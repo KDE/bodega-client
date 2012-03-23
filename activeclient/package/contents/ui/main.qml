@@ -98,7 +98,7 @@ Image {
 
     MobileComponents.Package {
         id: viewerPackage
-        name: "com.ct.bodegastore"
+        name: "com.coherenttheory.bodegastore"
     }
 
 

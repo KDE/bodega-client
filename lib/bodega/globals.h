@@ -23,6 +23,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDateTime>
 #include <QtCore/QMap>
+#include <QtCore/QMetaType>
 #include <QtCore/QString>
 #include <QtCore/qglobal.h>
 

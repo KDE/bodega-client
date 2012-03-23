@@ -25,8 +25,6 @@
 
 #include <QtCore/QStringList>
 
-Q_DECLARE_METATYPE(Bodega::AssetInfo)
-Q_DECLARE_METATYPE(Bodega::Tags)
 namespace Bodega {
 
     class BODEGA_EXPORT AssetJob : public NetworkJob
@@ -53,7 +51,7 @@ namespace Bodega {
         AssetInfo info() const;
         ChangeLog changeLog() const;
         QStringList previews() const;
-        Bodega::Tags tags() const;
+        Tags tags() const;
 
     protected:
         virtual void netFinished(const QVariantMap &jsonMap);
@@ -64,5 +62,7 @@ namespace Bodega {
     };
 }
 
+Q_DECLARE_METATYPE(Bodega::AssetInfo)
+Q_DECLARE_METATYPE(Bodega::Tags)
 
 #endif

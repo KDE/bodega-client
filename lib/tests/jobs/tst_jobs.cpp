@@ -2,11 +2,12 @@
 
 #include "dummyserver.h"
 
-#include <bodega/session.h>
-#include <bodega/signonjob.h>
-#include <bodega/channelsjob.h>
 #include <bodega/assetjob.h>
 #include <bodega/changelanguagejob.h>
+#include <bodega/channelsjob.h>
+#include <bodega/globals.h>
+#include <bodega/session.h>
+#include <bodega/signonjob.h>
 
 #include <QSettings>
 #include <QDir>

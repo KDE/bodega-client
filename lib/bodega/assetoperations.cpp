@@ -25,7 +25,8 @@
 #include "assethandler.h"
 #include "installjob.h"
 
-using namespace Bodega;
+namespace Bodega
+{
 
 class AssetOperations::Private {
 public:
@@ -57,8 +58,14 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
         handler = 0;
 
         //FIXME: may ever have more than one mimetype?
-        if (assetJob->tags().contains(QLatin1String("mimetype"))) {
-            handler = AssetHandler::create(assetJob->tags().values(QLatin1String("mimetype")).first(), q);
+
+        QHash<QString, QString> tags = assetJob->tags();
+        QHashIterator<QString, QString> it(tags);
+        while (it.hasNext()) {
+            if (it.key() == QLatin1String("mimetype")) {
+                handler = AssetHandler::create(it.value(), q);
+                break;
+            }
         }
     }
 
@@ -138,6 +145,8 @@ void AssetOperations::launch()
     if (d->ready()) {
         d->handler->launch();
     }
+}
+
 }
 
 #include "assetoperations.moc"

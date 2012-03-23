@@ -1,9 +1,6 @@
 
 include_directories( ${KDE4_INCLUDES} ${QT_INCLUDES} ${BODEGA_INCLUDE_DIR} common)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/libs/bodega/cmake/modules)
-find_package(BODEGA REQUIRED)
-
 set(bodega-store_SRCS
     main.cpp
     bodegastore.cpp
@@ -23,7 +20,7 @@ target_link_libraries(bodega-store
     ${KDE4_KIO_LIBS}
     ${KDE4_PLASMA_LIBS}
     kdeclarative
-    ${BODEGA_LIBRARIES}
+    bodega
 )
 
 install(TARGETS bodega-store ${INSTALL_TARGETS_DEFAULT_ARGS} )

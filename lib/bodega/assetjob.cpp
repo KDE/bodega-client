@@ -23,7 +23,8 @@
 
 #include <QDebug>
 
-using namespace Bodega;
+namespace Bodega
+{
 
 class AssetJob::Private
 {
@@ -166,4 +167,5 @@ AssetJob::AssetFlags AssetJob::flags() const
     return d->flags;
 }
 
+}
 #include "assetjob.moc"

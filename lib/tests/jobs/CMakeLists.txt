@@ -8,7 +8,7 @@ INCLUDE(AddFileDependencies)
 # Include the library include directories, and the current build directory (moc)
 INCLUDE_DIRECTORIES(
   ${CMAKE_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/libs/bodega
+  ${CMAKE_SOURCE_DIR}/lib/
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 link_directories(${LINK_DIRECTORIES} ${qjson_LIBRARY_DIRS})

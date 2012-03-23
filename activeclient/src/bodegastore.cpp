@@ -228,7 +228,7 @@ BodegaStore::BodegaStore()
     : KDeclarativeMainWindow()
 {
 
-    declarativeView()->setPackageName("com.ct.bodegastore");
+    declarativeView()->setPackageName("com.coherenttheory.bodegastore");
 
     qmlRegisterType<Bodega::AssetJob>();
     qmlRegisterType<Bodega::AssetOperations>();
@@ -237,7 +237,6 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::NetworkJob>();
     qmlRegisterType<Bodega::Session>();
     qmlRegisterType<Bodega::SignOnJob>();
-    
 
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ChannelInfo>(declarativeView()->scriptEngine(), qScriptValueFromChannelInfo, channelInfoFromQScriptValue, QScriptValue());

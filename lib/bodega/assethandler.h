@@ -21,7 +21,7 @@
 #ifndef BODEGA_ASSETHANDLER_H
 #define BODEGA_ASSETHANDLER_H
 
-#include "bodega/assetoperations.h"
+#include <bodega/assetoperations.h>
 
 namespace Bodega
 {
