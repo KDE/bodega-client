@@ -52,6 +52,7 @@ Image {
         job.error.connect(errorSigning)
         connectPageTimer.restart()
     }
+
     function signedOn(job)
     {
         //save credentials only if login worked
@@ -64,6 +65,7 @@ Image {
         //FIXME: here mainStack.replace() (so this page would be deleted) will break all mouse input in ItemBrowser
         mainStack.push(Qt.createComponent("storebrowser/ItemBrowser.qml"))
     }
+
     function errorSigning(job, error)
     {
         while (mainStack.currentPage.objectName != "startPage" &&
