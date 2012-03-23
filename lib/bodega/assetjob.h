@@ -20,8 +20,8 @@
 #ifndef BODEGA_ASSETJOB_H
 #define BODEGA_ASSETJOB_H
 
-#include <bodega/networkjob.h>
 #include <bodega/globals.h>
+#include <bodega/networkjob.h>
 
 #include <QtCore/QStringList>
 
@@ -62,7 +62,5 @@ namespace Bodega {
     };
 }
 
-Q_DECLARE_METATYPE(Bodega::AssetInfo)
-Q_DECLARE_METATYPE(Bodega::Tags)
 
 #endif

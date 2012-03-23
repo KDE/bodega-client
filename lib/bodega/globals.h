@@ -100,4 +100,7 @@ namespace Bodega {
     typedef QMultiHash<QString, QString> Tags;
 }
 
+Q_DECLARE_METATYPE(Bodega::AssetInfo)
+Q_DECLARE_METATYPE(Bodega::Tags)
+
 #endif
