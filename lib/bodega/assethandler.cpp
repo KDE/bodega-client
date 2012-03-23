@@ -100,14 +100,16 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
 
     if (!plugin.isEmpty()) {
         QDir pluginsDir(QLibraryInfo::location(QLibraryInfo::PluginsPath) + QLatin1String("/bodegaassethandlers/"));
-        const QString path = pluginsDir.absoluteFilePath(QLatin1String("lib") + plugin + QLatin1String("handlerplugin"));
+        //FIXME: the .so is non-portable. need some ifdef's here if this is to work on non-UNIX.
+        //remind me why QPluginLoader doesn't do this when QLibrary does?
+        const QString path = pluginsDir.absoluteFilePath(QLatin1String("lib") + plugin + QLatin1String("handlerplugin.so"));
         QPluginLoader pluginLoader(path);
 
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
             handler = qobject_cast<Bodega::AssetHandler *>(plugin);
         } else {
-            qWarning() << "Plugin load failed" << pluginLoader.errorString();
+            qWarning() << "Plugin load failed" << pluginLoader.errorString() << path;
         }
 
         if (!handler) {
