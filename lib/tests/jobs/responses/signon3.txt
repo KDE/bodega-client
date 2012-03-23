@@ -1,0 +1,1 @@
+{"device":0,"authStatus":false,"points":0,"errors":[{"title":"Authentication Error","error":"The username or password was entered incorrectly. Please try again","errorId":"auth/10"}]}

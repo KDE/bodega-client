@@ -1,0 +1,20 @@
+
+Mock:
+* positioning bug in PageRow
+* connect account mock
+** lost password page
+* settings mock
+** mock of every page inside it
+
+Real thing:
+* binding of libbodega
+* test models
+* ...
+
+Downloading:
+* moving of content to correct location once downloaded
+* download progress
+* deactivate download button when downloading
+
+Listings:
+* for books, show author and date

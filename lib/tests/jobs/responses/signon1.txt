@@ -1,0 +1,1 @@
+{"device":0,"authStatus":false,"points":0,"errors":[{"title":"Authentication Error","error":"Username, password or device identifier missing","errorId":"auth/02"}]}

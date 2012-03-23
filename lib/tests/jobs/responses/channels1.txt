@@ -1,0 +1,1 @@
+{"device":"SPARK-1","authStatus":true,"points":10000,"offset":0,"hasMoreAssets":false,"channels":[{"id":1,"image":"gutenberg/default-book.png","name":"Books","description":"Books","assetcount":0}]}

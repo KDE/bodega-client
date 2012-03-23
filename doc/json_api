@@ -1,0 +1,58 @@
+Conventions
+===========
+
+Parameters marked with + are required, those marked with * are optional, those marked with ? are
+conditional (with conditions explained in the description for the parameter).
+
+URL Path Roots
+==============
+For V1, all URL paths must start with /bodega/v1/json. All URLs below are relative to this root.
+Future versions may be moved to other roots.
+
+Objects
+=======
+
+Errors
+------
++ string title, a short summary of the error
++ string error, a description of the error
++ string errorId, the ID of the error
+
+Known URLs
+==========
+
+Authentication
+--------------
+Path: /auth
+Purpose: authenticates a given user.
+Parameters:
+    + string auth_user
+    + string auth_password
+    + string auth_device, the device ID for which to authenticate the user against
+Response:
+    + boolean authSuccess, true on success and false on failure
+    * number points, the number of points available to this account to spend
+    ? Error, on failure (authSuccess == false) the reason for failure
+Example:
+    https://sample.com/bodega/v1/json/auth?auth_user=zack@kde.org&auth_password=zack&auth_device=2
+
+List Channels
+-------------
+Path: /channels
+Purpose: list all channels by name/id for the logged in device
+Parameters:
+    + integer offset, offset response from the start
+    + integer pageSize, how many items to show
+Response:
+    * List<number> channels, the numeric IDs of channels
+
+Path: /channel/[0-9]+
+Purpose: list the contents of a specific channel; the id is encoded in the URL path
+Parameters: <none>
+Response:
+
+Example:
+    http://sample.com/bodega/v1/json/channels
+    http://sample.com/bodega/v1/json/channels?offset=25&pageSize=25
+
+

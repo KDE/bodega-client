@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Store
+GenericName=Content Store
+Comment=Content store for plasma active tablets
+
+
+Exec=bodega-store -graphicssystem raster %u
+Terminal=false
+Type=Application
+Categories=Qt;KDE;

@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=@LIB_INSTALL_DIR@
+includedir=@INCLUDE_INSTALL_DIR@
+
+Name: Bodega
+Description: Bodega is a qt-based library that accesses the Bodega store
+Version: @BODEGA_LIB_MAJOR_VERSION@.@BODEGA_LIB_MINOR_VERSION@.@BODEGA_LIB_PATCH_VERSION@
+Requires: QtCore QtNetwork QJson
+Libs: -L${libdir} -lbodega
+Cflags: -I${includedir}
