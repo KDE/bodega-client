@@ -62,6 +62,7 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
         QHash<QString, QString> tags = assetJob->tags();
         QHashIterator<QString, QString> it(tags);
         while (it.hasNext()) {
+            it.next();
             if (it.key() == QLatin1String("mimetype")) {
                 handler = AssetHandler::create(it.value(), q);
                 break;
