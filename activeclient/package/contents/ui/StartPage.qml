@@ -27,23 +27,22 @@ SimplePage {
     objectName: "startPage"
     title: "Make Play Live"
 
-
-    Row {
+    Column {
         anchors.centerIn: parent
-        spacing: 150
+        spacing: 12
         PlasmaComponents.ToolButton {
+            anchors.horizontalCenter: parent.horizontalCenter;
             text: i18n("Add an existing Bodega account")
             iconSource: "list-add"
             font.pointSize: theme.defaultFont.pointSize * 1.5
             onClicked: mainStack.push(Qt.createComponent("PasswordPage.qml"))
         }
         PlasmaComponents.ToolButton {
+            anchors.horizontalCenter: parent.horizontalCenter;
             text: i18n("Create a new Bodega account")
             iconSource: "contact-new"
             font.pointSize: theme.defaultFont.pointSize * 1.5
             onClicked: mainStack.push(Qt.createComponent("CreateUser.qml"))
         }
     }
-
-    Component.onCompleted: showMessage("Welcome", "Some descriptive text")
 }
