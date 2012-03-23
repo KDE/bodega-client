@@ -20,7 +20,7 @@ target_link_libraries(wallpaperhandlerplugin  ${QT_LIBRARIES} ${QJSON_LIBRARIES}
 
 
 INSTALL(TARGETS wallpaperhandlerplugin
-   DESTINATION ${QT_PLUGINS_DIR}/bodegaassethandler/
+   DESTINATION ${QT_PLUGINS_DIR}/bodegaassethandlers/
 )
 
 

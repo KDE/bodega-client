@@ -18,7 +18,7 @@ target_link_libraries(epubhandlerplugin  ${QT_LIBRARIES} ${QJSON_LIBRARIES} bode
 
 
 INSTALL(TARGETS epubhandlerplugin
-   DESTINATION ${QT_PLUGINS_DIR}/bodegaassethandler/
+   DESTINATION ${QT_PLUGINS_DIR}/bodegaassethandlers/
 )
 
 
