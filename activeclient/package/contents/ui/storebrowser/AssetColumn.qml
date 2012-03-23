@@ -112,7 +112,7 @@ BrowserColumn {
                             assetInfo.points > 0 ? i18n("Buy") : i18n("Download")
                         }
                     }
-                    onClicked: assetOperations.installed ? assetOperations.uninstall() : assetOperations.install()
+                    onClicked: assetOperations.installed ? bodegaClient.session.uninstall(assetOperations) : bodegaClient.session.install(assetOperations)
                 }
                 PlasmaComponents.Button {
                     visible: assetOperations.installed && assetOperations.launchText !== ""

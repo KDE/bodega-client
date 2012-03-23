@@ -37,6 +37,8 @@
 #include <bodega/networkjob.h>
 #include <bodega/session.h>
 #include <bodega/signonjob.h>
+#include <bodega/installjob.h>
+#include <bodega/uninstalljob.h>
 
 using namespace Bodega;
 
@@ -237,6 +239,8 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::NetworkJob>();
     qmlRegisterType<Bodega::Session>();
     qmlRegisterType<Bodega::SignOnJob>();
+    qmlRegisterType<Bodega::InstallJob>();
+    qmlRegisterType<Bodega::UninstallJob>();
 
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ChannelInfo>(declarativeView()->scriptEngine(), qScriptValueFromChannelInfo, channelInfoFromQScriptValue, QScriptValue());

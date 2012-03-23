@@ -325,4 +325,10 @@ Bodega::InstallJob *Session::install(AssetOperations *operations)
     return job;
 }
 
+Bodega::UninstallJob *Session::uninstall(AssetOperations *operations)
+{
+    QNetworkReply *reply = d->get(operations->assetInfo().path);
+    return operations->uninstall();
+}
+
 #include "session.moc"

@@ -38,6 +38,7 @@ namespace Bodega {
     class ParticipantInfoJob;
     class SearchJob;
     class SignOnJob;
+    class UninstallJob;
 
     class BODEGA_EXPORT Session : public QObject
     {
@@ -89,7 +90,8 @@ namespace Bodega {
         Bodega::ParticipantInfoJob *participantInfo();
 
         Bodega::AssetOperations *assetOperations(const QString &assetId);
-        Bodega::InstallJob *install(AssetOperations *operations);
+        Bodega::InstallJob *install(Bodega::AssetOperations *operations);
+        Bodega::UninstallJob *uninstall(Bodega::AssetOperations *operations);
 
     Q_SIGNALS:
         void disconnected();

@@ -7,11 +7,13 @@ set (bodega_HEADERS
      error.h
      globals.h
      imagelocator.h
+     installjob.h
      networkjob.h
      participantinfojob.h
-     session.h
      searchjob.h
+     session.h
      signonjob.h
+     uninstalljob.h
     )
 
 set (bodega_SRCS
@@ -29,6 +31,7 @@ set (bodega_SRCS
      session.cpp
      searchjob.cpp
      signonjob.cpp
+     uninstalljob.cpp
      )
 
 include("CMakeQtUsage")
