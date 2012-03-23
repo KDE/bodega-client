@@ -4,6 +4,8 @@ INCLUDE( ${QT_USE_FILE} )
 
 INCLUDE(AddFileDependencies)
 
+include_directories(${CMAKE_SOURCE_DIR}/lib)
+
 link_directories(${LINK_DIRECTORIES} ${qjson_LIBRARY_DIRS})
 
 # Include the library include directories, and the current build directory (moc)
