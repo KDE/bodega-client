@@ -59,11 +59,7 @@ Image {
         bodegaClient.saveCredentials(username, password)
 
         connectPageTimer.running = false
-        while (mainStack.currentPage.objectName != "startPage") {
-            mainStack.pop(0, true)
-        }
-        //FIXME: here mainStack.replace() (so this page would be deleted) will break all mouse input in ItemBrowser
-        mainStack.push(Qt.createComponent("storebrowser/ItemBrowser.qml"))
+        mainStack.replace(Qt.createComponent("storebrowser/ItemBrowser.qml"), '', true)
     }
 
     function errorSigning(job, error)
@@ -80,9 +76,10 @@ Image {
     //Tis timer is to avoid to show the connecting page if the authentication is fast enough
     Timer {
         id: connectPageTimer
-        interval: 500
+        interval: 100
         onTriggered: {
-            mainStack.push(Qt.createComponent("ConnectingPage.qml"))
+            var credentials = bodegaClient.retrieveCredentials()
+                authenticate(credentials.username, credentials.password)
         }
     }
 
@@ -93,7 +90,8 @@ Image {
         onTriggered: {
             var credentials = bodegaClient.retrieveCredentials()
             if (credentials.username && credentials.password) {
-                authenticate(credentials.username, credentials.password)
+                mainStack.push(Qt.createComponent("ConnectingPage.qml"), "", true)
+                connectPageTimer.start()
             }
         }
     }
