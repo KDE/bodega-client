@@ -37,6 +37,7 @@ namespace Bodega {
     class InstallJob;
     class ParticipantInfoJob;
     class RegisterJob;
+    class ResetPasswordJob;
     class SearchJob;
     class SignOnJob;
     class UninstallJob;
@@ -98,12 +99,19 @@ namespace Bodega {
         Bodega::InstallJob *install(Bodega::AssetOperations *operations);
         Bodega::UninstallJob *uninstall(Bodega::AssetOperations *operations);
 
+        /*
+         * These two are special because they don't require a session, as
+         * such they're fire and forget jobs that don't require
+         * authentication and don't set any state
+         */
         Bodega::RegisterJob *registerAccount(
             const QString &email,
             const QString &password,
             const QString &firstName = QString(),
             const QString &middleNames = QString(),
             const QString &lastName = QString());
+        Bodega::ResetPasswordJob *resetPassword(
+            const QString &email);
 
     Q_SIGNALS:
         void disconnected();

@@ -11,6 +11,7 @@ set (bodega_HEADERS
      networkjob.h
      participantinfojob.h
      registerjob.h
+     resetpasswordjob.h
      searchjob.h
      session_p.h
      session.h
@@ -31,6 +32,7 @@ set (bodega_SRCS
      networkjob.cpp
      participantinfojob.cpp
      registerjob.cpp
+     resetpasswordjob.cpp
      session.cpp
      searchjob.cpp
      signonjob.cpp

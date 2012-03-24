@@ -28,6 +28,7 @@
 #include "installjob.h"
 #include "participantinfojob.h"
 #include "registerjob.h"
+#include "resetpasswordjob.h"
 #include "searchjob.h"
 #include "signonjob.h"
 
@@ -352,6 +353,22 @@ Bodega::RegisterJob * Session::registerAccount(const QString &email,
     //qDebug()<<"url is " <<url;
 
     RegisterJob *job = new RegisterJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::ResetPasswordJob * Session::resetPassword(const QString &email)
+{
+    QUrl url = d->baseUrl;
+    QString path = QString::fromLatin1("/resetRequest");
+
+    url.setEncodedPath(d->jsonPath(path));
+
+    url.addQueryItem(QLatin1String("email"), email);
+
+    //qDebug()<<"url is " <<url;
+
+    ResetPasswordJob *job = new ResetPasswordJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }

@@ -17,46 +17,45 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "registerjob.h"
+#include "resetpasswordjob.h"
 
 #include "session.h"
 
-#include <QDebug>
 
 namespace Bodega
 {
 
-class RegisterJob::Private
+class ResetPasswordJob::Private
 {
 public:
     Private()
     {}
-    void init(RegisterJob *parent)
+    void init(ResetPasswordJob *parent)
     {
         q = parent;
     }
-    RegisterJob *q;
+    ResetPasswordJob *q;
 };
 
-RegisterJob::RegisterJob(QNetworkReply *reply,
-                         Session *parent)
+
+ResetPasswordJob::ResetPasswordJob(QNetworkReply *reply,
+                                   Session *parent)
     : NetworkJob(reply, parent),
       d(new Private)
 {
     d->init(this);
 }
 
-RegisterJob::~RegisterJob()
+ResetPasswordJob::~ResetPasswordJob()
 {
     delete d;
 }
 
-void RegisterJob::netFinished(const QVariantMap &result)
+void ResetPasswordJob::netFinished(const QVariantMap &result)
 {
-     parseCommon(result);
+    parseCommon(result);
 }
 
 }
 
-#include "registerjob.moc"
-
+#include "resetpasswordjob.moc"
