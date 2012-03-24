@@ -10,7 +10,9 @@ set (bodega_HEADERS
      installjob.h
      networkjob.h
      participantinfojob.h
+     registerjob.h
      searchjob.h
+     session_p.h
      session.h
      signonjob.h
      uninstalljob.h
@@ -28,6 +30,7 @@ set (bodega_SRCS
      installjob.cpp
      networkjob.cpp
      participantinfojob.cpp
+     registerjob.cpp
      session.cpp
      searchjob.cpp
      signonjob.cpp

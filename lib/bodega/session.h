@@ -36,6 +36,7 @@ namespace Bodega {
     class ChangeLanguageJob;
     class InstallJob;
     class ParticipantInfoJob;
+    class RegisterJob;
     class SearchJob;
     class SignOnJob;
     class UninstallJob;
@@ -77,21 +78,32 @@ namespace Bodega {
     public Q_SLOTS:
         Bodega::SignOnJob *signOn();
         void signOut();
-        Bodega::ChannelsJob *channels(const QString &topChannel=QString(), int offset=-1, int pageSize=-1);
+        Bodega::ChannelsJob *channels(const QString &topChannel=QString(),
+                                      int offset=-1, int pageSize=-1);
 
         // continues listing channels from where the passed job
         // stopped
         Bodega::ChannelsJob *nextChannels(const ChannelsJob *job);
         Bodega::ChannelsJob *prevChannels(const ChannelsJob *job);
 
-        Bodega::AssetJob *asset(const QString &assetId, AssetJob::AssetFlags flags=AssetJob::None);
+        Bodega::AssetJob *asset(const QString &assetId,
+                                AssetJob::AssetFlags flags=AssetJob::None);
         Bodega::ChangeLanguageJob *changeLanguage(const QString &lang);
-        Bodega::ChannelsJob *search(const QString &text, const QString &channelId, int offset=-1, int pageSize=-1);
+        Bodega::ChannelsJob *search(const QString &text,
+                                    const QString &channelId,
+                                    int offset=-1, int pageSize=-1);
         Bodega::ParticipantInfoJob *participantInfo();
 
         Bodega::AssetOperations *assetOperations(const QString &assetId);
         Bodega::InstallJob *install(Bodega::AssetOperations *operations);
         Bodega::UninstallJob *uninstall(Bodega::AssetOperations *operations);
+
+        Bodega::RegisterJob *registerAccount(
+            const QString &email,
+            const QString &password,
+            const QString &firstName = QString(),
+            const QString &middleNames = QString(),
+            const QString &lastName = QString());
 
     Q_SIGNALS:
         void disconnected();

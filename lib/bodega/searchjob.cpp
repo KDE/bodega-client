@@ -108,7 +108,7 @@ void SearchJob::Private::parseAssets(const QVariantMap &result)
 }
 
 SearchJob::SearchJob(const QString &text, QNetworkReply *reply,
-                         Session *parent)
+                     Session *parent)
     : NetworkJob(reply, parent),
       d(new Private)
 {

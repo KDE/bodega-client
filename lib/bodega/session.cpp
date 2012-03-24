@@ -27,6 +27,7 @@
 #include "changelanguagejob.h"
 #include "installjob.h"
 #include "participantinfojob.h"
+#include "registerjob.h"
 #include "searchjob.h"
 #include "signonjob.h"
 
@@ -329,6 +330,30 @@ Bodega::UninstallJob *Session::uninstall(AssetOperations *operations)
 {
     QNetworkReply *reply = d->get(operations->assetInfo().path);
     return operations->uninstall();
+}
+
+Bodega::RegisterJob * Session::registerAccount(const QString &email,
+                                               const QString &password,
+                                               const QString &firstName,
+                                               const QString &middleNames,
+                                               const QString &lastName)
+{
+    QUrl url = d->baseUrl;
+    QString path = QString::fromLatin1("/register");
+
+    url.setEncodedPath(d->jsonPath(path));
+
+    url.addQueryItem(QLatin1String("email"),       email);
+    url.addQueryItem(QLatin1String("password"),    password);
+    url.addQueryItem(QLatin1String("firstname"),   firstName);
+    url.addQueryItem(QLatin1String("middlenames"), middleNames);
+    url.addQueryItem(QLatin1String("lastName"),    lastName);
+
+    //qDebug()<<"url is " <<url;
+
+    RegisterJob *job = new RegisterJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
 }
 
 #include "session.moc"
