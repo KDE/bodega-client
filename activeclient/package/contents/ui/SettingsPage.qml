@@ -59,7 +59,7 @@ PlasmaComponents.Page {
                 ListView {
                     id: categoriesView
                     clip: true
-                    currentIndex: 2
+                    currentIndex: 0
                     anchors {
                         top: parent.top
                         bottom: toolBar.top
@@ -67,10 +67,10 @@ PlasmaComponents.Page {
                         right: parent.right
                     }
                     model: ListModel {
-                        ListElement { DisplayRole: "Payment methods"; component: "PaymentMethods" }
-                        ListElement { DisplayRole: "Account history"; component: "AccountHistory" }
                         ListElement { DisplayRole: "Personal data"; component: "PersonalData" }
                         ListElement { DisplayRole: "Add points"; component: "AddPoints" }
+                        ListElement { DisplayRole: "Payment methods"; component: "PaymentMethods" }
+                        ListElement { DisplayRole: "Account history"; component: "AccountHistory" }
                     }
                     delegate: StoreListItem {
                         checked: categoriesView.currentIndex == index
