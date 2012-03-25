@@ -81,7 +81,7 @@ BrowserColumn {
             }
             PlasmaComponents.Label {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: i18nc("number of points left", "%1 points", bodegaClient.session.points)
+                text: i18ncp("number of points left", "1 point", "%1 points", bodegaClient.session.points)
             }
             PlasmaComponents.Button {
                 anchors.horizontalCenter: parent.horizontalCenter
