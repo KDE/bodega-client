@@ -42,10 +42,6 @@
 
 using namespace Bodega;
 
-Q_DECLARE_METATYPE(Bodega::Error)
-Q_DECLARE_METATYPE(Bodega::ChannelInfo)
-
-
 QScriptValue qScriptValueFromError(QScriptEngine *engine, const Bodega::Error &error)
 {
     QScriptValue obj = engine->newObject();
