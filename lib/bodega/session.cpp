@@ -26,6 +26,7 @@
 #include "channelsjob.h"
 #include "changelanguagejob.h"
 #include "installjob.h"
+#include "listballotsjob.h"
 #include "participantinfojob.h"
 #include "registerjob.h"
 #include "resetpasswordjob.h"
@@ -369,6 +370,30 @@ Bodega::ResetPasswordJob * Session::resetPassword(const QString &email)
     //qDebug()<<"url is " <<url;
 
     ResetPasswordJob *job = new ResetPasswordJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::ListBallotsJob * Session::listBallots(int offset, int pageSize)
+{
+    QUrl url = d->baseUrl;
+    QString path = QString::fromLatin1("/listBallots");
+
+
+    url.setEncodedPath(d->jsonPath(path));
+
+    if (offset >= 0) {
+        url.addQueryItem(QLatin1String("offset"),
+                         QString::fromLatin1("%1").arg(offset));
+    }
+    if (pageSize >= 0) {
+        url.addQueryItem(QLatin1String("pageSize"),
+                         QString::fromLatin1("%1").arg(pageSize));
+    }
+
+    //qDebug()<<"url is " <<url;
+
+    ListBallotsJob *job = new ListBallotsJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }

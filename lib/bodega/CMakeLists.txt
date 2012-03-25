@@ -8,6 +8,7 @@ set (bodega_HEADERS
      globals.h
      imagelocator.h
      installjob.h
+     listballotsjob.h
      networkjob.h
      participantinfojob.h
      registerjob.h
@@ -29,6 +30,7 @@ set (bodega_SRCS
      error.cpp
      imagelocator.cpp
      installjob.cpp
+     listballotsjob.cpp
      networkjob.cpp
      participantinfojob.cpp
      registerjob.cpp

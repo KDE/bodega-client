@@ -97,10 +97,27 @@ namespace Bodega {
         QMap<QString, Entry> entries;
     };
 
+    struct BallotInfo
+    {
+    public:
+        enum BallotFlag {
+            None     = 0,
+            Public   = 1 << 0,
+            Wishlist = 1 << 1
+        };
+        Q_DECLARE_FLAGS(BallotFlags, BallotFlag);
+    public:
+        int id;
+        QString name;
+        BallotFlags flags;
+    };
+
     typedef QMultiHash<QString, QString> Tags;
 }
 
 Q_DECLARE_METATYPE(Bodega::AssetInfo)
+Q_DECLARE_METATYPE(Bodega::BallotInfo)
+Q_DECLARE_METATYPE(QList<Bodega::BallotInfo>)
 Q_DECLARE_METATYPE(Bodega::Tags)
 
 #endif

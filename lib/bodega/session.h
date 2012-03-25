@@ -35,6 +35,7 @@ namespace Bodega {
     class ChannelsJob;
     class ChangeLanguageJob;
     class InstallJob;
+    class ListBallotsJob;
     class ParticipantInfoJob;
     class RegisterJob;
     class ResetPasswordJob;
@@ -98,6 +99,21 @@ namespace Bodega {
         Bodega::AssetOperations *assetOperations(const QString &assetId);
         Bodega::InstallJob *install(Bodega::AssetOperations *operations);
         Bodega::UninstallJob *uninstall(Bodega::AssetOperations *operations);
+
+
+        Bodega::ListBallotsJob *listBallots(int offset=-1, int pageSize=-1);
+        /*
+        Bodega::CreateBallotJob *createBallot(
+            const QString &name,
+            Ballot::BallotFlags flags = Ballot::None);
+        Bodega::DeleteBallotJob *deleteBallot(int ballotId);
+        Bodega::BallotAddAssetJob *ballotAddAsset(int ballotId,
+                                                  int assetId);
+        Bodega::BallotRemoveAssetJob *ballotRemoveAsset(int ballotId,
+                                                        int assetId);
+        Bodega::BallotListAssetsJob *ballotListAssets(int ballotId,
+                                                      int offset=-1,
+                                                      int pageSize=-1);*/
 
         /*
          * These two are special because they don't require a session, as
