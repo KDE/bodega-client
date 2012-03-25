@@ -43,6 +43,7 @@ using namespace Bodega;
 void Session::Private::init(Session *parent)
 {
     q = parent;
+    points = 0;
     authenticated = false;
 
     netManager = new QNetworkAccessManager(q);
