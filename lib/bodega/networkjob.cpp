@@ -84,7 +84,7 @@ void NetworkJob::Private::netFinished()
     if (reply->error() == QNetworkReply::NoError) {
         if (expectingJson) {
             const QByteArray data = reply->readAll();
-            //qDebug() << "response from" << reply->url() << "is" << data
+            //qDebug() << "response from" << reply->url() << "is" << data;
             bool ok = false;
             parsedJson = parser.parse(data, &ok).toMap();
             if (ok) {
@@ -234,7 +234,7 @@ Bodega::Error NetworkJob::error() const
 
 void NetworkJob::netFinished(const QVariantMap &jsonMap)
 {
-    Q_UNUSED(jsonMap)
+    parseCommon(jsonMap);
 }
 
 void NetworkJob::setFinished()
