@@ -34,6 +34,7 @@ namespace Bodega {
     class AssetOperations;
     class ChannelsJob;
     class ChangeLanguageJob;
+    class CreateBallotJob;
     class InstallJob;
     class ListBallotsJob;
     class ParticipantInfoJob;
@@ -102,10 +103,10 @@ namespace Bodega {
 
 
         Bodega::ListBallotsJob *listBallots(int offset=-1, int pageSize=-1);
-        /*
         Bodega::CreateBallotJob *createBallot(
             const QString &name,
-            Ballot::BallotFlags flags = Ballot::None);
+            BallotInfo::BallotFlags flags = BallotInfo::None);
+        /*
         Bodega::DeleteBallotJob *deleteBallot(int ballotId);
         Bodega::BallotAddAssetJob *ballotAddAsset(int ballotId,
                                                   int assetId);

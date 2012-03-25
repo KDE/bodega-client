@@ -25,6 +25,7 @@
 #include "assetoperations.h"
 #include "channelsjob.h"
 #include "changelanguagejob.h"
+#include "createballotjob.h"
 #include "installjob.h"
 #include "listballotsjob.h"
 #include "participantinfojob.h"
@@ -394,6 +395,33 @@ Bodega::ListBallotsJob * Session::listBallots(int offset, int pageSize)
     //qDebug()<<"url is " <<url;
 
     ListBallotsJob *job = new ListBallotsJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::CreateBallotJob * Session::createBallot(const QString &name,
+                                                BallotInfo::BallotFlags flags)
+{
+    QUrl url = d->baseUrl;
+    QString path = QString::fromLatin1("/createBallot");
+
+    url.setEncodedPath(d->jsonPath(path));
+
+    url.addQueryItem(QLatin1String("name"), name);
+    if (flags.testFlag(BallotInfo::Public)) {
+        url.addQueryItem(QLatin1String("public"), QLatin1String("true"));
+    } else {
+        url.addQueryItem(QLatin1String("public"), QLatin1String("false"));
+    }
+    if (flags.testFlag(BallotInfo::Wishlist)) {
+        url.addQueryItem(QLatin1String("wishlist"), QLatin1String("true"));
+    } else {
+        url.addQueryItem(QLatin1String("wishlist"), QLatin1String("false"));
+    }
+
+    //qDebug()<<"url is " <<url;
+
+    CreateBallotJob *job = new CreateBallotJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }
