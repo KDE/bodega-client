@@ -36,8 +36,6 @@ BrowserColumn {
             left: parent.left
             right: parent.right
             bottom: statusFrame.top
-            topMargin: 8
-            bottomMargin: 8
         }
         model: VisualDataModel {
             model: bodegaClient.channelsModel
