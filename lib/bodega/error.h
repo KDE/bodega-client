@@ -67,4 +67,6 @@ namespace Bodega {
     };
 }
 
+Q_DECLARE_METATYPE(Bodega::Error)
+
 #endif
