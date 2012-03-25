@@ -51,6 +51,7 @@ public:
                 q, SLOT(jobFinished(Bodega::NetworkJob*)));
     }
 
+    void setPoints(int p);
     void signOnFinished(Bodega::SignOnJob *job);
     void jobFinished(Bodega::NetworkJob *job);
     QNetworkReply *get(const QUrl &url);

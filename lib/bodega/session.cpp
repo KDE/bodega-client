@@ -48,6 +48,15 @@ Session::Private::Private(Session *parent)
 {
 }
 
+void Session::Private::setPoints(int p)
+{
+    if (p > -1) {
+        points = p;
+        qDebug() << "*****************************************************" << points;
+        emit q->pointsChanged(points);
+    }
+}
+
 void Session::Private::signOnFinished(SignOnJob *job)
 {
     imageUrls = job->imageUrls();
@@ -56,7 +65,7 @@ void Session::Private::signOnFinished(SignOnJob *job)
 void Session::Private::jobFinished(NetworkJob *job)
 {
     if (authenticated && !job->authSuccess()) {
-        points = 0;
+        setPoints(0);
         emit q->disconnected();
     }
 
@@ -66,7 +75,7 @@ void Session::Private::jobFinished(NetworkJob *job)
     }
 
     if (job->authSuccess()) {
-        points = job->points();
+        setPoints(job->points());
     }
 
     job->deleteLater();
@@ -122,7 +131,7 @@ void Session::signOut()
 {
     if (d->authenticated) {
         d->authenticated = false;
-        d->points = 0;
+        d->setPoints(0);
         emit disconnected();
     }
 }

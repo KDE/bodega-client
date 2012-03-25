@@ -52,8 +52,7 @@ namespace Bodega {
         Q_PROPERTY(QString userName READ userName WRITE setUserName)
         Q_PROPERTY(QString password READ password WRITE setPassword)
         Q_PROPERTY(QString deviceId READ deviceId WRITE setDeviceId)
-        //TODO: needs a pointsChanged signal probably
-        Q_PROPERTY(int points READ points)
+        Q_PROPERTY(int points READ points NOTIFY pointsChanged)
 
     public:
         Session(QObject *parent=0);
@@ -133,6 +132,7 @@ namespace Bodega {
     Q_SIGNALS:
         void disconnected();
         void authenticated(bool);
+        void pointsChanged(int points);
 
     private:
         class Private;
