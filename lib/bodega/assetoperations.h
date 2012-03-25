@@ -33,7 +33,7 @@ namespace Bodega {
     class BODEGA_EXPORT AssetOperations : public QObject
     {
         Q_OBJECT
-        Q_PROPERTY(QString launchText READ launchText)
+        Q_PROPERTY(QString launchText READ launchText NOTIFY ready)
         Q_PROPERTY(bool installed READ isInstalled NOTIFY installedChanged)
         Q_PROPERTY(bool ready READ isReady NOTIFY ready)
 
