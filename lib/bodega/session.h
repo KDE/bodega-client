@@ -100,6 +100,7 @@ namespace Bodega {
         Bodega::InstallJob *install(Bodega::AssetOperations *operations);
         Bodega::UninstallJob *uninstall(Bodega::AssetOperations *operations);
 
+        Bodega::NetworkJob *redeemPointsCode(const QString &code);
 
         Bodega::ListBallotsJob *listBallots(int offset=-1, int pageSize=-1);
         Bodega::CreateBallotJob *createBallot(
