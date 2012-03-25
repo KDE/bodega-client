@@ -27,9 +27,7 @@ namespace Bodega {
 
 class Session::Private {
 public:
-    Private()
-    {}
-    void init(Session *parent);
+    Private(Session *parent);
 
     QByteArray jsonPath(const char *cmd, bool includeBasePath=true) const
     {

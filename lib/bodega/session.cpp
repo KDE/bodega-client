@@ -40,13 +40,12 @@
 
 using namespace Bodega;
 
-void Session::Private::init(Session *parent)
+Session::Private::Private(Session *parent)
+        : q(parent),
+          points(0),
+          authenticated(false),
+          netManager(new QNetworkAccessManager(q))
 {
-    q = parent;
-    points = 0;
-    authenticated = false;
-
-    netManager = new QNetworkAccessManager(q);
 }
 
 void Session::Private::signOnFinished(SignOnJob *job)
@@ -83,9 +82,8 @@ QNetworkReply *Session::Private::get(const QUrl &url)
 
 Session::Session(QObject *parent)
     : QObject(parent),
-      d(new Private)
+      d(new Private(this))
 {
-    d->init(this);
 }
 
 Session::~Session()

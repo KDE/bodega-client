@@ -105,7 +105,7 @@ namespace Bodega {
         Bodega::ListBallotsJob *listBallots(int offset=-1, int pageSize=-1);
         Bodega::CreateBallotJob *createBallot(
             const QString &name,
-            BallotInfo::BallotFlags flags = BallotInfo::None);
+            Bodega::BallotInfo::BallotFlags flags = Bodega::BallotInfo::None);
         /*
         Bodega::DeleteBallotJob *deleteBallot(int ballotId);
         Bodega::BallotAddAssetJob *ballotAddAsset(int ballotId,
