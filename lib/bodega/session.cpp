@@ -52,7 +52,6 @@ void Session::Private::setPoints(int p)
 {
     if (p > -1) {
         points = p;
-        qDebug() << "*****************************************************" << points;
         emit q->pointsChanged(points);
     }
 }
