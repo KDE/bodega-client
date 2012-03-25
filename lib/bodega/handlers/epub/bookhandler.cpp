@@ -64,12 +64,13 @@ Bodega::InstallJob *BookHandler::install(QNetworkReply *reply, Session *session)
     return m_installJob.data();
 }
 
-Bodega::UninstallJob *BookHandler::uninstall()
+Bodega::UninstallJob *BookHandler::uninstall(Session *session)
 {
-    QFile f(filePath());
-    f.remove();
-    //FIXME: needs to be an actual job!
-    return 0;
+    if (!m_uninstallJob) {
+        m_uninstallJob = new BookUninstallJob(session, this);
+    }
+
+    return m_uninstallJob.data();
 }
 
 QString BookHandler::launchText() const

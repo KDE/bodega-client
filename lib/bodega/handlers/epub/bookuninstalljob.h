@@ -17,41 +17,22 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifndef BOOKUNINSTALLJOB_H
+#define BOOKUNINSTALLJOB_H
 
-#ifndef BOOKOPERATIONS_H
-#define BOOKOPERATIONS_H
-
-#include <bodega/assethandler.h>
-
-#include <qplugin.h>
-
-#include "bookinstalljob.h"
-#include "bookuninstalljob.h"
+#include <bodega/uninstalljob.h>
 
 namespace Bodega {
 
-    class BookHandler : public AssetHandler
+    class BookHandler;
+    class Session;
+
+    class BookUninstallJob : public UninstallJob
     {
         Q_OBJECT
-        Q_INTERFACES(Bodega::AssetHandler)
-
     public:
-        BookHandler(QObject *parent = 0);
-        ~BookHandler();
-
-        QString launchText() const;
-        bool isInstalled() const;
-
-        QString filePath() const;
-
-    public Q_SLOTS:
-        Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
-        Bodega::UninstallJob *uninstall(Session *session);
-        void launch();
-
-    private:
-        QWeakPointer<BookInstallJob> m_installJob;
-        QWeakPointer<BookUninstallJob> m_uninstallJob;
+        BookUninstallJob(Session *parent, BookHandler *handler);
+        ~BookUninstallJob();
     };
 }
 

@@ -5,6 +5,7 @@ link_directories(${LINK_DIRECTORIES} ${QJSON_LIBRARY_DIRS})
 set (bookhandlerplugin_SRCS
      bookhandler.cpp
      bookinstalljob.cpp
+     bookuninstalljob.cpp
      )
 
 include_directories(${CMAKE_SOURCE_DIR}/libs/bodega/ ${CMAKE_SOURCE_DIR}/libs/bodega/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/bodega ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES})

@@ -77,7 +77,7 @@ Bodega::InstallJob *AssetHandler::install(QNetworkReply *reply, Session *session
     return new InstallJob(reply, session);
 }
 
-Bodega::UninstallJob *AssetHandler::uninstall()
+Bodega::UninstallJob *AssetHandler::uninstall(Session *session)
 {
     //return new UninstallJob();
     return 0;

@@ -43,7 +43,7 @@ namespace Bodega
 
             virtual Bodega::InstallJob *install(QNetworkReply *reply,
                                                 Session *session);
-            virtual Bodega::UninstallJob *uninstall();
+            virtual Bodega::UninstallJob *uninstall(Session *session);
 
             virtual void launch();
 

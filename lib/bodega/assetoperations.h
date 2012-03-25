@@ -50,7 +50,7 @@ namespace Bodega {
 
     public Q_SLOTS:
         Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
-        Bodega::UninstallJob *uninstall();
+        Bodega::UninstallJob *uninstall(Session *session);
         void launch();
 
     Q_SIGNALS:

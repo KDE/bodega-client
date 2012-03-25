@@ -149,12 +149,13 @@ Bodega::InstallJob *AssetOperations::install(QNetworkReply *reply, Session *sess
     return new InstallJob(reply, session);
 }
 
-Bodega::UninstallJob *AssetOperations::uninstall()
+Bodega::UninstallJob *AssetOperations::uninstall(Session *session)
 {
     if (d->ready()) {
-        Bodega::UninstallJob *job = d->handler->uninstall();
+        Bodega::UninstallJob *job = d->handler->uninstall(session);
         if (job) {
             connect(job, SIGNAL(jobFinished(Bodega::UninstallJob *)), this, SLOT(checkInstalled()));
+            d->checkInstalled();
         }
         return job;
     }

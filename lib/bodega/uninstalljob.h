@@ -32,8 +32,9 @@ namespace Bodega {
     class BODEGA_EXPORT UninstallJob : public QObject
     {
         Q_OBJECT
-        Q_PROPERTY(bool finished READ isFinished)
-        Q_PROPERTY(bool failed READ failed)
+        Q_PROPERTY(bool finished READ isFinished NOTIFY finishedChanged())
+        Q_PROPERTY(bool failed READ failed NOTIFY failedChanged())
+
     public:
         UninstallJob(Session *parent);
         ~UninstallJob();
@@ -48,11 +49,15 @@ namespace Bodega {
     Q_SIGNALS:
         void error(Bodega::UninstallJob *job, const Bodega::Error &error);
         void jobFinished(Bodega::UninstallJob *job);
+        void failedChanged();
+        void finishedChanged();
 
 
     private:
         class Private;
         Private * const d;
+        Q_PRIVATE_SLOT(d, void gotError(Bodega::UninstallJob *, const Bodega::Error &))
+        Q_PRIVATE_SLOT(d, void gotError(Bodega::UninstallJob *, const Bodega::Error &))
     };
 }
 

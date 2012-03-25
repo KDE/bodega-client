@@ -17,42 +17,30 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-#ifndef BOOKOPERATIONS_H
-#define BOOKOPERATIONS_H
-
-#include <bodega/assethandler.h>
-
-#include <qplugin.h>
-
-#include "bookinstalljob.h"
 #include "bookuninstalljob.h"
+#include "bookhandler.h"
+#include "session.h"
 
-namespace Bodega {
+#include <QDebug>
+#include <QFile>
 
-    class BookHandler : public AssetHandler
-    {
-        Q_OBJECT
-        Q_INTERFACES(Bodega::AssetHandler)
+using namespace Bodega;
 
-    public:
-        BookHandler(QObject *parent = 0);
-        ~BookHandler();
-
-        QString launchText() const;
-        bool isInstalled() const;
-
-        QString filePath() const;
-
-    public Q_SLOTS:
-        Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
-        Bodega::UninstallJob *uninstall(Session *session);
-        void launch();
-
-    private:
-        QWeakPointer<BookInstallJob> m_installJob;
-        QWeakPointer<BookUninstallJob> m_uninstallJob;
-    };
+BookUninstallJob::BookUninstallJob(Session *parent, BookHandler *handler)
+    : UninstallJob(parent)
+{
+    QFile f(handler->filePath());
+    if (!f.remove()) {
+        emit(this, Error(Error::Parsing,
+                        QLatin1String("uj/01"),
+                        tr("Uninstall failed"),
+                        tr("Impossible to delete the file.")));
+    }
+    emit jobFinished(this);
 }
 
-#endif
+BookUninstallJob::~BookUninstallJob()
+{
+}
+
+#include "bookuninstalljob.moc"
