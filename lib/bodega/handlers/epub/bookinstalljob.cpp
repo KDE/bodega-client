@@ -44,7 +44,6 @@ BookInstallJob::~BookInstallJob()
 
 void BookInstallJob::downloadFinished(const QString &localFile)
 {
-    QFileInfo fileInfo(localFile);
     QFile f(localFile);
 
     QDir dir(QDir::homePath() + QString::fromLatin1("/Books/"));
@@ -53,10 +52,7 @@ void BookInstallJob::downloadFinished(const QString &localFile)
         dir.mkdir(dir.path());
     }
 
-    QString path = QString::fromLatin1("%1.%2")
-            .arg(m_handler->operations()->assetInfo().name)
-            .arg(fileInfo.completeSuffix());
-    f.rename(dir.filePath(path));
+    f.rename(dir.filePath(m_handler->filePath()));
     setFinished();
 }
 

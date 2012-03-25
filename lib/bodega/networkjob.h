@@ -83,6 +83,7 @@ namespace Bodega {
         Private * const d;
 
         Q_PRIVATE_SLOT(d, void netError(QNetworkReply::NetworkError code));
+        Q_PRIVATE_SLOT(d, void readFromNetwork());
         Q_PRIVATE_SLOT(d, void netFinished());
     };
 }

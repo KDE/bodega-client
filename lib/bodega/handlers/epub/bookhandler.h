@@ -41,13 +41,12 @@ namespace Bodega {
         QString launchText() const;
         bool isInstalled() const;
 
+        QString filePath() const;
+
     public Q_SLOTS:
         Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
         Bodega::UninstallJob *uninstall();
         void launch();
-
-    protected:
-        QString filePath() const;
 
     private:
         QWeakPointer<BookInstallJob> m_installJob;

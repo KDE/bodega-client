@@ -37,7 +37,7 @@ public:
 };
 
 InstallJob::InstallJob(QNetworkReply *reply, Session *session)
-    : NetworkJob(reply, session),
+    : NetworkJob(reply, session, false),
       d(0)
 {
 }

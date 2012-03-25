@@ -42,7 +42,11 @@ BookHandler::~BookHandler()
 QString BookHandler::filePath() const
 {
     QFileInfo remoteInfo(operations()->assetInfo().path.path());
-    return QDir::homePath() + QString::fromLatin1("/Books/") + operations()->assetInfo().name + QString::fromLatin1(".") + remoteInfo.completeSuffix();
+    //Te id is to make sure to have an unique filename
+    return QDir::homePath() +
+           QLatin1String("/Books/") +
+           operations()->assetInfo().name + QLatin1String(" - ") + operations()->assetInfo().id +
+           QLatin1String(".") + remoteInfo.completeSuffix();
 }
 
 bool BookHandler::isInstalled() const
@@ -75,7 +79,7 @@ QString BookHandler::launchText() const
 
 void BookHandler::launch()
 {
-    QDesktopServices::openUrl(QUrl(QString::fromLatin1("file://") + filePath(), QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl(QLatin1String("file://") + filePath(), QUrl::TolerantMode));
 }
 
 #include "bookhandler.moc"

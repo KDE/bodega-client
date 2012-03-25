@@ -34,7 +34,7 @@ namespace Bodega {
     {
         Q_OBJECT
         Q_PROPERTY(QString launchText READ launchText)
-        Q_PROPERTY(bool installed READ isInstalled CONSTANT)
+        Q_PROPERTY(bool installed READ isInstalled NOTIFY installedChanged)
         Q_PROPERTY(bool ready READ isReady NOTIFY ready)
 
     public:
@@ -56,12 +56,14 @@ namespace Bodega {
     Q_SIGNALS:
         void failed();
         void ready();
+        void installedChanged();
 
     private:
         class Private;
         Private * const d;
 
         Q_PRIVATE_SLOT(d, void assetDownloadComplete(Bodega::NetworkJob*));
+        Q_PRIVATE_SLOT(d, void checkInstalled());
     };
 
 }

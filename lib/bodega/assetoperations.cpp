@@ -24,6 +24,7 @@
 
 #include "assethandler.h"
 #include "installjob.h"
+#include "uninstalljob.h"
 
 namespace Bodega
 {
@@ -32,7 +33,8 @@ class AssetOperations::Private {
 public:
     Private(AssetOperations *operations)
         : q(operations),
-          handler(0)
+          handler(0),
+          wasInstalled(false)
     {}
 
     ~Private()
@@ -40,10 +42,12 @@ public:
 
     void assetDownloadComplete(NetworkJob *job);
     bool ready();
+    void checkInstalled();
 
     AssetOperations *q;
     AssetHandler *handler;
     AssetInfo assetInfo;
+    bool wasInstalled;
 };
 
 void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
@@ -75,11 +79,20 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
     } else {
         emit q->failed();
     }
+    checkInstalled();
 }
 
 bool AssetOperations::Private::ready()
 {
     return handler;
+}
+
+void AssetOperations::Private::checkInstalled()
+{
+    if (wasInstalled != handler->isInstalled()) {
+        wasInstalled = handler->isInstalled();
+        emit q->installedChanged();
+    }
 }
 
 AssetOperations::AssetOperations(const QString &assetId, Session *session)
@@ -126,7 +139,11 @@ bool AssetOperations::isInstalled() const
 Bodega::InstallJob *AssetOperations::install(QNetworkReply *reply, Session *session)
 {
     if (d->ready()) {
-        return d->handler->install(reply, session);
+        Bodega::InstallJob *job = d->handler->install(reply, session);
+        if (job) {
+            connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)), this, SLOT(checkInstalled()));
+        }
+        return job;
     }
 
     return new InstallJob(reply, session);
@@ -135,7 +152,11 @@ Bodega::InstallJob *AssetOperations::install(QNetworkReply *reply, Session *sess
 Bodega::UninstallJob *AssetOperations::uninstall()
 {
     if (d->ready()) {
-        return d->handler->uninstall();
+        Bodega::UninstallJob *job = d->handler->uninstall();
+        if (job) {
+            connect(job, SIGNAL(jobFinished(Bodega::UninstallJob *)), this, SLOT(checkInstalled()));
+        }
+        return job;
     }
 
     return 0;
