@@ -46,28 +46,45 @@ PlasmaComponents.Page {
             PlasmaComponents.Label {
                 text: i18n("Code:")
                 anchors {
-                    right: code.left
+                    right: pointsCode.left
                     rightMargin: mainColumn.spacing
                 }
             }
 
             PlasmaComponents.TextField {
-                id: code
+                id: pointsCode
                 onTextChanged: { redemptionButton.enabled = text.length > 0; }
             }
 
             PlasmaComponents.Button {
                 id: redemptionButton
-                text: i18n("Redeem code");
+                text: i18n("Redeem code")
                 enabled: false
+                property variant job
 
                 anchors {
-                    left: code.left
+                    left: pointsCode.left
                 }
 
                 onClicked: {
                     redeemBusy.running = true;
                     redeemBusy.visible = true;
+                    enabled = false;
+
+                    job = bodegaClient.session.redeemPointsCode(pointsCode.text);
+                    job.jobFinished.connect(redeemed)
+                }
+
+                function redeemed(job)
+                {
+                    if (job.failed) {
+                        print("Error! " + job.error.id + job.error.description);
+                    } else {
+                        pointsCode.text = '';
+                    }
+
+                    redeemBusy.running = false;
+                    redeemBusy.visible = false;
                     enabled = false;
                 }
             }
