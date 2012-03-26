@@ -103,6 +103,43 @@ BrowserColumn {
                     text: assetInfo.points > 0 ? i18nc("Price in points", "%1 points", assetInfo.points) : i18n("Free")
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
+                Item {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                    }
+                    height: downloadProgress.height
+                    PlasmaComponents.ProgressBar {
+                        id: downloadProgress
+                        opacity: 0
+                        minimumValue: 0
+                        maximumValue: 100
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        function updateProgress(progress)
+                        {
+                            value = progress*100
+                        }
+                        onValueChanged: {
+                            if (value >= 100) {
+                                indeterminate = true
+                            }
+                        }
+                        function operationFinished(job)
+                        {
+                            opacity = 0
+                            indeterminate = false
+                        }
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: 250
+                                easing.type: Easing.InOutQuad
+                            }
+                        }
+                    }
+                }
                 PlasmaComponents.Button {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: {
@@ -112,7 +149,23 @@ BrowserColumn {
                             assetInfo.points > 0 ? i18n("Buy") : i18n("Download")
                         }
                     }
-                    onClicked: assetOperations.installed ? bodegaClient.session.uninstall(assetOperations) : bodegaClient.session.install(assetOperations)
+                    onClicked: {
+                        if(assetOperations.installed) {
+                           downloadProgress.indeterminate = true
+                           downloadProgress.opacity = 1
+                           var job = bodegaClient.session.uninstall(assetOperations)
+                           job.jobFinished.connect(downloadProgress.operationFinished)
+                           if (job.finished) {
+                               downloadProgress.opacity = 0
+                           }
+                        } else {
+                           downloadProgress.indeterminate = false
+                           downloadProgress.opacity = 1
+                           var job = bodegaClient.session.install(assetOperations)
+                           job.progressChanged.connect(downloadProgress.updateProgress)
+                           job.jobFinished.connect(downloadProgress.operationFinished)
+                        }
+                    }
                 }
                 PlasmaComponents.Button {
                     visible: assetOperations.installed && assetOperations.launchText !== ""

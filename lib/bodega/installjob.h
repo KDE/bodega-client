@@ -35,9 +35,6 @@ namespace Bodega
         InstallJob(QNetworkReply *reply, Session *session);
         ~InstallJob();
 
-    Q_SIGNALS:
-        void installFinished(Bodega::InstallJob *job);
-
     protected:
         void downloadFinished(const QString &filename);
 

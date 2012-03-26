@@ -35,6 +35,7 @@ public:
     void netError(QNetworkReply::NetworkError code);
     void netFinished();
     void readFromNetwork();
+    void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
 
     NetworkJob *q;
     QNetworkReply *reply;
@@ -48,6 +49,7 @@ public:
     QString deviceId;
     int points;
     QTemporaryFile *file;
+    qreal progress;
 };
 
 NetworkJob::Private::Private(NetworkJob *nj, QNetworkReply *r, bool parseResults)
@@ -58,11 +60,14 @@ NetworkJob::Private::Private(NetworkJob *nj, QNetworkReply *r, bool parseResults
       authSuccess(false),
       points(0),
       expectingJson(parseResults),
-      file(0)
+      file(0),
+      progress(0)
 {
     QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
                      q, SLOT(netError(QNetworkReply::NetworkError)));
     QObject::connect(reply, SIGNAL(finished()), q, SLOT(netFinished()));
+    QObject::connect(reply, SIGNAL(downloadProgress(qint64, qint64)),
+                     q, SLOT(downloadProgress(qint64, qint64)));
     if (!expectingJson) {
         // not json ... so we need to save to a file
         file = new QTemporaryFile(q);
@@ -120,6 +125,13 @@ void NetworkJob::Private::readFromNetwork()
         emit q->error(q, this->error);
     }
 }
+
+void NetworkJob::Private::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
+{
+    progress = (qreal)1.0 / qreal(bytesTotal / bytesReceived);
+    emit q->progressChanged(progress);
+}
+
 
 NetworkJob::NetworkJob(QNetworkReply *reply, Session *parent, bool parseResults)
     : QObject(parent),
@@ -220,6 +232,11 @@ QString NetworkJob::deviceId() const
 int NetworkJob::points() const
 {
     return d->points;
+}
+
+qreal NetworkJob::progress() const
+{
+    return d->progress;
 }
 
 Session *NetworkJob::session() const

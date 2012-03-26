@@ -39,6 +39,8 @@ namespace Bodega {
         Q_PROPERTY(bool authSuccess READ authSuccess)
         Q_PROPERTY(QString deviceId READ deviceId)
         Q_PROPERTY(int points READ points)
+        Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
+
     public:
         NetworkJob(QNetworkReply *reply, Session *parent, bool parseResponse = true);
         ~NetworkJob();
@@ -57,6 +59,8 @@ namespace Bodega {
 
         int points() const;
 
+        qreal progress() const;
+
         bool failed() const;
         Error error() const;
 
@@ -67,6 +71,7 @@ namespace Bodega {
         //  QObject * instead of a NetworkJob * (same thing for error)
         void error(Bodega::NetworkJob *job, const Bodega::Error &error);
         void jobFinished(Bodega::NetworkJob *job);
+        void progressChanged(qreal progress);
 
     protected:
         virtual void netError(QNetworkReply::NetworkError code,
@@ -85,6 +90,7 @@ namespace Bodega {
         Q_PRIVATE_SLOT(d, void netError(QNetworkReply::NetworkError code));
         Q_PRIVATE_SLOT(d, void readFromNetwork());
         Q_PRIVATE_SLOT(d, void netFinished());
+        Q_PRIVATE_SLOT(d, void downloadProgress(qint64 bytesReceived, qint64 bytesTotal));
     };
 }
 
