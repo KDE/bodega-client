@@ -28,65 +28,66 @@ import "../components"
 PlasmaComponents.Page {
     id: root
 
-    Column {
-        id: mainColumn
+    Grid {
+        id: mainGrid
+        rows: 7
+        columns: 2
         spacing: 4
         anchors.centerIn: parent
 
         PlasmaExtraComponents.Heading {
             text: i18n("Redeem Points Code")
+            //HACK: fake mini width to not mess with the Grid layout
+            wrapMode: Text.NoWrap
+            width: 1
             level: 4
         }
+        Item {width: 1; height:1}
 
-        Grid {
-            rows: 2
-            columns: 2
-            spacing: 4
+        PlasmaComponents.Label {
+            text: i18n("Code:")
+            anchors {
+                right: pointsCode.left
+                rightMargin: mainGrid.spacing
+            }
+        }
 
-            PlasmaComponents.Label {
-                text: i18n("Code:")
-                anchors {
-                    right: pointsCode.left
-                    rightMargin: mainColumn.spacing
-                }
+        PlasmaComponents.TextField {
+            id: pointsCode
+            onTextChanged: { redemptionButton.enabled = text.length > 0; }
+        }
+
+        Item {width: 1; height:1}
+        PlasmaComponents.Button {
+            id: redemptionButton
+            text: i18n("Redeem code")
+            enabled: false
+            property variant job
+
+            anchors {
+                left: pointsCode.left
             }
 
-            PlasmaComponents.TextField {
-                id: pointsCode
-                onTextChanged: { redemptionButton.enabled = text.length > 0; }
+            onClicked: {
+                redeemBusy.running = true;
+                redeemBusy.visible = true;
+                enabled = false;
+
+                job = bodegaClient.session.redeemPointsCode(pointsCode.text);
+                job.jobFinished.connect(redeemed)
             }
 
-            PlasmaComponents.Button {
-                id: redemptionButton
-                text: i18n("Redeem code")
-                enabled: false
-                property variant job
-
-                anchors {
-                    left: pointsCode.left
+            function redeemed(job)
+            {
+                if (job.failed) {
+                    print("Error! " + job.error.id + job.error.description);
+                } else {
+                    pointsCode.text = '';
                 }
 
-                onClicked: {
-                    redeemBusy.running = true;
-                    redeemBusy.visible = true;
-                    enabled = false;
-
-                    job = bodegaClient.session.redeemPointsCode(pointsCode.text);
-                    job.jobFinished.connect(redeemed)
-                }
-
-                function redeemed(job)
-                {
-                    if (job.failed) {
-                        print("Error! " + job.error.id + job.error.description);
-                    } else {
-                        pointsCode.text = '';
-                    }
-
-                    redeemBusy.running = false;
-                    redeemBusy.visible = false;
-                    enabled = false;
-                }
+                redeemBusy.running = false;
+                redeemBusy.visible = false;
+                enabled = false;
             }
 
             PlasmaComponents.BusyIndicator {
@@ -95,20 +96,28 @@ PlasmaComponents.Page {
                 height: redemptionButton.height
                 width: height
                 anchors {
-                    left: redemptionButton.right
+                    left: parent.right
                 }
             }
         }
 
+
+        //HACK: just for spacing
+        Item {width: 1; height: theme.defaultFont.mSize.height}Item {width: 1; height:1}
         PlasmaExtraComponents.Heading {
             text: i18n("Purchase Points")
             level: 4
+            //HACK: fake mini width to not mess with the Grid layout
+            wrapMode: Text.NoWrap
+            width: 1
         }
+        Item {width: 1; height:1}
 
+        Item {width: 1; height:1}
         PlasmaComponents.ButtonColumn {
             id: buttonColumn
             exclusive: true
-            spacing: mainColumn.spacing
+            spacing: mainGrid.spacing
 
             PlasmaComponents.RadioButton {
                 text: i18n("500 points")
@@ -133,12 +142,13 @@ PlasmaComponents.Page {
                     id: otherField
                     anchors {
                         left: parent.right
-                        leftMargin: mainColumn.spacing * 2
+                        leftMargin: mainGrid.spacing * 2
                     }
                 }
             }
         }
 
+        Item {width: 1; height:1}
         PlasmaComponents.Button {
             text: i18n("Purchase")
         }
