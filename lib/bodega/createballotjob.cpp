@@ -47,7 +47,7 @@ void CreateBallotJob::Private::parseBallots(const QVariantMap &result)
 
     QVariantMap ballot = ballotsLst[0].toMap();
     BallotInfo info;
-    info.id = ballot[QLatin1String("id")].toInt();
+    info.id = ballot[QLatin1String("id")].toString();
     info.name = ballot[QLatin1String("name")].toString();
     info.flags = BallotInfo::None;
     if (ballot[QLatin1String("public")].toBool()) {

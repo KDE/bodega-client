@@ -5,6 +5,7 @@ set (bodega_HEADERS
      changelanguagejob.h
      channelsjob.h
      createballotjob.h
+     deleteballotjob.h
      error.h
      globals.h
      imagelocator.h
@@ -29,6 +30,7 @@ set (bodega_SRCS
      changelanguagejob.cpp
      channelsjob.cpp
      createballotjob.cpp
+     deleteballotjob.cpp
      error.cpp
      imagelocator.cpp
      installjob.cpp

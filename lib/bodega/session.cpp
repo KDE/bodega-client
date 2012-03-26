@@ -26,6 +26,7 @@
 #include "channelsjob.h"
 #include "changelanguagejob.h"
 #include "createballotjob.h"
+#include "deleteballotjob.h"
 #include "installjob.h"
 #include "listballotsjob.h"
 #include "participantinfojob.h"
@@ -440,6 +441,22 @@ Bodega::CreateBallotJob * Session::createBallot(const QString &name,
     //qDebug()<<"url is " <<url;
 
     CreateBallotJob *job = new CreateBallotJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::DeleteBallotJob * Session::deleteBallot(const QString &ballotId)
+{
+    QUrl url = d->baseUrl;
+    QString path = QString::fromLatin1("/deleteBallot");
+
+    url.setEncodedPath(d->jsonPath(path));
+
+    url.addQueryItem(QLatin1String("ballotId"), ballotId);
+
+    //qDebug()<<"url is " <<url;
+
+    DeleteBallotJob *job = new DeleteBallotJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }

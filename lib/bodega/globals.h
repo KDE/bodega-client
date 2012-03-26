@@ -107,7 +107,7 @@ namespace Bodega {
         };
         Q_DECLARE_FLAGS(BallotFlags, BallotFlag);
     public:
-        int id;
+        QString id;
         QString name;
         BallotFlags flags;
     };
