@@ -342,6 +342,17 @@ Bodega::UninstallJob *Session::uninstall(AssetOperations *operations)
     return operations->uninstall(this);
 }
 
+Bodega::NetworkJob *Session::redeemPointsCode(const QString &code)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QLatin1String("points/redeemCode/") + code;
+    url.setEncodedPath(d->jsonPath(path));
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
 Bodega::RegisterJob * Session::registerAccount(const QString &email,
                                                const QString &password,
                                                const QString &firstName,
