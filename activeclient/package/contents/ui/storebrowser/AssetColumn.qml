@@ -140,7 +140,7 @@ BrowserColumn {
                     }
                     PlasmaComponents.Label {
                         id: authorLabel
-                        visible: assetTags.author[0]
+                        visible: assetTags.author != undefined && assetTags.author[0] != ""
                         text: assetTags.author[0]
                     }
                     PlasmaComponents.Label {
@@ -164,7 +164,7 @@ BrowserColumn {
                     }
                     PlasmaComponents.Label {
                         id: dateLabel
-                        visible: assetTags.created[0]
+                        visible: assetTags.created != undefined && assetTags.created[0] != ""
                         property variant splitDate: assetTags.created[0].split("-")
                         text: Qt.formatDate(new Date(splitDate[0], splitDate[1], splitDate[2]), Qt.DefaultLocaleShortDate)
                     }
