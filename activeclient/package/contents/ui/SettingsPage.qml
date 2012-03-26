@@ -33,9 +33,7 @@ PlasmaComponents.Page {
         contentHeight: height
         contentWidth: contentItem.width
         boundsBehavior: Flickable.StopAtBounds
-        Image {
-            source: "image://appbackgrounds/standard"
-            fillMode: Image.Tile
+        Item {
             id: contentItem
             height: parent.height
             width: Math.max(root.width, sideBar.width * 2)
@@ -47,7 +45,9 @@ PlasmaComponents.Page {
                 easing.type: Easing.InOutQuad
             }
 
-            Item {
+            Image {
+                source: "image://appbackgrounds/standard"
+                fillMode: Image.Tile
                 id: sideBar
                 anchors {
                     top: parent.top
