@@ -20,6 +20,7 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.extras 0.1 as PlasmaExtraComponents
 import "./components"
 
 PlasmaComponents.Page {
@@ -33,7 +34,9 @@ PlasmaComponents.Page {
         contentHeight: height
         contentWidth: contentItem.width
         boundsBehavior: Flickable.StopAtBounds
-        Item {
+        Image {
+            source: "image://appbackgrounds/standard"
+            fillMode: Image.Tile
             id: contentItem
             height: parent.height
             width: Math.max(root.width, sideBar.width * 2)
@@ -44,7 +47,8 @@ PlasmaComponents.Page {
                 duration: 250
                 easing.type: Easing.InOutQuad
             }
-            SimplePage {
+            
+            Item {
                 id: sideBar
                 anchors {
                     top: parent.top
@@ -52,26 +56,42 @@ PlasmaComponents.Page {
                     left: parent.left
                 }
                 width: root.width/Math.round(root.width/(theme.defaultFont.mSize.width*30))
-                title: "Make Play Live"
                 //FIXME: why necessary?
                 visible: true
+
+                PlasmaExtraComponents.Heading {
+                    id: categoryTitleLabel
+                    text: i18n("Account Information")
+                    level: 3
+                    anchors {
+                        top: parent.top
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                }
 
                 ListView {
                     id: categoriesView
                     clip: true
                     currentIndex: 0
+
                     anchors {
-                        top: parent.top
+                        top: categoryTitleLabel.bottom
                         bottom: toolBar.top
                         left: parent.left
                         right: parent.right
                     }
+
+                    Component.onCompleted: {
+                        print("we want to hit: " + parent.top + " + " + categoryTitleLabel.height + "..." + top);
+                        }
+
                     model: ListModel {
                         ListElement { DisplayRole: "Personal data"; component: "PersonalData" }
                         ListElement { DisplayRole: "Add points"; component: "AddPoints" }
                         ListElement { DisplayRole: "Payment methods"; component: "PaymentMethods" }
                         ListElement { DisplayRole: "Account history"; component: "AccountHistory" }
                     }
+
                     delegate: StoreListItem {
                         checked: categoriesView.currentIndex == index
                         property string title: label
@@ -89,6 +109,7 @@ PlasmaComponents.Page {
                         }
                     }
                 }
+
                 PlasmaComponents.ScrollBar {
                     flickableItem: categoriesView
                     orientation: Qt.Vertical
@@ -96,7 +117,11 @@ PlasmaComponents.Page {
 
                 PlasmaComponents.ToolBar {
                     id: toolBar
-                    anchors.bottom: parent.bottom
+                    anchors {
+                        bottom: parent.bottom
+                        left: parent.left
+                        right: parent.right
+                    }
 
                     tools: PlasmaComponents.ToolBarLayout {
                         PlasmaComponents.ToolButton {
@@ -119,23 +144,20 @@ PlasmaComponents.Page {
                         }
                     }
                 }
+
+                Image {
+                    z: 800
+                    source: "image://appbackgrounds/shadow-right"
+                    fillMode: Image.TileVertically
+                    anchors {
+                        left: parent.right
+                        top: parent.top
+                        bottom: parent.bottom
+                    }
+                }
             }
 
-            Image {
-                source: "image://appbackgrounds/standard"
-                fillMode: Image.Tile
-
-                PlasmaComponents.Label {
-                    id: titleLabel
-                    anchors {
-                        right: parent.right
-                        top: parent.top
-                        margins: 10
-                    }
-                    text: categoriesView.currentItem.title
-                    font.pointSize: theme.defaultFont.pointSize * 1.5
-                }
-
+            Item {
                 anchors {
                     left: sideBar.right
                     right: parent.right
@@ -153,16 +175,6 @@ PlasmaComponents.Page {
                     }
                     clip: true
                     initialPage: Qt.createComponent("settings/PersonalData.qml")
-                }
-                Image {
-                    z: 800
-                    source: "image://appbackgrounds/shadow-left"
-                    fillMode: Image.TileVertically
-                    anchors {
-                        right: parent.left
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
                 }
             }
         }
