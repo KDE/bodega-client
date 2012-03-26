@@ -49,6 +49,7 @@ PlasmaComponents.Page {
                 source: "image://appbackgrounds/standard"
                 fillMode: Image.Tile
                 id: sideBar
+                clip: true
                 anchors {
                     top: parent.top
                     bottom: parent.bottom
@@ -102,7 +103,6 @@ PlasmaComponents.Page {
 
                 PlasmaComponents.ToolBar {
                     id: toolBar
-                    clip: true
                     anchors {
                         bottom: parent.bottom
                         left: parent.left
@@ -130,16 +130,15 @@ PlasmaComponents.Page {
                         }
                     }
                 }
-
-                Image {
-                    z: 800
-                    source: "image://appbackgrounds/shadow-right"
-                    fillMode: Image.TileVertically
-                    anchors {
-                        left: parent.right
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
+            }
+            Image {
+                z: 800
+                source: "image://appbackgrounds/shadow-right"
+                fillMode: Image.TileVertically
+                anchors {
+                    left: sideBar.right
+                    top: sideBar.top
+                    bottom: sideBar.bottom
                 }
             }
 
