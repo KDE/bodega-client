@@ -17,41 +17,23 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#ifndef WALLPAPERUNINSTALLJOB_H
+#define WALLPAPERUNINSTALLJOB_H
 
-#ifndef WALLPAPERHANDLER_H
-#define WALLPAPERHANDLER_H
-
-#include <bodega/assethandler.h>
-
-#include <qplugin.h>
-
-#include "wallpaperinstalljob.h"
-#include "wallpaperuninstalljob.h"
+#include <bodega/uninstalljob.h>
 
 namespace Bodega {
 
-    class WallpaperHandler : public AssetHandler
+    class WallpaperHandler;
+    class Session;
+
+    class WallpaperUninstallJob : public UninstallJob
     {
         Q_OBJECT
-        Q_INTERFACES(Bodega::AssetHandler)
-
     public:
-        WallpaperHandler(QObject *parent = 0);
-        ~WallpaperHandler();
-
-        QString launchText() const;
-        bool isInstalled() const;
-
-    public Q_SLOTS:
-        Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
-        Bodega::UninstallJob *uninstall(Session *session);
-        void launch();
-
-    private:
-        QWeakPointer<WallpaperInstallJob> m_installJob;
-        QWeakPointer<WallpaperUninstallJob> m_uninstallJob;
+        WallpaperUninstallJob(Session *parent, WallpaperHandler *handler);
+        ~WallpaperUninstallJob();
     };
-
 }
 
 #endif

@@ -32,22 +32,13 @@
 
 using namespace Bodega;
 
-class WallpaperHandler::Private {
-public:
-    QWeakPointer<WallpaperInstallJob> installJob;
-};
-
-
-
 WallpaperHandler::WallpaperHandler(QObject *parent)
-    : AssetHandler(parent),
-      d(new WallpaperHandler::Private)
+    : AssetHandler(parent)
 {
 }
 
 WallpaperHandler::~WallpaperHandler()
 {
-    delete d;
 }
 
 bool WallpaperHandler::isInstalled() const
@@ -59,20 +50,21 @@ bool WallpaperHandler::isInstalled() const
 
 Bodega::InstallJob *WallpaperHandler::install(QNetworkReply *reply, Session *session)
 {
-    if (!d->installJob) {
-        d->installJob = new WallpaperInstallJob(reply, session);
+    if (!m_installJob) {
+        m_installJob = new WallpaperInstallJob(reply, session);
     }
 
-    return d->installJob.data();
+    return m_installJob.data();
 }
 
 //TODO: make it a job
-Bodega::UninstallJob *WallpaperHandler::uninstall()
+Bodega::UninstallJob *WallpaperHandler::uninstall(Session *session)
 {
-    QString packageName = operations()->assetInfo().path.path().replace(QRegExp(QLatin1String(".*\\/([^\\/]*)\\.wallpaper")), QLatin1String("\\1"));
-    Plasma::PackageStructure installer(0, QLatin1String("Plasma/Wallpaper"));
-    installer.uninstallPackage(packageName, KGlobal::dirs()->findDirs("wallpaper", QLatin1String("")).first());
-    return 0;
+    if (!m_uninstallJob) {
+        m_uninstallJob = new WallpaperUninstallJob(session, this);
+    }
+
+    return m_uninstallJob.data();
 }
 
 QString WallpaperHandler::launchText() const
@@ -86,3 +78,4 @@ void WallpaperHandler::launch()
 }
 
 #include "wallpaperhandler.moc"
+Q_EXPORT_PLUGIN2(wallpaperhandler, Bodega::WallpaperHandler);

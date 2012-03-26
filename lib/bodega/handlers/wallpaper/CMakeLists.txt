@@ -7,6 +7,7 @@ link_directories(${LINK_DIRECTORIES} ${KDE4_INCLUDES} ${QT_INCLUDES} )
 set (wallpaperhandlerplugin_SRCS
      wallpaperhandler.cpp
      wallpaperinstalljob.cpp
+     wallpaperuninstalljob.cpp
      )
 
 include_directories(${CMAKE_SOURCE_DIR}/libs/bodega/ ${CMAKE_SOURCE_DIR}/libs/bodega/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/bodega ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES} ${KDE4_INCLUDES})
