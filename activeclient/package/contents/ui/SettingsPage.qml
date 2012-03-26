@@ -20,7 +20,6 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.plasma.extras 0.1 as PlasmaExtraComponents
 import "./components"
 
 PlasmaComponents.Page {
@@ -59,23 +58,13 @@ PlasmaComponents.Page {
                 //FIXME: why necessary?
                 visible: true
 
-                PlasmaExtraComponents.Heading {
-                    id: categoryTitleLabel
-                    text: i18n("Account Information")
-                    level: 3
-                    anchors {
-                        top: parent.top
-                        horizontalCenter: parent.horizontalCenter
-                    }
-                }
-
                 ListView {
                     id: categoriesView
                     clip: true
                     currentIndex: 0
 
                     anchors {
-                        top: categoryTitleLabel.bottom
+                        top: parent.top
                         bottom: toolBar.top
                         left: parent.left
                         right: parent.right
