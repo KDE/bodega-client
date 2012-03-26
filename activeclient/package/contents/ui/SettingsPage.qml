@@ -47,7 +47,7 @@ PlasmaComponents.Page {
                 duration: 250
                 easing.type: Easing.InOutQuad
             }
-            
+
             Item {
                 id: sideBar
                 anchors {
@@ -80,10 +80,6 @@ PlasmaComponents.Page {
                         left: parent.left
                         right: parent.right
                     }
-
-                    Component.onCompleted: {
-                        print("we want to hit: " + parent.top + " + " + categoryTitleLabel.height + "..." + top);
-                        }
 
                     model: ListModel {
                         ListElement { DisplayRole: "Personal data"; component: "PersonalData" }
