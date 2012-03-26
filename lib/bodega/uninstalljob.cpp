@@ -29,8 +29,6 @@ using namespace Bodega;
 class UninstallJob::Private {
 public:
     Private(UninstallJob *uj);
-    void gotError(Bodega::UninstallJob *, const Bodega::Error &);
-    void jobHasFinished(Bodega::UninstallJob *);
 
     UninstallJob *q;
     bool finished;
@@ -49,10 +47,6 @@ UninstallJob::UninstallJob(Session *parent)
     : QObject(parent),
       d(new UninstallJob::Private(this))
 {
-    connect(this, SIGNAL(error(Bodega::UninstallJob *, const Bodega::Error &)),
-            this, SLOT(gotError(Bodega::UninstallJob *, const Bodega::Error &)));
-    connect(this, SIGNAL(jobFinished(Bodega::UninstallJob *)),
-            this, SLOT(jobHasFinished(Bodega::UninstallJob *)));
 }
 
 UninstallJob::~UninstallJob()
@@ -81,17 +75,20 @@ Bodega::Error UninstallJob::error() const
     return d->error;
 }
 
-void UninstallJob::Private::gotError(Bodega::UninstallJob *job, const Bodega::Error &e)
+void UninstallJob::setError(const Bodega::Error &e)
 {
-    error = e;
-    failed = true;
-    emit q->failedChanged();
+    d->error = e;
+    d->failed = true;
+    emit error(this, e);
+    emit failedChanged();
 }
 
-void UninstallJob::Private::jobHasFinished(Bodega::UninstallJob *job)
+void UninstallJob::setFinished()
 {
-    finished = true;
-    emit q->finishedChanged();
+    d->finished = true;
+    emit finishedChanged();
+    emit jobFinished(this);
+    deleteLater();
 }
 
 #include "uninstalljob.moc"

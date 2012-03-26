@@ -46,6 +46,10 @@ namespace Bodega {
         bool failed() const;
         Error error() const;
 
+    protected:
+        void setError(const Bodega::Error &e);
+        void setFinished();
+
     Q_SIGNALS:
         void error(Bodega::UninstallJob *job, const Bodega::Error &error);
         void jobFinished(Bodega::UninstallJob *job);
@@ -56,8 +60,6 @@ namespace Bodega {
     private:
         class Private;
         Private * const d;
-        Q_PRIVATE_SLOT(d, void gotError(Bodega::UninstallJob *, const Bodega::Error &))
-        Q_PRIVATE_SLOT(d, void gotError(Bodega::UninstallJob *, const Bodega::Error &))
     };
 }
 

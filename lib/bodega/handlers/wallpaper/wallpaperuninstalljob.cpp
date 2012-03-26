@@ -38,12 +38,12 @@ WallpaperUninstallJob::WallpaperUninstallJob(Session *parent, WallpaperHandler *
     const bool success = installer.uninstallPackage(packageName, KGlobal::dirs()->findDirs("wallpaper", QLatin1String("")).first());
 
     if (!success) {
-        emit(this, Error(Error::Parsing,
-                        QLatin1String("uj/01"),
-                        tr("Uninstall failed"),
-                        tr("Impossible to uninstall the wallpaper package.")));
+        setError(Error(Error::Parsing,
+                       QLatin1String("uj/01"),
+                       tr("Uninstall failed"),
+                       tr("Impossible to uninstall the wallpaper package.")));
     }
-    emit jobFinished(this);
+    setFinished();
 }
 
 WallpaperUninstallJob::~WallpaperUninstallJob()

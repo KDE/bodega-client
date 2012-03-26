@@ -31,12 +31,12 @@ BookUninstallJob::BookUninstallJob(Session *parent, BookHandler *handler)
 {
     QFile f(handler->filePath());
     if (!f.remove()) {
-        emit(this, Error(Error::Parsing,
-                        QLatin1String("uj/01"),
-                        tr("Uninstall failed"),
-                        tr("Impossible to delete the file.")));
+        setError(Error(Error::Parsing,
+                       QLatin1String("uj/01"),
+                       tr("Uninstall failed"),
+                       tr("Impossible to delete the file.")));
     }
-    emit jobFinished(this);
+    setFinished();
 }
 
 BookUninstallJob::~BookUninstallJob()

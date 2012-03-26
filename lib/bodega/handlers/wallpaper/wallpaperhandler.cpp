@@ -59,7 +59,7 @@ Bodega::InstallJob *WallpaperHandler::install(QNetworkReply *reply, Session *ses
 
 //TODO: make it a job
 Bodega::UninstallJob *WallpaperHandler::uninstall(Session *session)
-{
+{qDebug()<<m_uninstallJob;
     if (!m_uninstallJob) {
         m_uninstallJob = new WallpaperUninstallJob(session, this);
     }
