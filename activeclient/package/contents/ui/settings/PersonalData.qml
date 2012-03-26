@@ -46,7 +46,7 @@ PlasmaComponents.Page {
         PlasmaComponents.TextField {
             id: nameField
         }
-        
+
         PlasmaComponents.Label {
             text: i18n("Last name:")
             anchors {
@@ -57,7 +57,7 @@ PlasmaComponents.Page {
         PlasmaComponents.TextField {
             id: lastNameField
         }
-        
+
         PlasmaComponents.Label {
             text: i18n("Email:")
             anchors {
@@ -65,10 +65,11 @@ PlasmaComponents.Page {
                 rightMargin: root.spacing
             }
         }
+
         PlasmaComponents.TextField {
             id: emailField
         }
-        
+
         PlasmaComponents.Label {
             text: i18n("Password:")
             anchors {
@@ -80,7 +81,7 @@ PlasmaComponents.Page {
             id: passwordField
             echoMode: TextInput.Password
         }
-        
+
         PlasmaComponents.Label {
             text: i18n("Password (repeat):")
             anchors {
@@ -88,6 +89,7 @@ PlasmaComponents.Page {
                 rightMargin: root.spacing
             }
         }
+
         PlasmaComponents.TextField {
             id: password2Field
             echoMode: TextInput.Password
@@ -117,7 +119,7 @@ PlasmaComponents.Page {
                 }
             }
         }
-        
+
         //just a placeholder
         Item {
             width: 10
