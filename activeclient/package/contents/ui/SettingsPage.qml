@@ -102,6 +102,7 @@ PlasmaComponents.Page {
 
                 PlasmaComponents.ToolBar {
                     id: toolBar
+                    clip: true
                     anchors {
                         bottom: parent.bottom
                         left: parent.left
