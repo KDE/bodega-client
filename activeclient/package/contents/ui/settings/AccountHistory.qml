@@ -31,8 +31,8 @@ PlasmaComponents.Page {
         id: listView
         anchors.centerIn: parent
         clip: true
-        height: parent.height/4*3
-        width: root.width/Math.round(root.width/(theme.defaultFont.mSize.width*30))
+        height: parent.height
+        width: parent.width
         model: ListModel {
             ListElement { label: "Bought foo" }
             ListElement { label: "Bought bar" }
