@@ -31,7 +31,7 @@ BookUninstallJob::BookUninstallJob(Session *parent, BookHandler *handler)
 {
     QFile f(handler->filePath());
     if (!f.remove()) {
-        setError(Error(Error::Parsing,
+        setError(Error(Error::Session,
                        QLatin1String("uj/01"),
                        tr("Uninstall failed"),
                        tr("Impossible to delete the file.")));

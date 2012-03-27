@@ -260,6 +260,12 @@ void NetworkJob::setFinished()
     emit jobFinished(this);
 }
 
+void NetworkJob::setError(const Bodega::Error &e)
+{
+    d->error = e;
+    emit error(this, d->error);
+}
+
 void NetworkJob::downloadFinished(const QString &filename)
 {
     Q_UNUSED(filename)

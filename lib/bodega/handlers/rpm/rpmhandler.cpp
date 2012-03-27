@@ -42,6 +42,7 @@ RpmHandler::~RpmHandler()
 
 QString RpmHandler::packageName() const
 {
+    //try to extract a package name from a file name
     return operations()->assetInfo().path.path().replace(QRegExp(QLatin1String("(.*\\/)*(.*)-\\d.*")), QLatin1String("\\2"));
 }
 

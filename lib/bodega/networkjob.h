@@ -81,6 +81,8 @@ namespace Bodega {
 
         void parseCommon(const QVariantMap &jsonMap);
         void parseErrors(const QVariantMap &jsonMap);
+        //For errors not related to network
+        void setError(const Bodega::Error &error);
         void setFinished();
 
     private:

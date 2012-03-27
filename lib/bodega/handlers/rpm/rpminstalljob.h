@@ -23,6 +23,8 @@
 #include <bodega/installjob.h>
 #include <bodega/globals.h>
 
+#include <QPackageKit>
+
 namespace Bodega {
     class RpmHandler;
 
@@ -36,6 +38,10 @@ namespace Bodega {
 
     protected:
         void downloadFinished(const QString &localFile);
+
+    private Q_SLOTS:
+        void errorOccurred(PackageKit::Enum::Error error, QString &message);
+        void installFinished(PackageKit::Enum::Exit status, uint runtime);
 
     private:
         RpmHandler *m_handler;

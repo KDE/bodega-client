@@ -29,17 +29,39 @@ using namespace Bodega;
 RpmUninstallJob::RpmUninstallJob(Session *parent, RpmHandler *handler)
     : UninstallJob(parent)
 {
-    if (1) {
-        setError(Error(Error::Parsing,
-                       QLatin1String("uj/01"),
+    PackageKit::Client *client = PackageKit::Client::instance();
+    PackageKit::Transaction *transaction = client->removePackages(client->resolve(handler->packageName())->lastPackage(), true, true);
+    if (transaction) {
+        connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, QString)),
+                this, SLOT(errorOccurred(PackageKit::Enum::Error, QString)));
+        connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
+                this, SLOT(uninstallFinished(PackageKit::Enum::Exit, uint)));
+    } else {
+        setError(Error(Error::Session,
+                       QLatin1String("rpm/01"),
                        tr("Uninstall failed"),
-                       tr("Impossible to delete the file.")));
+                       tr("Package not installed.")));
     }
     setFinished();
 }
 
 RpmUninstallJob::~RpmUninstallJob()
 {
+}
+
+void RpmUninstallJob::errorOccurred(PackageKit::Enum::Error error, QString &message)
+{
+    setError(Error(Error::Session,
+                   QString(QLatin1String("rpm/%1")).arg(error),
+                   tr("Uninstall failed"),
+                   message));
+}
+
+void RpmUninstallJob::uninstallFinished(PackageKit::Enum::Exit status, uint runtime)
+{
+    if (status == PackageKit::Enum::ExitSuccess) {
+        setFinished();
+    }
 }
 
 #include "rpmuninstalljob.moc"

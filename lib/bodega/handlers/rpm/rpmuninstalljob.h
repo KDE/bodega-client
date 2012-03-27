@@ -22,6 +22,8 @@
 
 #include <bodega/uninstalljob.h>
 
+#include <QPackageKit>
+
 namespace Bodega {
 
     class RpmHandler;
@@ -33,6 +35,10 @@ namespace Bodega {
     public:
         RpmUninstallJob(Session *parent, RpmHandler *handler);
         ~RpmUninstallJob();
+
+    private Q_SLOTS:
+        void errorOccurred(PackageKit::Enum::Error error, QString &message);
+        void uninstallFinished(PackageKit::Enum::Exit status, uint runtime);
     };
 }
 
