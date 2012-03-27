@@ -23,6 +23,7 @@
 
 #include "assetjob.h"
 #include "assetoperations.h"
+#include "ballotaddassetjob.h"
 #include "channelsjob.h"
 #include "changelanguagejob.h"
 #include "createballotjob.h"
@@ -457,6 +458,24 @@ Bodega::DeleteBallotJob * Session::deleteBallot(const QString &ballotId)
     //qDebug()<<"url is " <<url;
 
     DeleteBallotJob *job = new DeleteBallotJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::BallotAddAssetJob * Session::ballotAddAsset(const QString &ballotId,
+                                                    const QString &assetId)
+{
+    QUrl url = d->baseUrl;
+    QString path = QString::fromLatin1("/ballotAddAsset");
+
+    url.setEncodedPath(d->jsonPath(path));
+
+    url.addQueryItem(QLatin1String("ballotId"), ballotId);
+    url.addQueryItem(QLatin1String("assetId"), assetId);
+
+    //qDebug()<<"url is " <<url;
+
+    BallotAddAssetJob *job = new BallotAddAssetJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }
