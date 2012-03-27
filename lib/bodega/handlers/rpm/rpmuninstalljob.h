@@ -22,7 +22,7 @@
 
 #include <bodega/uninstalljob.h>
 
-#include <QPackageKit>
+#include <Transaction>
 
 namespace Bodega {
 
@@ -37,8 +37,8 @@ namespace Bodega {
         ~RpmUninstallJob();
 
     private Q_SLOTS:
-        void errorOccurred(PackageKit::Enum::Error error, QString &message);
-        void uninstallFinished(PackageKit::Enum::Exit status, uint runtime);
+        void errorOccurred(PackageKit::Transaction::Error error, QString &message);
+        void uninstallFinished(PackageKit::Transaction::Exit status, uint runtime);
     };
 }
 

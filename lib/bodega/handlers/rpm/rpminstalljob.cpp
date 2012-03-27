@@ -44,14 +44,15 @@ RpmInstallJob::~RpmInstallJob()
 
 void RpmInstallJob::downloadFinished(const QString &localFile)
 {
-    PackageKit::Transaction *transaction = PackageKit::Client::instance()->installFiles(localFile, false);
+    PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
+    transaction->installFile(localFile, false);
     connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, QString)),
             this, SLOT(errorOccurred(PackageKit::Enum::Error, QString)));
     connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
             this, SLOT(installFinished(PackageKit::Enum::Exit, uint)));
 }
 
-void RpmInstallJob::errorOccurred(PackageKit::Enum::Error error, QString &message)
+void RpmInstallJob::errorOccurred(PackageKit::Transaction::Error error, QString &message)
 {
     setError(Error(Error::Session,
                    QString(QLatin1String("rpm/%1")).arg(error),
@@ -59,9 +60,9 @@ void RpmInstallJob::errorOccurred(PackageKit::Enum::Error error, QString &messag
                    message));
 }
 
-void RpmInstallJob::installFinished(PackageKit::Enum::Exit status, uint runtime)
+void RpmInstallJob::installFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
-    if (status == PackageKit::Enum::ExitSuccess) {
+    if (status == PackageKit::Transaction::ExitSuccess) {
         setFinished();
     }
 }

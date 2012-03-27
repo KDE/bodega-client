@@ -50,6 +50,9 @@ namespace Bodega
             static AssetHandler *create(const QString &type,
                                         AssetOperations *parent);
 
+        Q_SIGNALS:
+            void installedChanged();
+
         private:
             class Private;
             Private * const d;

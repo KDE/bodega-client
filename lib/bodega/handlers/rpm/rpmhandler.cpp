@@ -26,6 +26,8 @@
 #include <QFileInfo>
 #include <QtGui/QDesktopServices>
 
+#include <Daemon>
+
 #include "rpminstalljob.h"
 
 using namespace Bodega;
@@ -33,7 +35,6 @@ using namespace Bodega;
 RpmHandler::RpmHandler(QObject *parent)
     : AssetHandler(parent)
 {
-    m_client = PackageKit::Client::instance();
 }
 
 RpmHandler::~RpmHandler()
@@ -46,9 +47,22 @@ QString RpmHandler::packageName() const
     return operations()->assetInfo().path.path().replace(QRegExp(QLatin1String("(.*\\/)*(.*)-\\d.*")), QLatin1String("\\2"));
 }
 
+const PackageKit::Package &RpmHandler::package() const
+{
+    return m_package;
+}
+
 bool RpmHandler::isInstalled() const
 {
-    return m_client->resolve(packageName())->lastPackage();
+    if (!m_package.id().isEmpty()) {
+        return true;
+    } else {
+        PackageKit::Transaction *t = new PackageKit::Transaction;
+        t->resolve(packageName());
+        connect(t, SIGNAL(package(const PackageKit::Package &)),
+                this, SLOT(gotPackage(const PackageKit::Package &)));
+        return false;
+    }
 }
 
 Bodega::InstallJob *RpmHandler::install(QNetworkReply *reply, Session *session)
@@ -76,6 +90,19 @@ QString RpmHandler::launchText() const
 
 void RpmHandler::launch()
 {
+    //not supported yet
+}
+
+void RpmHandler::gotPackage(const PackageKit::Package &package)
+{
+    m_package = package;
+    emit installedChanged();
+}
+
+void RpmHandler::installJobFinished()
+{
+    m_package = PackageKit::Package();
+    emit installedChanged();
 }
 
 #include "rpmhandler.moc"

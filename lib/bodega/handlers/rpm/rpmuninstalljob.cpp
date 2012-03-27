@@ -29,9 +29,10 @@ using namespace Bodega;
 RpmUninstallJob::RpmUninstallJob(Session *parent, RpmHandler *handler)
     : UninstallJob(parent)
 {
-    PackageKit::Client *client = PackageKit::Client::instance();
-    PackageKit::Transaction *transaction = client->removePackages(client->resolve(handler->packageName())->lastPackage(), true, true);
-    if (transaction) {
+    PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
+    
+    if (transaction && !handler->package().id().isEmpty()) {
+        transaction->removePackage(handler->package(), true, true);
         connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, QString)),
                 this, SLOT(errorOccurred(PackageKit::Enum::Error, QString)));
         connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
@@ -49,7 +50,7 @@ RpmUninstallJob::~RpmUninstallJob()
 {
 }
 
-void RpmUninstallJob::errorOccurred(PackageKit::Enum::Error error, QString &message)
+void RpmUninstallJob::errorOccurred(PackageKit::Transaction::Error error, QString &message)
 {
     setError(Error(Error::Session,
                    QString(QLatin1String("rpm/%1")).arg(error),
@@ -57,9 +58,9 @@ void RpmUninstallJob::errorOccurred(PackageKit::Enum::Error error, QString &mess
                    message));
 }
 
-void RpmUninstallJob::uninstallFinished(PackageKit::Enum::Exit status, uint runtime)
+void RpmUninstallJob::uninstallFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
-    if (status == PackageKit::Enum::ExitSuccess) {
+    if (status == PackageKit::Transaction::ExitSuccess) {
         setFinished();
     }
 }
