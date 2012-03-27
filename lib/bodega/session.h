@@ -33,6 +33,7 @@ namespace Bodega {
     class AssetJob;
     class AssetOperations;
     class BallotAddAssetJob;
+    class BallotListAssetsJob;
     class BallotRemoveAssetJob;
     class ChannelsJob;
     class ChangeLanguageJob;
@@ -114,10 +115,9 @@ namespace Bodega {
                                                   const QString &assetId);
         Bodega::BallotRemoveAssetJob *ballotRemoveAsset(const QString &ballotId,
                                                         const QString &assetId);
-        /*
-        Bodega::BallotListAssetsJob *ballotListAssets(int ballotId,
+        Bodega::BallotListAssetsJob *ballotListAssets(const QString &ballotId,
                                                       int offset=-1,
-                                                      int pageSize=-1);*/
+                                                      int pageSize=-1);
 
         /*
          * These two are special because they don't require a session, as

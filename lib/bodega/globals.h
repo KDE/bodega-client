@@ -119,6 +119,7 @@ Q_DECLARE_METATYPE(Bodega::AssetInfo)
 Q_DECLARE_METATYPE(Bodega::BallotInfo)
 Q_DECLARE_METATYPE(Bodega::ChannelInfo)
 Q_DECLARE_METATYPE(QList<Bodega::BallotInfo>)
+Q_DECLARE_METATYPE(QList<Bodega::AssetInfo>)
 Q_DECLARE_METATYPE(Bodega::Tags)
 
 #endif
