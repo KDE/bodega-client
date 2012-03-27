@@ -2,6 +2,7 @@ set (bodega_HEADERS
      assetjob.h
      assetoperations.h
      ballotaddassetjob.h
+     ballotremoveassetjob.h
      bodegamodel.h
      changelanguagejob.h
      channelsjob.h
@@ -28,6 +29,7 @@ set (bodega_SRCS
      assethandler.cpp
      assetoperations.cpp
      ballotaddassetjob.cpp
+     ballotremoveassetjob.cpp
      bodegamodel.cpp
      changelanguagejob.cpp
      channelsjob.cpp
