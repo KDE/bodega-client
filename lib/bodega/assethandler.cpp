@@ -94,6 +94,8 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
         plugin = QLatin1String("plasmoid");
     } else if (type == QLatin1String("application/x-desktop-wallpaper")) {
         plugin = QLatin1String("wallpaper");
+    } else if (type == QLatin1String("application/x-rpm")) {
+        plugin = QLatin1String("rpm");
     }
 
     AssetHandler * handler = 0;
