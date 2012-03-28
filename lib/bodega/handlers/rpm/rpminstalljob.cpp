@@ -44,6 +44,7 @@ RpmInstallJob::~RpmInstallJob()
 
 void RpmInstallJob::downloadFinished(const QString &localFile)
 {
+    qDebug() << "Trying to install" << localFile;
     PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
     transaction->installFile(localFile, false);
     connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
@@ -54,6 +55,7 @@ void RpmInstallJob::downloadFinished(const QString &localFile)
 
 void RpmInstallJob::errorOccurred(PackageKit::Transaction::Error error, const QString &message)
 {
+    qDebug() << "Failed with error:" << error << message;
     setError(Error(Error::Session,
                    QString(QLatin1String("rpm/%1")).arg(error),
                    tr("Install failed"),
@@ -62,6 +64,7 @@ void RpmInstallJob::errorOccurred(PackageKit::Transaction::Error error, const QS
 
 void RpmInstallJob::installFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
+    qDebug() << "Job finished, exit code:" << status << "Running time:" << runtime;
     if (status == PackageKit::Transaction::ExitSuccess) {
         setFinished();
     }
