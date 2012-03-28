@@ -52,7 +52,7 @@ void RpmInstallJob::downloadFinished(const QString &localFile)
             this, SLOT(installFinished(PackageKit::Transaction::Exit, uint)));
 }
 
-void RpmInstallJob::errorOccurred(PackageKit::Transaction::Error error, QString &message)
+void RpmInstallJob::errorOccurred(PackageKit::Transaction::Error error, const QString &message)
 {
     setError(Error(Error::Session,
                    QString(QLatin1String("rpm/%1")).arg(error),

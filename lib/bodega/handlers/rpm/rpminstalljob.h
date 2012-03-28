@@ -40,7 +40,7 @@ namespace Bodega {
         void downloadFinished(const QString &localFile);
 
     private Q_SLOTS:
-        void errorOccurred(PackageKit::Transaction::Error error, QString &message);
+        void errorOccurred(PackageKit::Transaction::Error error, const QString &message);
         void installFinished(PackageKit::Transaction::Exit status, uint runtime);
 
     private:
