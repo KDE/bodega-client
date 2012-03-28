@@ -46,10 +46,10 @@ void RpmInstallJob::downloadFinished(const QString &localFile)
 {
     PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
     transaction->installFile(localFile, false);
-    connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, QString)),
-            this, SLOT(errorOccurred(PackageKit::Enum::Error, QString)));
-    connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-            this, SLOT(installFinished(PackageKit::Enum::Exit, uint)));
+    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+            this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(installFinished(PackageKit::Transaction::Exit, uint)));
 }
 
 void RpmInstallJob::errorOccurred(PackageKit::Transaction::Error error, QString &message)

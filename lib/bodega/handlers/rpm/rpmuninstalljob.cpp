@@ -33,10 +33,10 @@ RpmUninstallJob::RpmUninstallJob(Session *parent, RpmHandler *handler)
     
     if (transaction && !handler->package().id().isEmpty()) {
         transaction->removePackage(handler->package(), true, true);
-        connect(transaction, SIGNAL(errorCode(PackageKit::Enum::Error, QString)),
-                this, SLOT(errorOccurred(PackageKit::Enum::Error, QString)));
-        connect(transaction, SIGNAL(finished(PackageKit::Enum::Exit, uint)),
-                this, SLOT(uninstallFinished(PackageKit::Enum::Exit, uint)));
+        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+                this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
+        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                this, SLOT(uninstallFinished(PackageKit::Transaction::Exit, uint)));
     } else {
         setError(Error(Error::Session,
                        QLatin1String("rpm/01"),
