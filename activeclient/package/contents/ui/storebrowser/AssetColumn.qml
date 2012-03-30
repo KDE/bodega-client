@@ -142,6 +142,7 @@ BrowserColumn {
                 }
                 PlasmaComponents.Button {
                     anchors.horizontalCenter: parent.horizontalCenter
+                    enabled: assetOperations.isReady
                     text: {
                         if (assetOperations.installed) {
                             i18n("Uninstall")
@@ -150,7 +151,7 @@ BrowserColumn {
                         }
                     }
                     onClicked: {
-                        if(assetOperations.installed) {
+                        if (assetOperations.installed) {
                            downloadProgress.indeterminate = true
                            downloadProgress.opacity = 1
                            var job = bodegaClient.session.uninstall(assetOperations)
