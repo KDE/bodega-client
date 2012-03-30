@@ -35,6 +35,10 @@ using namespace Bodega;
 RpmHandler::RpmHandler(QObject *parent)
     : AssetHandler(parent)
 {
+    PackageKit::Transaction *t = new PackageKit::Transaction;
+    t->resolve(packageName());
+    connect(t, SIGNAL(package(const PackageKit::Package &)),
+            this, SLOT(gotPackage(const PackageKit::Package &)));
 }
 
 RpmHandler::~RpmHandler()
@@ -54,15 +58,7 @@ const PackageKit::Package &RpmHandler::package() const
 
 bool RpmHandler::isInstalled() const
 {
-    if (!m_package.id().isEmpty()) {
-        return true;
-    } else {
-        PackageKit::Transaction *t = new PackageKit::Transaction;
-        t->resolve(packageName());
-        connect(t, SIGNAL(package(const PackageKit::Package &)),
-                this, SLOT(gotPackage(const PackageKit::Package &)));
-        return false;
-    }
+    return !m_package.id().isEmpty();
 }
 
 Bodega::InstallJob *RpmHandler::install(QNetworkReply *reply, Session *session)
@@ -96,6 +92,7 @@ void RpmHandler::launch()
 void RpmHandler::gotPackage(const PackageKit::Package &package)
 {
     m_package = package;
+    setReady(true);
     emit installedChanged();
 }
 

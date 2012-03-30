@@ -33,6 +33,7 @@ using namespace Bodega;
 BookHandler::BookHandler(QObject *parent)
     : AssetHandler(parent)
 {
+    setReady(true);
 }
 
 BookHandler::~BookHandler()

@@ -35,6 +35,7 @@ using namespace Bodega;
 WallpaperHandler::WallpaperHandler(QObject *parent)
     : AssetHandler(parent)
 {
+    setReady(true);
 }
 
 WallpaperHandler::~WallpaperHandler()
@@ -57,9 +58,9 @@ Bodega::InstallJob *WallpaperHandler::install(QNetworkReply *reply, Session *ses
     return m_installJob.data();
 }
 
-//TODO: make it a job
 Bodega::UninstallJob *WallpaperHandler::uninstall(Session *session)
-{qDebug()<<m_uninstallJob;
+{
+    //qDebug()<<m_uninstallJob;
     if (!m_uninstallJob) {
         m_uninstallJob = new WallpaperUninstallJob(session, this);
     }
