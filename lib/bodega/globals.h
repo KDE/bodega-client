@@ -106,7 +106,7 @@ namespace Bodega {
             Wishlist = 1 << 1
         };
         Q_DECLARE_FLAGS(BallotFlags, BallotFlag);
-    public:
+
         QString id;
         QString name;
         BallotFlags flags;
