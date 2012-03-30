@@ -75,7 +75,10 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
     }
 
     if (ready()) {
-        emit q->ready();
+        QObject::connect(handler, SIGNAL(ready()), q, SIGNAL(ready()));
+        if (handler->isReady()) {
+            emit q->ready();
+        }
     } else {
         emit q->failed();
     }
@@ -84,7 +87,7 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
 
 bool AssetOperations::Private::ready()
 {
-    return handler;
+    return handler && handler->isReady();
 }
 
 void AssetOperations::Private::checkInstalled()
