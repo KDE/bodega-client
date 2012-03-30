@@ -16,8 +16,6 @@ target_link_libraries(bodega-store
     ${QT_QTDECLARATIVE_LIBRARY}
     ${QT_QTOPENGL_LIBRARY}
     ${QT_QTSCRIPT_LIBRARY}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KIO_LIBS}
     ${KDE4_PLASMA_LIBS}
     kdeclarative
     bodega
