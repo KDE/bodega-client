@@ -1,6 +1,4 @@
 
-find_package(PackageKitQt2 REQUIRED)
-
 link_directories(${LINK_DIRECTORIES} ${QJSON_LIBRARY_DIRS})
 
 set (rpmhandlerplugin_SRCS

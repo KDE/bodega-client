@@ -1,3 +1,9 @@
+find_package(PackageKitQt2)
+if (PACKAGEKIT_QT2_FOUND)
+    add_subdirectory(rpm)
+else (PACKAGEKIT_QT2_FOUND)
+   message("Did not find pkgqt2, required for RPM installation handler")
+endif (PACKAGEKIT_QT2_FOUND)
+
 add_subdirectory(epub)
-add_subdirectory(rpm)
 add_subdirectory(wallpaper)
