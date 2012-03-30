@@ -34,11 +34,13 @@ class AssetHandler::Private
 {
 public:
     Private()
-        : ops(0)
+        : ops(0),
+          ready(false)
     {
     }
 
     AssetOperations *ops;
+    bool ready;
 };
 
 AssetHandler::AssetHandler(QObject *parent)
@@ -130,6 +132,19 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
 
 void AssetHandler::launch()
 {
+}
+
+void AssetHandler::setReady(bool isReady)
+{
+    d->ready = isReady;
+    if (isReady) {
+        emit ready();
+    }
+}
+
+bool AssetHandler::isReady() const
+{
+    return d->ready;
 }
 
 } // namespace Bodega

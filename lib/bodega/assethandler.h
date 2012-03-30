@@ -35,6 +35,9 @@ namespace Bodega
             AssetHandler(QObject *parent = 0);
             ~AssetHandler();
 
+            bool isReady() const;
+            void setReady(bool ready);
+
             void setOperations(AssetOperations *operations);
             AssetOperations *operations() const;
 
@@ -51,6 +54,7 @@ namespace Bodega
                                         AssetOperations *parent);
 
         Q_SIGNALS:
+            void ready();
             void installedChanged();
 
         private:
