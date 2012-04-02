@@ -100,7 +100,7 @@ void NetworkJob::Private::netFinished()
                         tr("Invalid response from the server"),
                         tr("Server has sent an invalid response."));
                 failed = true;
-                emit q->error(q, this->error);
+                emit q->jobError(q, this->error);
             }
 
             q->setFinished();
@@ -122,7 +122,7 @@ void NetworkJob::Private::readFromNetwork()
                             tr("Download error"),
                             tr("Error downloading the asset."));
         failed = true;
-        emit q->error(q, this->error);
+        emit q->jobError(q, this->error);
     }
 }
 
@@ -163,7 +163,7 @@ void NetworkJob::netError(QNetworkReply::NetworkError code,
     d->failed = true;
     d->error = Error(Error::Network,
                      id, tr("Network Error"), msg);
-    emit error(this, d->error);
+    emit jobError(this, d->error);
 }
 
 bool NetworkJob::isFinished() const
@@ -190,7 +190,7 @@ void NetworkJob::parseErrors(const QVariantMap &jsonMap)
                          QString::fromLatin1("auth/01"),
                          tr("Authentication Error"),
                          tr("Invalid username or password"));
-        emit error(this, d->error);
+        emit jobError(this, d->error);
     } else {
         foreach(QVariant var, errors) {
             QVariantMap verror = var.toMap();
@@ -199,7 +199,7 @@ void NetworkJob::parseErrors(const QVariantMap &jsonMap)
                              verror[QLatin1String("errorId")].toString(),
                              verror[QLatin1String("title")].toString(),
                              verror[QLatin1String("error")].toString());
-            emit error(this, d->error);
+            emit jobError(this, d->error);
         }
     }
 }
@@ -265,7 +265,7 @@ void NetworkJob::setFinished()
 void NetworkJob::setError(const Bodega::Error &e)
 {
     d->error = e;
-    emit error(this, d->error);
+    emit jobError(this, d->error);
 }
 
 void NetworkJob::downloadFinished(const QString &filename)

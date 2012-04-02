@@ -40,6 +40,7 @@ namespace Bodega {
         Q_PROPERTY(QString deviceId READ deviceId)
         Q_PROPERTY(int points READ points)
         Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
+        Q_PROPERTY(Bodega::Error error READ error)
 
     public:
         NetworkJob(QNetworkReply *reply, Session *parent, bool parseResponse = true);
@@ -69,7 +70,7 @@ namespace Bodega {
     Q_SIGNALS:
         //FIXME job seems to be readable from qml only if the parameter is a
         //  QObject * instead of a NetworkJob * (same thing for error)
-        void error(Bodega::NetworkJob *job, const Bodega::Error &error);
+        void jobError(Bodega::NetworkJob *job, const Bodega::Error &error);
         void jobFinished(Bodega::NetworkJob *job);
         void progressChanged(qreal progress);
 
