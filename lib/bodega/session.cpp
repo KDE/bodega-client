@@ -154,9 +154,9 @@ QString Session::password() const
     return d->password;
 }
 
-void Session::setPassword(const QString &pass)
+void Session::setPassword(const QString &password)
 {
-    d->password = pass;
+    d->password = password;
 }
 
 QString Session::deviceId() const
@@ -381,13 +381,11 @@ Bodega::RegisterJob * Session::registerAccount(const QString &email,
     return job;
 }
 
-Bodega::ResetPasswordJob * Session::resetPassword(const QString &email)
+Bodega::ResetPasswordJob *Session::resetPassword(const QString &email)
 {
     QUrl url = d->baseUrl;
     QString path = QString::fromLatin1("/resetRequest");
-
     url.setEncodedPath(d->jsonPath(path));
-
     url.addQueryItem(QLatin1String("email"), email);
 
     //qDebug()<<"url is " <<url;
@@ -397,7 +395,21 @@ Bodega::ResetPasswordJob * Session::resetPassword(const QString &email)
     return job;
 }
 
-Bodega::ListBallotsJob * Session::listBallots(int offset, int pageSize)
+Bodega::NetworkJob *Session::changePassword(const QString &newPassword)
+{
+    QUrl url = d->baseUrl;
+    QString path = QString::fromLatin1("/changePassword");
+    url.setEncodedPath(d->jsonPath(path));
+    url.addQueryItem(QLatin1String("newPassword"), newPassword);
+
+    //qDebug()<<"url is " <<url;
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::ListBallotsJob *Session::listBallots(int offset, int pageSize)
 {
     QUrl url = d->baseUrl;
     QString path = QString::fromLatin1("/listBallots");

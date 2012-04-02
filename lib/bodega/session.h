@@ -73,7 +73,7 @@ namespace Bodega {
         void setUserName(const QString &name);
 
         QString password() const;
-        void setPassword(const QString &pass);
+        void setPassword(const QString &password);
 
         QString deviceId() const;
         void setDeviceId(const QString &device);
@@ -132,6 +132,7 @@ namespace Bodega {
             const QString &lastName = QString());
         Bodega::ResetPasswordJob *resetPassword(
             const QString &email);
+        Bodega::NetworkJob *changePassword(const QString &newPassword);
 
     Q_SIGNALS:
         void disconnected();
