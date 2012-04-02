@@ -35,14 +35,18 @@ using namespace Bodega;
 RpmHandler::RpmHandler(QObject *parent)
     : AssetHandler(parent)
 {
-    PackageKit::Transaction *t = new PackageKit::Transaction;
-    t->resolve(packageName());
-    connect(t, SIGNAL(package(const PackageKit::Package &)),
-            this, SLOT(gotPackage(const PackageKit::Package &)));
 }
 
 RpmHandler::~RpmHandler()
 {
+}
+
+void RpmHandler::init()
+{
+    PackageKit::Transaction *t = new PackageKit::Transaction;
+    t->resolve(packageName());
+    connect(t, SIGNAL(package(const PackageKit::Package &)),
+            this, SLOT(gotPackage(const PackageKit::Package &)));
 }
 
 QString RpmHandler::packageName() const
@@ -67,6 +71,8 @@ Bodega::InstallJob *RpmHandler::install(QNetworkReply *reply, Session *session)
 {
     if (!m_installJob) {
         m_installJob = new RpmInstallJob(reply, session, this);
+        connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob *)),
+                this, SLOT(installJobFinished()));
     }
 
     return m_installJob.data();
@@ -76,6 +82,8 @@ Bodega::UninstallJob *RpmHandler::uninstall(Session *session)
 {
     if (!m_uninstallJob) {
         m_uninstallJob = new RpmUninstallJob(session, this);
+        connect(m_uninstallJob.data(), SIGNAL(jobFinished(Bodega::UninstallJob *)),
+                this, SLOT(installJobFinished()));
     }
 
     return m_uninstallJob.data();
@@ -83,12 +91,12 @@ Bodega::UninstallJob *RpmHandler::uninstall(Session *session)
 
 QString RpmHandler::launchText() const
 {
-    return tr("Read rpm");
+    return tr("Launch");
 }
 
 void RpmHandler::launch()
 {
-    //not supported yet
+    QDesktopServices::openUrl(QUrl(m_desktopFile));
 }
 
 void RpmHandler::gotPackage(const PackageKit::Package &package)
@@ -96,14 +104,33 @@ void RpmHandler::gotPackage(const PackageKit::Package &package)
     m_package = package;
     setReady(true);
     emit installedChanged();
+
+    PackageKit::Transaction *listT = new PackageKit::Transaction;
+    listT->getFiles(package);
+    connect(listT, SIGNAL(files(const PackageKit::Package &, const QStringList &)),
+            this, SLOT(gotFiles(const PackageKit::Package &, const QStringList &)));
 }
 
 void RpmHandler::installJobFinished()
 {
-    m_package = PackageKit::Package();
-    emit installedChanged();
+    PackageKit::Transaction *t = new PackageKit::Transaction;
+    t->resolve(packageName());
+    connect(t, SIGNAL(package(const PackageKit::Package &)),
+            this, SLOT(gotPackage(const PackageKit::Package &)));
+}
+
+void RpmHandler::gotFiles(const PackageKit::Package &package, const QStringList &fileNames)
+{
+    Q_UNUSED(package)
+    qDebug() << fileNames;
+    foreach (const QString &file, fileNames) {
+        if (file.contains(QRegExp(QLatin1String(".*/applications/.*\\.desktop")))) {
+            m_desktopFile = file;
+            break;
+        }
+    }
 }
 
 #include "rpmhandler.moc"
-Q_EXPORT_PLUGIN2(epubhandler, Bodega::RpmHandler);
+Q_EXPORT_PLUGIN2(rpmhandler, Bodega::RpmHandler);
 

@@ -41,6 +41,10 @@ namespace Bodega
             void setOperations(AssetOperations *operations);
             AssetOperations *operations() const;
 
+            //anyhting accessing operations() will have to be here
+            //operations() doesn't exist yet in the constructor
+            virtual void init();
+
             virtual QString launchText() const;
             virtual bool isInstalled() const;
 

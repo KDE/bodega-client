@@ -41,6 +41,8 @@ namespace Bodega {
         RpmHandler(QObject *parent = 0);
         ~RpmHandler();
 
+        void init();
+
         QString launchText() const;
         bool isInstalled() const;
 
@@ -54,12 +56,14 @@ namespace Bodega {
 
     private Q_SLOTS:
         void gotPackage(const PackageKit::Package &package);
+        void gotFiles(const PackageKit::Package &package, const QStringList &filenames);
         void installJobFinished();
 
     private:
         QWeakPointer<RpmInstallJob> m_installJob;
         QWeakPointer<RpmUninstallJob> m_uninstallJob;
         PackageKit::Package m_package;
+        QString m_desktopFile;
     };
 }
 

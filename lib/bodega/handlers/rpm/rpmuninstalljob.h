@@ -37,7 +37,7 @@ namespace Bodega {
         ~RpmUninstallJob();
 
     private Q_SLOTS:
-        void errorOccurred(PackageKit::Transaction::Error error, QString &message);
+        void errorOccurred(PackageKit::Transaction::Error error, const QString &message);
         void uninstallFinished(PackageKit::Transaction::Exit status, uint runtime);
     };
 }

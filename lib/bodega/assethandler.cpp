@@ -54,6 +54,11 @@ AssetHandler::~AssetHandler()
     delete d;
 }
 
+void AssetHandler::init()
+{
+    //Base implementation does nothing
+}
+
 void AssetHandler::setOperations(AssetOperations *operations)
 {
     d->ops = operations;
@@ -127,6 +132,7 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
 
     handler->setParent(parent);
     handler->setOperations(parent);
+    handler->init();
     return handler;
 }
 

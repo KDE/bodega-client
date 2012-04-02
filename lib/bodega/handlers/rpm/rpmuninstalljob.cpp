@@ -50,7 +50,7 @@ RpmUninstallJob::~RpmUninstallJob()
 {
 }
 
-void RpmUninstallJob::errorOccurred(PackageKit::Transaction::Error error, QString &message)
+void RpmUninstallJob::errorOccurred(PackageKit::Transaction::Error error, const QString &message)
 {
     setError(Error(Error::Session,
                    QString(QLatin1String("rpm/%1")).arg(error),
