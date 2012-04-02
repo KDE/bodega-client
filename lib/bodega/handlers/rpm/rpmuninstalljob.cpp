@@ -60,9 +60,7 @@ void RpmUninstallJob::errorOccurred(PackageKit::Transaction::Error error, const 
 
 void RpmUninstallJob::uninstallFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
-    if (status == PackageKit::Transaction::ExitSuccess) {
-        setFinished();
-    }
+    setFinished();
 }
 
 #include "rpmuninstalljob.moc"

@@ -31,6 +31,8 @@ namespace Bodega
     class BODEGA_EXPORT AssetHandler : public QObject
     {
         Q_OBJECT
+        Q_PROPERTY(bool ready READ isReady NOTIFY ready)
+
         public:
             AssetHandler(QObject *parent = 0);
             ~AssetHandler();

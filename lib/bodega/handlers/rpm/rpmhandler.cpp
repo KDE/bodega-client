@@ -64,7 +64,9 @@ const PackageKit::Package &RpmHandler::package() const
 
 bool RpmHandler::isInstalled() const
 {
-    return !m_package.id().isEmpty();
+    //TODO: manage updates
+    return !m_package.id().isEmpty() && (m_package.info() == PackageKit::Package::InfoInstalled ||
+                m_package.info() == PackageKit::Package::InfoCollectionInstalled);
 }
 
 Bodega::InstallJob *RpmHandler::install(QNetworkReply *reply, Session *session)
@@ -103,6 +105,7 @@ void RpmHandler::gotPackage(const PackageKit::Package &package)
 {
     m_package = package;
     setReady(true);
+
     emit installedChanged();
 
     PackageKit::Transaction *listT = new PackageKit::Transaction;
@@ -122,7 +125,6 @@ void RpmHandler::installJobFinished()
 void RpmHandler::gotFiles(const PackageKit::Package &package, const QStringList &fileNames)
 {
     Q_UNUSED(package)
-    qDebug() << fileNames;
     foreach (const QString &file, fileNames) {
         if (file.contains(QRegExp(QLatin1String(".*/applications/.*\\.desktop")))) {
             m_desktopFile = file;

@@ -32,6 +32,7 @@ BrowserColumn {
     function loadAsset(assetId, extension)
     {
         assetOperations = bodegaClient.session.assetOperations(assetId, extension)
+        assetOperationsWatcher.target = assetOperations
     }
     property variant assetOperations
 
