@@ -27,7 +27,7 @@ SimplePage {
     id: root
     objectName: "passwordPage"
     title: "Make Play Live"
-
+    property alias email: emailField.text
 
     Column {
         anchors.centerIn: parent
