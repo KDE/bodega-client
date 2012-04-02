@@ -29,6 +29,7 @@ PlasmaComponents.Page {
 
     property bool creation: false
     property int spacing: 4
+    property variant job
 
     Grid {
         anchors.centerIn: parent
@@ -126,14 +127,57 @@ PlasmaComponents.Page {
             height: 10
         }
         PlasmaComponents.Button {
-            text: creation ? i18n("Create") : i18n("Save")
-            enabled: nameField.text && lastNameField.text && emailField.text && passwordField.text && password2Field.text && (passwordField.text == password2Field.text)
+            id: saveButton
+            text: creation ? i18n("Create") : i18n("Loading...")
+            enabled: nameField.text && lastNameField.text && emailField.text && (passwordField.text == password2Field.text)
             onClicked: {
                 if (creation) {
                     mainStack.push(Qt.createComponent("../ConnectingPage.qml"))
                 }
             }
+
+            PlasmaComponents.BusyIndicator {
+                id: busyIndicator
+                visible: false
+                height: saveButton.height
+                width: height
+                anchors {
+                    left: parent.right
+                }
+            }
         }
     }
 
+    function loadData()
+    {
+        busyIndicator.visible = true;
+        busyIndicator.running = true;
+        job = bodegaClient.session.participantInfo("fuck");
+        job.jobFinished.connect(jobFinished);
+        job.infoReceived.connect(displayInfo);
+    }
+
+    function jobFinished()
+    {
+        if (job.failed) {
+            print("Error! " + job.error.id + job.error.description);
+        }
+
+        busyIndicator.running = false;
+        busyIndicator.visible = false;
+        saveButton.enabled = false;
+    }
+
+    function displayInfo(info)
+    {
+        nameField.text = info.firstName;
+        lastNameField.text = info.lastName;
+        emailField.text = info.email;
+    }
+
+    Component.onCompleted: {
+        if (!creation) {
+            loadData();
+        }
+    }
 }

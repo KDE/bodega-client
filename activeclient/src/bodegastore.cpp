@@ -35,6 +35,7 @@
 #include <bodega/bodegamodel.h>
 #include <bodega/channelsjob.h>
 #include <bodega/networkjob.h>
+#include <bodega/participantinfojob.h>
 #include <bodega/session.h>
 #include <bodega/signonjob.h>
 #include <bodega/installjob.h>
@@ -220,7 +221,29 @@ void tagsFromQScriptValue(const QScriptValue &scriptValue, Bodega::Tags &tags)
     }
 }
 
+QScriptValue qScriptValueFromParticipantInfo(QScriptEngine *engine, const Bodega::ParticipantInfo &info)
+{
+    QScriptValue obj = engine->newObject();
+    obj.setProperty("assetCount", info.assetCount);
+    obj.setProperty("channelCount", info.channelCount);
+    obj.setProperty("pointsOwed", info.pointsOwed);
+    obj.setProperty("organization", info.organization);
+    obj.setProperty("firstName", info.firstName);
+    obj.setProperty("lastName", info.lastName);
+    obj.setProperty("email", info.email);
+    return obj;
+}
 
+void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::ParticipantInfo &info)
+{
+    info.assetCount = scriptValue.property("assetCount").toInt32();
+    info.channelCount = scriptValue.property("channelCount").toInt32();
+    info.pointsOwed = scriptValue.property("pointsOwed").toInt32();
+    info.organization = scriptValue.property("organization").toString();
+    info.firstName = scriptValue.property("firstName").toString();
+    info.lastName = scriptValue.property("lastName").toString();
+    info.email = scriptValue.property("email").toString();
+}
 
 BodegaStore::BodegaStore()
     : KDeclarativeMainWindow()
@@ -228,6 +251,7 @@ BodegaStore::BodegaStore()
 
     declarativeView()->setPackageName("com.coherenttheory.bodegastore");
 
+    qmlRegisterType<Bodega::ParticipantInfoJob>();
     qmlRegisterType<Bodega::AssetJob>();
     qmlRegisterType<Bodega::AssetOperations>();
     qmlRegisterType<Bodega::ChannelsJob>();
@@ -242,6 +266,7 @@ BodegaStore::BodegaStore()
     qScriptRegisterMetaType<Bodega::ChannelInfo>(declarativeView()->scriptEngine(), qScriptValueFromChannelInfo, channelInfoFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::AssetInfo>(declarativeView()->scriptEngine(), qScriptValueFromAssetInfo, assetInfoFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::Tags>(declarativeView()->scriptEngine(), qScriptValueFromTags, tagsFromQScriptValue, QScriptValue());
+    qScriptRegisterMetaType<Bodega::ParticipantInfo>(declarativeView()->scriptEngine(), qScriptValueFromParticipantInfo, participantInfoFromQScriptValue, QScriptValue());
 
     m_session = new Session(this);
     m_channelsModel = new Bodega::Model(this);
