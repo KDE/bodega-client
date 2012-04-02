@@ -80,7 +80,6 @@ PlasmaComponents.Page {
 
                     delegate: StoreListItem {
                         checked: categoriesView.currentIndex == index
-                        property string title: label
                         onClicked: {
                             if (categoriesView.currentIndex == index) {
                                 return
