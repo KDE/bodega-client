@@ -165,7 +165,7 @@ PlasmaComponents.Page {
 
         busyIndicator.running = false;
         busyIndicator.visible = false;
-        saveButton.enabled = false;
+        saveButton.text = i18n("Save")
     }
 
     function displayInfo(info)
