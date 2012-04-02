@@ -40,17 +40,23 @@ Image {
     function authenticate(username, password)
     {
         bodegaClient.session.baseUrl = "http://127.0.0.1:3000"
-        bodegaClient.session.userName = username
-        bodegaClient.session.password = password
         bodegaClient.session.deviceId = "VIVALDI-1"
-        var job = bodegaClient.session.signOn()
 
         appRoot.username = username
         appRoot.password = password
 
-        job.signedOn.connect(signedOn)
-        job.error.connect(errorSigning)
-        connectPageTimer.restart()
+        if (username == '' || password == '') {
+            if (!connectPageTimer.authing) {
+                connectPageTimer.restart()
+            }
+        } else {
+            bodegaClient.session.userName = username
+            bodegaClient.session.password = password
+
+            var job = bodegaClient.session.signOn()
+            job.signedOn.connect(signedOn)
+            job.jobError.connect(errorSigning)
+        }
     }
 
     function signedOn(job)
@@ -64,11 +70,17 @@ Image {
 
     function errorSigning(job, error)
     {
+        connectPageTimer.running = false
         while (mainStack.currentPage.objectName != "startPage" &&
                mainStack.currentPage.objectName != "passwordPage") {
             mainStack.pop(0, true)
         }
-        connectPageTimer.running = false
+
+        if (!mainStack.currentPage.objectName != "passwordPage") {
+            mainStack.push(Qt.createComponent("PasswordPage.qml"))
+        }
+
+        mainStack.currentPage.email = bodegaClient.session.userName
         mainStack.currentPage.showMessage(error.title, error.description)
     }
 
@@ -77,9 +89,12 @@ Image {
     Timer {
         id: connectPageTimer
         interval: 100
+        property bool authing
         onTriggered: {
+            authing = true
             var credentials = bodegaClient.retrieveCredentials()
-                authenticate(credentials.username, credentials.password)
+            authenticate(credentials.username, credentials.password)
+            authing = false
         }
     }
 
