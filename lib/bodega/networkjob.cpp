@@ -128,8 +128,10 @@ void NetworkJob::Private::readFromNetwork()
 
 void NetworkJob::Private::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
-    progress = (qreal)1.0 / qreal(bytesTotal / bytesReceived);
-    emit q->progressChanged(progress);
+    if (bytesReceived > 0 && bytesTotal > 0) {
+        progress = (qreal)1.0 / qreal(bytesTotal / bytesReceived);
+        emit q->progressChanged(progress);
+    }
 }
 
 
