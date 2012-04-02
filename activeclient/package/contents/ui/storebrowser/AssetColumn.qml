@@ -44,7 +44,7 @@ BrowserColumn {
         assetJob = bodegaClient.session.asset(assetId)
 
         assetJob.jobFinished.connect(assetJobcompleted)
-        assetJob.error.connect(error)
+        assetJob.jobError.connect(error)
     }
     property variant assetInfo
     property variant assetTags
