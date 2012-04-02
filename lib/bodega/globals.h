@@ -112,6 +112,19 @@ namespace Bodega {
         BallotFlags flags;
     };
 
+    class BODEGA_EXPORT ParticipantInfo
+    {
+    public:
+        int assetCount;
+        int channelCount;
+        int storeCount;
+        int pointsOwed;
+        QString organization;
+        QString firstName;
+        QString lastName;
+        QString email;
+    };
+
     typedef QMultiHash<QString, QString> Tags;
 }
 
@@ -121,5 +134,6 @@ Q_DECLARE_METATYPE(Bodega::ChannelInfo)
 Q_DECLARE_METATYPE(QList<Bodega::BallotInfo>)
 Q_DECLARE_METATYPE(QList<Bodega::AssetInfo>)
 Q_DECLARE_METATYPE(Bodega::Tags)
+Q_DECLARE_METATYPE(Bodega::ParticipantInfo)
 
 #endif

@@ -27,27 +27,6 @@ namespace Bodega {
 
     class Session;
 
-    class BODEGA_EXPORT ParticipantInfo
-    {
-    public:
-        ParticipantInfo(const ParticipantInfo &info);
-        ~ParticipantInfo();
-
-        bool succeeded() const;
-        int assetCount() const;
-        int channelCount() const;
-        int storeCount() const;
-        int pointsOwed() const;
-        QString organization() const;
-
-    private:
-        ParticipantInfo();
-
-        friend class ParticipantInfoJob;
-        class Private;
-        Private *const d;
-    };
-
     class BODEGA_EXPORT ParticipantInfoJob : public NetworkJob
     {
         Q_OBJECT

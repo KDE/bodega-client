@@ -18,73 +18,9 @@
  */
 
 #include <bodega/participantinfojob.h>
+#include <bodega/globals.h>
 
 namespace Bodega {
-
-class ParticipantInfo::Private
-{
-public:
-    Private()
-        : assetCount(0),
-          channelCount(0),
-          storeCount(0),
-          pointsOwed(0),
-          succeeded(false)
-    {
-    }
-
-    QString organization;
-    int assetCount;
-    int channelCount;
-    int storeCount;
-    int pointsOwed;
-    bool succeeded;
-};
-
-ParticipantInfo::ParticipantInfo(const ParticipantInfo &info)
-    : d(new Private(*info.d))
-{
-}
-
-ParticipantInfo::ParticipantInfo()
-    : d(new Private)
-{
-}
-
-ParticipantInfo::~ParticipantInfo()
-{
-    delete d;
-}
-
-bool ParticipantInfo::succeeded() const
-{
-    return d->succeeded;
-}
-
-int ParticipantInfo::assetCount() const
-{
-    return d->assetCount;
-}
-
-int ParticipantInfo::channelCount() const
-{
-    return d->channelCount;
-}
-
-int ParticipantInfo::storeCount() const
-{
-    return d->storeCount;
-}
-
-int ParticipantInfo::pointsOwed() const
-{
-    return d->pointsOwed;
-}
-
-QString ParticipantInfo::organization() const
-{
-    return d->organization;
-}
 
 ParticipantInfoJob::ParticipantInfoJob(QNetworkReply *reply, Session *parent)
     : NetworkJob(reply, parent),
@@ -103,15 +39,16 @@ void ParticipantInfoJob::netFinished(const QVariantMap &jsonMap)
     parseCommon(jsonMap);
 
     if (authSuccess() && !failed()) {
-        info.d->assetCount = jsonMap[QLatin1String("assetCount")].toInt();
-        info.d->channelCount = jsonMap[QLatin1String("channelCount")].toInt();
-        info.d->storeCount = jsonMap[QLatin1String("storeCount")].toInt();
-        info.d->pointsOwed = jsonMap[QLatin1String("pointsOwed")].toInt();
-        info.d->organization = jsonMap[QLatin1String("organization")].toString();
-        info.d->succeeded = true;
+        info.assetCount = jsonMap[QLatin1String("assetCount")].toInt();
+        info.channelCount = jsonMap[QLatin1String("channelCount")].toInt();
+        info.storeCount = jsonMap[QLatin1String("storeCount")].toInt();
+        info.pointsOwed = jsonMap[QLatin1String("pointsOwed")].toInt();
+        info.organization = jsonMap[QLatin1String("organization")].toString();
+        info.firstName = jsonMap[QLatin1String("firstName")].toString();
+        info.lastName = jsonMap[QLatin1String("lastName")].toString();
+        info.email = jsonMap[QLatin1String("email")].toString();
+        emit infoReceived(info);
     }
-
-    emit infoReceived(info);
 }
 
 }
