@@ -151,7 +151,7 @@ PlasmaComponents.Page {
                 PlasmaComponents.PageStack {
                     id: settingsStack
                     anchors {
-                        top: titleLabel.bottom
+                        top: parent.top
                         left: parent.left
                         right: parent.right
                         bottom: parent.bottom
