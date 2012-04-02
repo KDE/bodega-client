@@ -44,9 +44,22 @@ RpmInstallJob::~RpmInstallJob()
 
 void RpmInstallJob::downloadFinished(const QString &localFile)
 {
-    qDebug() << "Trying to install" << localFile;
+    QFileInfo remoteInfo(m_handler->operations()->assetInfo().path.path());
+    const QString packagePath = QDir::tempPath() + QDir::separator() + remoteInfo.fileName();
+    QFile f(localFile);
+
+    QFile oldFile(packagePath);
+    if (oldFile.exists()) {
+        oldFile.remove();
+    }
+
+    qDebug() << "Trying to install" << remoteInfo.fileName();
+    //RPM uses the file name to know what package actually is
+    f.rename(packagePath);
+
     PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
-    transaction->installFile(localFile, false);
+    transaction->installFile(packagePath, false);
+
     connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
             this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
