@@ -31,6 +31,16 @@ PlasmaComponents.Page {
     property int spacing: 4
     property variant job
 
+    //FIXME: proper solution needed
+    function showMessage(title, message)
+    {
+        print(title + ": " + message);
+    }
+
+    function hideMessage()
+    {
+    }
+
     Grid {
         anchors.centerIn: parent
         rows: 6
@@ -130,10 +140,35 @@ PlasmaComponents.Page {
             id: saveButton
             text: creation ? i18n("Create") : i18n("Loading...")
             enabled: nameField.text && lastNameField.text && emailField.text && (passwordField.text == password2Field.text)
+            property variant pwordJob
+            property string newPword
+
             onClicked: {
                 if (creation) {
                     mainStack.push(Qt.createComponent("../ConnectingPage.qml"))
+                } else {
+                    if (passwordField.text != '') {
+                        newPword = passwordField.text;
+                        pwordJob = bodegaClient.session.changePassword(passwordField.text);
+                        pwordJob.jobFinished.connect(pwordResetDone);
+                    }
                 }
+
+                enabled = false;
+            }
+
+            function pwordResetDone()
+            {
+                if (pwordJob.failed) {
+                    showMessage(pwordJob.error.title, pwordJob.error.errorId + ': ' + pwordJob.error.description);
+                } else {
+                    bodegaClient.session.password = newPword;
+                    authenticate(appRoot.username, newPword)
+                }
+
+                passwordField.text = '';
+                password2Field.text = '';
+                enabled = nameField.text && lastNameField.text && emailField.text && (passwordField.text == password2Field.text);
             }
 
             PlasmaComponents.BusyIndicator {
@@ -160,7 +195,7 @@ PlasmaComponents.Page {
     function jobFinished()
     {
         if (job.failed) {
-            print("Error! " + job.error.id + job.error.description);
+            showMessage(job.error.title, job.error.id + ": " + job.error.description);
         }
 
         busyIndicator.running = false;
