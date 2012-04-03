@@ -90,8 +90,6 @@ KDeclarativeMainWindow::KDeclarativeMainWindow()
         useGL = cg.readEntry("UseOpenGl", true);
     }
     d->view->setUseGL(useGL);
-
-    connect(d->view, SIGNAL(titleChanged(QString)), SLOT(setCaption(QString)));
 }
 
 KDeclarativeMainWindow::~KDeclarativeMainWindow()
