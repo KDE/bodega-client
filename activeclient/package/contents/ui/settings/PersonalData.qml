@@ -45,12 +45,13 @@ PlasmaComponents.Page {
     Grid {
         id: grid
         anchors.verticalCenter: parent.verticalCenter
-        width: parent.width
+        anchors.leftMargin: root.spacing
+        width: parent.width - root.spacing * 2
         rows: 8
         columns: 2
         spacing: root.spacing
 
-        onWidthChanged: { print("***************************** " + width) }
+        onWidthChanged: { nameField.width = width - nameLabel.x - nameLabel.width }
         PlasmaComponents.Label {
             text: i18n("Name:")
             id: nameLabel
@@ -255,6 +256,5 @@ PlasmaComponents.Page {
         if (!creation) {
             loadData();
         }
-    print("widths: " + parent.width  + ", " + nameLabel.right + ", " + nameField.width)
     }
 }
