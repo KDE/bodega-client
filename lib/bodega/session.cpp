@@ -433,7 +433,7 @@ Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, cons
     }
 
     if (!email.isEmpty()) {
-        url.addQueryItem(QLatin1String("email"), firstName);
+        url.addQueryItem(QLatin1String("email"), email);
     }
 
     //qDebug()<<"url is " <<url;
