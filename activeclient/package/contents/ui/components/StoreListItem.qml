@@ -51,7 +51,7 @@ PlasmaComponents.ListItem {
         }
         PlasmaComponents.Label {
             id: countLabel
-            text: model.ChannelAssetCountRole
+            text: model.ChannelAssetCountRole ? model.ChannelAssetCountRole : ''
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
