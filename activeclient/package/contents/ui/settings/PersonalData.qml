@@ -99,6 +99,26 @@ PlasmaComponents.Page {
             visible: !creation
             text: i18n("Loading...")
             enabled: nameField.text && lastNameField.text && emailField.text
+            property variant job
+
+            onClicked: {
+                text = i18n("Saving...")
+                enabled = false;
+
+                job = bodegaClient.session.changeAccountDetails(nameField.text, lastNameField.text, emailField.text);
+                job.jobFinished.connect(updateDone);
+            }
+
+            function updateDone()
+            {
+                if (job.failed) {
+                    showMessage(job.error.title, job.error.errorId + ': ' + job.error.description);
+                }
+
+                enabled = nameField.text && lastNameField.text && emailField.text
+                text = i18n("Update Account")
+            }
+
 
             PlasmaComponents.BusyIndicator {
                 id: infoSaveBusyIndicator
