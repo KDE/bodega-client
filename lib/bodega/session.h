@@ -53,9 +53,9 @@ namespace Bodega {
         Q_OBJECT
         Q_PROPERTY(QUrl baseUrl READ baseUrl WRITE setBaseUrl)
         Q_PROPERTY(bool authenticated READ isAuthenticated NOTIFY authenticated)
-        Q_PROPERTY(QString userName READ userName WRITE setUserName)
-        Q_PROPERTY(QString password READ password WRITE setPassword)
-        Q_PROPERTY(QString deviceId READ deviceId WRITE setDeviceId)
+        Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
+        Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
+        Q_PROPERTY(QString deviceId READ deviceId WRITE setDeviceId NOTIFY deviceChanged)
         Q_PROPERTY(int points READ points NOTIFY pointsChanged)
 
     public:
@@ -138,6 +138,9 @@ namespace Bodega {
         void disconnected();
         void authenticated(bool);
         void pointsChanged(int points);
+        void userNameChanged();
+        void passwordChanged();
+        void deviceChanged();
 
     private:
         class Private;

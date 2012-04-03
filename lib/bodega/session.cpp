@@ -146,7 +146,10 @@ QString Session::userName() const
 
 void Session::setUserName(const QString &name)
 {
-    d->userName = name;
+    if (d->userName != name) {
+        d->userName = name;
+        emit userNameChanged();
+    }
 }
 
 QString Session::password() const
@@ -156,7 +159,10 @@ QString Session::password() const
 
 void Session::setPassword(const QString &password)
 {
-    d->password = password;
+    if (d->password != password) {
+        d->password = password;
+        emit passwordChanged();
+    }
 }
 
 QString Session::deviceId() const
@@ -166,7 +172,10 @@ QString Session::deviceId() const
 
 void Bodega::Session::setDeviceId(const QString &device)
 {
-    d->deviceId = device;
+    if (d->deviceId != device) {
+        d->deviceId = device;
+        emit deviceChanged();
+    }
 }
 
 bool Session::isAuthenticated() const
