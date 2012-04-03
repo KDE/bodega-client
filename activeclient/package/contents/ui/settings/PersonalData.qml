@@ -19,6 +19,7 @@
 
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.qtextracomponents 0.1
 import "../components"
@@ -30,6 +31,7 @@ PlasmaComponents.Page {
     property bool creation: false
     property int spacing: 4
     property variant job
+    width: parent.width
 
     //FIXME: proper solution needed
     function showMessage(title, message)
@@ -42,13 +44,15 @@ PlasmaComponents.Page {
     }
 
     Grid {
-        anchors.centerIn: parent
-        rows: 6
+        id: grid
+        anchors.verticalCenter: parent.verticalCenter
+        rows: 8
         columns: 2
         spacing: root.spacing
 
         PlasmaComponents.Label {
             text: i18n("Name:")
+            id: nameLabel
             anchors {
                 right: nameField.left
                 rightMargin: root.spacing
@@ -56,6 +60,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: nameField
+            width: parent.width - nameLabel.width - 6
         }
 
         PlasmaComponents.Label {
@@ -67,6 +72,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: lastNameField
+            width: nameField.width
         }
 
         PlasmaComponents.Label {
@@ -76,13 +82,31 @@ PlasmaComponents.Page {
                 rightMargin: root.spacing
             }
         }
-
         PlasmaComponents.TextField {
             id: emailField
+            width: nameField.width
         }
 
+        Item {
+            width: 1
+            height: root.spacing * 2
+        }
+        Item {
+            width: 1
+            height: root.spacing * 2
+        }
+
+        Item {
+            width: 1
+            height: 1
+            }
+        PlasmaComponents.Label{
+            text: i18n("Enter a new password below or leave it empty to keep your current password.")
+            width: nameField.width
+            wrapMode: Text.Wrap
+        }
         PlasmaComponents.Label {
-            text: i18n("Password:")
+            text: i18n("New password:")
             anchors {
                 right: passwordField.left
                 rightMargin: root.spacing
@@ -91,10 +115,11 @@ PlasmaComponents.Page {
         PlasmaComponents.TextField {
             id: passwordField
             echoMode: TextInput.Password
+            width: nameField.width
         }
 
         PlasmaComponents.Label {
-            text: i18n("Password (repeat):")
+            text: i18n("Confirm password:")
             anchors {
                 right: password2Field.left
                 rightMargin: root.spacing
@@ -104,6 +129,7 @@ PlasmaComponents.Page {
         PlasmaComponents.TextField {
             id: password2Field
             echoMode: TextInput.Password
+            width: nameField.width
             Row {
                 opacity: passwordField.text ? 1 : 0
                 anchors.left: parent.right
