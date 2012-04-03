@@ -133,6 +133,7 @@ namespace Bodega {
         Bodega::ResetPasswordJob *resetPassword(
             const QString &email);
         Bodega::NetworkJob *changePassword(const QString &newPassword);
+        Bodega::NetworkJob *changeAccountDetails(const QString &firstName, const QString &lastName, const QString &email);
 
     Q_SIGNALS:
         void disconnected();

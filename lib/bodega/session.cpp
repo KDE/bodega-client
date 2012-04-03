@@ -418,6 +418,31 @@ Bodega::NetworkJob *Session::changePassword(const QString &newPassword)
     return job;
 }
 
+Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, const QString &lastName, const QString &email)
+{
+    QUrl url = d->baseUrl;
+    QString path = QString::fromLatin1("/changeAccountDetails");
+    url.setEncodedPath(d->jsonPath(path));
+
+    if (!firstName.isEmpty()) {
+        url.addQueryItem(QLatin1String("firstName"), firstName);
+    }
+
+    if (!lastName.isEmpty()) {
+        url.addQueryItem(QLatin1String("lastName"), lastName);
+    }
+
+    if (!email.isEmpty()) {
+        url.addQueryItem(QLatin1String("email"), firstName);
+    }
+
+    //qDebug()<<"url is " <<url;
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
 Bodega::ListBallotsJob *Session::listBallots(int offset, int pageSize)
 {
     QUrl url = d->baseUrl;
