@@ -33,15 +33,9 @@ Image {
     width: 360
     height: 360
 
-    property string username
-    property string password
-
     //Signon functions
     function authenticate(username, password)
     {
-        appRoot.username = username
-        appRoot.password = password
-
         if (username == '' || password == '') {
             if (!connectPageTimer.authing) {
                 connectPageTimer.restart()
@@ -59,7 +53,7 @@ Image {
     function signedOn(job)
     {
         //save credentials only if login worked
-        bodegaClient.saveCredentials(username, password)
+        bodegaClient.saveCredentials()
 
         connectPageTimer.running = false
         mainStack.replace(Qt.createComponent("storebrowser/ItemBrowser.qml"), '', true)

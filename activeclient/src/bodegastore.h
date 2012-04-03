@@ -47,7 +47,7 @@ public:
     Bodega::Model* channelsModel() const;
     Bodega::Model* searchModel() const;
 
-    Q_INVOKABLE void saveCredentials(const QString &userName, const QString &password) const;
+    Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE QVariantHash retrieveCredentials() const;
 
 private:

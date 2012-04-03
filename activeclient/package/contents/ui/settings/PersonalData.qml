@@ -163,7 +163,7 @@ PlasmaComponents.Page {
                     showMessage(pwordJob.error.title, pwordJob.error.errorId + ': ' + pwordJob.error.description);
                 } else {
                     bodegaClient.session.password = newPword;
-                    authenticate(appRoot.username, newPword)
+                    authenticate(bodegaClient.session.userName, newPword)
                 }
 
                 passwordField.text = '';

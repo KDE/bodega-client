@@ -303,7 +303,7 @@ Model* BodegaStore::searchModel() const
     return m_searchModel;
 }
 
-void BodegaStore::saveCredentials(const QString &username, const QString &password) const
+void BodegaStore::saveCredentials() const
 {
     KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(),
                                            winId(), KWallet::Wallet::Synchronous);
@@ -313,8 +313,8 @@ void BodegaStore::saveCredentials(const QString &username, const QString &passwo
          wallet->setFolder("Bodega")) {
 
         QMap<QString, QString> map;
-        map["username"] = username;
-        map["password"] = password;
+        map["username"] = m_session->userName();
+        map["password"] = m_session->password();
 
         if (wallet->writeMap("credentials", map) != 0) {
             kWarning() << "Unable to write credentials to wallet";
