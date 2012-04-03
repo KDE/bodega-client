@@ -31,7 +31,6 @@ PlasmaComponents.Page {
     property bool creation: false
     property int spacing: 4
     property variant job
-    width: parent.width
 
     //FIXME: proper solution needed
     function showMessage(title, message)
@@ -46,21 +45,22 @@ PlasmaComponents.Page {
     Grid {
         id: grid
         anchors.verticalCenter: parent.verticalCenter
+        width: parent.width
         rows: 8
         columns: 2
         spacing: root.spacing
 
+        onWidthChanged: { print("***************************** " + width) }
         PlasmaComponents.Label {
             text: i18n("Name:")
             id: nameLabel
             anchors {
-                right: nameField.left
+                right: lastNameField.left
                 rightMargin: root.spacing
             }
         }
         PlasmaComponents.TextField {
             id: nameField
-            width: parent.width - nameLabel.width - 6
         }
 
         PlasmaComponents.Label {
@@ -87,24 +87,38 @@ PlasmaComponents.Page {
             width: nameField.width
         }
 
+        //just a placeholder
         Item {
+            visible: !creation
             width: 1
-            height: root.spacing * 2
+            height: saveInfoButton.height
         }
-        Item {
-            width: 1
-            height: root.spacing * 2
+        PlasmaComponents.Button {
+            id: saveInfoButton
+            visible: !creation
+            text: i18n("Loading...")
+            enabled: nameField.text && lastNameField.text && emailField.text
+
+            PlasmaComponents.BusyIndicator {
+                id: infoSaveBusyIndicator
+                visible: false
+                height: savePasswordButton.height
+                width: height
+                anchors {
+                    left: parent.right
+                }
+            }
         }
 
         Item {
             width: 1
-            height: 1
-            }
-        PlasmaComponents.Label{
-            text: i18n("Enter a new password below or leave it empty to keep your current password.")
-            width: nameField.width
-            wrapMode: Text.Wrap
+            height: creation ? 0 : root.spacing * 2
         }
+        Item {
+            width: 1
+            height: creation ? 0 : root.spacing * 2
+        }
+
         PlasmaComponents.Label {
             text: i18n("New password:")
             anchors {
@@ -159,13 +173,13 @@ PlasmaComponents.Page {
 
         //just a placeholder
         Item {
-            width: 10
-            height: 10
+            width: 1
+            height: savePasswordButton.height
         }
         PlasmaComponents.Button {
-            id: saveButton
-            text: creation ? i18n("Create") : i18n("Loading...")
-            enabled: nameField.text && lastNameField.text && emailField.text && (passwordField.text == password2Field.text)
+            id: savePasswordButton
+            text: creation ? i18n("Create") : i18n("Update Password")
+            enabled: passwordField.text == password2Field.text
             property variant pwordJob
             property string newPword
 
@@ -194,13 +208,13 @@ PlasmaComponents.Page {
 
                 passwordField.text = '';
                 password2Field.text = '';
-                enabled = nameField.text && lastNameField.text && emailField.text && (passwordField.text == password2Field.text);
+                enabled = passwordField.text == password2Field.text;
             }
 
             PlasmaComponents.BusyIndicator {
-                id: busyIndicator
+                id: passwordSaveBusyIndicator
                 visible: false
-                height: saveButton.height
+                height: savePasswordButton.height
                 width: height
                 anchors {
                     left: parent.right
@@ -211,9 +225,10 @@ PlasmaComponents.Page {
 
     function loadData()
     {
-        busyIndicator.visible = true;
-        busyIndicator.running = true;
-        job = bodegaClient.session.participantInfo("fuck");
+        var indicator = creation ? passwordSaveBusyIndicator : infoSaveBusyIndicator
+        indicator.visible = true;
+        indicator.running = true;
+        job = bodegaClient.session.participantInfo();
         job.jobFinished.connect(jobFinished);
         job.infoReceived.connect(displayInfo);
     }
@@ -224,9 +239,9 @@ PlasmaComponents.Page {
             showMessage(job.error.title, job.error.id + ": " + job.error.description);
         }
 
-        busyIndicator.running = false;
-        busyIndicator.visible = false;
-        saveButton.text = i18n("Save")
+        infoSaveBusyIndicator.running = false;
+        infoSaveBusyIndicator.visible = false;
+        saveInfoButton.text = i18n("Update Account")
     }
 
     function displayInfo(info)
@@ -240,5 +255,6 @@ PlasmaComponents.Page {
         if (!creation) {
             loadData();
         }
+    print("widths: " + parent.width  + ", " + nameLabel.right + ", " + nameField.width)
     }
 }
