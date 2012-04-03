@@ -39,9 +39,6 @@ Image {
     //Signon functions
     function authenticate(username, password)
     {
-        bodegaClient.session.baseUrl = "http://127.0.0.1:3000"
-        bodegaClient.session.deviceId = "VIVALDI-1"
-
         appRoot.username = username
         appRoot.password = password
 

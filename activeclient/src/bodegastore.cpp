@@ -27,7 +27,10 @@
 #include <QScriptEngine>
 #include <QScriptValueIterator>
 
+#include <KConfig>
+#include <KConfigGroup>
 #include <KDebug>
+#include <KGlobal>
 #include <kwallet.h>
 
 //Bodega libs
@@ -248,7 +251,6 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
 BodegaStore::BodegaStore()
     : KDeclarativeMainWindow()
 {
-
     declarativeView()->setPackageName("com.coherenttheory.bodegastore");
 
     qmlRegisterType<Bodega::ParticipantInfoJob>();
@@ -269,6 +271,11 @@ BodegaStore::BodegaStore()
     qScriptRegisterMetaType<Bodega::ParticipantInfo>(declarativeView()->scriptEngine(), qScriptValueFromParticipantInfo, participantInfoFromQScriptValue, QScriptValue());
 
     m_session = new Session(this);
+    KConfigGroup config(KGlobal::config(), "AddOns");
+    m_session->setBaseUrl(config.readEntry("URL", "http://127.0.0.1:3000"));
+    m_session->setDeviceId(config.readEntry("Device", "VIVALDI-1"));
+
+
     m_channelsModel = new Bodega::Model(this);
     m_channelsModel->setSession(m_session);
     m_searchModel = new Bodega::Model(this);
