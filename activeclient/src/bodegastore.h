@@ -25,6 +25,7 @@
 #include "kdeclarativemainwindow.h"
 
 namespace Bodega {
+    class HistoryModel;
     class Model;
     class Session;
 }
@@ -37,6 +38,7 @@ class BodegaStore : public KDeclarativeMainWindow
     Q_PROPERTY(Bodega::Session *session READ session CONSTANT)
     Q_PROPERTY(Bodega::Model *channelsModel READ channelsModel CONSTANT)
     Q_PROPERTY(Bodega::Model *searchModel READ searchModel CONSTANT)
+    Q_PROPERTY(Bodega::HistoryModel *historyModel READ historyModel CONSTANT)
 
 public:
     BodegaStore();
@@ -46,14 +48,18 @@ public:
     Bodega::Session *session() const;
     Bodega::Model* channelsModel() const;
     Bodega::Model* searchModel() const;
+    Bodega::HistoryModel *historyModel();
 
     Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE QVariantHash retrieveCredentials() const;
+    Q_INVOKABLE void historyInUse(bool used);
 
 private:
     Bodega::Session *m_session;
     Bodega::Model *m_channelsModel;
     Bodega::Model *m_searchModel;
+    Bodega::HistoryModel *m_historyModel;
+    int m_historyUsers;
 };
 
 #endif // BODEGASTORE_H

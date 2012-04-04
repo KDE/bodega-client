@@ -37,6 +37,7 @@
 #include <bodega/assetoperations.h>
 #include <bodega/bodegamodel.h>
 #include <bodega/channelsjob.h>
+#include <bodega/historymodel.h>
 #include <bodega/networkjob.h>
 #include <bodega/participantinfojob.h>
 #include <bodega/session.h>
@@ -249,7 +250,8 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
 }
 
 BodegaStore::BodegaStore()
-    : KDeclarativeMainWindow()
+    : KDeclarativeMainWindow(),
+      m_historyModel(0)
 {
     declarativeView()->setPackageName("com.coherenttheory.bodegastore");
 
@@ -257,6 +259,7 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::AssetJob>();
     qmlRegisterType<Bodega::AssetOperations>();
     qmlRegisterType<Bodega::ChannelsJob>();
+    qmlRegisterType<Bodega::HistoryModel>();
     qmlRegisterType<Bodega::Model>();
     qmlRegisterType<Bodega::NetworkJob>();
     qmlRegisterType<Bodega::Session>();
@@ -301,6 +304,31 @@ Model* BodegaStore::channelsModel() const
 Model* BodegaStore::searchModel() const
 {
     return m_searchModel;
+}
+
+HistoryModel *BodegaStore::historyModel()
+{
+    if (!m_historyModel) {
+        m_historyUsers = 0;
+        m_historyModel = new HistoryModel(m_session);
+        m_historyModel->setSession(m_session);
+    }
+
+    return m_historyModel;
+}
+
+void BodegaStore::historyInUse(bool used)
+{
+    if (used) {
+        ++m_historyUsers;
+    } else {
+        --m_historyUsers;
+        if (m_historyUsers < 1) {
+            m_historyUsers = 0;
+            m_historyModel->deleteLater();
+            m_historyModel = 0;
+        }
+    }
 }
 
 void BodegaStore::saveCredentials() const
