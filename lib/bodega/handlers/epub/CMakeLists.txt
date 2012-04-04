@@ -15,7 +15,7 @@ include("../../CMakeQtUsage")
 qt4_automoc(${bookhandlerplugin_SRCS})
 
 add_library (epubhandlerplugin SHARED ${bookhandlerplugin_SRCS})
-target_link_libraries(epubhandlerplugin  ${QT_LIBRARIES} ${QJSON_LIBRARIES} bodega)
+target_link_libraries(epubhandlerplugin  ${QT_QTNETWORK_LIBRARY}  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QJSON_LIBRARIES} bodega)
 
 
 INSTALL(TARGETS epubhandlerplugin

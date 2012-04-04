@@ -14,7 +14,7 @@ include("../../CMakeQtUsage")
 qt4_automoc(${rpmhandlerplugin_SRCS})
 
 add_library (rpmhandlerplugin SHARED ${rpmhandlerplugin_SRCS})
-target_link_libraries(rpmhandlerplugin  ${QT_LIBRARIES} ${QJSON_LIBRARIES} ${PACKAGEKIT_QT2_LIB} bodega)
+target_link_libraries(rpmhandlerplugin  ${QT_QTNETWORK_LIBRARY}  ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QJSON_LIBRARIES} ${PACKAGEKIT_QT2_LIB} bodega)
 
 
 INSTALL(TARGETS rpmhandlerplugin
