@@ -55,6 +55,8 @@ public:
     void signOnFinished(Bodega::SignOnJob *job);
     void jobFinished(Bodega::NetworkJob *job);
     QNetworkReply *get(const QUrl &url);
+    void addPaging(QUrl &url, int offset, int pageSize);
+    QAbstractItemModel *historyModel();
 
     Session *q;
     QNetworkAccessManager *netManager;
@@ -65,6 +67,8 @@ public:
     bool authenticated;
     int points;
     QMap<ImageUrl, QUrl> imageUrls;
+    QWeakPointer<QAbstractItemModel> historyModelPtr;
+    int historyUsers;
 };
 
 }

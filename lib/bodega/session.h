@@ -28,6 +28,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
 
+class QAbstractItemModel;
+
 namespace Bodega {
 
     class AssetJob;
@@ -82,6 +84,7 @@ namespace Bodega {
         QMap<ImageUrl, QUrl> urlsForImage(const QString &name) const;
 
     public Q_SLOTS:
+        Bodega::NetworkJob *history(int offset, int pageSize);
         Bodega::SignOnJob *signOn();
         void signOut();
         Bodega::ChannelsJob *channels(const QString &topChannel=QString(),

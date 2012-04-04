@@ -30,6 +30,7 @@
 #include "changelanguagejob.h"
 #include "createballotjob.h"
 #include "deleteballotjob.h"
+#include "historymodel.h"
 #include "installjob.h"
 #include "listballotsjob.h"
 #include "participantinfojob.h"
@@ -48,7 +49,8 @@ Session::Private::Private(Session *parent)
         : q(parent),
           points(0),
           authenticated(false),
-          netManager(new QNetworkAccessManager(q))
+          netManager(new QNetworkAccessManager(q)),
+          historyUsers(0)
 {
 }
 
@@ -90,6 +92,17 @@ QNetworkReply *Session::Private::get(const QUrl &url)
     request.setRawHeader("User-Agent", "Bodega 0.1");
     request.setUrl(url);
     return netManager->get(request);
+}
+
+void Session::Private::addPaging(QUrl &url, int offset, int pageSize)
+{
+    if (offset >= 0) {
+        url.addQueryItem(QLatin1String("offset"), QString::number(offset));
+    }
+
+    if (pageSize >= 0) {
+        url.addQueryItem(QLatin1String("pageSize"), QString::number(pageSize));
+    }
 }
 
 Session::Session(QObject *parent)
@@ -183,8 +196,7 @@ bool Session::isAuthenticated() const
     return d->authenticated;
 }
 
-ChannelsJob * Session::channels(const QString &topChannel, int offset,
-                                int pageSize)
+ChannelsJob * Session::channels(const QString &topChannel, int offset, int pageSize)
 {
     QUrl url = d->baseUrl;
     QString path;
@@ -197,15 +209,7 @@ ChannelsJob * Session::channels(const QString &topChannel, int offset,
     }
 
     url.setEncodedPath(d->jsonPath(path));
-
-    if (offset >= 0) {
-        url.addQueryItem(QLatin1String("offset"),
-                         QString::fromLatin1("%1").arg(offset));
-    }
-    if (pageSize >= 0) {
-        url.addQueryItem(QLatin1String("pageSize"),
-                         QString::fromLatin1("%1").arg(pageSize));
-    }
+    d->addPaging(url, offset, pageSize);
 
     //qDebug()<<"url is " <<url;
 
@@ -221,17 +225,10 @@ ChannelsJob * Session::search(const QString &text, const QString &channelId, int
 
     url.setEncodedPath(d->jsonPath(path));
     url.addQueryItem(QLatin1String("query"), text);
+
     //FIXME: decide how this should work, the search field may have to be moved in the channels column
     url.addQueryItem(QLatin1String("channelId"), channelId);
-
-    if (offset >= 0) {
-        url.addQueryItem(QLatin1String("offset"),
-                         QString::fromLatin1("%1").arg(offset));
-    }
-    if (pageSize >= 0) {
-        url.addQueryItem(QLatin1String("pageSize"),
-                         QString::fromLatin1("%1").arg(pageSize));
-    }
+    d->addPaging(url, offset, pageSize);
 
     //qDebug()<<"url is " <<url;
 
@@ -334,6 +331,18 @@ QMap<ImageUrl, QUrl> Session::urlsForImage(const QString &name) const
         ret.insert(itr.key(), QUrl(path));
     }
     return ret;
+}
+
+Bodega::NetworkJob *Session::history(int offset, int pageSize)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QLatin1String("history/");
+    url.setEncodedPath(d->jsonPath(path));
+    d->addPaging(url, offset, pageSize);
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
 }
 
 Bodega::AssetOperations *Session::assetOperations(const QString &assetId)
@@ -450,15 +459,7 @@ Bodega::ListBallotsJob *Session::listBallots(int offset, int pageSize)
 
 
     url.setEncodedPath(d->jsonPath(path));
-
-    if (offset >= 0) {
-        url.addQueryItem(QLatin1String("offset"),
-                         QString::fromLatin1("%1").arg(offset));
-    }
-    if (pageSize >= 0) {
-        url.addQueryItem(QLatin1String("pageSize"),
-                         QString::fromLatin1("%1").arg(pageSize));
-    }
+    d->addPaging(url, offset, pageSize);
 
     //qDebug()<<"url is " <<url;
 
@@ -553,17 +554,8 @@ Bodega::BallotListAssetsJob * Session::ballotListAssets(const QString &ballotId,
     QUrl url = d->baseUrl;
     QString path = QString::fromLatin1("/ballotListAssets");
 
-
     url.setEncodedPath(d->jsonPath(path));
-
-    if (offset >= 0) {
-        url.addQueryItem(QLatin1String("offset"),
-                         QString::number(offset));
-    }
-    if (pageSize >= 0) {
-        url.addQueryItem(QLatin1String("pageSize"),
-                         QString::number(pageSize));
-    }
+    d->addPaging(url, offset, pageSize);
 
     //qDebug()<<"url is " <<url;
 

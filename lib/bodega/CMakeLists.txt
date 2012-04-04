@@ -11,6 +11,7 @@ set (bodega_HEADERS
      deleteballotjob.h
      error.h
      globals.h
+     historymodel.h
      imagelocator.h
      installjob.h
      listballotsjob.h
@@ -38,6 +39,7 @@ set (bodega_SRCS
      createballotjob.cpp
      deleteballotjob.cpp
      error.cpp
+     historymodel.cpp
      imagelocator.cpp
      installjob.cpp
      listballotsjob.cpp
