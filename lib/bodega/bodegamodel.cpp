@@ -275,12 +275,16 @@ Model::Model(QObject *parent)
     QHash<int, QByteArray> roles;
     roles.insert(Qt::DisplayRole, "DisplayRole");
     roles.insert(Qt::DecorationRole, "DecorationRole");
-    QMetaEnum e = metaObject()->enumerator(
-                metaObject()->indexOfEnumerator("DisplayRoles"));
+    QMetaEnum e = metaObject()->enumerator(metaObject()->indexOfEnumerator("DisplayRoles"));
     for (int i = 0; i < e.keyCount(); ++i) {
         roles.insert(e.value(i), e.key(i));
     }
     setRoleNames(roles);
+}
+
+Model::~Model()
+{
+    delete d;
 }
 
 bool Model::canFetchMore(const QModelIndex &parent) const

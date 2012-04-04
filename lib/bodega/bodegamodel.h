@@ -61,6 +61,7 @@ namespace Bodega {
         };
 
         Model(QObject *parent=0);
+        ~Model();
 
         //Invokable to make the view show a spinner when loading more
         Q_INVOKABLE bool canFetchMore(const QModelIndex &parent) const;
