@@ -53,6 +53,7 @@ SimplePage {
                 }
             }
             PlasmaComponents.Label {
+                id: passwordLabel
                 text: i18n("Password:")
                 anchors {
                     right: passwordField.left
@@ -61,6 +62,7 @@ SimplePage {
             }
             PlasmaComponents.TextField {
                 id: passwordField
+                visible: passwordLabel.visible
                 echoMode: TextInput.Password
                 Keys.onTabPressed: emailField.forceActiveFocus()
                 Keys.onPressed: {
@@ -74,26 +76,49 @@ SimplePage {
             id: submitButton
             text: i18n("Connect!")
             anchors.horizontalCenter: parent.horizontalCenter
-            enabled: emailField.text && passwordField.text
+            enabled: emailField.text && (!passwordField.visible || passwordField.text)
             onClicked: submit()
+            property variant job
 
             function submit()
             {
                 if (!submitButton.enabled) {
-                    return
+                    return;
                 }
 
-                appRoot.authenticate(emailField.text, passwordField.text)
+                if (passwordField.visible) {
+                    appRoot.authenticate(emailField.text, passwordField.text);
+                } else {
+                    job = bodegaClient.session.resetPassword(emailField.text);
+                    job.jobFinished.connect(showResetInstructions);
+                }
+            }
+
+            function showResetInstructions()
+            {
+                 if (job.failed) {
+                     showMessage(job.error.title, job.error.id + ": " + job.error.description);
+                 } else {
+                     showMessage(i18n("Password Reset Successfully"), i18n("Please check your email for further instructions."));
+                 }
             }
         }
     }
 
     PlasmaComponents.ToolButton {
-        text: i18n("Forgot password?")
+        text: i18n("Forgot your password?")
+        visible: passwordField.visible
+
         anchors {
             right: parent.right
             bottom: parent.bottom
             margins: 8
+        }
+
+        onClicked: {
+            visible = false;
+            passwordLabel.visible = false;
+            submitButton.text = i18n("Reset my password")
         }
     }
 }
