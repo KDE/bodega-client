@@ -27,43 +27,43 @@ import "../components"
 PlasmaComponents.Page {
     id: root
 
+    PlasmaComponents.Label {
+        text: i18n("Loading history...")
+        anchors.centerIn: parent
+        visible: listView.count == 0
+        PlasmaComponents.BusyIndicator {
+            running: visible
+            height: parent.height
+            width: height
+            anchors.right: parent.left
+        }
+    }
+
     ListView {
         id: listView
         anchors.centerIn: parent
         clip: true
         height: parent.height
         width: parent.width
-        model: ListModel {
-            ListElement { label: "Bought foo" }
-            ListElement { label: "Bought bar" }
-            ListElement { label: "Reinstalled baz" }
-            ListElement { label: "Uninstalled application3" }
-            ListElement { label: "Changed Account details" }
-            ListElement { label: "Bought foo" }
-            ListElement { label: "Bought bar" }
-            ListElement { label: "Reinstalled baz" }
-            ListElement { label: "Uninstalled application3" }
-            ListElement { label: "Changed Account details" }
-            ListElement { label: "Bought foo" }
-            ListElement { label: "Bought bar" }
-            ListElement { label: "Reinstalled baz" }
-            ListElement { label: "Uninstalled application3" }
-            ListElement { label: "Changed Account details" }
-            ListElement { label: "Bought foo" }
-            ListElement { label: "Bought bar" }
-            ListElement { label: "Reinstalled baz" }
-            ListElement { label: "Uninstalled application3" }
-            ListElement { label: "Changed Account details" }
-        }
+        model: bodegaClient.historyModel
 
         delegate: PlasmaComponents.ListItem {
             PlasmaComponents.Label {
-                text: label
+                text: model.DisplayRole
             }
         }
     }
+
     PlasmaComponents.ScrollBar {
         flickableItem: listView
         orientation: Qt.Vertical
+    }
+
+    Component.onCompleted: {
+        bodegaClient.historyInUse(true);
+    }
+
+    Component.onDestruction: {
+        bodegaClient.historyInUse(false);
     }
 }
