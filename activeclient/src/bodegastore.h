@@ -51,6 +51,7 @@ public:
     Bodega::HistoryModel *historyModel();
 
     Q_INVOKABLE void saveCredentials() const;
+    Q_INVOKABLE void forgetCredentials() const;
     Q_INVOKABLE QVariantHash retrieveCredentials() const;
     Q_INVOKABLE void historyInUse(bool used);
 

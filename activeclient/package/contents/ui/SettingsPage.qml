@@ -122,7 +122,7 @@ PlasmaComponents.Page {
                             anchors.verticalCenter: parent.verticalCenter
                             onClicked: {
                                 //make kwallet forget
-                                bodegaClient.saveCredentials("", "")
+                                bodegaClient.forgetCredentials()
                                 bodegaClient.session.signOut()
                                 mainStack.pop(mainStack.initialPage)
                             }

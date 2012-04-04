@@ -331,6 +331,13 @@ void BodegaStore::historyInUse(bool used)
     }
 }
 
+void BodegaStore::forgetCredentials() const
+{
+    m_session->setUserName(QString());
+    m_session->setPassword(QString());
+    saveCredentials();
+}
+
 void BodegaStore::saveCredentials() const
 {
     KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(),
