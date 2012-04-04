@@ -35,7 +35,6 @@
 #include "listballotsjob.h"
 #include "participantinfojob.h"
 #include "registerjob.h"
-#include "resetpasswordjob.h"
 #include "searchjob.h"
 #include "signonjob.h"
 
@@ -399,7 +398,7 @@ Bodega::RegisterJob * Session::registerAccount(const QString &email,
     return job;
 }
 
-Bodega::ResetPasswordJob *Session::resetPassword(const QString &email)
+Bodega::NetworkJob *Session::resetPassword(const QString &email)
 {
     QUrl url = d->baseUrl;
     QString path = QString::fromLatin1("/resetRequest");
@@ -408,7 +407,7 @@ Bodega::ResetPasswordJob *Session::resetPassword(const QString &email)
 
     //qDebug()<<"url is " <<url;
 
-    ResetPasswordJob *job = new ResetPasswordJob(d->get(url), this);
+    NetworkJob *job = new NetworkJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }

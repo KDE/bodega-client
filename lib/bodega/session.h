@@ -133,8 +133,7 @@ namespace Bodega {
             const QString &firstName = QString(),
             const QString &middleNames = QString(),
             const QString &lastName = QString());
-        Bodega::ResetPasswordJob *resetPassword(
-            const QString &email);
+        Bodega::NetworkJob *resetPassword(const QString &email);
         Bodega::NetworkJob *changePassword(const QString &newPassword);
         Bodega::NetworkJob *changeAccountDetails(const QString &firstName, const QString &lastName, const QString &email);
 
