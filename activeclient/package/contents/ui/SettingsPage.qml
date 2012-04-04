@@ -74,7 +74,7 @@ PlasmaComponents.Page {
                     model: ListModel {
                         ListElement { DisplayRole: "Personal data"; component: "PersonalData" }
                         ListElement { DisplayRole: "Add points"; component: "AddPoints" }
-                        ListElement { DisplayRole: "Payment methods"; component: "PaymentMethods" }
+                        //ListElement { DisplayRole: "Payment methods"; component: "PaymentMethods" }
                         ListElement { DisplayRole: "Account history"; component: "AccountHistory" }
                     }
 
