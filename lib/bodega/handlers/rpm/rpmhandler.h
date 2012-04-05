@@ -56,6 +56,7 @@ namespace Bodega {
 
     private Q_SLOTS:
         void gotPackage(const PackageKit::Package &package);
+        void resolveFinished();
         void gotFiles(const PackageKit::Package &package, const QStringList &filenames);
         void installJobFinished();
 

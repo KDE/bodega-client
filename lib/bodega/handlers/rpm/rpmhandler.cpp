@@ -47,6 +47,8 @@ void RpmHandler::init()
     t->resolve(packageName());
     connect(t, SIGNAL(package(const PackageKit::Package &)),
             this, SLOT(gotPackage(const PackageKit::Package &)));
+    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(resolveFinished()));
 }
 
 QString RpmHandler::packageName() const
@@ -104,7 +106,6 @@ void RpmHandler::launch()
 void RpmHandler::gotPackage(const PackageKit::Package &package)
 {
     m_package = package;
-    setReady(true);
 
     emit installedChanged();
 
@@ -112,6 +113,11 @@ void RpmHandler::gotPackage(const PackageKit::Package &package)
     listT->getFiles(package);
     connect(listT, SIGNAL(files(const PackageKit::Package &, const QStringList &)),
             this, SLOT(gotFiles(const PackageKit::Package &, const QStringList &)));
+}
+
+void RpmHandler::resolveFinished()
+{
+    setReady(true);
 }
 
 void RpmHandler::installJobFinished()
