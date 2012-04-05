@@ -155,7 +155,7 @@ QVariant HistoryModel::data(const QModelIndex &index, int role) const
             }
         }
         case DateRole:
-            return d->history[index.row()][QLatin1String("date")];
+            return d->history[index.row()][QLatin1String("date")].toDateTime().toString(Qt::SystemLocaleShortDate);
         case DescriptionRole:
             return d->history[index.row()][QLatin1String("comment")];
         default:
