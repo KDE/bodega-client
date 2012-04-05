@@ -254,7 +254,7 @@ BodegaStore::BodegaStore()
     : KDeclarativeMainWindow(),
       m_historyModel(0)
 {
-    declarativeView()->setPackageName("com.coherenttheory.bodegastore");
+    declarativeView()->setPackageName("com.coherenttheory.addonsapp");
 
     qmlRegisterType<Bodega::ParticipantInfoJob>();
     qmlRegisterType<Bodega::AssetJob>();
@@ -345,9 +345,9 @@ void BodegaStore::saveCredentials() const
     KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(),
                                            winId(), KWallet::Wallet::Synchronous);
     if (wallet->isOpen() &&
-        (wallet->hasFolder("Bodega") ||
-         wallet->createFolder("Bodega")) &&
-         wallet->setFolder("Bodega")) {
+        (wallet->hasFolder("MakePlayLive") ||
+         wallet->createFolder("MakePlayLive")) &&
+         wallet->setFolder("MakePlayLive")) {
 
         QMap<QString, QString> map;
         map["username"] = m_session->userName();
@@ -365,7 +365,7 @@ QVariantHash BodegaStore::retrieveCredentials() const
 {
     KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(),
                                            winId(), KWallet::Wallet::Synchronous);
-    if (wallet->isOpen() && wallet->setFolder("Bodega")) {
+    if (wallet->isOpen() && wallet->setFolder("MakePlayLive")) {
 
         QMap<QString, QString> map;
 

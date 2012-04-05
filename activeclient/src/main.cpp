@@ -30,15 +30,16 @@
 // Own
 #include "bodegastore.h"
 
-static const char description[] = I18N_NOOP("Frontend for the Bodega store");
+static const char description[] = I18N_NOOP("Frontend for the Make Play Live content store");
 
 static const char version[] = "0.1";
 
 int main(int argc, char **argv)
 {
-    KAboutData about("bodega-store", 0, ki18n("Bodega store"), version, ki18n(description),
+    KAboutData about("bodega-store", 0, ki18n("Add Ons App"), version, ki18n(description),
                      KAboutData::License_GPL, ki18n("Copyright 2012 Marco Martin"), KLocalizedString(), 0, "mart@kde.org");
-                     about.addAuthor( ki18n("Marco Martin"), KLocalizedString(), "mart@kde.org" );
+    about.addAuthor( ki18n("Marco Martin"), KLocalizedString(), "mart@kde.org" );
+    about.addAuthor( ki18n("Aaron Seigo"), KLocalizedString(), "aseigo@kde.org" ),
 
     KCmdLineArgs::init(argc, argv, &about);
 

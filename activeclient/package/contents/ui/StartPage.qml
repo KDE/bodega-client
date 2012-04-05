@@ -32,14 +32,14 @@ SimplePage {
         spacing: 12
         PlasmaComponents.ToolButton {
             anchors.horizontalCenter: parent.horizontalCenter;
-            text: i18n("Add an existing Bodega account")
+            text: i18n("Add an existing account")
             iconSource: "list-add"
             font.pointSize: theme.defaultFont.pointSize * 1.5
             onClicked: mainStack.push(Qt.createComponent("PasswordPage.qml"))
         }
         PlasmaComponents.ToolButton {
             anchors.horizontalCenter: parent.horizontalCenter;
-            text: i18n("Create a new Bodega account")
+            text: i18n("Create a new account")
             iconSource: "contact-new"
             font.pointSize: theme.defaultFont.pointSize * 1.5
             onClicked: mainStack.push(Qt.createComponent("CreateUser.qml"))

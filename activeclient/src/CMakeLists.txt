@@ -1,7 +1,7 @@
 
 include_directories( ${KDE4_INCLUDES} ${QT_INCLUDES} ${BODEGA_INCLUDE_DIR} common)
 
-set(bodega-store_SRCS
+set(active-addons_SRCS
     main.cpp
     bodegastore.cpp
 
@@ -10,9 +10,9 @@ set(bodega-store_SRCS
     common/kdeclarativemainwindow.cpp
 )
 
-KDE4_ADD_EXECUTABLE(bodega-store ${bodega-store_SRCS})
+KDE4_ADD_EXECUTABLE(active-addons ${active-addons_SRCS})
 
-target_link_libraries(bodega-store
+target_link_libraries(active-addons
     ${QT_QTDECLARATIVE_LIBRARY}
     ${QT_QTOPENGL_LIBRARY}
     ${QT_QTSCRIPT_LIBRARY}
@@ -21,5 +21,5 @@ target_link_libraries(bodega-store
     bodega
 )
 
-install(TARGETS bodega-store ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS active-addons ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
