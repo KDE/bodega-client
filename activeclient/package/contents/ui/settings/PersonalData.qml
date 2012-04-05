@@ -202,11 +202,19 @@ PlasmaComponents.Page {
             text: creation ? i18n("Create") : i18n("Update Password")
             enabled: passwordField.text == password2Field.text
             property variant pwordJob
+            property variant registerJob
             property string newPword
 
             onClicked: {
                 if (creation) {
                     mainStack.push(Qt.createComponent("../ConnectingPage.qml"))
+                    registerJob = bodegaClient.session.registerAccount(
+                                      emailField.text,
+                                      passwordField.text,
+                                      nameField.text,
+                                      "",
+                                      lastNameField.text);
+                    registerJob.jobFinished.connect(registerAccountDone);
                 } else {
                     if (passwordField.text != '') {
                         newPword = passwordField.text;
@@ -230,6 +238,17 @@ PlasmaComponents.Page {
                 passwordField.text = '';
                 password2Field.text = '';
                 enabled = passwordField.text == password2Field.text;
+            }
+
+            function registerAccountDone()
+            {
+                mainStack.pop()
+                if (registerJob.failed) {
+                    showMessage(registerJob.error.title, registerJob.error.errorId + ': ' + registerJob.error.description);
+                } else {
+                    bodegaClient.session.password = passwordField.text;
+                    authenticate(bodegaClient.session.userName, passwordField.text)
+                }
             }
 
             PlasmaComponents.BusyIndicator {

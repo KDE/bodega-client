@@ -40,6 +40,7 @@
 #include <bodega/historymodel.h>
 #include <bodega/networkjob.h>
 #include <bodega/participantinfojob.h>
+#include <bodega/registerjob.h>
 #include <bodega/session.h>
 #include <bodega/signonjob.h>
 #include <bodega/installjob.h>
@@ -262,6 +263,7 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::HistoryModel>();
     qmlRegisterType<Bodega::Model>();
     qmlRegisterType<Bodega::NetworkJob>();
+    qmlRegisterType<Bodega::RegisterJob>();
     qmlRegisterType<Bodega::Session>();
     qmlRegisterType<Bodega::SignOnJob>();
     qmlRegisterType<Bodega::InstallJob>();
