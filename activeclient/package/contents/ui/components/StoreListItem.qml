@@ -43,6 +43,7 @@ PlasmaComponents.ListItem {
             text: model.DisplayRole
             anchors {
                 left: iconLoader.right
+                leftMargin: 2
                 verticalCenter: parent.verticalCenter
                 right: countLabel.left
             }
