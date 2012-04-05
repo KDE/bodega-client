@@ -76,6 +76,7 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
 
     if (handler) {
         QObject::connect(handler, SIGNAL(ready()), q, SIGNAL(ready()));
+        QObject::connect(handler, SIGNAL(ready()), q, SLOT(checkInstalled()));
         if (handler->isReady()) {
             emit q->ready();
         }

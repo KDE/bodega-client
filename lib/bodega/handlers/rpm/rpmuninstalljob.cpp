@@ -42,8 +42,8 @@ RpmUninstallJob::RpmUninstallJob(Session *parent, RpmHandler *handler)
                        QLatin1String("rpm/01"),
                        tr("Uninstall failed"),
                        tr("Package not installed.")));
+        setFinished();
     }
-    setFinished();
 }
 
 RpmUninstallJob::~RpmUninstallJob()

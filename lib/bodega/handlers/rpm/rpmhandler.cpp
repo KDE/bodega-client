@@ -123,7 +123,8 @@ void RpmHandler::resolveFinished()
 void RpmHandler::installJobFinished()
 {
     PackageKit::Transaction *t = new PackageKit::Transaction;
-    t->resolve(packageName());
+    m_package = PackageKit::Package();
+    t->resolve(packageName(), PackageKit::Transaction::FilterInstalled);
     connect(t, SIGNAL(package(const PackageKit::Package &)),
             this, SLOT(gotPackage(const PackageKit::Package &)));
 }
