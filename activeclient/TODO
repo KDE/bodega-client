@@ -1,9 +1,10 @@
 Downloading:
+* AssetHandler for Plasma packages (using plasmapkg?)
 * moving of content to correct location once downloaded
 * deactivate download button when downloading
 
 Listings:
-* for books, show author and date
+* customized listings for different types, e.g. for books, show author and date
 
 Settings:
 * point purchases
