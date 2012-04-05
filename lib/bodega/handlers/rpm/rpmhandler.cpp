@@ -44,7 +44,7 @@ RpmHandler::~RpmHandler()
 void RpmHandler::init()
 {
     PackageKit::Transaction *t = new PackageKit::Transaction;
-    t->resolve(packageName());
+    t->resolve(packageName(), PackageKit::Transaction::FilterInstalled);
     connect(t, SIGNAL(package(const PackageKit::Package &)),
             this, SLOT(gotPackage(const PackageKit::Package &)));
     connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
