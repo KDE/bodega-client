@@ -52,14 +52,21 @@ PlasmaComponents.Page {
                 spacing: 0
                 PlasmaComponents.Label {
                     text: model.DisplayRole
-                }
-
-                PlasmaComponents.Label {
-                    text: model.DateRole
+                    wrapMode: Text.Wrap
+                    width: root.width
+                    visible: text.length > 0
                 }
 
                 PlasmaComponents.Label {
                     text: model.DescriptionRole
+                    wrapMode: Text.Wrap
+                    width: root.width
+                    visible: text.length > 0
+                }
+
+                PlasmaComponents.Label {
+                    text: model.DateRole
+                    visible: text.length > 0
                 }
             }
         }
