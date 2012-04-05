@@ -41,7 +41,7 @@ namespace Bodega {
 
     private Q_SLOTS:
         void errorOccurred(PackageKit::Transaction::Error error, const QString &message);
-        void removeRepoFinished(PackageKit::Transaction::Exit status, uint runtime);
+        void removeRepoFinished();
         void simulateInstallFinished(PackageKit::Transaction::Exit status, uint runtime);
         void installFinished(PackageKit::Transaction::Exit status, uint runtime);
 

@@ -55,17 +55,18 @@ void RpmInstallJob::downloadFinished(const QString &localFile)
     //RPM uses the file name to know what package actually is
     f.rename(m_packagePath);
 
-    qDebug() << "Getting rid of PK_TMP_DIR";
+    qDebug() << "Getting rid of PK_TMP_DIR if exists";
     PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
     transaction->repoSetData(QLatin1String("PK_TMP_DIR"), QLatin1String("remove"), QLatin1String("true"));
+    //if the repo was not existent, is ok go forward with install procedure
     connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
-            this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
+            this, SLOT(removeRepoFinished()));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(removeRepoFinished(PackageKit::Transaction::Exit, uint)));
+            this, SLOT(removeRepoFinished()));
 }
 
 
-void RpmInstallJob::removeRepoFinished(PackageKit::Transaction::Exit status, uint runtime)
+void RpmInstallJob::removeRepoFinished()
 {
     qDebug() << "Simulate install" << m_packagePath;
 
