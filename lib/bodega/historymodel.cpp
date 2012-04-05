@@ -41,13 +41,13 @@ public:
     HistoryModel *q;
     Session *session;
     QList<QVariantMap> history;
-    int historyCount;
+    bool hasMore;
 };
 
 HistoryModel::Private::Private(HistoryModel *parent)
     : q(parent),
       session(0),
-      historyCount(0)
+      hasMore(false)
 {
 }
 
@@ -62,15 +62,15 @@ void HistoryModel::Private::historyJobFinished(Bodega::NetworkJob *job)
         return;
     }
 
-    historyCount = json[QLatin1String("total")].toInt();
+    hasMore = json[QLatin1String("hasMoreHistory")].toBool();
     const QVariantList historyData = json[QLatin1String("history")].toList();
     const int count = historyData.count();
     int offset = json[QLatin1String("offset")].toInt();
-    const int end = count + offset;
+    const int end = count + offset - 1;
     q->beginInsertRows(QModelIndex(), offset, end);
 
     // fill any blanks
-    while (history.size() <= offset) {
+    while (history.size() < offset) {
         history.append(QVariantMap());
     }
 
@@ -91,7 +91,7 @@ void HistoryModel::Private::reloadFromNetwork()
 
     //reset topnode, remove all the contents of the model
     q->beginResetModel();
-    historyCount = 0;
+    hasMore = false;
     history.clear();
     q->endResetModel();
 
@@ -126,7 +126,7 @@ bool HistoryModel::canFetchMore(const QModelIndex &parent) const
         return false;
     }
 
-    return d->historyCount < d->history.count();
+    return d->hasMore;
 }
 
 int HistoryModel::columnCount(const QModelIndex &parent) const
@@ -141,12 +141,23 @@ QVariant HistoryModel::data(const QModelIndex &index, int role) const
     }
 
     switch (role) {
-        case Qt::DisplayRole:
-            return d->history[index.row()][QLatin1String("title")];
+        case Qt::DisplayRole: {
+            const QString category = d->history[index.row()][QLatin1String("category")].toString();
+            const QString what = d->history[index.row()][QLatin1String("what")].toString();
+            if (category == QLatin1String("Download")) {
+                return tr("Downloaded %1").arg(what);
+            } else if (category == QLatin1String("Purchase")) {
+                return tr("Purchased %1").arg(what);
+            } else if (category == QLatin1String("Points")) {
+                return tr("Added %1 points").arg(what);
+            } else {
+                return QString();
+            }
+        }
         case DateRole:
             return d->history[index.row()][QLatin1String("date")];
         case DescriptionRole:
-            return d->history[index.row()][QLatin1String("description")];
+            return d->history[index.row()][QLatin1String("comment")];
         default:
             return QVariant();
     }
