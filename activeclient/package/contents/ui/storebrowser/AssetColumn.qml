@@ -133,6 +133,12 @@ BrowserColumn {
                             opacity = 0
                             indeterminate = false
                         }
+                        function installError(job, error)
+                        {
+                            opacity = 0
+                            indeterminate = false
+                            showMessage(error.title, error.description)
+                        }
                         Behavior on opacity {
                             NumberAnimation {
                                 duration: 250
@@ -157,6 +163,7 @@ BrowserColumn {
                            downloadProgress.opacity = 1
                            var job = bodegaClient.session.uninstall(assetOperations)
                            job.jobFinished.connect(downloadProgress.operationFinished)
+                           job.error.connect(downloadProgress.installError)
                            if (job.finished) {
                                downloadProgress.opacity = 0
                            }
@@ -166,6 +173,7 @@ BrowserColumn {
                            var job = bodegaClient.session.install(assetOperations)
                            job.progressChanged.connect(downloadProgress.updateProgress)
                            job.jobFinished.connect(downloadProgress.operationFinished)
+                           job.jobError.connect(downloadProgress.installError)
                         }
                     }
                 }

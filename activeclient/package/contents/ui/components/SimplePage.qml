@@ -38,6 +38,7 @@ PlasmaComponents.Page {
         messageBox.state = "left"
     }
 
+    property bool titleShown: true
     property alias title: titleLabel.text
     default property alias content: contentRect.data
 
@@ -45,6 +46,7 @@ PlasmaComponents.Page {
         id: logo
         width: theme.enormousIconSize
         height: width
+        visible: titleShown
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
@@ -54,6 +56,7 @@ PlasmaComponents.Page {
     PlasmaComponents.Label {
         id: titleLabel
         text: "Make Play Live"
+        visible: titleShown
         anchors {
             top: logo.bottom
             horizontalCenter: parent.horizontalCenter
@@ -63,16 +66,16 @@ PlasmaComponents.Page {
     Item {
         id: contentRect
         anchors {
-            top: titleLabel.bottom
+            top: titleShown ? titleLabel.bottom : parent.top
             left: parent.left
             right: parent.right
             bottom: parent.bottom
-            margins: 4
         }
     }
 
     PlasmaCore.FrameSvgItem {
         id: messageBox
+        z: 9999
         property alias title: messageTitleLabel.text
         property alias text: messageLabel.text
         state: "right"

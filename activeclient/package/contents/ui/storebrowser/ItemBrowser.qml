@@ -24,15 +24,19 @@ import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.qtextracomponents 0.1
 import "../components"
 
-PageRow {
-    id: itemBrowser
+SimplePage {
     anchors.fill: parent
+    titleShown: false
+    PageRow {
+        id: itemBrowser
+        anchors.fill: parent
 
-    Timer {
-        interval: 0
-        running: true
-        onTriggered: {
-            push(Qt.createComponent("OverviewColumn.qml"))
+        Timer {
+            interval: 0
+            running: true
+            onTriggered: {
+                itemBrowser.push(Qt.createComponent("OverviewColumn.qml"))
+            }
         }
     }
 }
