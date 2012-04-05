@@ -48,8 +48,19 @@ PlasmaComponents.Page {
         model: bodegaClient.historyModel
 
         delegate: PlasmaComponents.ListItem {
-            PlasmaComponents.Label {
-                text: model.DisplayRole
+            Column {
+                spacing: 0
+                PlasmaComponents.Label {
+                    text: model.DisplayRole
+                }
+
+                PlasmaComponents.Label {
+                    text: model.DateRole
+                }
+
+                PlasmaComponents.Label {
+                    text: model.DescriptionRole
+                }
             }
         }
     }
