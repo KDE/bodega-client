@@ -30,7 +30,6 @@
 #include "changelanguagejob.h"
 #include "createballotjob.h"
 #include "deleteballotjob.h"
-#include "historymodel.h"
 #include "installjob.h"
 #include "listballotsjob.h"
 #include "participantinfojob.h"
@@ -48,8 +47,7 @@ Session::Private::Private(Session *parent)
         : q(parent),
           points(0),
           authenticated(false),
-          netManager(new QNetworkAccessManager(q)),
-          historyUsers(0)
+          netManager(new QNetworkAccessManager(q))
 {
 }
 
@@ -220,7 +218,7 @@ ChannelsJob * Session::channels(const QString &topChannel, int offset, int pageS
 ChannelsJob * Session::search(const QString &text, const QString &channelId, int offset, int pageSize)
 {
     QUrl url = d->baseUrl;
-    QString path = QLatin1String("/search");
+    const QString path = QLatin1String("/search");
 
     url.setEncodedPath(d->jsonPath(path));
     url.addQueryItem(QLatin1String("query"), text);
@@ -335,9 +333,10 @@ QMap<ImageUrl, QUrl> Session::urlsForImage(const QString &name) const
 Bodega::NetworkJob *Session::history(int offset, int pageSize)
 {
     QUrl url = d->baseUrl;
-    const QString path = QLatin1String("history/");
+    const QString path = QLatin1String("/participant/history");
     url.setEncodedPath(d->jsonPath(path));
     d->addPaging(url, offset, pageSize);
+    //qDebug() << "url is" << url;
 
     NetworkJob *job = new NetworkJob(d->get(url), this);
     d->jobConnect(job);
@@ -366,8 +365,9 @@ Bodega::UninstallJob *Session::uninstall(AssetOperations *operations)
 Bodega::NetworkJob *Session::redeemPointsCode(const QString &code)
 {
     QUrl url = d->baseUrl;
-    const QString path = QLatin1String("points/redeemCode/") + code;
+    const QString path = QLatin1String("/points/redeemCode/") + code;
     url.setEncodedPath(d->jsonPath(path));
+    //qDebug() << "url is" << url;
 
     NetworkJob *job = new NetworkJob(d->get(url), this);
     d->jobConnect(job);
@@ -381,7 +381,7 @@ Bodega::RegisterJob * Session::registerAccount(const QString &email,
                                                const QString &lastName)
 {
     QUrl url = d->baseUrl;
-    QString path = QString::fromLatin1("/register");
+    const QString path = QString::fromLatin1("/register");
 
     url.setEncodedPath(d->jsonPath(path));
 
@@ -401,7 +401,7 @@ Bodega::RegisterJob * Session::registerAccount(const QString &email,
 Bodega::NetworkJob *Session::resetPassword(const QString &email)
 {
     QUrl url = d->baseUrl;
-    QString path = QString::fromLatin1("/resetRequest");
+    const QString path = QString::fromLatin1("/resetRequest");
     url.setEncodedPath(d->jsonPath(path));
     url.addQueryItem(QLatin1String("email"), email);
 
@@ -415,7 +415,7 @@ Bodega::NetworkJob *Session::resetPassword(const QString &email)
 Bodega::NetworkJob *Session::changePassword(const QString &newPassword)
 {
     QUrl url = d->baseUrl;
-    QString path = QString::fromLatin1("/changePassword");
+    const QString path = QString::fromLatin1("/changePassword");
     url.setEncodedPath(d->jsonPath(path));
     url.addQueryItem(QLatin1String("newPassword"), newPassword);
 
@@ -429,7 +429,7 @@ Bodega::NetworkJob *Session::changePassword(const QString &newPassword)
 Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, const QString &lastName, const QString &email)
 {
     QUrl url = d->baseUrl;
-    QString path = QString::fromLatin1("/changeAccountDetails");
+    const QString path = QString::fromLatin1("/changeAccountDetails");
     url.setEncodedPath(d->jsonPath(path));
 
     if (!firstName.isEmpty()) {
@@ -454,7 +454,7 @@ Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, cons
 Bodega::ListBallotsJob *Session::listBallots(int offset, int pageSize)
 {
     QUrl url = d->baseUrl;
-    QString path = QString::fromLatin1("/listBallots");
+    const QString path = QString::fromLatin1("/listBallots");
 
 
     url.setEncodedPath(d->jsonPath(path));
@@ -471,7 +471,7 @@ Bodega::CreateBallotJob * Session::createBallot(const QString &name,
                                                 BallotInfo::BallotFlags flags)
 {
     QUrl url = d->baseUrl;
-    QString path = QString::fromLatin1("/createBallot");
+    const QString path = QString::fromLatin1("/createBallot");
 
     url.setEncodedPath(d->jsonPath(path));
 
@@ -497,7 +497,7 @@ Bodega::CreateBallotJob * Session::createBallot(const QString &name,
 Bodega::DeleteBallotJob * Session::deleteBallot(const QString &ballotId)
 {
     QUrl url = d->baseUrl;
-    QString path = QString::fromLatin1("/deleteBallot");
+    const QString path = QString::fromLatin1("/deleteBallot");
 
     url.setEncodedPath(d->jsonPath(path));
 
@@ -514,7 +514,7 @@ Bodega::BallotAddAssetJob * Session::ballotAddAsset(const QString &ballotId,
                                                     const QString &assetId)
 {
     QUrl url = d->baseUrl;
-    QString path = QString::fromLatin1("/ballotAddAsset");
+    const QString path = QString::fromLatin1("/ballotAddAsset");
 
     url.setEncodedPath(d->jsonPath(path));
 
@@ -532,7 +532,7 @@ Bodega::BallotRemoveAssetJob * Session::ballotRemoveAsset(const QString &ballotI
                                                           const QString &assetId)
 {
     QUrl url = d->baseUrl;
-    QString path = QString::fromLatin1("/ballotRemoveAsset");
+    const QString path = QString::fromLatin1("/ballotRemoveAsset");
 
     url.setEncodedPath(d->jsonPath(path));
 
@@ -551,7 +551,7 @@ Bodega::BallotListAssetsJob * Session::ballotListAssets(const QString &ballotId,
                                                         int pageSize)
 {
     QUrl url = d->baseUrl;
-    QString path = QString::fromLatin1("/ballotListAssets");
+    const QString path = QString::fromLatin1("/ballotListAssets");
 
     url.setEncodedPath(d->jsonPath(path));
     d->addPaging(url, offset, pageSize);

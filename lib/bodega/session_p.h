@@ -67,8 +67,6 @@ public:
     bool authenticated;
     int points;
     QMap<ImageUrl, QUrl> imageUrls;
-    QWeakPointer<QAbstractItemModel> historyModelPtr;
-    int historyUsers;
 };
 
 }
