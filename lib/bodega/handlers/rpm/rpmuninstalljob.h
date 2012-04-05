@@ -38,7 +38,11 @@ namespace Bodega {
 
     private Q_SLOTS:
         void errorOccurred(PackageKit::Transaction::Error error, const QString &message);
+        void simulateUninstallFinished(PackageKit::Transaction::Exit status, uint runtime);
         void uninstallFinished(PackageKit::Transaction::Exit status, uint runtime);
+
+    private:
+        RpmHandler *m_handler;
     };
 }
 
