@@ -45,25 +45,52 @@ RpmInstallJob::~RpmInstallJob()
 void RpmInstallJob::downloadFinished(const QString &localFile)
 {
     QFileInfo remoteInfo(m_handler->operations()->assetInfo().path.path());
-    const QString packagePath = QDir::tempPath() + QDir::separator() + remoteInfo.fileName();
+    m_packagePath = QDir::tempPath() + QDir::separator() + remoteInfo.fileName();
     QFile f(localFile);
 
-    QFile oldFile(packagePath);
+    QFile oldFile(m_packagePath);
     if (oldFile.exists()) {
         oldFile.remove();
     }
-
-    qDebug() << "Trying to install" << remoteInfo.fileName();
     //RPM uses the file name to know what package actually is
-    f.rename(packagePath);
+    f.rename(m_packagePath);
+
+    qDebug() << "Getting rid of PK_TMP_DIR";
+    PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
+    transaction->repoSetData(QLatin1String("PK_TMP_DIR"), QLatin1String("remove"), QLatin1String("true"));
+    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+            this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
+    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+            this, SLOT(removeRepoFinished(PackageKit::Transaction::Exit, uint)));
+}
+
+
+void RpmInstallJob::removeRepoFinished(PackageKit::Transaction::Exit status, uint runtime)
+{
+    qDebug() << "Simulate install" << m_packagePath;
 
     PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
-    transaction->installFile(packagePath, false);
+    transaction->simulateInstallFile(m_packagePath);
 
     connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
             this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(installFinished(PackageKit::Transaction::Exit, uint)));
+            this, SLOT(simulateInstallFinished(PackageKit::Transaction::Exit, uint)));
+}
+
+void RpmInstallJob::simulateInstallFinished(PackageKit::Transaction::Exit status, uint runtime)
+{
+    if (status == PackageKit::Transaction::ExitSuccess) {
+        qDebug() << "Trying to install" << m_packagePath;
+
+        PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
+        transaction->installFile(m_packagePath, false);
+
+        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+                this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
+        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                this, SLOT(installFinished(PackageKit::Transaction::Exit, uint)));
+    }
 }
 
 void RpmInstallJob::errorOccurred(PackageKit::Transaction::Error error, const QString &message)
@@ -73,14 +100,13 @@ void RpmInstallJob::errorOccurred(PackageKit::Transaction::Error error, const QS
                    QString(QLatin1String("rpm/%1")).arg(error),
                    tr("Install failed"),
                    message));
+    setFinished();
 }
 
 void RpmInstallJob::installFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
     qDebug() << "Job finished, exit code:" << status << "Running time:" << runtime;
-    if (status == PackageKit::Transaction::ExitSuccess) {
-        setFinished();
-    }
+    setFinished();
 }
 
 }
