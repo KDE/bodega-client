@@ -64,6 +64,14 @@ void PackageInstallJob::downloadFinished(const QString &packageFile)
             type = QLatin1String("runner");
         } else if (serviceType == QLatin1String("Plasma/Wallpaper")) {
             type = QLatin1String("wallpaperplugin");
+        } else if (serviceType == QLatin1String("Plasma/LayoutTemplate")) {
+            packageRoot = QLatin1String("plasma/layout-templates/");
+        } else if (serviceType == QLatin1String("KWin/Effect")) {
+            packageRoot = QLatin1String("kwin/effects/");
+        } else if (serviceType == QLatin1String("KWin/WindowSwitcher")) {
+            packageRoot = QLatin1String("kwin/tabbox/");
+        } else if (serviceType == QLatin1String("KWin/Script")) {
+            packageRoot = QLatin1String("kwin/scripts/");
         } else {
             type = serviceType;
             qDebug() << "fallthrough type is" << serviceType;
