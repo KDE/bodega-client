@@ -42,6 +42,9 @@ namespace Bodega {
         QString launchText() const;
         bool isInstalled() const;
 
+        //Internal
+        const QStringList &supportedTypes() const;
+
     public Q_SLOTS:
         Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
         Bodega::UninstallJob *uninstall(Session *session);
@@ -50,6 +53,7 @@ namespace Bodega {
     private:
         QWeakPointer<PackageInstallJob> m_installJob;
         QWeakPointer<PackageUninstallJob> m_uninstallJob;
+        QStringList m_supportedTypes;
     };
 
 }

@@ -37,6 +37,16 @@ using namespace Bodega;
 PackageHandler::PackageHandler(QObject *parent)
     : AssetHandler(parent)
 {
+    m_supportedTypes << QLatin1String("Plasma/Applet")
+                     << QLatin1String("Plasma/PopupApplet")
+                     << QLatin1String("Plasma/Containment")
+                     << QLatin1String("Plasma/DataEngine")
+                     << QLatin1String("Plasma/Runner")
+                     << QLatin1String("Plasma/Wallpaper")
+                     << QLatin1String("Plasma/LayoutTemplate")
+                     << QLatin1String("KWin/Effect")
+                     << QLatin1String("KWin/WindowSwitcher")
+                     << QLatin1String("KWin/Script");
     setReady(true);
 }
 
@@ -49,19 +59,7 @@ bool PackageHandler::isInstalled() const
     //FIXME: pluginName always == file name?
     const QString packageName = operations()->assetInfo().path.path().replace(QRegExp(QLatin1String(".*\\/([^\\/]*)\\..*")), QLatin1String("\\1"));
 
-    QStringList types;
-    types << QLatin1String("Plasma/Applet")
-          << QLatin1String("Plasma/PopupApplet")
-          << QLatin1String("Plasma/Containment")
-          << QLatin1String("Plasma/DataEngine")
-          << QLatin1String("Plasma/Runner")
-          << QLatin1String("Plasma/Wallpaper")
-          << QLatin1String("Plasma/LayoutTemplate")
-          << QLatin1String("KWin/Effect")
-          << QLatin1String("KWin/WindowSwitcher")
-          << QLatin1String("KWin/Script");
-
-    foreach (const QString& type, types) {
+    foreach (const QString& type, m_supportedTypes) {
         const KService::List services = KServiceTypeTrader::self()->query(type);
         foreach (const KService::Ptr &service, services) {
             if (packageName == service->property(QLatin1String("X-KDE-PluginInfo-Name"), QVariant::String).toString()) {
@@ -100,6 +98,11 @@ QString PackageHandler::launchText() const
 void PackageHandler::launch()
 {
     //This plugin doesn't support launch
+}
+
+const QStringList &PackageHandler::supportedTypes() const
+{
+    return m_supportedTypes;
 }
 
 #include "packagehandler.moc"

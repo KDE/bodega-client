@@ -37,22 +37,10 @@ PackageUninstallJob::PackageUninstallJob(Session *parent, PackageHandler *handle
 {
     const QString packageName = handler->operations()->assetInfo().path.path().replace(QRegExp(QLatin1String(".*\\/([^\\/]*)\\..*")), QLatin1String("\\1"));
 
-    QStringList types;
-    types << QLatin1String("Plasma/Applet")
-          << QLatin1String("Plasma/PopupApplet")
-          << QLatin1String("Plasma/Containment")
-          << QLatin1String("Plasma/DataEngine")
-          << QLatin1String("Plasma/Runner")
-          << QLatin1String("Plasma/Wallpaper")
-          << QLatin1String("Plasma/LayoutTemplate")
-          << QLatin1String("KWin/Effect")
-          << QLatin1String("KWin/WindowSwitcher")
-          << QLatin1String("KWin/Script");
-
     QStringList pluginTypes;
     QString packageRoot;
 
-    foreach (const QString& type, types) {
+    foreach (const QString& type, handler->supportedTypes()) {
         const KService::List services = KServiceTypeTrader::self()->query(type);
         foreach (const KService::Ptr &service, services) {
             if (packageName == service->property(QLatin1String("X-KDE-PluginInfo-Name"), QVariant::String).toString()) {
