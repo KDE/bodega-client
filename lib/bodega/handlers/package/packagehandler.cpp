@@ -168,10 +168,5 @@ void PackageHandler::launch()
     //This plugin doesn't support launch
 }
 
-const QStringList &PackageHandler::supportedTypes() const
-{
-    return m_supportedTypes;
-}
-
 #include "packagehandler.moc"
 Q_EXPORT_PLUGIN2(packagehandler, Bodega::PackageHandler);

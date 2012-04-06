@@ -47,7 +47,6 @@ namespace Bodega {
         bool isInstalled() const;
 
         //Internal
-        const QStringList &supportedTypes() const;
         Plasma::PackageStructure *createPackageStructure() const;
 
     public Q_SLOTS:
