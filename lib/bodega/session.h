@@ -110,15 +110,15 @@ namespace Bodega {
         Bodega::NetworkJob *redeemPointsCode(const QString &code);
 
         Bodega::ListBallotsJob *listBallots(int offset=-1, int pageSize=-1);
-        Bodega::CreateBallotJob *createBallot(
+        Bodega::CreateBallotJob *createCollection(
             const QString &name,
             Bodega::BallotInfo::BallotFlags flags = Bodega::BallotInfo::None);
-        Bodega::DeleteBallotJob *deleteBallot(const QString &collectionId);
-        Bodega::BallotAddAssetJob *ballotAddAsset(const QString &collectionId,
+        Bodega::DeleteBallotJob *deleteCollection(const QString &collectionId);
+        Bodega::BallotAddAssetJob *collectionAddAsset(const QString &collectionId,
                                                   const QString &assetId);
-        Bodega::BallotRemoveAssetJob *ballotRemoveAsset(const QString &collectionId,
+        Bodega::BallotRemoveAssetJob *collectionRemoveAsset(const QString &collectionId,
                                                         const QString &assetId);
-        Bodega::BallotListAssetsJob *ballotListAssets(const QString &collectionId,
+        Bodega::BallotListAssetsJob *collectionListAssets(const QString &collectionId,
                                                       int offset=-1,
                                                       int pageSize=-1);
 
