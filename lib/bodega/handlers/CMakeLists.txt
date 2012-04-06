@@ -6,4 +6,5 @@ else (PACKAGEKIT_QT2_FOUND)
 endif (PACKAGEKIT_QT2_FOUND)
 
 add_subdirectory(epub)
+add_subdirectory(package)
 add_subdirectory(wallpaper)
