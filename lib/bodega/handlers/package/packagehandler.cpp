@@ -29,13 +29,15 @@
 
 #include <KService>
 #include <KServiceTypeTrader>
+#include <KSycoca>
 #include <KStandardDirs>
 #include <Plasma/Package>
 
 using namespace Bodega;
 
 PackageHandler::PackageHandler(QObject *parent)
-    : AssetHandler(parent)
+    : AssetHandler(parent),
+      m_cachedInstalled(false)
 {
     m_supportedTypes << QLatin1String("Plasma/Applet")
                      << QLatin1String("Plasma/PopupApplet")
@@ -47,11 +49,17 @@ PackageHandler::PackageHandler(QObject *parent)
                      << QLatin1String("KWin/Effect")
                      << QLatin1String("KWin/WindowSwitcher")
                      << QLatin1String("KWin/Script");
+    connect(KSycoca::self(), SIGNAL(databaseChanged(QStringList)), this, SLOT(checkInstalledChanged()));
     setReady(true);
 }
 
 PackageHandler::~PackageHandler()
 {
+}
+
+void PackageHandler::init()
+{
+    m_cachedInstalled = isInstalled();
 }
 
 Plasma::PackageStructure *PackageHandler::createPackageStructure() const
@@ -137,6 +145,14 @@ bool PackageHandler::isInstalled() const
     }
 
     return false;
+}
+
+void PackageHandler::checkInstalledChanged()
+{
+    if (m_cachedInstalled != isInstalled()) {
+        m_cachedInstalled = isInstalled();
+        emit installedChanged();
+    }
 }
 
 Bodega::InstallJob *PackageHandler::install(QNetworkReply *reply, Session *session)

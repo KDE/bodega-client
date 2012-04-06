@@ -43,6 +43,8 @@ namespace Bodega {
         PackageHandler(QObject *parent = 0);
         ~PackageHandler();
 
+        void init();
+
         QString launchText() const;
         bool isInstalled() const;
 
@@ -54,10 +56,14 @@ namespace Bodega {
         Bodega::UninstallJob *uninstall(Session *session);
         void launch();
 
+    private Q_SLOTS:
+        void checkInstalledChanged();
+
     private:
         QWeakPointer<PackageInstallJob> m_installJob;
         QWeakPointer<PackageUninstallJob> m_uninstallJob;
         QStringList m_supportedTypes;
+        bool m_cachedInstalled;
     };
 
 }
