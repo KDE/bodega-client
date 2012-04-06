@@ -134,6 +134,7 @@ QScriptValue qScriptValueFromAssetInfo(QScriptEngine *engine, const Bodega::Asse
     //obj.setProperty("images", info.images);
     obj.setProperty("description", info.description);
     obj.setProperty("points", info.points);
+    obj.setProperty("canDownload", info.canDownload);
 
     QScriptValue imageObj = engine->newObject();
     imageObj.setProperty("tiny", info.images[ImageTiny].toString());
@@ -171,6 +172,8 @@ void assetInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::AssetInf
             info.description = it.value().toString();
         } else if (it.name() == "points") {
             info.points = it.value().toInteger();
+        } else if (it.name() == "canDownload") {
+            info.canDownload = it.value().toBool();
         } else if (it.name() == "images") {
             QMap<ImageUrl, QUrl> images;
             QScriptValueIterator imageIt(scriptValue);
