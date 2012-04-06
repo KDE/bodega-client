@@ -24,6 +24,7 @@ Known URLs
 Authentication
 --------------
 Path: /auth
+Authentication: yes
 Purpose: authenticates a given user.
 Parameters:
     + string auth_user
@@ -36,9 +37,11 @@ Response:
 Example:
     https://sample.com/bodega/v1/json/auth?auth_user=zack@kde.org&auth_password=zack&auth_device=2
 
-List Channels
--------------
+
+Store Listings
+--------------
 Path: /channels
+Authentication: yes
 Purpose: list all channels by name/id for the logged in device
 Parameters:
     + integer offset, offset response from the start
@@ -47,12 +50,184 @@ Response:
     * List<number> channels, the numeric IDs of channels
 
 Path: /channel/[0-9]+
+Authentication: yes
 Purpose: list the contents of a specific channel; the id is encoded in the URL path
 Parameters: <none>
 Response:
-
-Example:
+Examples:
     http://sample.com/bodega/v1/json/channels
     http://sample.com/bodega/v1/json/channels?offset=25&pageSize=25
 
+Path: /search
+Authentication: yes
+Purpose: returns assets that match a given search term
+Paramaters:
+    + string query
+    + number channelId, the channel to search in (will also search in sub-channels)
+    * number pageSize, the number of matches to return at a time
+    * number offset, the offset into the match set to start returning from
+
+
+Path: /asset/<asset id>
+Authentication: yes
+Purpose: retrieves details for a given asset
+Parameters: id, in URL
+Response:
+    + number id
+    + string name
+    + string description
+    + string license
+    + number partnerId (uploading participant)
+    + string version
+    + string path
+    + string image
+
+Points and purchases
+--------------------
+Path: /points/redeemCode/<code>
+Authentication: yes
+Purpose: to redeem a pre-purchased code for points
+Parameters:
+    + (in url) string code to redeem
+Response:
+    * Number of new points, or -1 on error (along with error object)
+Example:
+    https://sample.com/bodega/v1/json/points/redeem/111111111
+
+Path: /points/buy
+Authentication: yes
+Purpose: to purchase points
+Parameters:
+    + points: number of points to purchase
+Response:
+Example:
+    https://sample.com/bodega/v1/json/points/buy?points=1000
+
+Path: /download/<asset id>
+Authentication: yes
+Purpose: initiates a download for the given asset, or returns an error if the asset is not available or needs to be purchased first
+Parameters: number asset id, in URL
+Response: the contents of the asset file
+
+Path: /upload
+Authentication: yes
+Purpose: 
+
+
+Collections
+-----------
+Path: /collections/list
+Authentication: yes
+Purpose:
+Parameters:
+Response:
+
+Path: /collections/create
+Authentication: yes
+Purpose:
+Parameters:
+Response:
+
+Path: /collections/delete
+Authentication: yes
+Purpose:
+Parameters:
+Response:
+
+Path: /collections/listAssets
+Authentication: yes
+Purpose:
+Parameters:
+Response:
+
+Path: /collections/addAsset
+Authentication: yes
+Purpose:
+Parameters:
+Response:
+
+Path: /collections/removeAsset
+Authentication: yes
+Purpose:
+Parameters:
+Response:
+
+
+Account Registration
+--------------------
+Path: /register
+Authentication: no
+Purpose: list the account history of a given participant
+Response:
+Parameters:
+
+Path: /register/confirm
+Authentication: no
+Purpose: list the account history of a given participant
+Response:
+Parameters:
+
+
+
+Account Management
+------------------
+Path: /participant/resetPassword
+Authentication: no
+Purpose: sends a password reset email to a given email
+Response:
+Parameters:
+    + string email
+
+Path: /participant/changePassword
+Authentication: yes
+Purpose: sets a new password for an account
+Parameters:
+    + newPassword: the new password string
+Response:
+    * success: true on successful password update, otherwise an error object
+Eample:
+    https://sample.com/bodega/v1/json/changePassword?newPassword=thisIsMyNewPassphrase
+
+Path: /participant/changeAccountDetails
+Authentication: yes
+Purpose: change the name or email associated with a participant
+Parameters:
+    * firstName: the person's first name
+    * lastName: the person's last name
+    * email: the person's email address; will be validated before usage
+Response:
+    * success: true on success, otherwise an error object
+Eample:
+    https://sample.com/bodega/v1/json/changePassword?firstName=Sally
+    https://sample.com/bodega/v1/json/changePassword?firstName=Sally&lastName=Fally
+    https://sample.com/bodega/v1/json/changePassword?email=sally@foo.com
+
+Account Information
+-------------------
+Path: /participant/history
+Authentication: yes
+Purpose: list the account history of a given participant
+Parameters:
+    * integer offset, offset response from the start (default 0)
+    * integer pageSize, how many items to show (default 50)
+Response:
+    * List<Map> list of history items: title, date and description
+Example:
+    https://sample.com/bodega/v1/json/participant/history?offset=0&pageSize=20
+
+Path: /participant/info
+Authentication: yes
+Purpose: retrieve information related to the participant
+Parameters: <none>
+Response:
+    + assetCount: number of assets in the store belonging (e.g. uploaded by) this participant
+    + channelCount: number of channels their assets exist in
+    + storeCount: number of stores their assets exist in
+    + pointsEarned: number of points earned in the store (all time)
+    + pointsOwed: number of points they have owed in the store
+    + points: number of points available for spending (pointsOwed + purchased points)
+    + organization: name of the organization their account is associate with
+    + firstName
+    + lastName
+    + email
 
