@@ -66,14 +66,16 @@ namespace Bodega {
         QString partnerName;
         QString name;
         QString version;
-        QUrl    path;
-        QMap<ImageUrl, QUrl> images;
         QString description;
-        int     points;
         QString mimetype;
+        QUrl path;
+        QMap<ImageUrl, QUrl> images;
+        int  points;
+        bool canDownload;
 
         AssetInfo()
-            : points(0)
+            : points(0),
+              canDownload(false)
         {
         }
 
@@ -83,6 +85,7 @@ namespace Bodega {
             path.clear();
             images.clear();
             points = 0;
+            canDownload = false;
         }
     };
 

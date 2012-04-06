@@ -94,7 +94,7 @@ bool AssetOperations::Private::ready()
 
 void AssetOperations::Private::checkInstalled()
 {
-    if (wasInstalled != handler->isInstalled()) {
+    if (ready() && wasInstalled != handler->isInstalled()) {
         wasInstalled = handler->isInstalled();
         emit q->installedChanged();
     }

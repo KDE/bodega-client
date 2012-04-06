@@ -23,6 +23,7 @@
 
 #include <QDebug>
 
+#include <iostream>
 namespace Bodega
 {
 
@@ -72,10 +73,10 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
     info.name = asset[QLatin1String("name")].toString();
     info.version = asset[QLatin1String("version")].toString();
     info.path = asset[QLatin1String("path")].toString();
-    info.images = q->session()->urlsForImage(
-        asset[QLatin1String("image")].toString());
+    info.images = q->session()->urlsForImage(asset[QLatin1String("image")].toString());
     info.description = asset[QLatin1String("description")].toString();
     info.points = asset[QLatin1String("points")].toInt();
+    info.canDownload = asset[QLatin1String("canDownload")].toBool();
 }
 
 void AssetJob::Private::parseChangeLog(const QVariantMap &result)
