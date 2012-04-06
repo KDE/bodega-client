@@ -167,13 +167,15 @@ BrowserColumn {
                            if (job.finished) {
                                downloadProgress.opacity = 0
                            }
-                        } else {
+                        } else if (assetInfo.canDownload) {
                            downloadProgress.indeterminate = false
                            downloadProgress.opacity = 1
                            var job = bodegaClient.session.install(assetOperations)
                            job.progressChanged.connect(downloadProgress.updateProgress)
                            job.jobFinished.connect(downloadProgress.operationFinished)
                            job.jobError.connect(downloadProgress.installError)
+                        } else {
+                            // purchase
                         }
                     }
                 }
