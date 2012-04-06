@@ -36,6 +36,8 @@ namespace Bodega {
         Q_PROPERTY(QString launchText READ launchText NOTIFY ready)
         Q_PROPERTY(bool installed READ isInstalled NOTIFY installedChanged)
         Q_PROPERTY(bool ready READ isReady NOTIFY ready)
+        Q_PROPERTY(Bodega::AssetInfo assetInfo READ assetInfo NOTIFY ready)
+        Q_PROPERTY(Bodega::Tags assetTags READ assetTags NOTIFY ready)
 
     public:
         AssetOperations(const QString &assetId, Session *parent);

@@ -37,25 +37,17 @@ BrowserColumn {
     property variant assetOperations
 
     //FIXME: this is needed because qml can't understand the job passed from the signal
-    property variant assetJob
     onAssetIdChanged: {
         if (assetId <= 0) {
             return
         }
-        assetJob = bodegaClient.session.asset(assetId)
+        var assetJob = bodegaClient.session.asset(assetId)
 
-        assetJob.jobFinished.connect(assetJobcompleted)
         assetJob.jobError.connect(error)
     }
     property variant assetInfo
     property variant assetTags
 
-
-    function assetJobcompleted(job)
-    {
-        assetInfo = assetJob.info
-        assetTags = assetJob.tags
-    }
 
     function error(job, error)
     {
@@ -82,7 +74,7 @@ BrowserColumn {
                 spacing: 8
                 Image {
                     id: bigIconImage
-                    source: assetInfo.images["huge"]
+                    source: assetOperations.assetInfo.images["huge"]
                     asynchronous: true
                     
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -91,7 +83,7 @@ BrowserColumn {
                 }
                 PlasmaComponents.Label {
                     id: titleLabel
-                    text: assetInfo.name
+                    text: assetOperations.assetInfo.name
                     font.pointSize: 20
                     anchors {
                         left: parent.left
@@ -101,7 +93,7 @@ BrowserColumn {
                     horizontalAlignment: Text.AlignHCenter
                 }
                 PlasmaComponents.Label {
-                    text: assetInfo.points > 0 ? i18nc("Price in points", "%1 points", assetInfo.points) : i18n("Free")
+                    text: assetOperations.assetInfo.points > 0 ? i18nc("Price in points", "%1 points", assetOperations.assetInfo.points) : i18n("Free")
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
                 Item {
@@ -154,7 +146,7 @@ BrowserColumn {
                         if (assetOperations.installed) {
                             i18n("Uninstall")
                         } else {
-                            assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
+                            assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
                         }
                     }
                     onClicked: {
@@ -167,7 +159,7 @@ BrowserColumn {
                            if (job.finished) {
                                downloadProgress.opacity = 0
                            }
-                        } else if (assetInfo.canDownload) {
+                        } else if (assetOperations.assetInfo.canDownload) {
                            downloadProgress.indeterminate = false
                            downloadProgress.opacity = 1
                            var job = bodegaClient.session.install(assetOperations)
@@ -188,7 +180,7 @@ BrowserColumn {
                 //TODO: make a component out of it
                 ExpandingLabel {
                     id: descriptionLabel
-                    text: assetInfo.description
+                    text: assetOperations.assetInfo.description
                 }
 
                 Grid {
@@ -205,8 +197,8 @@ BrowserColumn {
                     }
                     PlasmaComponents.Label {
                         id: authorLabel
-                        visible: assetTags.author != undefined && assetTags.author[0] != ""
-                        text: assetTags.author[0]
+                        visible: assetOperations.assetTags.author != undefined && assetOperations.assetTags.author[0] != ""
+                        text: assetOperations.assetTags.author[0]
                     }
                     PlasmaComponents.Label {
                         anchors {
@@ -229,8 +221,8 @@ BrowserColumn {
                     }
                     PlasmaComponents.Label {
                         id: dateLabel
-                        visible: assetTags.created != undefined && assetTags.created[0] != ""
-                        property variant splitDate: assetTags.created[0].split("-")
+                        visible: assetOperations.assetTags.created != undefined && assetOperations.assetTags.created[0] != ""
+                        property variant splitDate: assetOperations.assetTags.created[0].split("-")
                         text: Qt.formatDate(new Date(splitDate[0], splitDate[1], splitDate[2]), Qt.DefaultLocaleShortDate)
                     }
                 }
