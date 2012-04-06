@@ -54,10 +54,78 @@ PackageHandler::~PackageHandler()
 {
 }
 
+Plasma::PackageStructure *PackageHandler::createPackageStructure() const
+{
+    if (!operations()->assetTags().contains(QLatin1String("servicetype"))) {
+        return 0;
+    }
+
+    QString serviceType = operations()->assetTags().value(QLatin1String("servicetype"));
+    QString servicePrefix;
+    Plasma::PackageStructure *installer = 0;
+
+    if (serviceType.contains(QLatin1String("Plasma/Applet")) ||
+        serviceType.contains(QLatin1String("Plasma/PopupApplet")) ||
+        serviceType.contains(QLatin1String("Plasma/Containment"))) {
+        servicePrefix = QLatin1String("plasma-applet-");
+
+    //FIXME: themes are still broken
+    /*} else if (type == QLatin1String("theme")) {
+        packageRoot = QLatin1String("desktoptheme/");*/
+
+    } else if (serviceType == QLatin1String("Plasma/DataEngine")) {
+        servicePrefix = QLatin1String("plasma-dataengine-");
+
+    } else if (serviceType == QLatin1String("Plasma/Runner")) {
+        servicePrefix = QLatin1String("plasma-runner-");
+
+    } else if (serviceType == QLatin1String("Plasma/Wallpaper")) {
+        servicePrefix = QLatin1String("plasma-wallpaper-");
+
+    } else if (serviceType == QLatin1String("Plasma/LayoutTemplate")) {
+        servicePrefix = QLatin1String("plasma-layout-");
+
+    } else if (serviceType == QLatin1String("KWin/Effect")) {
+        servicePrefix = QLatin1String("kwin-effect-");
+
+    } else if (serviceType == QLatin1String("KWin/WindowSwitcher")) {
+        servicePrefix = QLatin1String("kwin-windowswitcher-");
+
+    } else if (serviceType == QLatin1String("KWin/Script")) {
+        servicePrefix = QLatin1String("kwin-script-");
+
+    } else {
+        const QString constraint = QString(QLatin1String("[X-KDE-ServiceType] == '%1'")).arg(serviceType);
+        KService::List offers = KServiceTypeTrader::self()->query(QLatin1String("Plasma/PackageStructure"), constraint);
+        if (offers.isEmpty()) {
+            return 0;
+        }
+
+        KService::Ptr offer = offers.first();
+        QString error;
+        installer = offer->createInstance<Plasma::PackageStructure>(0, QVariantList(), &error);
+
+        if (!installer) {
+            return 0;
+        }
+
+    }
+
+    // install, remove or upgrade
+    if (!installer) {
+        installer = new Plasma::PackageStructure(0, serviceType);
+        installer->setServicePrefix(servicePrefix);
+    }
+
+    return installer;
+}
+
 bool PackageHandler::isInstalled() const
 {
-    //FIXME: pluginName always == file name?
-    const QString packageName = operations()->assetInfo().path.path().replace(QRegExp(QLatin1String(".*\\/([^\\/]*)\\..*")), QLatin1String("\\1"));
+    if (!operations()->assetTags().contains(QLatin1String("pluginname"))) {
+        return false;
+    }
+    const QString packageName = operations()->assetTags().value(QLatin1String("pluginname"));
 
     foreach (const QString& type, m_supportedTypes) {
         const KService::List services = KServiceTypeTrader::self()->query(type);
@@ -74,7 +142,7 @@ bool PackageHandler::isInstalled() const
 Bodega::InstallJob *PackageHandler::install(QNetworkReply *reply, Session *session)
 {
     if (!m_installJob) {
-        m_installJob = new PackageInstallJob(reply, session);
+        m_installJob = new PackageInstallJob(reply, session, this);
     }
 
     return m_installJob.data();

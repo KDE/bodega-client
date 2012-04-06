@@ -25,16 +25,20 @@
 
 namespace Bodega {
 
+    class PackageHandler;
     class PackageInstallJob : public InstallJob
     {
         Q_OBJECT
 
     public:
-        PackageInstallJob(QNetworkReply *reply, Session *session);
+        PackageInstallJob(QNetworkReply *reply, Session *session, PackageHandler *handler);
         ~PackageInstallJob();
 
     protected:
         void downloadFinished(const QString &localFile);
+
+    private:
+        PackageHandler *m_handler;
     };
 }
 

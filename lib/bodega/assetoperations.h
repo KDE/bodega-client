@@ -41,7 +41,8 @@ namespace Bodega {
         AssetOperations(const QString &assetId, Session *parent);
         ~AssetOperations();
 
-        const AssetInfo& assetInfo() const;
+        const Bodega::AssetInfo& assetInfo() const;
+        const Bodega::Tags& assetTags() const;
 
         bool isReady() const;
 

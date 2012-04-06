@@ -19,6 +19,7 @@
 
 
 #include "packageinstalljob.h"
+#include "packagehandler.h"
 #include "session.h"
 
 #include <QDBusInterface>
@@ -33,8 +34,9 @@
 
 using namespace Bodega;
 
-PackageInstallJob::PackageInstallJob(QNetworkReply *reply, Session *session)
-    : InstallJob(reply, session)
+PackageInstallJob::PackageInstallJob(QNetworkReply *reply, Session *session, PackageHandler *handler)
+    : InstallJob(reply, session),
+      m_handler(handler)
 {
 }
 
@@ -44,111 +46,46 @@ PackageInstallJob::~PackageInstallJob()
 
 void PackageInstallJob::downloadFinished(const QString &packageFile)
 {
-    //Figure out the type of package
-    QString type;
     QString packageRoot;
     QString servicePrefix;
     Plasma::PackageStructure *installer = 0;
-    // Check type for common plasma packages
-    Plasma::PackageStructure package;
-    package.setPath(packageFile);
-    QString serviceType = package.metadata().serviceType();
-    if (!serviceType.isEmpty()) {
-        if (serviceType.contains(QLatin1String("Plasma/Applet")) ||
-            serviceType.contains(QLatin1String("Plasma/PopupApplet")) ||
-            serviceType.contains(QLatin1String("Plasma/Containment"))) {
-            type = QLatin1String("plasmoid");
-        } else if (serviceType == QLatin1String("Plasma/DataEngine")) {
-            type = QLatin1String("dataengine");
-        } else if (serviceType == QLatin1String("Plasma/Runner")) {
-            type = QLatin1String("runner");
-        } else if (serviceType == QLatin1String("Plasma/Wallpaper")) {
-            type = QLatin1String("wallpaperplugin");
-        } else if (serviceType == QLatin1String("Plasma/LayoutTemplate")) {
-            packageRoot = QLatin1String("plasma/layout-templates/");
-        } else if (serviceType == QLatin1String("KWin/Effect")) {
-            packageRoot = QLatin1String("kwin/effects/");
-        } else if (serviceType == QLatin1String("KWin/WindowSwitcher")) {
-            packageRoot = QLatin1String("kwin/tabbox/");
-        } else if (serviceType == QLatin1String("KWin/Script")) {
-            packageRoot = QLatin1String("kwin/scripts/");
-        } else {
-            type = serviceType;
-            qDebug() << "fallthrough type is" << serviceType;
-        }
+
+    if (!m_handler->operations()->assetTags().contains(QLatin1String("servicetype"))) {
+        setError(Error(Error::Session,
+                       QLatin1String("packageinstall/01"),
+                       tr("Install failed"),
+                       tr("Service type tag not specified.")));
+        setFinished();
+        return;
     }
 
 
-    if (type == QLatin1String("plasmoid")) {
-        packageRoot = QLatin1String("plasma/plasmoids/");
-        servicePrefix = QLatin1String("plasma-applet-");
-    } else if (type == QLatin1String("theme")) {
-        packageRoot = QLatin1String("desktoptheme/");
-    } else if (type == QLatin1String("wallpaper")) {
-        packageRoot = QLatin1String("wallpapers/");
-    } else if (type == QLatin1String("dataengine")) {
-        packageRoot = QLatin1String("plasma/dataengines/");
-        servicePrefix = QLatin1String("plasma-dataengine-");
-    } else if (type == QLatin1String("runner")) {
-        packageRoot = QLatin1String("plasma/runners/");
-        servicePrefix = QLatin1String("plasma-runner-");
-    } else if (type == QLatin1String("wallpaperplugin")) {
-        packageRoot = QLatin1String("plasma/wallpapers/");
-        servicePrefix = QLatin1String("plasma-wallpaper-");
-    } else if (type == QLatin1String("layout-template")) {
-        packageRoot = QLatin1String("plasma/layout-templates/");
-        servicePrefix = QLatin1String("plasma-layout-");
-    } else if (type == QLatin1String("kwineffect")) {
-        packageRoot = QLatin1String("kwin/effects/");
-        servicePrefix = QLatin1String("kwin-effect-");
-    } else if (type == QLatin1String("windowswitcher")) {
-        packageRoot = QLatin1String("kwin/tabbox/");
-        servicePrefix = QLatin1String("kwin-windowswitcher-");
-    } else if (type == QLatin1String("kwinscript")) {
-        packageRoot = QLatin1String("kwin/scripts/");
-        servicePrefix = QLatin1String("kwin-script-");
-    } else {
-        const QString constraint = QString(QLatin1String("[X-KDE-PluginInfo-Name] == '%1'")).arg(type);
-        KService::List offers = KServiceTypeTrader::self()->query(QLatin1String("Plasma/PackageStructure"), constraint);
-        if (offers.isEmpty()) {
-            setError(Error(Error::Session,
-                       QLatin1String("package/01"),
-                       tr("Install failed"),
-                       tr(QString::fromLatin1("Could not find a suitable installer for package of type %1").arg(type).toLatin1())));
-            return;
-        }
+    QString serviceType = m_handler->operations()->assetTags().value(QLatin1String("servicetype"));
 
-        KService::Ptr offer = offers.first();
-        QString error;
-        installer = offer->createInstance<Plasma::PackageStructure>(0, QVariantList(), &error);
 
-        if (!installer) {
-            setError(Error(Error::Session,
-                       QLatin1String("package/02"),
-                       tr("Install failed"),
-                       tr(QString::fromLatin1("Could not load installer for package of type %1. Error reported was: %2").arg(type).arg(error).toLatin1())));
-            return;
-        }
-
-        packageRoot = installer->defaultPackageRoot();
-    }
+    installer = m_handler->createPackageStructure();
 
     // install, remove or upgrade
     if (!installer) {
-        installer = new Plasma::PackageStructure();
-        installer->setServicePrefix(servicePrefix);
+        setError(Error(Error::Session,
+                       QLatin1String("packageinstall/04"),
+                       tr("Install failed"),
+                       tr(QString::fromLatin1("Installation of %1 failed.").arg(packageFile).toLatin1())));
+        setFinished();
+        return;
     }
-
-    packageRoot = KStandardDirs::locateLocal("data", packageRoot);
+qDebug()<<"AAAAA"<<installer->defaultPackageRoot();
+    packageRoot = KStandardDirs::locateLocal("data", installer->defaultPackageRoot());
 
 
     if (installer->installPackage(packageFile, packageRoot)) {
         qDebug() << "Successfully installed" << packageFile;
     } else {
         setError(Error(Error::Session,
-                       QLatin1String("package/02"),
+                       QLatin1String("packageinstall/04"),
                        tr("Install failed"),
                        tr(QString::fromLatin1("Installation of %1 failed.").arg(packageFile).toLatin1())));
+        setFinished();
         delete installer;
         return;
     }

@@ -21,6 +21,7 @@
 #include "packagehandler.h"
 #include "session.h"
 
+#include <QDBusInterface>
 #include <QDebug>
 #include <QFile>
 
@@ -33,61 +34,37 @@
 using namespace Bodega;
 
 PackageUninstallJob::PackageUninstallJob(Session *parent, PackageHandler *handler)
-    : UninstallJob(parent)
+    : UninstallJob(parent),
+      m_handler(handler)
 {
-    const QString packageName = handler->operations()->assetInfo().path.path().replace(QRegExp(QLatin1String(".*\\/([^\\/]*)\\..*")), QLatin1String("\\1"));
-
-    QStringList pluginTypes;
-    QString packageRoot;
-
-    foreach (const QString& type, handler->supportedTypes()) {
-        const KService::List services = KServiceTypeTrader::self()->query(type);
-        foreach (const KService::Ptr &service, services) {
-            if (packageName == service->property(QLatin1String("X-KDE-PluginInfo-Name"), QVariant::String).toString()) {
-                pluginTypes = service->serviceTypes();
-                //FIXME: desktop themes don't have servicetype
-                if (!pluginTypes.isEmpty()) {
-                    if (pluginTypes.contains(QLatin1String("Plasma/Applet")) ||
-                        pluginTypes.contains(QLatin1String("Plasma/PopupApplet")) ||
-                        pluginTypes.contains(QLatin1String("Plasma/Containment"))) {
-                        packageRoot = QLatin1String("plasma/plasmoids/");
-                    } else if (pluginTypes.contains(QLatin1String("Plasma/DataEngine"))) {
-                        packageRoot = QLatin1String("plasma/dataengines/");
-                    } else if (pluginTypes.contains(QLatin1String("Plasma/Runner"))) {
-                        packageRoot = QLatin1String("plasma/runners/");
-                    } else if (pluginTypes.contains(QLatin1String("Plasma/Wallpaper"))) {
-                        packageRoot = QLatin1String("plasma/wallpapers/");
-                    } else if (pluginTypes.contains(QLatin1String("Plasma/LayoutTemplate"))) {
-                        packageRoot = QLatin1String("plasma/layout-templates/");
-                    } else if (pluginTypes.contains(QLatin1String("KWin/Effect"))) {
-                        packageRoot = QLatin1String("kwin/effects/");
-                    } else if (pluginTypes.contains(QLatin1String("KWin/WindowSwitcher"))) {
-                        packageRoot = QLatin1String("kwin/tabbox/");
-                    } else if (pluginTypes.contains(QLatin1String("KWin/Script"))) {
-                        packageRoot = QLatin1String("kwin/scripts/");
-                    } else {
-                        setError(Error(Error::Session,
-                            QLatin1String("packageuninstall/01"),
-                            tr("Uninstall failed"),
-                            tr(QString::fromLatin1("Could not figure out the package type of %1").arg(packageName).toLatin1())));
-                            setFinished();
-                            return;
-                    }
-                }
-                break;
-            }
-        }
+    if (!m_handler->operations()->assetTags().contains(QLatin1String("pluginname")) ||
+        !m_handler->operations()->assetTags().contains(QLatin1String("servicetype"))) {
+        setError(Error(Error::Session,
+                       QLatin1String("packageuninstall/01"),
+                       tr("Install failed"),
+                       tr("Plugin name or service type tags not specified.")));
+        setFinished();
+        return;
     }
 
-    Plasma::PackageStructure installer(0, pluginTypes.first());
-    const bool success = installer.uninstallPackage(packageName, packageRoot);
+    const QString pluginName = m_handler->operations()->assetTags().value(QLatin1String("pluginname"));
+    const QString serviceType = m_handler->operations()->assetTags().value(QLatin1String("servicetype"));
+
+    Plasma::PackageStructure installer(0, serviceType);
+    const QString packageRoot = KStandardDirs::locateLocal("data", installer.defaultPackageRoot());
+    qDebug() << "Attempting to uninstall" << pluginName << "from" << packageRoot;
+    const bool success = installer.uninstallPackage(pluginName, packageRoot);
 
     if (!success) {
         setError(Error(Error::Parsing,
-                       QLatin1String("uj/01"),
+                       QLatin1String("packageuninstall/02"),
                        tr("Uninstall failed"),
                        tr("Impossible to uninstall the package.")));
     }
+
+    QDBusInterface dbus(QLatin1String("org.kde.kded"), QLatin1String("/kbuildsycoca"), QLatin1String("org.kde.kbuildsycoca"));
+    dbus.call(QDBus::NoBlock, QLatin1String("recreate"));
+
     setFinished();
 }
 

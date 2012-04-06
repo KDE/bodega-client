@@ -47,6 +47,7 @@ public:
     AssetOperations *q;
     AssetHandler *handler;
     AssetInfo assetInfo;
+    Tags assetTags;
     bool wasInstalled;
 };
 
@@ -57,6 +58,7 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
 
     if (!job->failed()) {
         assetInfo = assetJob->info();
+        assetTags = assetJob->tags();
 
         delete handler;
         handler = 0;
@@ -116,6 +118,11 @@ AssetOperations::~AssetOperations()
 const AssetInfo &AssetOperations::assetInfo() const
 {
     return d->assetInfo;
+}
+
+const Bodega::Tags& AssetOperations::assetTags() const
+{
+    return d->assetTags;
 }
 
 bool AssetOperations::isReady() const

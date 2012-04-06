@@ -28,6 +28,10 @@
 #include "packageinstalljob.h"
 #include "packageuninstalljob.h"
 
+namespace Plasma {
+    class PackageStructure;
+}
+
 namespace Bodega {
 
     class PackageHandler : public AssetHandler
@@ -44,6 +48,7 @@ namespace Bodega {
 
         //Internal
         const QStringList &supportedTypes() const;
+        Plasma::PackageStructure *createPackageStructure() const;
 
     public Q_SLOTS:
         Bodega::InstallJob *install(QNetworkReply *reply, Session *session);

@@ -33,6 +33,9 @@ namespace Bodega {
     public:
         PackageUninstallJob(Session *parent, PackageHandler *handler);
         ~PackageUninstallJob();
+
+    private:
+        PackageHandler *m_handler;
     };
 }
 
