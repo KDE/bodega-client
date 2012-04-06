@@ -44,14 +44,12 @@ PlasmaComponents.Page {
 
     Grid {
         id: grid
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.leftMargin: root.spacing
-        width: parent.width - root.spacing * 2
+        anchors.centerIn: parent
+
         rows: 8
         columns: 2
         spacing: root.spacing
 
-        onWidthChanged: { nameField.width = width - nameLabel.x - nameLabel.width }
         PlasmaComponents.Label {
             text: i18n("Name:")
             id: nameLabel
@@ -62,6 +60,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: nameField
+            width: theme.defaultFont.mSize.width * 20
         }
 
         PlasmaComponents.Label {
