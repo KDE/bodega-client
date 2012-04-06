@@ -34,7 +34,7 @@ MouseArea {
 
     height: mainColumn.height
     onClicked: root.expanded = !root.expanded
-    enabled: (!expanded && descriptionLabel.paintedHeight > descriptionLabel.height)
+    enabled: (expanded || descriptionLabel.paintedHeight > descriptionLabel.height)
 
     Column {
         id: mainColumn
