@@ -63,9 +63,6 @@ void PackageInstallJob::downloadFinished(const QString &packageFile)
         } else if (serviceType == QLatin1String("Plasma/Runner")) {
             type = QLatin1String("runner");
         } else if (serviceType == QLatin1String("Plasma/Wallpaper")) {
-            // This also changes type to wallpaperplugin when --type wallpaper
-            // was specified and we have wallpaper plugin package (instead of
-            // wallpaper image package)
             type = QLatin1String("wallpaperplugin");
         } else {
             type = serviceType;
