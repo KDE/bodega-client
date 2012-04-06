@@ -401,7 +401,7 @@ Bodega::RegisterJob * Session::registerAccount(const QString &email,
 Bodega::NetworkJob *Session::resetPassword(const QString &email)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/resetRequest");
+    const QString path = QString::fromLatin1("/participant/resetRequest");
     url.setEncodedPath(d->jsonPath(path));
     url.addQueryItem(QLatin1String("email"), email);
 
@@ -415,7 +415,7 @@ Bodega::NetworkJob *Session::resetPassword(const QString &email)
 Bodega::NetworkJob *Session::changePassword(const QString &newPassword)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/changePassword");
+    const QString path = QString::fromLatin1("/participant/changePassword");
     url.setEncodedPath(d->jsonPath(path));
     url.addQueryItem(QLatin1String("newPassword"), newPassword);
 
@@ -429,7 +429,7 @@ Bodega::NetworkJob *Session::changePassword(const QString &newPassword)
 Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, const QString &lastName, const QString &email)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/changeAccountDetails");
+    const QString path = QString::fromLatin1("/participant/changeAccountDetails");
     url.setEncodedPath(d->jsonPath(path));
 
     if (!firstName.isEmpty()) {
