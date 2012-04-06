@@ -154,7 +154,7 @@ BrowserColumn {
                         if (assetOperations.installed) {
                             i18n("Uninstall")
                         } else {
-                            assetInfo.points > 0 ? i18n("Buy") : i18n("Download")
+                            assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
                         }
                     }
                     onClicked: {
