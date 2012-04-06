@@ -110,7 +110,7 @@ void PackageInstallJob::downloadFinished(const QString &packageFile)
             setError(Error(Error::Session,
                        QLatin1String("package/01"),
                        tr("Install failed"),
-                       tr(QString(QLatin1String("Could not find a suitable installer for package of type %1")).arg(type).toLatin1())));
+                       tr(QString::fromLatin1("Could not find a suitable installer for package of type %1").arg(type).toLatin1())));
             return;
         }
 
@@ -122,7 +122,7 @@ void PackageInstallJob::downloadFinished(const QString &packageFile)
             setError(Error(Error::Session,
                        QLatin1String("package/02"),
                        tr("Install failed"),
-                       tr(QString(QLatin1String("Could not load installer for package of type %1. Error reported was: %2")).arg(type).arg(error).toLatin1())));
+                       tr(QString::fromLatin1("Could not load installer for package of type %1. Error reported was: %2").arg(type).arg(error).toLatin1())));
             return;
         }
 
