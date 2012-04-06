@@ -79,7 +79,6 @@ void PackageInstallJob::downloadFinished(const QString &packageFile)
     }
 
 
-
     if (type == QLatin1String("plasmoid")) {
         packageRoot = QLatin1String("plasma/plasmoids/");
         servicePrefix = QLatin1String("plasma-applet-");
