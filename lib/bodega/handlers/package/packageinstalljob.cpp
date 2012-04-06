@@ -74,7 +74,7 @@ void PackageInstallJob::downloadFinished(const QString &packageFile)
         setFinished();
         return;
     }
-qDebug()<<"AAAAA"<<installer->defaultPackageRoot();
+
     packageRoot = KStandardDirs::locateLocal("data", installer->defaultPackageRoot());
 
 
