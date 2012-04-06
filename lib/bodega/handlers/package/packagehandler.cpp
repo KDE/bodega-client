@@ -44,9 +44,8 @@ PackageHandler::~PackageHandler()
 
 bool PackageHandler::isInstalled() const
 {
-    QString packageName = operations()->assetInfo().path.path().replace(QRegExp(QLatin1String(".*\\/([^\\/]*)\\.package")), QLatin1String("\\1"));
-    const QString path = KStandardDirs::locate("package", packageName + QLatin1String("/metadata.desktop"));
-    return !path.isEmpty();
+    //TODO: we don't have the plugin name as available info
+    return false;
 }
 
 Bodega::InstallJob *PackageHandler::install(QNetworkReply *reply, Session *session)
