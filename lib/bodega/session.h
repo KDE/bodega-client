@@ -113,12 +113,12 @@ namespace Bodega {
         Bodega::CreateBallotJob *createBallot(
             const QString &name,
             Bodega::BallotInfo::BallotFlags flags = Bodega::BallotInfo::None);
-        Bodega::DeleteBallotJob *deleteBallot(const QString &ballotId);
-        Bodega::BallotAddAssetJob *ballotAddAsset(const QString &ballotId,
+        Bodega::DeleteBallotJob *deleteBallot(const QString &collectionId);
+        Bodega::BallotAddAssetJob *ballotAddAsset(const QString &collectionId,
                                                   const QString &assetId);
-        Bodega::BallotRemoveAssetJob *ballotRemoveAsset(const QString &ballotId,
+        Bodega::BallotRemoveAssetJob *ballotRemoveAsset(const QString &collectionId,
                                                         const QString &assetId);
-        Bodega::BallotListAssetsJob *ballotListAssets(const QString &ballotId,
+        Bodega::BallotListAssetsJob *ballotListAssets(const QString &collectionId,
                                                       int offset=-1,
                                                       int pageSize=-1);
 

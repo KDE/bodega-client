@@ -454,7 +454,7 @@ Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, cons
 Bodega::ListBallotsJob *Session::listBallots(int offset, int pageSize)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/listBallots");
+    const QString path = QString::fromLatin1("/collections/list");
 
 
     url.setEncodedPath(d->jsonPath(path));
@@ -471,7 +471,7 @@ Bodega::CreateBallotJob * Session::createBallot(const QString &name,
                                                 BallotInfo::BallotFlags flags)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/createBallot");
+    const QString path = QString::fromLatin1("/collections/create");
 
     url.setEncodedPath(d->jsonPath(path));
 
@@ -494,14 +494,14 @@ Bodega::CreateBallotJob * Session::createBallot(const QString &name,
     return job;
 }
 
-Bodega::DeleteBallotJob * Session::deleteBallot(const QString &ballotId)
+Bodega::DeleteBallotJob * Session::deleteBallot(const QString &collectionId)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/deleteBallot");
+    const QString path = QString::fromLatin1("/collections/delete");
 
     url.setEncodedPath(d->jsonPath(path));
 
-    url.addQueryItem(QLatin1String("ballotId"), ballotId);
+    url.addQueryItem(QLatin1String("collectionId"), collectionId);
 
     //qDebug()<<"url is " <<url;
 
@@ -510,15 +510,15 @@ Bodega::DeleteBallotJob * Session::deleteBallot(const QString &ballotId)
     return job;
 }
 
-Bodega::BallotAddAssetJob * Session::ballotAddAsset(const QString &ballotId,
+Bodega::BallotAddAssetJob * Session::ballotAddAsset(const QString &collectionId,
                                                     const QString &assetId)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/ballotAddAsset");
+    const QString path = QString::fromLatin1("/collections/addAsset");
 
     url.setEncodedPath(d->jsonPath(path));
 
-    url.addQueryItem(QLatin1String("ballotId"), ballotId);
+    url.addQueryItem(QLatin1String("collectionId"), collectionId);
     url.addQueryItem(QLatin1String("assetId"), assetId);
 
     //qDebug()<<"url is " <<url;
@@ -528,15 +528,15 @@ Bodega::BallotAddAssetJob * Session::ballotAddAsset(const QString &ballotId,
     return job;
 }
 
-Bodega::BallotRemoveAssetJob * Session::ballotRemoveAsset(const QString &ballotId,
+Bodega::BallotRemoveAssetJob * Session::ballotRemoveAsset(const QString &collectionId,
                                                           const QString &assetId)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/ballotRemoveAsset");
+    const QString path = QString::fromLatin1("/collections/removeAsset");
 
     url.setEncodedPath(d->jsonPath(path));
 
-    url.addQueryItem(QLatin1String("ballotId"), ballotId);
+    url.addQueryItem(QLatin1String("collectionId"), collectionId);
     url.addQueryItem(QLatin1String("assetId"), assetId);
 
     //qDebug()<<"url is " <<url;
@@ -546,12 +546,12 @@ Bodega::BallotRemoveAssetJob * Session::ballotRemoveAsset(const QString &ballotI
     return job;
 }
 
-Bodega::BallotListAssetsJob * Session::ballotListAssets(const QString &ballotId,
+Bodega::BallotListAssetsJob * Session::ballotListAssets(const QString &collectionId,
                                                         int offset,
                                                         int pageSize)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/ballotListAssets");
+    const QString path = QString::fromLatin1("/collections/listAssets");
 
     url.setEncodedPath(d->jsonPath(path));
     d->addPaging(url, offset, pageSize);
