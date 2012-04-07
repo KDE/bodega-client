@@ -350,25 +350,18 @@ Bodega::AssetOperations *Session::assetOperations(const QString &assetId)
 
 Bodega::InstallJob *Session::install(AssetOperations *operations)
 {
-    QNetworkReply *reply = d->get(operations->assetInfo().path);
+    QUrl url = d->baseUrl;
+    const QString path = QLatin1String("/download/") + operations->assetInfo().id;
+    url.setEncodedPath(d->jsonPath(path));
+    QNetworkReply *reply = d->get(url);
     InstallJob *job = operations->install(reply, this);
     d->jobConnect(job);
 
-    // if the item is hosted external to the store, we should
-    // tell the store about it anyways
-    if (job->url().host() != d->baseUrl.host()) {
-        QUrl url = d->baseUrl;
-        const QString path = QLatin1String("/externalDownload/") + operations->assetInfo().id;
-        url.setEncodedPath(d->jsonPath(path));
-        QNetworkReply *recordJob = d->get(url);
-        connect(reply, SIGNAL(finished()), reply, SLOT(deleteLater()));
-    }
     return job;
 }
 
 Bodega::UninstallJob *Session::uninstall(AssetOperations *operations)
 {
-    QNetworkReply *reply = d->get(operations->assetInfo().path);
     return operations->uninstall(this);
 }
 
