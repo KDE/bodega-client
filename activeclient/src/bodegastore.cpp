@@ -129,8 +129,8 @@ QScriptValue qScriptValueFromAssetInfo(QScriptEngine *engine, const Bodega::Asse
     obj.setProperty("partnerId", info.partnerId);
     obj.setProperty("partnerName", info.partnerName);
     obj.setProperty("name", info.name);
+    obj.setProperty("filename", info.filename);
     obj.setProperty("version", info.version);
-    obj.setProperty("path", info.path.toString());
     //obj.setProperty("images", info.images);
     obj.setProperty("description", info.description);
     obj.setProperty("points", info.points);
@@ -164,10 +164,10 @@ void assetInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::AssetInf
             info.partnerName = it.value().toString();
         } else if (it.name() == "name") {
             info.name = it.value().toString();
+        } else if (it.name() == "filename") {
+            info.filename = it.value().toString();
         } else if (it.name() == "version") {
             info.version = it.value().toString();
-        } else if (it.name() == "path") {
-            info.path = it.value().toString();
         } else if (it.name() == "description") {
             info.description = it.value().toString();
         } else if (it.name() == "points") {
