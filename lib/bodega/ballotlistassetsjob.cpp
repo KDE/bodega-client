@@ -93,7 +93,6 @@ void BallotListAssetsJob::Private::parseAssets(const QVariantMap &result)
         info.partnerName = asset[QLatin1String("partnername")].toString();
         info.name = asset[QLatin1String("name")].toString();
         info.version = asset[QLatin1String("version")].toString();
-        info.path = asset[QLatin1String("path")].toString();
         info.images = q->session()->urlsForImage(
             asset[QLatin1String("image")].toString());
         info.description = asset[QLatin1String("description")].toString();
