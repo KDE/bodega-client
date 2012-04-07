@@ -109,6 +109,12 @@ Purpose: initiates a download for the given asset, or returns an error if the as
 Parameters: number asset id, in URL
 Response: the contents of the asset file
 
+Path: /externalDownload/<asset id>
+Authentication: yes
+Purpose: records an asset download from an external URL
+Parameters: number asset id, in URL
+Response: none
+
 Path: /upload
 Authentication: yes
 Purpose: 
