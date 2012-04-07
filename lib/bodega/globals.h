@@ -65,10 +65,10 @@ namespace Bodega {
         QString partnerId;
         QString partnerName;
         QString name;
+        QString filename;
         QString version;
         QString description;
         QString mimetype;
-        QUrl path;
         QMap<ImageUrl, QUrl> images;
         int  points;
         bool canDownload;
@@ -82,8 +82,8 @@ namespace Bodega {
         void clear()
         {
             id = license = partnerId = partnerName = version = description = QString();
-            path.clear();
             images.clear();
+            filename.clear();
             points = 0;
             canDownload = false;
         }
