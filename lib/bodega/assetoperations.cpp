@@ -48,6 +48,7 @@ public:
     AssetHandler *handler;
     AssetInfo assetInfo;
     Tags assetTags;
+    QString mimetype;
     bool wasInstalled;
 };
 
@@ -70,7 +71,8 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
         while (it.hasNext()) {
             it.next();
             if (it.key() == QLatin1String("mimetype")) {
-                handler = AssetHandler::create(it.value(), q);
+                mimetype = it.value();
+                handler = AssetHandler::create(mimetype, q);
                 break;
             }
         }
@@ -146,6 +148,11 @@ bool AssetOperations::isInstalled() const
     }
 
     return false;
+}
+
+QString AssetOperations::mimetype() const
+{
+    return d->mimetype;
 }
 
 Bodega::InstallJob *AssetOperations::install(QNetworkReply *reply, Session *session)

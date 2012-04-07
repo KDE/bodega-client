@@ -38,6 +38,7 @@ namespace Bodega {
         Q_PROPERTY(bool ready READ isReady NOTIFY ready)
         Q_PROPERTY(Bodega::AssetInfo assetInfo READ assetInfo NOTIFY ready)
         Q_PROPERTY(Bodega::Tags assetTags READ assetTags NOTIFY ready)
+        Q_PROPERTY(QString mimetype READ mimetype)
 
     public:
         AssetOperations(const QString &assetId, Session *parent);
@@ -50,6 +51,8 @@ namespace Bodega {
 
         QString launchText() const;
         bool isInstalled() const;
+
+        QString mimetype() const;
 
     public Q_SLOTS:
         Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
