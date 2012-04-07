@@ -44,7 +44,7 @@ RpmInstallJob::~RpmInstallJob()
 
 void RpmInstallJob::downloadFinished(const QString &localFile)
 {
-    QFileInfo remoteInfo(m_handler->operations()->assetInfo().path.path());
+    QFileInfo remoteInfo(localFile);
     m_packagePath = QDir::tempPath() + QDir::separator() + remoteInfo.fileName();
     QFile f(localFile);
 

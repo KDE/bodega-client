@@ -33,7 +33,7 @@ using namespace Bodega;
 WallpaperUninstallJob::WallpaperUninstallJob(Session *parent, WallpaperHandler *handler)
     : UninstallJob(parent)
 {
-    QString packageName = handler->operations()->assetInfo().path.path().replace(QRegExp(QLatin1String(".*\\/([^\\/]*)\\.wallpaper")), QLatin1String("\\1"));
+    QString packageName = handler->operations()->assetInfo().filename;
     Plasma::PackageStructure installer(0, QLatin1String("Plasma/Wallpaper"));
     const bool success = installer.uninstallPackage(packageName, KGlobal::dirs()->findDirs("wallpaper", QLatin1String("")).first());
 

@@ -44,7 +44,7 @@ WallpaperHandler::~WallpaperHandler()
 
 bool WallpaperHandler::isInstalled() const
 {
-    QString packageName = operations()->assetInfo().path.path().replace(QRegExp(QLatin1String(".*\\/([^\\/]*)\\.wallpaper")), QLatin1String("\\1"));
+    QString packageName = operations()->assetInfo().filename;
     const QString path = KStandardDirs::locate("wallpaper", packageName + QLatin1String("/metadata.desktop"));
     return !path.isEmpty();
 }
