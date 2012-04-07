@@ -71,8 +71,8 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
     info.partnerId = asset[QLatin1String("partnerId")].toString();
     info.partnerName = asset[QLatin1String("partnername")].toString();
     info.name = asset[QLatin1String("name")].toString();
+    info.filename = asset[QLatin1String("filename")].toString();
     info.version = asset[QLatin1String("version")].toString();
-    info.path = asset[QLatin1String("path")].toString();
     info.images = q->session()->urlsForImage(asset[QLatin1String("image")].toString());
     info.description = asset[QLatin1String("description")].toString();
     info.points = asset[QLatin1String("points")].toInt();
