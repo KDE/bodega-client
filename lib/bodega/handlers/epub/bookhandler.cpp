@@ -42,12 +42,16 @@ BookHandler::~BookHandler()
 
 QString BookHandler::filePath() const
 {
-    QFileInfo remoteInfo(operations()->assetInfo().path.path());
+    QString suffix = QLatin1String("epub");
+    if (operations()->mimetype() == QLatin1String("application/pdf")) {
+        suffix = QLatin1String("pdf");
+    }
+
     //Te id is to make sure to have an unique filename
     return QDir::homePath() +
            QLatin1String("/Books/") +
            operations()->assetInfo().name + QLatin1String(" - ") + operations()->assetInfo().id +
-           QLatin1String(".") + remoteInfo.completeSuffix();
+           QLatin1String(".") + suffix;
 }
 
 bool BookHandler::isInstalled() const
