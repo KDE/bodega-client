@@ -55,7 +55,7 @@ namespace Bodega {
             AssetPartnerNameRole = Qt::UserRole + 103,
             AssetNameRole = Qt::UserRole + 104,
             AssetVersionRole = Qt::UserRole + 105,
-            AssetPathRole = Qt::UserRole + 106,
+            AssetFilenameRole = Qt::UserRole + 106,
             AssetDescriptionRole = Qt::UserRole + 107,
             AssetPointsRole = Qt::UserRole + 108
         };
