@@ -12,4 +12,5 @@ Settings:
 Later:
 * adding additional stores in the settings
 * registration of payment methods
-
+* link on asset to show other items by the same participant ("More titles by..")
+* UI for collections
