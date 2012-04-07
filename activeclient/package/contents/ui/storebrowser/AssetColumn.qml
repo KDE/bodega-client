@@ -26,32 +26,13 @@ import "../components"
 BrowserColumn {
     id: root
 
+    property variant assetOperations
     property int assetId: 0
 
-    //This will replace all the assetjob thing
-    function loadAsset(assetId, extension)
-    {
-        assetOperations = bodegaClient.session.assetOperations(assetId, extension)
-        assetOperationsWatcher.target = assetOperations
-    }
-    property variant assetOperations
-
-    //FIXME: this is needed because qml can't understand the job passed from the signal
     onAssetIdChanged: {
-        if (assetId <= 0) {
-            return
+        if (assetId > 0) {
+            assetOperations = bodegaClient.session.assetOperations(assetId);
         }
-        var assetJob = bodegaClient.session.asset(assetId)
-
-        assetJob.jobError.connect(error)
-    }
-    property variant assetInfo
-    property variant assetTags
-
-
-    function error(job, error)
-    {
-        print("Error: " + error.title + " " + error.description)
     }
 
     Item {
@@ -76,10 +57,28 @@ BrowserColumn {
                     id: bigIconImage
                     source: assetOperations.assetInfo.images["huge"]
                     asynchronous: true
-                    
+
                     anchors.horizontalCenter: parent.horizontalCenter
-                    width: Math.min(parent.width - 32, sourceSize.width)
+                    width:  Math.min(256 * (sourceSize.width / sourceSize.height), Math.min(parent.width - 32, sourceSize.width))
+                    //width:  Math.min(parent.width - 32, sourceSize.width)
                     height: width / (sourceSize.width/sourceSize.height)
+
+                    /*
+                    TODO: make this show the large image unscaled
+                    MouseArea {
+                        anchors.fill: parent
+                        property bool big: false
+                        onClicked: {
+                            if (big) {
+                                bigIconImage.source = assetOperations.assetInfo.images["large"];
+                            } else {
+                                bigIconImage.source = assetOperations.assetInfo.images["huge"];
+                            }
+
+                            big = !big;
+                        }
+                    }
+                    */
                 }
                 PlasmaComponents.Label {
                     id: titleLabel
@@ -199,6 +198,7 @@ BrowserColumn {
                         id: authorLabel
                         visible: assetOperations.assetTags.author != undefined && assetOperations.assetTags.author[0] != ""
                         text: assetOperations.assetTags.author[0]
+                        wrapMode: Text.WordWrap
                     }
                     PlasmaComponents.Label {
                         anchors {
@@ -210,6 +210,7 @@ BrowserColumn {
                     PlasmaComponents.Label {
                         id: versionLabel
                         text: AssetVersionRole
+                        wrapMode: Text.WordWrap
                     }
                     PlasmaComponents.Label {
                         anchors {

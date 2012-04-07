@@ -303,7 +303,6 @@ assetsFromStringList(const QStringList &assets, int num_assets)
         info.license = assets[idx++];
         info.partnerId = assets[idx++];
         info.version = assets[idx++];
-        info.path = assets[idx++];
         //info.image =
         assets[idx++];
         info.name = assets[idx++];
@@ -369,7 +368,6 @@ void TestJobs::channels()
         QCOMPARE(info.partnerId, ref.partnerId);
         QCOMPARE(info.name, ref.name);
         QCOMPARE(info.version, ref.version);
-        QCOMPARE(info.path, ref.path);
         //QCOMPARE(info.image, ref.image);
         //QCOMPARE(info.description, ref.description);
         //QCOMPARE(info.points, ref.points);
@@ -447,7 +445,6 @@ assetFromStringList(const QStringList &assets)
     info.license = assets[idx++];
     info.partnerId = assets[idx++];
     info.version = assets[idx++];
-    info.path = assets[idx++];
     //info.image =
     assets[idx++];
     info.name = assets[idx++];
@@ -521,7 +518,6 @@ void TestJobs::asset()
     QCOMPARE(info.partnerId, ref.partnerId);
     QCOMPARE(info.name, ref.name);
     QCOMPARE(info.version, ref.version);
-    QCOMPARE(info.path, ref.path);
     //QCOMPARE(info.image, ref.image);
     QCOMPARE(info.description, ref.description);
     QCOMPARE(info.points, ref.points);

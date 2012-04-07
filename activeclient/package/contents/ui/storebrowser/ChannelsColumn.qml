@@ -86,7 +86,7 @@ BrowserColumn {
                     }
                     categoriesView.currentIndex = index
                     itemBrowser.pop(root)
-                   
+
                     if (model.ChannelIdRole) {
                         var channelsPage = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
                         channelsPage.rootIndex = categoriesView.model.modelIndex(index)
@@ -95,16 +95,6 @@ BrowserColumn {
                     } else if (model.AssetIdRole) {
                         var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
                         assetPage.assetId = model.AssetIdRole
-                        //FIXME: is using the extension, very lame, mimetYpe or something else to identify the install provider has to be specified in AssetInfo
-                        var path = String(model.AssetPathRole)
-                        var dot = path.lastIndexOf(".")
-
-                        if (dot == -1) {
-                            return
-                        }
-                        var extension = path.substr(dot+1, path.length)
-
-                        assetPage.loadAsset(model.AssetIdRole, extension)
                     }
                 }
             }
