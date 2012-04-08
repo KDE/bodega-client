@@ -377,6 +377,18 @@ Bodega::NetworkJob *Session::redeemPointsCode(const QString &code)
     return job;
 }
 
+Bodega::NetworkJob *Session::purchaseAsset(const QString &assetId)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QLatin1String("/purchase/") + assetId;
+    url.setEncodedPath(d->jsonPath(path));
+    //qDebug() << "url is" << url;
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
 Bodega::RegisterJob * Session::registerAccount(const QString &email,
                                                const QString &password,
                                                const QString &firstName,
