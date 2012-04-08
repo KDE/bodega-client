@@ -149,9 +149,10 @@ BrowserColumn {
                         }
                     }
                     onClicked: {
+                        downloadProgress.opacity = 1
+                        downloadProgress.indeterminate = true
+
                         if (assetOperations.installed) {
-                           downloadProgress.indeterminate = true
-                           downloadProgress.opacity = 1
                            var job = bodegaClient.session.uninstall(assetOperations)
                            job.jobFinished.connect(downloadProgress.operationFinished)
                            job.error.connect(downloadProgress.installError)
@@ -160,14 +161,23 @@ BrowserColumn {
                            }
                         } else if (assetOperations.assetInfo.canDownload) {
                            downloadProgress.indeterminate = false
-                           downloadProgress.opacity = 1
                            var job = bodegaClient.session.install(assetOperations)
                            job.progressChanged.connect(downloadProgress.updateProgress)
                            job.jobFinished.connect(downloadProgress.operationFinished)
                            job.jobError.connect(downloadProgress.installError)
                         } else {
+                           var job = bodegaClient.session.purchaseAsset(assetId)
+                           job.jobFinished.connect(downloadProgress.operationFinished)
+                           job.jobFinished.connect(purchaseCompleted)
+                           job.jobError.connect(downloadProgress.installError)
                             // purchase
                         }
+                    }
+
+                    function purchaseCompleted()
+                    {
+                        //TODO: need to show a success message methinks!
+                        root.assetOperations = bodegaClient.session.assetOperations(assetId);
                     }
                 }
                 PlasmaComponents.Button {
