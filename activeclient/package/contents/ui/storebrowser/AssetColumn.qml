@@ -149,6 +149,7 @@ BrowserColumn {
                         }
                     }
                     onClicked: {
+                        enabled = false
                         downloadProgress.opacity = 1
                         downloadProgress.indeterminate = true
 
@@ -156,6 +157,7 @@ BrowserColumn {
                            var job = bodegaClient.session.uninstall(assetOperations)
                            job.jobFinished.connect(downloadProgress.operationFinished)
                            job.error.connect(downloadProgress.installError)
+                           job.jobFinished.connect(assetOpJobCompleted)
                            if (job.finished) {
                                downloadProgress.opacity = 0
                            }
@@ -165,19 +167,21 @@ BrowserColumn {
                            job.progressChanged.connect(downloadProgress.updateProgress)
                            job.jobFinished.connect(downloadProgress.operationFinished)
                            job.jobError.connect(downloadProgress.installError)
+                           job.jobFinished.connect(assetOpJobCompleted)
                         } else {
                            var job = bodegaClient.session.purchaseAsset(assetId)
                            job.jobFinished.connect(downloadProgress.operationFinished)
-                           job.jobFinished.connect(purchaseCompleted)
+                           job.jobFinished.connect(assetOpJobCompleted)
                            job.jobError.connect(downloadProgress.installError)
                             // purchase
                         }
                     }
 
-                    function purchaseCompleted()
+                    function assetOpJobCompleted()
                     {
                         //TODO: need to show a success message methinks!
-                        root.assetOperations = bodegaClient.session.assetOperations(assetId);
+                        enabled = true
+                        root.assetOperations = bodegaClient.session.assetOperations(assetId)
                     }
                 }
                 PlasmaComponents.Button {
