@@ -24,9 +24,9 @@
 #include <QDebug>
 #include <QFile>
 
-#include <KGlobal>
 #include <KStandardDirs>
 #include <Plasma/Package>
+#include <Plasma/Wallpaper>
 
 using namespace Bodega;
 
@@ -41,12 +41,18 @@ WallpaperInstallJob::~WallpaperInstallJob()
 
 void WallpaperInstallJob::downloadFinished(const QString &localFile)
 {
-    Plasma::PackageStructure installer(0, QLatin1String("Plasma/Wallpaper"));
-    installer.installPackage(localFile, KGlobal::dirs()->findDirs("wallpaper", QLatin1String("")).first());
+    Plasma::PackageStructure package;
+    package.setPath(localFile);
+    const QString serviceType = package.metadata().serviceType();
+    if (package.metadata().serviceType() == QLatin1String("Plasma/Wallpaper")) {
+        Plasma::PackageStructure::Ptr installer = Plasma::Wallpaper::packageStructure();
+        installer->installPackage(localFile, KStandardDirs::locateLocal("data", QLatin1String("plasma/wallpapers/")));
+    } else {
+        Plasma::PackageStructure installer;
+        installer.installPackage(localFile, KStandardDirs::locateLocal("wallpaper", QLatin1String("")));
+    }
 
-    //Delete the downloaded package
-    QFile f(localFile);
-    f.remove();
+
     setFinished();
 }
 
