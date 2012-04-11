@@ -375,7 +375,7 @@ QVariantHash BodegaStore::retrieveCredentials() const
 {
     KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(),
                                            winId(), KWallet::Wallet::Synchronous);
-    if (wallet->isOpen() && wallet->setFolder("MakePlayLive")) {
+    if (wallet && wallet->isOpen() && wallet->setFolder("MakePlayLive")) {
 
         QMap<QString, QString> map;
 
