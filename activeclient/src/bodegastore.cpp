@@ -258,8 +258,10 @@ BodegaStore::BodegaStore()
     : KDeclarativeMainWindow(),
       m_historyModel(0)
 {
+    // For kde-runtime 4.8 compabitility, the appbackgrounds image provider is only
+    // in PlasmaExtras 4.9 (master currently)
+    // FIXME: Remove this call and the class from commmon/ once we can depend on 4.9
     if (!declarativeView()->engine()->imageProvider("appbackgrounds")) {
-        kDebug() << "Adding appbackgrounds";
         declarativeView()->engine()->addImageProvider(QLatin1String("appbackgrounds"), new AppBackgroundProvider);
     }
     declarativeView()->setPackageName("com.coherenttheory.addonsapp");
