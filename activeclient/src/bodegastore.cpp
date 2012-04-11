@@ -18,6 +18,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
+#include "appbackgroundprovider_p.h"
 #include "bodegastore.h"
 #include "kdeclarativeview.h"
 
@@ -257,6 +258,10 @@ BodegaStore::BodegaStore()
     : KDeclarativeMainWindow(),
       m_historyModel(0)
 {
+    if (!declarativeView()->engine()->imageProvider("appbackgrounds")) {
+        kDebug() << "Adding appbackgrounds";
+        declarativeView()->engine()->addImageProvider(QLatin1String("appbackgrounds"), new AppBackgroundProvider);
+    }
     declarativeView()->setPackageName("com.coherenttheory.addonsapp");
 
     qmlRegisterType<Bodega::ParticipantInfoJob>();
@@ -278,6 +283,7 @@ BodegaStore::BodegaStore()
     qScriptRegisterMetaType<Bodega::Tags>(declarativeView()->scriptEngine(), qScriptValueFromTags, tagsFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ParticipantInfo>(declarativeView()->scriptEngine(), qScriptValueFromParticipantInfo, participantInfoFromQScriptValue, QScriptValue());
 
+
     m_session = new Session(this);
     KConfigGroup config(KGlobal::config(), "AddOns");
     m_session->setBaseUrl(config.readEntry("URL", "http://addons.makeplaylive.com:3000"));
@@ -290,6 +296,7 @@ BodegaStore::BodegaStore()
     m_searchModel->setSession(m_session);
 
     declarativeView()->rootContext()->setContextProperty("bodegaClient", this);
+
 }
 
 BodegaStore::~BodegaStore()

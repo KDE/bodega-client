@@ -5,6 +5,7 @@ set(active-addons_SRCS
     main.cpp
     bodegastore.cpp
 
+    common/appbackgroundprovider.cpp
     common/dataenginebindings.cpp
     common/kdeclarativeview.cpp
     common/kdeclarativemainwindow.cpp
