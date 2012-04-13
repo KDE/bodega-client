@@ -66,7 +66,7 @@ void HistoryModel::Private::historyJobFinished(Bodega::NetworkJob *job)
     const QVariantList historyData = json[QLatin1String("history")].toList();
     const int count = historyData.count();
     int offset = json[QLatin1String("offset")].toInt();
-    const int end = count + offset - 1;
+    const int end = qMax(offset, count + offset - 1);
     q->beginInsertRows(QModelIndex(), offset, end);
 
     // fill any blanks
