@@ -141,7 +141,10 @@ PlasmaComponents.Page {
                 }
             }
 
-            Item {
+            Image {
+                source: "image://appbackgrounds/standard"
+                fillMode: Image.Tile
+
                 anchors {
                     left: sideBar.right
                     right: parent.right
