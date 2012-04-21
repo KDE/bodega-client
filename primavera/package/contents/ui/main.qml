@@ -250,20 +250,62 @@ Image {
 
                 onClicked: {
                     enabled = false
-                    busyIndicator.visible = true
+                    var doc = new XMLHttpRequest();
+                    doc.onreadystatechange = function() {
+                        if (doc.readyState == XMLHttpRequest.DONE) {
+                            if (doc.responseText.length == 0) {
+                                resultDisplay.text = i18n("Incorrect code. Try again.");
+                            } else {
+                                resultDisplay.text = i18n("Search for: %1", doc.responseText);
+                            }
+
+                            resultDisplay.visible = true;
+                            showBusy.running = false;
+                            busyIndicator.visible = false;
+                            enabled = true;
+                        }
+                    }
+
+                    showBusy.running = true;
+                    resultDisplay.text = '';
+                    var text = l1.text + l2.text + l3.text + l4.text + l5.text + l6.text + l7.text;
+                    doc.open("GET", "http://addons.makeplaylive.com:3000/bodega/v1/json/hunt?code=" + text);
+                    doc.send();
+                }
+
+                Timer {
+                    id: showBusy
+                    interval: 200
+                    onTriggered: {
+                        busyIndicator.visible = true
+                    }
                 }
             }
         }
 
+        // vertical spacer
+        Item { height: 8; width: 1; }
+
         Row {
             anchors.horizontalCenter: parent.horizontalCenter
+            Item {
+                // this item prevents the layout from jumping about
+                height: busyIndicator.height
+                width: 1
+            }
+
             PlasmaComponents.BusyIndicator {
                     id: busyIndicator
                     height: 64
                     width: 64
-                    anchors.left: parent.right
                     visible: false
                     running: visible
+            }
+
+            Text {
+                height: 64
+                id: resultDisplay
+                visible: true
             }
         }
     }
