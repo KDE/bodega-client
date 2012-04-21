@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=primavera
+
+Exec=primavera -graphicssystem raster %u
+Terminal=false
+Type=Application
+Hidden=true
+Categories=Qt;KDE;

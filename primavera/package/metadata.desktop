@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Primavera
+Encoding=UTF-8
+Type=Service
+X-KDE-ParentApp=
+X-KDE-PluginInfo-Author=Coherent Theory LLC
+X-KDE-PluginInfo-Email=vivaldi@makeplaylive.com
+X-KDE-PluginInfo-Name=com.coherenttheory.primavera
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=
+X-KDE-PluginInfo-Category=Network services
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=LGPLv2+
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-MainScript=ui/main.qml
