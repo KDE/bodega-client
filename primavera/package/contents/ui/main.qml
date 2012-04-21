@@ -246,7 +246,7 @@ Image {
             anchors.horizontalCenter: parent.horizontalCenter
 
             PlasmaComponents.Button {
-                text: i18n("Fetch Search Term")
+                text: i18n("Submit Code")
 
                 onClicked: {
                     enabled = false
@@ -256,7 +256,7 @@ Image {
                             if (doc.responseText.length == 0) {
                                 resultDisplay.text = i18n("Incorrect code. Try again.");
                             } else {
-                                resultDisplay.text = i18n("Search for: %1", doc.responseText);
+                                resultDisplay.text = i18n("Search for '%1'", doc.responseText);
                             }
 
                             resultDisplay.visible = true;
