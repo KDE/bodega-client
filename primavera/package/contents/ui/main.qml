@@ -253,10 +253,11 @@ Image {
                     var doc = new XMLHttpRequest();
                     doc.onreadystatechange = function() {
                         if (doc.readyState == XMLHttpRequest.DONE) {
-                            if (doc.responseText.length == 0) {
+                            var result = eval('(' + doc.responseText + ')');
+                            if (!result.egg  || result.egg.length == 0) {
                                 resultDisplay.text = i18n("Incorrect code. Try again.");
                             } else {
-                                resultDisplay.text = i18n("Search for '%1'", doc.responseText);
+                                resultDisplay.text = i18n("Search for '%1'", result.egg);
                             }
 
                             resultDisplay.visible = true;
@@ -269,7 +270,7 @@ Image {
                     showBusy.running = true;
                     resultDisplay.text = '';
                     var text = l1.text + l2.text + l3.text + l4.text + l5.text + l6.text + l7.text;
-                    doc.open("GET", "http://addons.makeplaylive.com:3000/bodega/v1/json/hunt?code=" + text);
+                    doc.open("GET", "http://addons.makeplaylive.com:3000/bodega/v1/json/hunt?device=VIVALDI-1&code=" + text);
                     doc.send();
                 }
 
