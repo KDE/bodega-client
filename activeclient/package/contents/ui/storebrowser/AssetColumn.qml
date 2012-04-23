@@ -201,6 +201,7 @@ BrowserColumn {
                     rows: 3
                     columns: 2
                     PlasmaComponents.Label {
+                        id: authorTitle
                         anchors {
                             right: authorLabel.left
                             rightMargin: theme.defaultFont.mSize.width
@@ -212,6 +213,7 @@ BrowserColumn {
                         id: authorLabel
                         visible: assetOperations.assetTags.author != undefined && assetOperations.assetTags.author[0] != ""
                         text: assetOperations.assetTags.author[0]
+                        width: root.width - authorTitle.width - 40
                         wrapMode: Text.WordWrap
                     }
                     PlasmaComponents.Label {
