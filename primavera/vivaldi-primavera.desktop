@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=primavera
-
+Icon=preferences-desktop-default-applications
 Exec=primavera -graphicssystem raster %u
 Terminal=false
 Type=Application
 Hidden=true
-Categories=Qt;KDE;
+Categories=Settings;System;SystemSetup;
