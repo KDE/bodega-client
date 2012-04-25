@@ -23,8 +23,12 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.qtextracomponents 0.1
 
 PlasmaComponents.ListItem {
+    id: root
     enabled: true
     property int iconSize: theme.mediumIconSize
+    property string icon
+    property string label: model.DisplayRole
+    property int count: model.ChannelAssetCountRole ? model.ChannelAssetCountRole : -1
     Row {
         spacing: theme.defaultFont.mSize.width
         anchors {
@@ -35,12 +39,12 @@ PlasmaComponents.ListItem {
             id: iconLoader
             width: iconSize
             height: iconSize
-            sourceComponent: model.ImageMediumRole ? iconComponent : emptyComponent
+            sourceComponent: root.icon ? qIconComponent : (model.ImageMediumRole ? iconComponent : emptyComponent)
             anchors.verticalCenter: parent.verticalCenter
         }
         PlasmaComponents.Label {
             id: label
-            text: model.DisplayRole
+            text: root.label
             anchors {
                 left: iconLoader.right
                 leftMargin: 2
@@ -52,7 +56,7 @@ PlasmaComponents.ListItem {
         }
         PlasmaComponents.Label {
             id: countLabel
-            text: model.ChannelAssetCountRole ? model.ChannelAssetCountRole : ''
+            text: root.count >= 0 ? root.count : ''
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: parent.right
@@ -63,6 +67,13 @@ PlasmaComponents.ListItem {
         id: iconComponent
         Image {
             source: model.ImageMediumRole
+            anchors.fill: parent
+        }
+    }
+    Component {
+        id: qIconComponent
+        QIconItem {
+            icon: root.icon
             anchors.fill: parent
         }
     }

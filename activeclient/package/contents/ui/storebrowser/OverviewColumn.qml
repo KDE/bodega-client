@@ -27,35 +27,61 @@ BrowserColumn {
     id: root
     clip: true
 
-    ListView {
-        id: categoriesView
-        currentIndex: -1
+    //It's a flickable+repeater because we need to mix other items to the model
+    //results should be small enough to be loaded all at once
+    Flickable {
+        id: categoriesFlickable
         clip: true
+        interactive: true
         anchors {
             top: parent.top
             left: parent.left
             right: parent.right
             bottom: statusFrame.top
         }
-        model: VisualDataModel {
-            model: bodegaClient.channelsModel
-            delegate: StoreListItem {
-                checked: categoriesView.currentIndex == index
+        Column {
+            id: categoriesColumn
+            property int currentIndex: -1
+            width: categoriesFlickable.width
+
+            Repeater {
+                model: VisualDataModel {
+                    id: visualDataModel
+                    model: bodegaClient.channelsModel
+                    delegate: StoreListItem {
+                        checked: categoriesColumn.currentIndex == index
+                        onClicked: {
+                            if (categoriesColumn.currentIndex == index) {
+                                return
+                            }
+                            categoriesColumn.currentIndex = index
+                            itemBrowser.pop(root)
+                            var channels = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
+                            channels.rootIndex = visualDataModel.modelIndex(index)
+                            channels.channelId = model.ChannelIdRole
+                        }
+                    }
+                }
+            }
+            StoreListItem {
+                icon: "folder-downloads"
+                label: i18n("Downloads")
+                property int index: visualDataModel.count
+                count: bodegaClient.session.installJobsModel.count
+                checked: categoriesColumn.currentIndex == index
                 onClicked: {
-                    if (categoriesView.currentIndex == index) {
+                    if (categoriesColumn.currentIndex == index) {
                         return
                     }
-                    categoriesView.currentIndex = index
+                    categoriesColumn.currentIndex = index
                     itemBrowser.pop(root)
-                    var channels = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
-                    channels.rootIndex = categoriesView.model.modelIndex(index)
-                    channels.channelId = model.ChannelIdRole
+                    var channels = itemBrowser.push(Qt.createComponent("InstallJobsColumn.qml"))
                 }
             }
         }
     }
     PlasmaComponents.ScrollBar {
-        flickableItem: categoriesView
+        flickableItem: categoriesFlickable
         orientation: Qt.Vertical
     }
     PlasmaCore.FrameSvgItem {
