@@ -24,6 +24,7 @@
 
 #include "assethandler.h"
 #include "installjob.h"
+#include "installjobsmodel.h"
 #include "uninstalljob.h"
 
 namespace Bodega
@@ -162,6 +163,7 @@ Bodega::InstallJob *AssetOperations::install(QNetworkReply *reply, Session *sess
         if (job) {
             connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)), this, SLOT(checkInstalled()));
         }
+        session->installJobsModel()->addJob(d->assetInfo, job);
         return job;
     }
 

@@ -41,6 +41,7 @@ set (bodega_SRCS
      historymodel.cpp
      imagelocator.cpp
      installjob.cpp
+     installjobsmodel.cpp
      listballotsjob.cpp
      networkjob.cpp
      participantinfojob.cpp
@@ -58,7 +59,7 @@ include_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/lib/bodega ${CMA
 qt4_automoc(${bodega_SRCS})
 
 add_library (bodega SHARED ${bodega_SRCS})
-target_link_libraries(bodega  ${QT_LIBRARIES} ${QJSON_LIBRARIES})
+target_link_libraries(bodega  ${QT_LIBRARIES} ${QT_QTGUI_LIBRARY} ${QJSON_LIBRARIES})
 
 
 set_target_properties(bodega PROPERTIES

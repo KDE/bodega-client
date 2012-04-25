@@ -42,6 +42,7 @@ namespace Bodega {
     class CreateBallotJob;
     class DeleteBallotJob;
     class InstallJob;
+    class InstallJobsModel;
     class ListBallotsJob;
     class ParticipantInfoJob;
     class RegisterJob;
@@ -58,6 +59,11 @@ namespace Bodega {
         Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
         Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
         Q_PROPERTY(QString deviceId READ deviceId WRITE setDeviceId NOTIFY deviceChanged)
+
+        /**
+         * Model containing all the install jobs for each asset done during this session
+         */
+        Q_PROPERTY(Bodega::InstallJobsModel *installJobsModel READ installJobsModel CONSTANT)
         Q_PROPERTY(int points READ points NOTIFY pointsChanged)
 
     public:
@@ -82,6 +88,8 @@ namespace Bodega {
 
         QMap<ImageUrl, QUrl> imageUrls() const;
         QMap<ImageUrl, QUrl> urlsForImage(const QString &name) const;
+
+        Bodega::InstallJobsModel *installJobsModel() const;
 
     public Q_SLOTS:
         Bodega::NetworkJob *history(int offset, int pageSize);

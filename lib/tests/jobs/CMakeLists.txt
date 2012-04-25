@@ -27,6 +27,7 @@ qt4_automoc(${tst_jobs_SRCS})
 TARGET_LINK_LIBRARIES(
   tst_jobs
   ${QT_LIBRARIES}
+  ${QT_QTGUI_LIBRARY}
   ${qjson_LIBRARIES}
   bodega
 )

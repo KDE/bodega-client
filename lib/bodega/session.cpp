@@ -31,6 +31,7 @@
 #include "createballotjob.h"
 #include "deleteballotjob.h"
 #include "installjob.h"
+#include "installjobsmodel.h"
 #include "listballotsjob.h"
 #include "participantinfojob.h"
 #include "registerjob.h"
@@ -47,7 +48,8 @@ Session::Private::Private(Session *parent)
         : q(parent),
           points(0),
           authenticated(false),
-          netManager(new QNetworkAccessManager(q))
+          netManager(new QNetworkAccessManager(q)),
+          installJobsModel(new InstallJobsModel(q))
 {
 }
 
@@ -328,6 +330,11 @@ QMap<ImageUrl, QUrl> Session::urlsForImage(const QString &name) const
         ret.insert(itr.key(), QUrl(path));
     }
     return ret;
+}
+
+Bodega::InstallJobsModel *Session::installJobsModel() const
+{
+    return d->installJobsModel;
 }
 
 Bodega::NetworkJob *Session::history(int offset, int pageSize)

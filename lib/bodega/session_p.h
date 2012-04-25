@@ -25,6 +25,8 @@
 
 namespace Bodega {
 
+class InstallJobsModel;
+
 class Session::Private {
 public:
     Private(Session *parent);
@@ -67,6 +69,7 @@ public:
     bool authenticated;
     int points;
     QMap<ImageUrl, QUrl> imageUrls;
+    InstallJobsModel *installJobsModel;
 };
 
 }
