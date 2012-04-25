@@ -1,7 +1,16 @@
 [Desktop Entry]
 Name=Store
+Name[pt]=Armazém
+Name[uk]=Сховище
+Name[x-test]=xxStorexx
 GenericName=Add Ons
+GenericName[pt]=Extensões
+GenericName[uk]=Додатки
+GenericName[x-test]=xxAdd Onsxx
 Comment=Content store for Plasma Active
+Comment[pt]=Armazém de conteúdos para o Plasma Active
+Comment[uk]=Сховища даних для портативної Плазми
+Comment[x-test]=xxContent store for Plasma Activexx
 Icon=preferences-desktop-default-applications
 Exec=active-addons -graphicssystem raster %u
 Terminal=false
