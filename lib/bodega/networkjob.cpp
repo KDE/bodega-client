@@ -183,25 +183,23 @@ QUrl NetworkJob::url() const
 
 void NetworkJob::parseErrors(const QVariantMap &jsonMap)
 {
-    QVariantList errors = jsonMap[QLatin1String("errors")].toList();
-    if (errors.isEmpty() && !d->authSuccess) {
-        d->failed = true;
+    if (!jsonMap.contains(QLatin1String("error"))) {
+        return;
+    }
+
+    d->failed = true;
+    const QVariantMap error = jsonMap[QLatin1String("error")].toMap();
+    if (error.isEmpty() && !d->authSuccess) {
         d->error = Error(Error::Authentication,
                          QString::fromLatin1("auth/01"),
                          tr("Authentication Error"),
                          tr("Invalid username or password"));
-        emit jobError(this, d->error);
     } else {
-        foreach(QVariant var, errors) {
-            QVariantMap verror = var.toMap();
-            d->failed = true;
-            d->error = Error(Error::Parsing,
-                             verror[QLatin1String("errorId")].toString(),
-                             verror[QLatin1String("title")].toString(),
-                             verror[QLatin1String("error")].toString());
-            emit jobError(this, d->error);
-        }
+        const Error::ServerCode code = Error::serverCodeId(error.value(QLatin1String("type")).toString());
+        d->error = Error(code);
     }
+
+    emit jobError(this, d->error);
 }
 
 void NetworkJob::parseCommon(const QVariantMap &result)
