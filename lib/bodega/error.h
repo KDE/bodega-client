@@ -29,7 +29,7 @@ namespace Bodega {
     {
     public:
         // These must remain in sync with the server implementation
-        enum Code {
+        enum ServerCode {
             NoCode                = 0,
             Connection            = 1, //reserved for client side connection errors
             Unknown               = 2, //unexpected problem
@@ -71,14 +71,14 @@ namespace Bodega {
         };
 
         Error();
-        Error(Code code);
+        Error(ServerCode code);
         Error(Type type, const QString &msg);
         Error(Type type,
               const QString &errorId,
               const QString &title,
               const QString &descr);
         ~Error();
-        Code code() const;
+        ServerCode serverCode() const;
         Type type() const;
         QString errorId() const;
         QString title() const;

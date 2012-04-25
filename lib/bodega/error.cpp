@@ -40,10 +40,10 @@ public:
     }
 
 
-    Private(Code c)
+    Private(ServerCode c)
         : code(NoCode)
     {
-        setCode(c);
+        setServerCode(c);
     }
 
     Private(Type t)
@@ -52,16 +52,16 @@ public:
     {
     }
 
-    void setCode(Code c);
+    void setServerCode(ServerCode c);
 
-    Code code;
+    ServerCode code;
     Type type;
     QString id;
     QString title;
     QString description;
 };
 
-void Error::Private::setCode(Code c)
+void Error::Private::setServerCode(ServerCode c)
 {
     code = c;
     type = Session;
@@ -179,7 +179,7 @@ Error::Error()
     qDebug() << "********************** 1" << d->code << d->type << d->id << d->title << d->description;
 }
 
-Error::Error(Code code)
+Error::Error(ServerCode code)
     : d(new Private(code))
 {
     qDebug() << "********************** 2" << d->code << d->type << d->id << d->title << d->description;
@@ -205,7 +205,7 @@ Error::~Error()
     delete d;
 }
 
-Error::Code Error::code() const
+Error::ServerCode Error::serverCode() const
 {
     return d->code;
 }
