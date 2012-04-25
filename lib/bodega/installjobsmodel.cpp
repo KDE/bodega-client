@@ -23,6 +23,8 @@
 #include <QtCore/QDebug>
 #include <QtCore/QMetaEnum>
 
+#include <bodega/installjob.h>
+
 namespace Bodega
 {
 
@@ -31,12 +33,26 @@ class InstallJobsModel::Private
 public:
     Private(InstallJobsModel *parent);
 
+    void progressChanged(qreal progress);
+
     InstallJobsModel *q;
+    QHash<InstallJob *, QStandardItem *> itemFromJobs;
 };
 
 InstallJobsModel::Private::Private(InstallJobsModel *parent)
     : q(parent)
 {
+}
+
+void InstallJobsModel::Private::progressChanged(qreal progress)
+{
+    InstallJob *job = qobject_cast<InstallJob *>(q->sender());
+
+    if (!job || !itemFromJobs.contains(job)) {
+        return;
+    }
+
+    itemFromJobs[job]->setData(progress, ProgressRole);
 }
 
 
@@ -80,9 +96,12 @@ void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
     item->setData(info.images[ImagePreviews], ImagePreviewsRole);
 
     item->setData(info.id, AssetIdRole);
-    item->setData(0, ProgressRole);
+    item->setData(job->progress(), ProgressRole);
 
     appendRow(item);
+
+    d->itemFromJobs[job] = item;
+    connect(job, SIGNAL(progressChanged(qreal)), this, SLOT(progressChanged(qreal)));
 }
 
 }
