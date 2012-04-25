@@ -19,7 +19,6 @@
 
 #include "error.h"
 
-#include <QDebug>
 #include <QObject>
 
 using namespace Bodega;
@@ -53,13 +52,57 @@ public:
     }
 
     void setServerCode(ServerCode c);
+    static void initServerCodeDict();
 
     ServerCode code;
     Type type;
     QString id;
     QString title;
     QString description;
+
+    static QMap<QString, ServerCode> serverCodes;
 };
+
+QMap<QString, Error::ServerCode> Error::Private::serverCodes;
+
+void Error::Private::initServerCodeDict()
+{
+    if (!serverCodes.isEmpty()) {
+        return;
+    }
+    #define ADD_SERVER_CODE(CODE) serverCodes.insert(QLatin1String("" #CODE), CODE);
+    ADD_SERVER_CODE(NoCode)
+    ADD_SERVER_CODE(Connection)
+    ADD_SERVER_CODE(Unknown)
+    ADD_SERVER_CODE(Database)
+    ADD_SERVER_CODE(Unauthorized)
+    ADD_SERVER_CODE(MissingParameters)
+    ADD_SERVER_CODE(NoMatch)
+    ADD_SERVER_CODE(AccountInactive)
+    ADD_SERVER_CODE(AccountExists)
+    ADD_SERVER_CODE(PurchaseFailed)
+    ADD_SERVER_CODE(MailerFailure)
+    ADD_SERVER_CODE(AccountUpdateFailed)
+    ADD_SERVER_CODE(EncryptionFailure)
+    ADD_SERVER_CODE(PasswordTooShort)
+    ADD_SERVER_CODE(Download)
+    ADD_SERVER_CODE(AccessDenied)
+    ADD_SERVER_CODE(RedeemCodeFailure)
+
+    ADD_SERVER_CODE(PaymentMethodCreation)
+    ADD_SERVER_CODE(PaymentMethodDeletion)
+    ADD_SERVER_CODE(PaymentMethodDetails)
+    ADD_SERVER_CODE(PaymentMethodMissing)
+    ADD_SERVER_CODE(CustomerRetrieval)
+    ADD_SERVER_CODE(CustomerDatabase)
+    ADD_SERVER_CODE(CustomerCharge)
+    ADD_SERVER_CODE(CustomerRefund)
+    ADD_SERVER_CODE(ChargeNotRecorded)
+    ADD_SERVER_CODE(NotEnoughPoints)
+    ADD_SERVER_CODE(TooManyPoints)
+    ADD_SERVER_CODE(CollectionExists)
+    ADD_SERVER_CODE(AssetExists)
+}
 
 void Error::Private::setServerCode(ServerCode c)
 {
@@ -71,9 +114,6 @@ void Error::Private::setServerCode(ServerCode c)
     switch (code) {
         case Connection:
             description = QObject::tr("Connection failed.");
-        break;
-        case Unknown:
-            description = QObject::tr("An unknown error occurred.");
         break;
         case Database:
             description = QObject::tr("The add-ons database could not be reached.");
@@ -168,7 +208,9 @@ void Error::Private::setServerCode(ServerCode c)
             description = QObject::tr("The asset already exists.");
         break;
 
-        NoCode:
+        // NoCode, Unknown or out of bounds errors
+        default:
+            description = QObject::tr("An unknown error occurred.");
         break;
     }
 }
@@ -176,19 +218,22 @@ void Error::Private::setServerCode(ServerCode c)
 Error::Error()
     : d(new Private(Session))
 {
-    qDebug() << "********************** 1" << d->code << d->type << d->id << d->title << d->description;
+}
+
+Error::Error(const Error &other)
+    : d(new Private(*other.d))
+{
+
 }
 
 Error::Error(ServerCode code)
     : d(new Private(code))
 {
-    qDebug() << "********************** 2" << d->code << d->type << d->id << d->title << d->description;
 }
 
 Error::Error(Type type, const QString &msg)
     : d(new Private(type, msg, msg, msg))
 {
-    qDebug() << "********************** 3" << d->code << d->type << d->id << d->title << d->description;
 }
 
 Error::Error(Type type,
@@ -197,12 +242,21 @@ Error::Error(Type type,
              const QString &descr)
     : d(new Private(type, errorId, title, descr))
 {
-    qDebug() << "********************** 4" << d->code << d->type << d->id << d->title << d->description;
 }
 
 Error::~Error()
 {
     delete d;
+}
+
+Error &Error::operator=(const Error &rhs)
+{
+    d->code = rhs.d->code;
+    d->type = rhs.d->type;
+    d->id = rhs.d->id;
+    d->title = rhs.d->title;
+    d->description = rhs.d->description;
+    return *this;
 }
 
 Error::ServerCode Error::serverCode() const
@@ -228,5 +282,15 @@ QString Error::title() const
 QString Error::description() const
 {
     return d->description;
+}
+
+Error::ServerCode Error::serverCodeId(const QString &string)
+{
+    Private::initServerCodeDict();
+    if (Private::serverCodes.contains(string)) {
+        return Private::serverCodes.value(string);
+    }
+
+    return Unknown;
 }
 

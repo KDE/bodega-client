@@ -28,7 +28,7 @@ namespace Bodega {
     class BODEGA_EXPORT Error
     {
     public:
-        // These must remain in sync with the server implementation
+        // These should remain in sync with the server implementation
         enum ServerCode {
             NoCode                = 0,
             Connection            = 1, //reserved for client side connection errors
@@ -71,22 +71,26 @@ namespace Bodega {
         };
 
         Error();
-        Error(ServerCode code);
+        Error(const Error &other);
+        Error(ServerCode serverCode);
         Error(Type type, const QString &msg);
         Error(Type type,
               const QString &errorId,
               const QString &title,
               const QString &descr);
         ~Error();
+        Error &operator=(const Error &rhs);
         ServerCode serverCode() const;
         Type type() const;
         QString errorId() const;
         QString title() const;
         QString description() const;
 
+        static ServerCode serverCodeId(const QString &string);
+
     private:
         class Private;
-        Private const *d;
+        Private * const d;
     };
 }
 
