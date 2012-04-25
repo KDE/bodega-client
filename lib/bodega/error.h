@@ -28,42 +28,65 @@ namespace Bodega {
     class BODEGA_EXPORT Error
     {
     public:
+        // These must remain in sync with the server implementation
+        enum Code {
+            NoCode                = 0,
+            Connection            = 1, //reserved for client side connection errors
+            Unknown               = 2, //unexpected problem
+            Database              = 3, //db communication problem
+            Unauthorized          = 4, //unauthorized access
+            MissingParameters     = 5, //username/password/device id missing
+            NoMatch               = 6, //no or incorrect result
+            AccountInactive       = 7, //account is inactive
+            AccountExists         = 8, //collection/asset already exists
+            PurchaseFailed        = 9, //failed to purchase item
+            MailerFailure         = 10, //failed to generate an email
+            AccountUpdateFailed   = 11, //account update failed
+            EncryptionFailure     = 12, //couldn't encrypt text
+            PasswordTooShort      = 13, //password has to be at least 8 characters
+            Download              = 14, //problem with the download
+            AccessDenied          = 15, //access denied to the requested asset
+            RedeemCodeFailure     = 16, //could not redeem points code.
+
+            PaymentMethodCreation = 17, //could not link credit card to customer
+            PaymentMethodDeletion = 18, //delete card details
+            PaymentMethodDetails  = 19, //problem updating customer card details
+            PaymentMethodMissing  = 20, //customer card details missing
+            CustomerRetrieval     = 21, //problems retrieving card details
+            CustomerDatabase      = 22, //db error while querying for customer id
+            CustomerCharge        = 23, //unable to charge the customers card
+            CustomerRefund        = 24, //unable to charge the customers card
+            ChargeNotRecorded     = 25, //charged the customer but couldn't record it
+            NotEnoughPoints       = 26, //not enough points for a purchase
+            TooManyPoints         = 27,  //tried to buy too many points at once
+            CollectionExists      = 28, //collection already exists
+            AssetExists           = 29  //asset already exists
+        };
+
         enum Type {
             Network,
             Authentication,
             Parsing,
             Session
         };
-    public:
+
         Error();
-        Error(Type type,
-              const QString &msg);
+        Error(Code code);
+        Error(Type type, const QString &msg);
         Error(Type type,
               const QString &errorId,
               const QString &title,
               const QString &descr);
-        Type type() const
-        {
-            return m_type;
-        }
-        QString errorId() const
-        {
-            return m_id;
-        }
-        QString title() const
-        {
-            return m_title;
-        }
-        QString description() const
-        {
-            return m_description;
-        }
+        ~Error();
+        Code code() const;
+        Type type() const;
+        QString errorId() const;
+        QString title() const;
+        QString description() const;
 
     private:
-        Type m_type;
-        QString m_id;
-        QString m_title;
-        QString m_description;
+        class Private;
+        Private const *d;
     };
 }
 
