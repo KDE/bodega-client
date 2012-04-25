@@ -34,6 +34,7 @@ public:
     Private(InstallJobsModel *parent);
 
     void progressChanged(qreal progress);
+    void jobDestroyed(QObject *obj);
 
     InstallJobsModel *q;
     QHash<InstallJob *, QStandardItem *> itemFromJobs;
@@ -55,6 +56,11 @@ void InstallJobsModel::Private::progressChanged(qreal progress)
     itemFromJobs[job]->setData(progress, ProgressRole);
 }
 
+void InstallJobsModel::Private::jobDestroyed(QObject *obj)
+{
+    InstallJob *job = qobject_cast<InstallJob *>(obj);
+    itemFromJobs.remove(job);
+}
 
 InstallJobsModel::InstallJobsModel(QObject *parent)
     : QStandardItemModel(parent),
@@ -102,6 +108,7 @@ void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
 
     d->itemFromJobs[job] = item;
     connect(job, SIGNAL(progressChanged(qreal)), this, SLOT(progressChanged(qreal)));
+    connect(job, SIGNAL(destroyed(QObject *)), this, SLOT(jobDestroyed(QObject *)));
 }
 
 }

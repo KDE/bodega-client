@@ -61,6 +61,7 @@ namespace Bodega {
         class Private;
         Private * const d;
         Q_PRIVATE_SLOT(d, void progressChanged(qreal progress))
+        Q_PRIVATE_SLOT(d, void jobDestroyed(QObject *obj))
     };
 
 }
