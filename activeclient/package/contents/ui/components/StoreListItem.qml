@@ -39,7 +39,7 @@ PlasmaComponents.ListItem {
             id: iconLoader
             width: iconSize
             height: iconSize
-            sourceComponent: root.icon ? qIconComponent : (model.ImageMediumRole ? iconComponent : emptyComponent)
+            sourceComponent: (root.icon || model.DecorationRole) ? qIconComponent : (model.ImageMediumRole ? iconComponent : emptyComponent)
             anchors.verticalCenter: parent.verticalCenter
         }
         PlasmaComponents.Label {

@@ -48,6 +48,7 @@ InstallJobsModel::InstallJobsModel(QObject *parent)
     //  the sake of QML
     QHash<int, QByteArray> roles;
     roles.insert(Qt::DisplayRole, "DisplayRole");
+    roles.insert(Qt::DecorationRole, "DecorationRole");
     QMetaEnum e = metaObject()->enumerator(metaObject()->indexOfEnumerator("DisplayRoles"));
     for (int i = 0; i < e.keyCount(); ++i) {
         roles.insert(e.value(i), e.key(i));
@@ -62,7 +63,19 @@ InstallJobsModel::~InstallJobsModel()
 
 void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
 {
-    appendRow(new QStandardItem(info.name));
+    QStandardItem *item = new QStandardItem(info.name);
+
+    item->setData(info.images[ImageTiny], ImageTinyRole);
+    item->setData(info.images[ImageSmall], ImageSmallRole);
+    item->setData(info.images[ImageMedium], ImageMediumRole);
+    item->setData(info.images[ImageLarge], ImageLargeRole);
+    item->setData(info.images[ImageHuge], ImageHugeRole);
+    item->setData(info.images[ImagePreviews], ImagePreviewsRole);
+
+    item->setData(info.id, AssetIdRole);
+    item->setData(0, ProgressRole);
+
+    appendRow(item);
 }
 
 }

@@ -35,7 +35,15 @@ namespace Bodega {
 
     public:
         enum DisplayRoles {
-            ProgressRole = Qt::UserRole + 1
+            AssetIdRole = Qt::UserRole + 1,
+            ProgressRole = Qt::UserRole + 2,
+
+            ImageTinyRole = Qt::UserRole + 50,
+            ImageSmallRole = Qt::UserRole + 51,
+            ImageMediumRole = Qt::UserRole + 52,
+            ImageLargeRole = Qt::UserRole + 53,
+            ImageHugeRole = Qt::UserRole + 54,
+            ImagePreviewsRole = Qt::UserRole + 55,
         };
 
         InstallJobsModel(QObject *parent = 0);
