@@ -64,6 +64,7 @@ BrowserColumn {
                 }
             }
             StoreListItem {
+                visible: count > 0
                 icon: "folder-downloads"
                 label: i18n("Downloads")
                 property int index: visualDataModel.count
