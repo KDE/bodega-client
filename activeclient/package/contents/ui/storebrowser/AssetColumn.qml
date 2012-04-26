@@ -211,8 +211,8 @@ BrowserColumn {
                     }
                     PlasmaComponents.Label {
                         id: authorLabel
-                        visible: assetOperations.assetTags.author != undefined && assetOperations.assetTags.author[0] != ""
-                        text: assetOperations.assetTags.author[0]
+                        visible: assetOperations.assetTags && assetOperations.assetTags.author != undefined && assetOperations.assetTags.author[0] != ""
+                        text: visible ? assetOperations.assetTags.author[0] : ''
                         width: root.width - authorTitle.width - 40
                         wrapMode: Text.WordWrap
                     }
@@ -238,13 +238,11 @@ BrowserColumn {
                     }
                     PlasmaComponents.Label {
                         id: dateLabel
-                        visible: assetOperations.assetTags.created != undefined && assetOperations.assetTags.created[0] != ""
-                        property variant splitDate: assetOperations.assetTags.created[0].split("-")
+                        visible: assetOperations.assetTags && assetOperations.assetTags.created != undefined && assetOperations.assetTags.created[0] != ""
+                        property variant splitDate: visible ? assetOperations.assetTags.created[0].split("-") : Date()
                         text: Qt.formatDate(new Date(splitDate[0], splitDate[1], splitDate[2]), Qt.DefaultLocaleShortDate)
                     }
                 }
-                
-
 
                 /*TODO
                 SlideShow {
