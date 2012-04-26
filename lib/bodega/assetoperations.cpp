@@ -35,7 +35,8 @@ public:
     Private(AssetOperations *operations)
         : q(operations),
           handler(0),
-          wasInstalled(false)
+          wasInstalled(false),
+          progress(0)
     {}
 
     ~Private()
@@ -44,6 +45,7 @@ public:
     void assetDownloadComplete(NetworkJob *job);
     bool ready();
     void checkInstalled();
+    void progressHasChanged(qreal progress);
 
     AssetOperations *q;
     AssetHandler *handler;
@@ -51,6 +53,7 @@ public:
     Tags assetTags;
     QString mimetype;
     bool wasInstalled;
+    qreal progress;
 };
 
 void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
@@ -105,6 +108,12 @@ void AssetOperations::Private::checkInstalled()
     }
 }
 
+void AssetOperations::Private::progressHasChanged(qreal prog)
+{
+    progress = prog;
+    emit q->progressChanged(progress);
+}
+
 AssetOperations::AssetOperations(const QString &assetId, Session *session)
     : QObject(session),
       d(new AssetOperations::Private(this))
@@ -156,6 +165,11 @@ QString AssetOperations::mimetype() const
     return d->mimetype;
 }
 
+qreal AssetOperations::progress() const
+{
+    return d->progress;
+}
+
 Bodega::InstallJob *AssetOperations::install(QNetworkReply *reply, Session *session)
 {
     if (d->ready()) {
@@ -164,6 +178,7 @@ Bodega::InstallJob *AssetOperations::install(QNetworkReply *reply, Session *sess
             connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)), this, SLOT(checkInstalled()));
         }
         session->installJobsModel()->addJob(d->assetInfo, job);
+        connect(job, SIGNAL(progressChanged(qreal)), this, SLOT(progressChanged(qreal)));
         return job;
     }
 

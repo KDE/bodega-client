@@ -50,6 +50,9 @@ namespace Bodega {
         InstallJobsModel(QObject *parent = 0);
         ~InstallJobsModel();
 
+        Q_INVOKABLE Bodega::InstallJob *jobForAsset(const QString &assetId) const;
+
+        //TODO: private?
         void addJob(const AssetInfo &info, InstallJob *job);
 
         int count() const {return rowCount();}

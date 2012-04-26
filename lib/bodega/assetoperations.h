@@ -39,6 +39,7 @@ namespace Bodega {
         Q_PROPERTY(Bodega::AssetInfo assetInfo READ assetInfo NOTIFY ready)
         Q_PROPERTY(Bodega::Tags assetTags READ assetTags NOTIFY ready)
         Q_PROPERTY(QString mimetype READ mimetype)
+        Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
 
     public:
         AssetOperations(const QString &assetId, Session *parent);
@@ -54,6 +55,8 @@ namespace Bodega {
 
         QString mimetype() const;
 
+        qreal progress() const;
+
     public Q_SLOTS:
         Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
         Bodega::UninstallJob *uninstall(Session *session);
@@ -63,6 +66,7 @@ namespace Bodega {
         void failed();
         void ready();
         void installedChanged();
+        void progressChanged(qreal progress);
 
     private:
         class Private;
@@ -70,6 +74,7 @@ namespace Bodega {
 
         Q_PRIVATE_SLOT(d, void assetDownloadComplete(Bodega::NetworkJob*));
         Q_PRIVATE_SLOT(d, void checkInstalled());
+        Q_PRIVATE_SLOT(d, void progressHasChanged(qreal progress));
     };
 
 }

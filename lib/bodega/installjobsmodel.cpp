@@ -37,7 +37,8 @@ public:
     void jobDestroyed(QObject *obj);
 
     InstallJobsModel *q;
-    QHash<InstallJob *, QStandardItem *> itemFromJobs;
+    QHash<InstallJob *, QStandardItem *> itemForJobs;
+    QHash<QString, InstallJob *> jobsForAssets;
 };
 
 InstallJobsModel::Private::Private(InstallJobsModel *parent)
@@ -49,17 +50,21 @@ void InstallJobsModel::Private::progressChanged(qreal progress)
 {
     InstallJob *job = qobject_cast<InstallJob *>(q->sender());
 
-    if (!job || !itemFromJobs.contains(job)) {
+    if (!job || !itemForJobs.contains(job)) {
         return;
     }
 
-    itemFromJobs[job]->setData(progress, ProgressRole);
+    itemForJobs[job]->setData(progress, ProgressRole);
 }
 
 void InstallJobsModel::Private::jobDestroyed(QObject *obj)
 {
     InstallJob *job = qobject_cast<InstallJob *>(obj);
-    itemFromJobs.remove(job);
+    QStandardItem *item = itemForJobs.value(job);
+    if (item) {
+        jobsForAssets.remove(item->data(AssetIdRole).toString());
+    }
+    itemForJobs.remove(job);
 }
 
 InstallJobsModel::InstallJobsModel(QObject *parent)
@@ -90,6 +95,11 @@ InstallJobsModel::~InstallJobsModel()
     delete d;
 }
 
+Bodega::InstallJob *InstallJobsModel::jobForAsset(const QString &assetId) const
+{
+    return d->jobsForAssets.value(assetId);
+}
+
 void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
 {
     QStandardItem *item = new QStandardItem(info.name);
@@ -106,7 +116,8 @@ void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
 
     appendRow(item);
 
-    d->itemFromJobs[job] = item;
+    d->itemForJobs[job] = item;
+    d->jobsForAssets[info.id] = job;
     connect(job, SIGNAL(progressChanged(qreal)), this, SLOT(progressChanged(qreal)));
     connect(job, SIGNAL(destroyed(QObject *)), this, SLOT(jobDestroyed(QObject *)));
 }
