@@ -32,4 +32,18 @@ SimplePage {
         creation: true
         visible: true
     }
+
+    PlasmaComponents.ToolButton {
+        id: backButton
+        iconSource: "go-previous"
+        width: theme.largeIconSize
+        height: width
+        flat: false
+        onClicked: mainStack.pop()
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: theme.defaultFont.mSize.height
+        }
+    }
 }
