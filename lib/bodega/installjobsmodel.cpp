@@ -118,6 +118,7 @@ void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
 
     d->itemForJobs[job] = item;
     d->jobsForAssets[info.id] = job;
+
     connect(job, SIGNAL(progressChanged(qreal)), this, SLOT(progressChanged(qreal)));
     connect(job, SIGNAL(destroyed(QObject *)), this, SLOT(jobDestroyed(QObject *)));
 }

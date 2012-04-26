@@ -32,6 +32,15 @@ BrowserColumn {
     onAssetIdChanged: {
         if (assetId > 0) {
             assetOperations = bodegaClient.session.assetOperations(assetId);
+            
+            var job = bodegaClient.session.installJobsModel.jobForAsset(root.assetId)
+            if (job) {
+                downloadProgress.opacity = 1
+                job.progressChanged.connect(downloadProgress.updateProgress)
+                job.jobFinished.connect(downloadProgress.operationFinished)
+                job.jobError.connect(downloadProgress.installError)
+                job.jobFinished.connect(installButton.assetOpJobCompleted)
+            }
         }
     }
 
@@ -136,9 +145,13 @@ BrowserColumn {
                                 easing.type: Easing.InOutQuad
                             }
                         }
+                        Component.onCompleted: {
+                            
+                        }
                     }
                 }
                 PlasmaComponents.Button {
+                    id: installButton
                     anchors.horizontalCenter: parent.horizontalCenter
                     enabled: assetOperations.isReady
                     text: {
