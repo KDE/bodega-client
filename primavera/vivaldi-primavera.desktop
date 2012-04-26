@@ -1,5 +1,8 @@
 [Desktop Entry]
 Name=primavera
+Name[pt]=primavera
+Name[uk]=primavera
+Name[x-test]=xxprimaveraxx
 Icon=preferences-desktop-default-applications
 Exec=primavera -graphicssystem raster %u
 Terminal=false
