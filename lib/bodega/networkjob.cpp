@@ -171,6 +171,11 @@ bool NetworkJob::isFinished() const
     return d->finished;
 }
 
+bool NetworkJob::isJsonResponse() const
+{
+    return d->expectingJson;
+}
+
 QVariantMap NetworkJob::parsedJson() const
 {
     return d->parsedJson;
