@@ -42,20 +42,22 @@ PlasmaComponents.Page {
     property alias title: titleLabel.text
     default property alias content: contentRect.data
 
-    Rectangle {
+    Image {
         id: logo
-        width: theme.enormousIconSize
-        height: width
+        width: 556
+        height: 50
         visible: titleShown
+        source: viewerPackage.filePath("images", "makeplaylive.png")
         anchors {
             top: parent.top
             horizontalCenter: parent.horizontalCenter
             topMargin: theme.defaultFont.mSize.height
         }
     }
+
     PlasmaComponents.Label {
         id: titleLabel
-        text: "Make Play Live"
+        text: i18n("add-ons and content store")
         visible: titleShown
         anchors {
             top: logo.bottom

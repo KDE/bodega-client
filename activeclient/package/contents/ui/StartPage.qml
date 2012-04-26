@@ -25,7 +25,6 @@ import "./components"
 
 SimplePage {
     objectName: "startPage"
-    title: "Make Play Live"
 
     Column {
         anchors.centerIn: parent

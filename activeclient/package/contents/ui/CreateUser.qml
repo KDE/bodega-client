@@ -25,7 +25,6 @@ import "./settings"
 
 
 SimplePage {
-    title: "Make Play Live"
     anchors.fill: parent
 
     PersonalData {

@@ -24,8 +24,6 @@ import "./components"
 
 
 SimplePage {
-    title: "Make Play Live"
-
 
     Row {
         anchors.centerIn: parent
