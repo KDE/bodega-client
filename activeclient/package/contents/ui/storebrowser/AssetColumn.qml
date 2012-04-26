@@ -29,17 +29,19 @@ BrowserColumn {
     property variant assetOperations
     property int assetId: 0
 
+    property variant installJob: null
+
     onAssetIdChanged: {
         if (assetId > 0) {
             assetOperations = bodegaClient.session.assetOperations(assetId);
             
-            var job = bodegaClient.session.installJobsModel.jobForAsset(root.assetId)
-            if (job) {
+            root.installJob = bodegaClient.session.installJobsModel.jobForAsset(root.assetId)
+            if (root.installJob) {
                 downloadProgress.opacity = 1
-                job.progressChanged.connect(downloadProgress.updateProgress)
-                job.jobFinished.connect(downloadProgress.operationFinished)
-                job.jobError.connect(downloadProgress.installError)
-                job.jobFinished.connect(installButton.assetOpJobCompleted)
+                root.installJob.progressChanged.connect(downloadProgress.updateProgress)
+                root.installJob.jobFinished.connect(downloadProgress.operationFinished)
+                root.installJob.jobError.connect(downloadProgress.installError)
+                root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
             }
         }
     }
@@ -145,15 +147,12 @@ BrowserColumn {
                                 easing.type: Easing.InOutQuad
                             }
                         }
-                        Component.onCompleted: {
-                            
-                        }
                     }
                 }
                 PlasmaComponents.Button {
                     id: installButton
                     anchors.horizontalCenter: parent.horizontalCenter
-                    enabled: assetOperations.isReady
+                    enabled: root.installJob == null && assetOperations.isReady
                     text: {
                         if (assetOperations.installed) {
                             i18n("Uninstall")
@@ -162,7 +161,6 @@ BrowserColumn {
                         }
                     }
                     onClicked: {
-                        enabled = false
                         downloadProgress.opacity = 1
                         downloadProgress.indeterminate = true
 
@@ -176,11 +174,11 @@ BrowserColumn {
                            }
                         } else if (assetOperations.assetInfo.canDownload) {
                            downloadProgress.indeterminate = false
-                           var job = bodegaClient.session.install(assetOperations)
-                           job.progressChanged.connect(downloadProgress.updateProgress)
-                           job.jobFinished.connect(downloadProgress.operationFinished)
-                           job.jobError.connect(downloadProgress.installError)
-                           job.jobFinished.connect(assetOpJobCompleted)
+                           root.installJob = bodegaClient.session.install(assetOperations)
+                           root.installJob.progressChanged.connect(downloadProgress.updateProgress)
+                           root.installJob.jobFinished.connect(downloadProgress.operationFinished)
+                           root.installJob.jobError.connect(downloadProgress.installError)
+                           root.installJob.jobFinished.connect(assetOpJobCompleted)
                         } else {
                            var job = bodegaClient.session.purchaseAsset(assetId)
                            job.jobFinished.connect(downloadProgress.operationFinished)
@@ -193,7 +191,6 @@ BrowserColumn {
                     function assetOpJobCompleted()
                     {
                         //TODO: need to show a success message methinks!
-                        enabled = true
                         root.assetOperations = bodegaClient.session.assetOperations(assetId)
                     }
                 }
