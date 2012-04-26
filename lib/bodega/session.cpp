@@ -66,6 +66,10 @@ void Session::Private::signOnFinished(SignOnJob *job)
 
 void Session::Private::jobFinished(NetworkJob *job)
 {
+    if (!job->isJsonResponse()) {
+        return;
+    }
+
     if (authenticated && !job->authSuccess()) {
         setPoints(0);
         emit q->disconnected();
