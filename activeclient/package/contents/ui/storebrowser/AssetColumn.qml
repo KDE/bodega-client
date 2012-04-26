@@ -154,26 +154,27 @@ BrowserColumn {
                         downloadProgress.indeterminate = true
 
                         if (assetOperations.installed) {
-                           var job = bodegaClient.session.uninstall(assetOperations)
-                           job.jobFinished.connect(downloadProgress.operationFinished)
-                           job.error.connect(downloadProgress.installError)
-                           job.jobFinished.connect(assetOpJobCompleted)
-                           if (job.finished) {
-                               downloadProgress.opacity = 0
-                           }
+                            var job = bodegaClient.session.uninstall(assetOperations)
+                            job.jobFinished.connect(downloadProgress.operationFinished)
+                            job.error.connect(downloadProgress.installError)
+                            job.jobFinished.connect(assetOpJobCompleted)
+                            if (job.finished) {
+                                downloadProgress.opacity = 0
+                                enabled = true;
+                            }
                         } else if (assetOperations.assetInfo.canDownload) {
-                           downloadProgress.indeterminate = false
-                           var job = bodegaClient.session.install(assetOperations)
-                           job.progressChanged.connect(downloadProgress.updateProgress)
-                           job.jobFinished.connect(downloadProgress.operationFinished)
-                           job.jobError.connect(downloadProgress.installError)
-                           job.jobFinished.connect(assetOpJobCompleted)
+                            downloadProgress.indeterminate = false
+                            var job = bodegaClient.session.install(assetOperations)
+                            job.progressChanged.connect(downloadProgress.updateProgress)
+                            job.jobFinished.connect(downloadProgress.operationFinished)
+                            job.jobError.connect(downloadProgress.installError)
+                            job.jobFinished.connect(assetOpJobCompleted)
                         } else {
-                           var job = bodegaClient.session.purchaseAsset(assetId)
-                           job.jobFinished.connect(downloadProgress.operationFinished)
-                           job.jobFinished.connect(assetOpJobCompleted)
-                           job.jobError.connect(downloadProgress.installError)
                             // purchase
+                            var job = bodegaClient.session.purchaseAsset(assetId)
+                            job.jobFinished.connect(downloadProgress.operationFinished)
+                            job.jobFinished.connect(assetOpJobCompleted)
+                            job.jobError.connect(downloadProgress.installError)
                         }
                     }
 
