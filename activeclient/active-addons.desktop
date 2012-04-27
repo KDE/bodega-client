@@ -1,17 +1,20 @@
 [Desktop Entry]
 Name=Store
+Name[nl]=Opslaan
 Name[pt]=Armazém
 Name[pt_BR]=Armazém
 Name[sk]=Uložiť
 Name[uk]=Сховище
 Name[x-test]=xxStorexx
 GenericName=Add Ons
+GenericName[nl]=Add-ons
 GenericName[pt]=Extensões
 GenericName[pt_BR]=Extensões
 GenericName[sk]=Doplnky
 GenericName[uk]=Додатки
 GenericName[x-test]=xxAdd Onsxx
 Comment=Content store for Plasma Active
+Comment[nl]=Opslag voor inhoud van Plasma Active
 Comment[pt]=Armazém de conteúdos para o Plasma Active
 Comment[pt_BR]=Armazém de conteúdos para o Plasma Active
 Comment[sk]=Úložisko obsahu pre Plasma Active
