@@ -142,7 +142,7 @@ void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
 
 QVariant InstallJobsModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() >= d->items.count()) {
+    if (!index.isValid() || index.row() >= d->items.count() || index.row() < 0) {
         return QVariant();
     }
 
