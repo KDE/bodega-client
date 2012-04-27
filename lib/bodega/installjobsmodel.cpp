@@ -37,8 +37,17 @@ public:
     void jobDestroyed(QObject *obj);
 
     InstallJobsModel *q;
-    QHash<InstallJob *, QStandardItem *> itemForJobs;
-    QHash<QString, InstallJob *> jobsForAssets;
+
+    //list used as the model data
+    QList <QHash<int, QVariant> > items;
+
+    //Bookeeping for jobs
+    //FIXME: This assumes rows will never be reordered
+    QHash<InstallJob *, int > rowsForJobs;
+
+    //the two hashes are intended to be perfectly symmetrical
+    QHash<InstallJob *, QString> idsForJobs;
+    QHash<QString, InstallJob *> jobsForIds;
 };
 
 InstallJobsModel::Private::Private(InstallJobsModel *parent)
@@ -50,25 +59,29 @@ void InstallJobsModel::Private::progressChanged(qreal progress)
 {
     InstallJob *job = qobject_cast<InstallJob *>(q->sender());
 
-    if (!job || !itemForJobs.contains(job)) {
+    if (!job || !rowsForJobs.contains(job)) {
         return;
     }
 
-    itemForJobs[job]->setData(progress, ProgressRole);
+    const int row = rowsForJobs[job];
+    items[row][ProgressRole] = progress;
+    emit q->dataChanged(q->index(row, 0, QModelIndex()), q->index(row, 0, QModelIndex()));
 }
 
 void InstallJobsModel::Private::jobDestroyed(QObject *obj)
 {
     InstallJob *job = qobject_cast<InstallJob *>(obj);
-    QStandardItem *item = itemForJobs.value(job);
-    if (item) {
-        jobsForAssets.remove(item->data(AssetIdRole).toString());
+
+    if (idsForJobs.contains(job)) {
+        jobsForIds.remove(idsForJobs.value(job));
     }
-    itemForJobs.remove(job);
+
+    idsForJobs.remove(job);
+    rowsForJobs.remove(job);
 }
 
 InstallJobsModel::InstallJobsModel(QObject *parent)
-    : QStandardItemModel(parent),
+    : QAbstractListModel(parent),
       d(new Private(this))
 {
     // set the role names based on the values of the DisplayRoles enum for
@@ -97,30 +110,92 @@ InstallJobsModel::~InstallJobsModel()
 
 Bodega::InstallJob *InstallJobsModel::jobForAsset(const QString &assetId) const
 {
-    return d->jobsForAssets.value(assetId);
+    return d->jobsForIds.value(assetId);
 }
 
 void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
 {
-    QStandardItem *item = new QStandardItem(info.name);
+    QHash<int, QVariant> item;
+    item[Qt::DisplayRole] = info.name;
+    item[ImageTinyRole] = info.images[ImageTiny];
+    item[ImageSmallRole] = info.images[ImageSmall];
+    item[ImageMediumRole] = info.images[ImageMedium];
+    item[ImageLargeRole] = info.images[ImageLarge];
+    item[ImageHugeRole] = info.images[ImageHuge];
+    item[ImagePreviewsRole] = info.images[ImagePreviews];
 
-    item->setData(info.images[ImageTiny], ImageTinyRole);
-    item->setData(info.images[ImageSmall], ImageSmallRole);
-    item->setData(info.images[ImageMedium], ImageMediumRole);
-    item->setData(info.images[ImageLarge], ImageLargeRole);
-    item->setData(info.images[ImageHuge], ImageHugeRole);
-    item->setData(info.images[ImagePreviews], ImagePreviewsRole);
+    item[AssetIdRole] = info.id;
+    item[ProgressRole] = job->progress();
 
-    item->setData(info.id, AssetIdRole);
-    item->setData(job->progress(), ProgressRole);
+    d->rowsForJobs[job] = d->items.count();
+    d->jobsForIds[info.id] = job;
+    d->idsForJobs[job] = info.id;
 
-    appendRow(item);
-
-    d->itemForJobs[job] = item;
-    d->jobsForAssets[info.id] = job;
+    beginInsertRows(QModelIndex(), d->items.count(), d->items.count());
+    d->items << item;
+    endInsertRows();
 
     connect(job, SIGNAL(progressChanged(qreal)), this, SLOT(progressChanged(qreal)));
     connect(job, SIGNAL(destroyed(QObject *)), this, SLOT(jobDestroyed(QObject *)));
+}
+
+
+QVariant InstallJobsModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid() || index.row() >= d->items.count()) {
+        return QVariant();
+    }
+
+    return d->items[index.row()].value(role);
+}
+
+Qt::ItemFlags InstallJobsModel::flags(const QModelIndex &index) const
+{
+    if (index.isValid()) {
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    } else {
+        return Qt::NoItemFlags;
+    }
+}
+
+bool InstallJobsModel::hasChildren(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return false;
+}
+
+QVariant InstallJobsModel::headerData(int section, Qt::Orientation orientation,
+                           int role) const
+{
+    return QVariant();
+}
+
+QModelIndex InstallJobsModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (column > 0) {
+        return QModelIndex();
+    }
+
+    if (row < 0 || row >= d->items.count()) {
+        return QModelIndex();
+    }
+
+    return createIndex(row, column);
+}
+
+QMap<int, QVariant> InstallJobsModel::itemData(const QModelIndex &index) const
+{
+    return QMap<int, QVariant>();
+}
+
+QModelIndex InstallJobsModel::parent(const QModelIndex &index) const
+{
+    return QModelIndex();
+}
+
+int InstallJobsModel::rowCount(const QModelIndex &parent) const
+{
+    return d->items.size();
 }
 
 }

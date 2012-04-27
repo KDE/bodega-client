@@ -22,13 +22,13 @@
 
 #include <bodega/globals.h>
 
-#include <QtGui/QStandardItemModel>
+#include <QtCore/QAbstractListModel>
 
 namespace Bodega {
 
     class InstallJob;
 
-    class BODEGA_EXPORT InstallJobsModel : public QStandardItemModel
+    class BODEGA_EXPORT InstallJobsModel : public QAbstractListModel
     {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
@@ -56,6 +56,18 @@ namespace Bodega {
         void addJob(const AssetInfo &info, InstallJob *job);
 
         int count() const {return rowCount();}
+
+        //Reimplemented from QAbstractItemModel
+        QVariant data(const QModelIndex &index, int role) const;
+        Qt::ItemFlags flags(const QModelIndex &index) const;
+        bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
+        QVariant headerData(int section, Qt::Orientation orientation,
+                            int role = Qt::DisplayRole) const;
+        QModelIndex index(int row, int column,
+                          const QModelIndex &parent = QModelIndex()) const;
+        QMap<int, QVariant> itemData(const QModelIndex &index) const;
+        QModelIndex parent(const QModelIndex &index) const;
+        int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     Q_SIGNALS:
         void countChanged();
