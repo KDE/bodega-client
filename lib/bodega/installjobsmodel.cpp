@@ -70,7 +70,9 @@ void InstallJobsModel::Private::progressChanged(qreal progress)
 
 void InstallJobsModel::Private::jobDestroyed(QObject *obj)
 {
-    InstallJob *job = qobject_cast<InstallJob *>(obj);
+    //WARNING: this static_cast is safe because nobody will access the job* pointer
+    // don't ever access it in this function!
+    InstallJob *job = static_cast<InstallJob *>(obj);
 
     if (idsForJobs.contains(job)) {
         jobsForIds.remove(idsForJobs.value(job));
