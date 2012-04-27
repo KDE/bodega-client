@@ -25,11 +25,10 @@ import "./components"
 
 SimplePage {
     objectName: "startPage"
-    title: "Make Play Live"
 
     Column {
         anchors.centerIn: parent
-        spacing: 12
+        spacing: theme.defaultFont.mSize.height * 1.5
         PlasmaComponents.ToolButton {
             anchors.horizontalCenter: parent.horizontalCenter;
             text: i18n("Add an existing account")

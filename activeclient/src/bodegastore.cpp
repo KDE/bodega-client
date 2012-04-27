@@ -54,6 +54,7 @@ QScriptValue qScriptValueFromError(QScriptEngine *engine, const Bodega::Error &e
 {
     QScriptValue obj = engine->newObject();
 
+    obj.setProperty("serverCode", error.serverCode());
     obj.setProperty("type", error.type());
     obj.setProperty("errorId", error.errorId());
     obj.setProperty("title", error.title());
@@ -74,7 +75,13 @@ void errorFromQScriptValue(const QScriptValue &scriptValue, Bodega::Error &error
     while (it.hasNext()) {
         it.next();
         //kDebug() << it.name() << "is" << it.value().toString();
-        if (it.name() == "type") {
+        if (it.name() == "serverCode") {
+            const Error::ServerCode code = (Error::ServerCode)it.value().toInteger();
+            if (code != Error::NoCode) {
+                error = Error(code);
+                return;
+            }
+        } else if (it.name() == "type") {
             type = (Error::Type)it.value().toInteger();
         } else if (it.name() == "errorId") {
             errorId = it.value().toString();

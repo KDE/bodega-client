@@ -68,6 +68,12 @@ void Session::Private::signOnFinished(SignOnJob *job)
 
 void Session::Private::jobFinished(NetworkJob *job)
 {
+    job->deleteLater();
+
+    if (!job->isJsonResponse()) {
+        return;
+    }
+
     if (authenticated && !job->authSuccess()) {
         setPoints(0);
         emit q->disconnected();
@@ -81,8 +87,6 @@ void Session::Private::jobFinished(NetworkJob *job)
     if (job->authSuccess()) {
         setPoints(job->points());
     }
-
-    job->deleteLater();
 }
 
 QNetworkReply *Session::Private::get(const QUrl &url)

@@ -165,13 +165,14 @@ BrowserColumn {
                         downloadProgress.indeterminate = true
 
                         if (assetOperations.installed) {
-                           var job = bodegaClient.session.uninstall(assetOperations)
-                           job.jobFinished.connect(downloadProgress.operationFinished)
-                           job.error.connect(downloadProgress.installError)
-                           job.jobFinished.connect(assetOpJobCompleted)
-                           if (job.finished) {
-                               downloadProgress.opacity = 0
-                           }
+                            var job = bodegaClient.session.uninstall(assetOperations)
+                            job.jobFinished.connect(downloadProgress.operationFinished)
+                            job.error.connect(downloadProgress.installError)
+                            job.jobFinished.connect(assetOpJobCompleted)
+                            if (job.finished) {
+                                downloadProgress.opacity = 0
+                                enabled = true;
+                            }
                         } else if (assetOperations.assetInfo.canDownload) {
                            downloadProgress.indeterminate = false
                            root.installJob = bodegaClient.session.install(assetOperations)
@@ -180,11 +181,11 @@ BrowserColumn {
                            root.installJob.jobError.connect(downloadProgress.installError)
                            root.installJob.jobFinished.connect(assetOpJobCompleted)
                         } else {
-                           var job = bodegaClient.session.purchaseAsset(assetId)
-                           job.jobFinished.connect(downloadProgress.operationFinished)
-                           job.jobFinished.connect(assetOpJobCompleted)
-                           job.jobError.connect(downloadProgress.installError)
                             // purchase
+                            var job = bodegaClient.session.purchaseAsset(assetId)
+                            job.jobFinished.connect(downloadProgress.operationFinished)
+                            job.jobFinished.connect(assetOpJobCompleted)
+                            job.jobError.connect(downloadProgress.installError)
                         }
                     }
 
@@ -221,8 +222,8 @@ BrowserColumn {
                     }
                     PlasmaComponents.Label {
                         id: authorLabel
-                        visible: assetOperations.assetTags.author != undefined && assetOperations.assetTags.author[0] != ""
-                        text: assetOperations.assetTags.author[0]
+                        visible: assetOperations.assetTags && assetOperations.assetTags.author != undefined && assetOperations.assetTags.author[0] != ""
+                        text: visible ? assetOperations.assetTags.author[0] : ''
                         width: root.width - authorTitle.width - 40
                         wrapMode: Text.WordWrap
                     }
@@ -248,13 +249,11 @@ BrowserColumn {
                     }
                     PlasmaComponents.Label {
                         id: dateLabel
-                        visible: assetOperations.assetTags.created != undefined && assetOperations.assetTags.created[0] != ""
-                        property variant splitDate: assetOperations.assetTags.created[0].split("-")
+                        visible: assetOperations.assetTags && assetOperations.assetTags.created != undefined && assetOperations.assetTags.created[0] != ""
+                        property variant splitDate: visible ? assetOperations.assetTags.created[0].split("-") : Date()
                         text: Qt.formatDate(new Date(splitDate[0], splitDate[1], splitDate[2]), Qt.DefaultLocaleShortDate)
                     }
                 }
-                
-
 
                 /*TODO
                 SlideShow {

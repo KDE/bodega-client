@@ -65,6 +65,7 @@ namespace Bodega {
         bool failed() const;
         Error error() const;
 
+        bool isJsonResponse() const;
         QVariantMap parsedJson() const;
 
     Q_SIGNALS:

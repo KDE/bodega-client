@@ -26,7 +26,6 @@ import "./components"
 SimplePage {
     id: root
     objectName: "passwordPage"
-    title: "Make Play Live"
     property alias email: emailField.text
 
     Column {
@@ -45,6 +44,7 @@ SimplePage {
             }
             PlasmaComponents.TextField {
                 id: emailField
+                width: theme.defaultFont.mSize.width * 20
                 Keys.onTabPressed: passwordField.forceActiveFocus()
                 Keys.onPressed: {
                     if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
@@ -64,6 +64,7 @@ SimplePage {
                 id: passwordField
                 visible: passwordLabel.visible
                 echoMode: TextInput.Password
+                width: emailField.width
                 Keys.onTabPressed: emailField.forceActiveFocus()
                 Keys.onPressed: {
                     if (event.key == Qt.Key_Enter || event.key == Qt.Key_Return) {
@@ -72,12 +73,14 @@ SimplePage {
                 }
             }
         }
+
         PlasmaComponents.Button {
             id: submitButton
             text: i18n("Connect!")
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.right: parent.right
             enabled: emailField.text && (!passwordField.visible || passwordField.text)
             onClicked: submit()
+            width: emailField.width
             property variant job
 
             function submit()
@@ -119,6 +122,20 @@ SimplePage {
             visible = false;
             passwordLabel.visible = false;
             submitButton.text = i18n("Reset my password")
+        }
+    }
+
+    PlasmaComponents.ToolButton {
+        id: backButton
+        iconSource: "go-previous"
+        width: theme.largeIconSize
+        height: width
+        flat: false
+        onClicked: mainStack.pop()
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            margins: theme.defaultFont.mSize.height
         }
     }
 }

@@ -34,12 +34,13 @@ public:
     QByteArray jsonPath(const char *cmd, bool includeBasePath=true) const
     {
         QString str;
-        if (includeBasePath)
+        if (includeBasePath) {
             str = QString::fromLatin1("%1%2")
                   .arg(QLatin1String("/bodega/v1/json"))
                   .arg(QLatin1String(cmd));
-        else
+        } else {
             str = QLatin1String(cmd);
+        }
         return str.toUtf8();
     }
     QByteArray jsonPath(const QString &str, bool includeBasePath=true) const

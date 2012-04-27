@@ -104,10 +104,8 @@ Image {
 
     MobileComponents.Package {
         id: viewerPackage
-        name: "com.coherenttheory.bodegastore"
+        name: "com.coherenttheory.addonsapp"
     }
-
-
 
     PlasmaComponents.BusyIndicator {
         id: busyIndicator
