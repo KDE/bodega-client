@@ -37,6 +37,7 @@ public:
     Private(HistoryModel *parent);
     void historyJobFinished(Bodega::NetworkJob *job);
     void reloadFromNetwork();
+    void insertNoHistoryEntry();
 
     HistoryModel *q;
     Session *session;
@@ -51,20 +52,44 @@ HistoryModel::Private::Private(HistoryModel *parent)
 {
 }
 
+void HistoryModel::Private::insertNoHistoryEntry()
+{
+    q->beginInsertRows(QModelIndex(), 0, 0);
+    QVariantMap noHistory;
+    noHistory.insert(QLatin1String("category"), QString(QLatin1String("Information")));
+    noHistory.insert(QLatin1String("what"), tr("No events for this account. Go download something interesting! :)"));
+    noHistory.insert(QLatin1String("date"), QDateTime::currentDateTime());
+    noHistory.insert(QLatin1String("comment"), QString());
+
+    history.insert(0, noHistory);
+    q->endInsertRows();
+}
+
 void HistoryModel::Private::historyJobFinished(Bodega::NetworkJob *job)
 {
     if (job->failed()) {
+        if (history.isEmpty()) {
+            insertNoHistoryEntry();
+        }
         return;
     }
 
     const QVariantMap json = job->parsedJson();
     if (json.isEmpty() || !json.contains(QLatin1String("history"))) {
+        if (history.isEmpty()) {
+            insertNoHistoryEntry();
+        }
         return;
     }
 
     hasMore = json[QLatin1String("hasMoreHistory")].toBool();
     const QVariantList historyData = json[QLatin1String("history")].toList();
     const int count = historyData.count();
+    if (count < 1 && !hasMore && history.isEmpty()) {
+        insertNoHistoryEntry();
+        return;
+    }
+
     int offset = json[QLatin1String("offset")].toInt();
     const int end = qMax(offset, count + offset - 1);
     q->beginInsertRows(QModelIndex(), offset, end);
@@ -144,7 +169,9 @@ QVariant HistoryModel::data(const QModelIndex &index, int role) const
         case Qt::DisplayRole: {
             const QString category = d->history[index.row()][QLatin1String("category")].toString();
             const QString what = d->history[index.row()][QLatin1String("what")].toString();
-            if (category == QLatin1String("Download")) {
+            if (category == QLatin1String("Information")) {
+                return what;
+            } else if (category == QLatin1String("Download")) {
                 return tr("Downloaded %1").arg(what);
             } else if (category == QLatin1String("Purchase")) {
                 return tr("Purchased %1").arg(what);
