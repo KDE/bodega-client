@@ -34,7 +34,6 @@ qt4_automoc(${model_SRCS})
 TARGET_LINK_LIBRARIES(
   model
   ${QT_LIBRARIES}
-  ${QT_QTGUI_LIBRARY}
   ${QT_QTTEST_LIBRARY}
   ${qjson_LIBRARIES}
   bodega

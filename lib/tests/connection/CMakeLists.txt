@@ -27,7 +27,6 @@ ADD_EXECUTABLE(
 TARGET_LINK_LIBRARIES(
   connection
   ${QT_LIBRARIES}
-  ${QT_QTGUI_LIBRARY}
   ${qjson_LIBRARIES}
   bodega
 )
