@@ -68,6 +68,7 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
     QVariantMap asset = result[QLatin1String("asset")].toMap();
     info.id = asset[QLatin1String("id")].toString();
     info.license = asset[QLatin1String("license")].toString();
+    info.licenseText = asset[QLatin1String("licenseText")].toString();
     info.partnerId = asset[QLatin1String("partnerId")].toString();
     info.partnerName = asset[QLatin1String("partnername")].toString();
     info.name = asset[QLatin1String("name")].toString();

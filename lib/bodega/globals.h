@@ -62,6 +62,7 @@ namespace Bodega {
     {
         QString id;
         QString license;
+        QString licenseText;
         QString partnerId;
         QString partnerName;
         QString name;
