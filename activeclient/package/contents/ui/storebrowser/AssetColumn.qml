@@ -214,7 +214,9 @@ BrowserColumn {
                     columns: 2
                     PlasmaComponents.Label {
                         id: authorTitle
+                        verticalAlignment: Text.AlignTop
                         anchors {
+                            top: authorLabel.top
                             right: authorLabel.left
                             rightMargin: theme.defaultFont.mSize.width
                         }
@@ -223,12 +225,14 @@ BrowserColumn {
                     }
                     PlasmaComponents.Label {
                         id: authorLabel
+                        verticalAlignment: Text.AlignTop
                         visible: assetOperations.assetTags && assetOperations.assetTags.author != undefined && assetOperations.assetTags.author[0] != ""
                         text: visible ? assetOperations.assetTags.author[0] : ''
                         width: root.width - authorTitle.width - 40
                         wrapMode: Text.WordWrap
                     }
                     PlasmaComponents.Label {
+                        verticalAlignment: Text.AlignTop
                         anchors {
                             right: versionLabel.left
                             rightMargin: theme.defaultFont.mSize.width
@@ -236,11 +240,13 @@ BrowserColumn {
                         text: i18n("Version:")
                     }
                     PlasmaComponents.Label {
+                        verticalAlignment: Text.AlignTop
                         id: versionLabel
                         text: AssetVersionRole
                         wrapMode: Text.WordWrap
                     }
                     PlasmaComponents.Label {
+                        verticalAlignment: Text.AlignTop
                         anchors {
                             right: dateLabel.left
                             rightMargin: theme.defaultFont.mSize.width
@@ -250,9 +256,28 @@ BrowserColumn {
                     }
                     PlasmaComponents.Label {
                         id: dateLabel
+                        verticalAlignment: Text.AlignTop
                         visible: assetOperations.assetTags && assetOperations.assetTags.created != undefined && assetOperations.assetTags.created[0] != ""
                         property variant splitDate: visible ? assetOperations.assetTags.created[0].split("-") : Date()
                         text: Qt.formatDate(new Date(splitDate[0], splitDate[1], splitDate[2]), Qt.DefaultLocaleShortDate)
+                    }
+                    PlasmaComponents.Label {
+                        id: licenseTitle
+                        verticalAlignment: Text.AlignTop
+                        anchors {
+                            right: licenseLabel.left
+                            rightMargin: theme.defaultFont.mSize.width
+                        }
+                        text: i18n("Author:")
+                        visible: licenseLabel.visible
+                    }
+                    PlasmaComponents.Label {
+                        id: licenseLabel
+                        verticalAlignment: Text.AlignTop
+                        visible: assetOperations.assetTags && assetOperations.assetTags.license != undefined && assetOperations.assetTags.license[0] != ""
+                        text: visible ? assetOperations.assetTags.license[0] : ''
+                        width: root.width - licenseTitle.width - 40
+                        wrapMode: Text.WordWrap
                     }
                 }
 
