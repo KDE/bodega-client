@@ -210,7 +210,7 @@ BrowserColumn {
 
                 Grid {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    rows: 3
+                    rows: 4
                     columns: 2
                     PlasmaComponents.Label {
                         id: authorTitle
@@ -268,14 +268,15 @@ BrowserColumn {
                             right: licenseLabel.left
                             rightMargin: theme.defaultFont.mSize.width
                         }
-                        text: i18n("Author:")
+                        text: i18n("License:")
                         visible: licenseLabel.visible
                     }
                     PlasmaComponents.Label {
                         id: licenseLabel
                         verticalAlignment: Text.AlignTop
-                        visible: assetOperations.assetTags && assetOperations.assetTags.license != undefined && assetOperations.assetTags.license[0] != ""
-                        text: visible ? assetOperations.assetTags.license[0] : ''
+                        visible: assetOperations.assetInfo.license != ''
+                        text: assetOperations.assetInfo.assetLicenseText != '' ? '<a href="' + assetOperations.assetInfo.assetLicenseText + '">' + assetOperations.assetInfo.license + '</a>'
+                                                                               : assetOperations.assetInfo.license
                         width: root.width - licenseTitle.width - 40
                         wrapMode: Text.WordWrap
                     }
