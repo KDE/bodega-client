@@ -204,6 +204,7 @@ BrowserColumn {
                 //TODO: make a component out of it
                 ExpandingLabel {
                     id: descriptionLabel
+                    visible: text != ''
                     text: assetOperations.assetInfo.description
                 }
 
