@@ -105,6 +105,23 @@ BrowserColumn {
                         }
                     }
                 }
+                InlineConfirmationDialog {
+                    id: uninstallConfirmation
+                    visualParent: installButton
+                    message: i18n("Are you sure you want to uninstall %1?", assetOperations.assetInfo.name)
+                    onAccepted: {
+                        downloadProgress.opacity = 1
+                        downloadProgress.indeterminate = true
+                        var job = bodegaClient.session.uninstall(assetOperations)
+                        job.jobFinished.connect(downloadProgress.operationFinished)
+                        job.error.connect(downloadProgress.installError)
+                        job.jobFinished.connect(installButton.assetOpJobCompleted)
+                        if (job.finished) {
+                            downloadProgress.opacity = 0
+                            enabled = true;
+                        }
+                    }
+                }
                 Column {
                     id: mainColumn
                     width: mainFlickable.width
@@ -218,16 +235,7 @@ BrowserColumn {
                         }
                         onClicked: {
                             if (assetOperations.installed) {
-                                downloadProgress.opacity = 1
-                                downloadProgress.indeterminate = true
-                                var job = bodegaClient.session.uninstall(assetOperations)
-                                job.jobFinished.connect(downloadProgress.operationFinished)
-                                job.error.connect(downloadProgress.installError)
-                                job.jobFinished.connect(assetOpJobCompleted)
-                                if (job.finished) {
-                                    downloadProgress.opacity = 0
-                                    enabled = true;
-                                }
+                                uninstallConfirmation.open()
                             } else if (assetOperations.assetInfo.canDownload) {
                                 root.downloadAsset()
                             } else {
