@@ -26,12 +26,19 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 
 PlasmaComponents.Page {
     id: root
-    function showMessage(title, message)
+    function showMessage(title, message, visualParent)
     {
-        messageBox.title = title
-        messageBox.text = message
-        messageBox.state = "right"
-        messageBox.state = ""
+        if (visualParent) {
+            inlineMessage.title = title
+            inlineMessage.message = message
+            inlineMessage.visualParent = visualParent
+            inlineMessage.open()
+        } else {
+            messageBox.title = title
+            messageBox.text = message
+            messageBox.state = "right"
+            messageBox.state = ""
+        }
     }
     function hideMessage()
     {
@@ -42,6 +49,9 @@ PlasmaComponents.Page {
     property alias title: titleLabel.text
     default property alias content: contentRect.data
 
+    InlineMessage {
+        id: inlineMessage
+    }
     Image {
         id: logo
         width: 556
@@ -88,7 +98,7 @@ PlasmaComponents.Page {
             bottomMargin: theme.defaultFont.mSize.height * 2
         }
 
-        imagePath: "widgets/frame"
+        imagePath: "dialogs/background"
         prefix: "raised"
         width: parent.width/3
         height: childrenRect.height + margins.top + margins.bottom

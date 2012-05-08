@@ -75,12 +75,13 @@ PlasmaComponents.Page {
 
                 job = bodegaClient.session.redeemPointsCode(pointsCode.text);
                 job.jobFinished.connect(redeemed)
+                job.jobError.connect(redeemFailed)
             }
 
             function redeemed(job)
             {
                 if (job.failed) {
-                    print("Error! " + job.error.id + job.error.description);
+                    showMessage(job.error.title, job.error.description, redemptionButton);
                 } else {
                     pointsCode.text = '';
                 }
@@ -88,6 +89,11 @@ PlasmaComponents.Page {
                 redeemBusy.running = false;
                 redeemBusy.visible = false;
                 enabled = false;
+            }
+
+            function redeemFailed(job, error)
+            {
+                showMessage(error.title, error.description, redemptionButton)
             }
 
             PlasmaComponents.BusyIndicator {

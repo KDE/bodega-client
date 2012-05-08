@@ -31,14 +31,6 @@ BrowserColumn {
 
     property variant installJob: null
 
-    function showMessage(title, message, visualParent)
-    {
-        inlineMessage.title = title
-        inlineMessage.message = message
-        inlineMessage.visualParent = visualParent
-        inlineMessage.open()
-    }
-
     function downloadAsset()
     {
         downloadProgress.opacity = 1
@@ -51,9 +43,6 @@ BrowserColumn {
         root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
     }
 
-    InlineMessage {
-        id: inlineMessage
-    }
     onAssetIdChanged: {
         if (assetId > 0) {
             assetOperations = bodegaClient.session.assetOperations(assetId);
