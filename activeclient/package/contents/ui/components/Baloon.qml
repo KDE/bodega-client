@@ -20,7 +20,6 @@
 import QtQuick 1.1
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.components 0.1 as PlasmaComponents
-//import org.kde.qtextracomponents 0.1
 
 Item {
     id: root
@@ -31,6 +30,7 @@ Item {
 
     function open()
     {
+        internal.parentPos = root.visualParent.mapToItem(dismissArea.parent, 0, 0)
         root.status = PlasmaComponents.DialogStatus.Opening
         appearAnimation.running = true
     }
@@ -64,7 +64,7 @@ Item {
 
         PlasmaCore.FrameSvgItem {
             id: internal
-            property variant parentPos: root.visualParent.mapToItem(dismissArea, root.visualParent.x-root.visualParent.x, root.visualParent.y-root.visualParent.y)
+            property variant parentPos
             imagePath: "dialogs/background"
             //TODO: support multiple directions
             x: internal.parentPos.x - internal.width/2 + root.visualParent.width/2
@@ -88,12 +88,13 @@ Item {
                 width: naturalSize.width
                 height: naturalSize.height
             }
-            Item {
+            MouseArea {
                 id: contentItem
                 x: parent.margins.left
                 y: parent.margins.top
                 width: childrenRect.width
                 height: childrenRect.height
+                onClicked: mouse.accepted = true
             }
         }
         onClicked: {
