@@ -67,19 +67,28 @@ BrowserColumn {
                     visualParent: installButton
                     Column {
                         spacing: 4
-                        width: theme.defaultFont.mSize.width*12
+                        width: theme.defaultFont.mSize.width*18
                         PlasmaComponents.Label {
                             anchors {
                                 left: parent.left
                                 right:parent.right
                             }
-                            text: "Lorem ipsum dolor sit amet?"
+                            text: i18n("Confirm purchase of \"%1\" for %2 points.", assetOperations.assetInfo.name,  assetOperations.assetInfo.points)
                             wrapMode: Text.Wrap
                         }
                         PlasmaComponents.Button {
                             text: i18n("Confirm")
                             anchors.horizontalCenter: parent.horizontalCenter
-                            onClicked: questionBaloon.close()
+                            onClicked: {
+                                // purchase
+                                downloadProgress.opacity = 1
+                                downloadProgress.indeterminate = true
+                                var job = bodegaClient.session.purchaseAsset(assetId)
+                                job.jobFinished.connect(downloadProgress.operationFinished)
+                                job.jobFinished.connect(installButton.assetOpJobCompleted)
+                                job.jobError.connect(downloadProgress.installError)
+                                questionBaloon.close()
+                            }
                         }
                     }
                 }
@@ -194,11 +203,10 @@ BrowserColumn {
                                 assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
                             }
                         }
-                        onClicked: {questionBaloon.open();return
-                            downloadProgress.opacity = 1
-                            downloadProgress.indeterminate = true
-
+                        onClicked: {
                             if (assetOperations.installed) {
+                                downloadProgress.opacity = 1
+                                downloadProgress.indeterminate = true
                                 var job = bodegaClient.session.uninstall(assetOperations)
                                 job.jobFinished.connect(downloadProgress.operationFinished)
                                 job.error.connect(downloadProgress.installError)
@@ -208,6 +216,8 @@ BrowserColumn {
                                     enabled = true;
                                 }
                             } else if (assetOperations.assetInfo.canDownload) {
+                                downloadProgress.opacity = 1
+                                downloadProgress.indeterminate = true
                             downloadProgress.indeterminate = false
                             root.installJob = bodegaClient.session.install(assetOperations)
                             root.installJob.progressChanged.connect(downloadProgress.updateProgress)
@@ -215,11 +225,8 @@ BrowserColumn {
                             root.installJob.jobError.connect(downloadProgress.installError)
                             root.installJob.jobFinished.connect(assetOpJobCompleted)
                             } else {
-                                // purchase
-                                var job = bodegaClient.session.purchaseAsset(assetId)
-                                job.jobFinished.connect(downloadProgress.operationFinished)
-                                job.jobFinished.connect(assetOpJobCompleted)
-                                job.jobError.connect(downloadProgress.installError)
+                                //ask to purchase
+                                questionBaloon.open()
                             }
                         }
 

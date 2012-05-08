@@ -66,9 +66,26 @@ Item {
             id: internal
             property variant parentPos
             imagePath: "dialogs/background"
-            //TODO: support multiple directions
+            property bool under: internal.parentPos.y + root.visualParent.height + height < dismissArea.height
+            //bindings won't work inside anchers definition
+            onUnderChanged: {
+                if (under) {
+                    tipSvg.anchors.top = undefined
+                    tipSvg.anchors.bottom = tipSvg.parent.top
+                } else {
+                    tipSvg.anchors.bottom = undefined
+                    tipSvg.anchors.top = tipSvg.parent.bottom
+                }
+            }
+
             x: internal.parentPos.x - internal.width/2 + root.visualParent.width/2
-            y: internal.parentPos.y + root.visualParent.height
+            y: {
+                if (under) {
+                    internal.parentPos.y + root.visualParent.height
+                } else {
+                    internal.parentPos.y - internal.height
+                }
+            }
             width: contentItem.width + margins.left + margins.right
             height: contentItem.height + margins.top + margins.bottom
 
@@ -78,12 +95,13 @@ Item {
                     id: backgroundSvg
                     imagePath: "dialogs/background"
                 }
-                elementId: "baloon-tip-top"
+                elementId: internal.under ? "baloon-tip-top" : "baloon-tip-bottom"
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                     bottom: parent.top
+                    top: parent.bottom
+                    topMargin: -backgroundSvg.elementSize("hint-bottom-shadow").height
                     bottomMargin: -backgroundSvg.elementSize("hint-top-shadow").height
-
                 }
                 width: naturalSize.width
                 height: naturalSize.height
