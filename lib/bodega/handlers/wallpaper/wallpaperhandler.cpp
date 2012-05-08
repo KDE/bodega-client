@@ -42,11 +42,24 @@ WallpaperHandler::~WallpaperHandler()
 {
 }
 
-bool WallpaperHandler::isInstalled() const
+QString WallpaperHandler::assetLocation(bool fullPath) const
 {
     QString packageName = operations()->assetInfo().filename;
-    const QString path = KStandardDirs::locate("wallpaper", packageName + QLatin1String("/metadata.desktop"));
-    return !path.isEmpty();
+    if (packageName.endsWith(QLatin1String(".wallpaper"))) {
+        packageName.chop(10);
+    }
+
+    if (fullPath) {
+        return KStandardDirs::locateLocal("wallpaper", QString()) + packageName + QLatin1String("/metadata.desktop");
+    }
+
+    return packageName;
+}
+
+bool WallpaperHandler::isInstalled() const
+{
+    const QString path = assetLocation();
+    return !path.isEmpty() && QFile::exists(path);
 }
 
 Bodega::InstallJob *WallpaperHandler::install(QNetworkReply *reply, Session *session)

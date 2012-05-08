@@ -33,9 +33,9 @@ using namespace Bodega;
 WallpaperUninstallJob::WallpaperUninstallJob(Session *parent, WallpaperHandler *handler)
     : UninstallJob(parent)
 {
-    QString packageName = handler->operations()->assetInfo().filename;
+    QString packageName = handler->assetLocation(false);
     Plasma::PackageStructure installer(0, QLatin1String("Plasma/Wallpaper"));
-    const bool success = installer.uninstallPackage(packageName, KGlobal::dirs()->findDirs("wallpaper", QLatin1String("")).first());
+    const bool success = installer.uninstallPackage(packageName, KGlobal::dirs()->findDirs("wallpaper", QString()).first());
 
     if (!success) {
         setError(Error(Error::Parsing,

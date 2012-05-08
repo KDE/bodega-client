@@ -41,6 +41,7 @@ namespace Bodega {
 
         QString launchText() const;
         bool isInstalled() const;
+        QString assetLocation(bool fullPath = true) const;
 
     public Q_SLOTS:
         Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
