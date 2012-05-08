@@ -177,7 +177,9 @@ BrowserColumn {
                         horizontalAlignment: Text.AlignHCenter
                     }
                     PlasmaComponents.Label {
-                        text: assetOperations.assetInfo.points > 0 ? i18nc("Price in points", "%1 points", assetOperations.assetInfo.points) : i18n("Free")
+                        text: assetOperations.assetInfo.points > 0 ? i18nc("Price in points", "%1 points", assetOperations.assetInfo.points) +
+                                                                     (root.assetOperations.assetInfo.canDownload ? "\n" + i18n("Purchased") : '')
+                                                                   : i18n("Free")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
                     Item {
