@@ -105,6 +105,7 @@ PlasmaComponents.Page {
 
                 job = bodegaClient.session.changeAccountDetails(nameField.text, lastNameField.text, emailField.text);
                 job.jobFinished.connect(updateDone);
+                job.jobError.connect(updateFailed)
             }
 
             function updateDone()
@@ -117,6 +118,10 @@ PlasmaComponents.Page {
                 text = i18n("Update Account")
             }
 
+            function updateFailed(job, error)
+            {
+                showMessage(error.title, error.description, saveInfoButton)
+            }
 
             PlasmaComponents.BusyIndicator {
                 id: infoSaveBusyIndicator
