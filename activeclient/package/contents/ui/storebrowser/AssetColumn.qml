@@ -65,8 +65,22 @@ BrowserColumn {
                 Baloon {
                     id: questionBaloon
                     visualParent: installButton
-                    PlasmaComponents.Label {
-                        text: "Lorem ipsum?"
+                    Column {
+                        spacing: 4
+                        width: theme.defaultFont.mSize.width*12
+                        PlasmaComponents.Label {
+                            anchors {
+                                left: parent.left
+                                right:parent.right
+                            }
+                            text: "Lorem ipsum dolor sit amet?"
+                            wrapMode: Text.Wrap
+                        }
+                        PlasmaComponents.Button {
+                            text: i18n("Confirm")
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            onClicked: questionBaloon.close()
+                        }
                     }
                 }
                 Column {
