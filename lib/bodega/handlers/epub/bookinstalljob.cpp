@@ -52,7 +52,12 @@ void BookInstallJob::downloadFinished(const QString &localFile)
         dir.mkdir(dir.path());
     }
 
-    f.rename(dir.filePath(m_handler->filePath()));
+    if (!f.rename(dir.filePath(m_handler->filePath()))) {
+        setError(Error(Error::Session,
+                       QLatin1String("ij/01"),
+                       tr("Install failed"),
+                       tr("Impossible to install the book, wrong permissions or no space left on device.")));
+    }
     setFinished();
 }
 
