@@ -100,6 +100,7 @@ BrowserColumn {
                                 job.jobFinished.connect(root.downloadAsset)
                                 job.jobFinished.connect(installButton.assetOpJobCompleted)
                                 job.jobError.connect(downloadProgress.installError)
+                                root.installJob = job
                                 questionBaloon.close()
                             }
                         }
@@ -225,18 +226,18 @@ BrowserColumn {
                     PlasmaComponents.Button {
                         id: installButton
                         anchors.horizontalCenter: parent.horizontalCenter
-                        enabled: root.installJob == null && assetOperations.isReady
+                        enabled: root.installJob == null && root.assetOperations.ready
                         text: {
-                            if (assetOperations.installed) {
+                            if (root.assetOperations.installed) {
                                 i18n("Uninstall")
                             } else {
-                                assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
+                                root.assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
                             }
                         }
                         onClicked: {
-                            if (assetOperations.installed) {
+                            if (root.assetOperations.installed) {
                                 uninstallConfirmation.open()
-                            } else if (assetOperations.assetInfo.canDownload) {
+                            } else if (root.assetOperations.assetInfo.canDownload) {
                                 root.downloadAsset()
                             } else {
                                 //ask to purchase
@@ -248,6 +249,7 @@ BrowserColumn {
                         {
                             //TODO: need to show a success message methinks!
                             root.assetOperations = bodegaClient.session.assetOperations(assetId)
+                            root.installJob = null
                         }
                     }
                     PlasmaComponents.Button {
