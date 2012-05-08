@@ -178,7 +178,7 @@ Bodega::InstallJob *AssetOperations::install(QNetworkReply *reply, Session *sess
             connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)), this, SLOT(checkInstalled()));
         }
         session->installJobsModel()->addJob(d->assetInfo, job);
-        connect(job, SIGNAL(progressChanged(qreal)), this, SLOT(progressChanged(qreal)));
+        connect(job, SIGNAL(progressChanged(qreal)), this, SLOT(progressHasChanged(qreal)));
         return job;
     }
 
