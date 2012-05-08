@@ -23,6 +23,9 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 
 Baloon {
     id: root
+    property alias title: titleLabel.text
+    property alias message: messageLabel.text
+
     Column {
         spacing: 4
         width: theme.defaultFont.mSize.width * 22
@@ -31,6 +34,7 @@ Baloon {
             right: parent.right
         }
         PlasmaComponents.Label {
+            id: titleLabel
             anchors {
                 left: parent.left
                 right: parent.right
@@ -39,6 +43,7 @@ Baloon {
             horizontalAlignment: Text.AlignHCenter
         }
         PlasmaComponents.Label {
+            id: messageLabel
             anchors {
                 left: parent.left
                 right: parent.right
