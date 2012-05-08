@@ -64,32 +64,42 @@ BrowserColumn {
                 width: mainFlickable.width
 
                 spacing: 8
-                Image {
-                    id: bigIconImage
-                    source: assetOperations.assetInfo.images["huge"]
-                    asynchronous: true
 
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width:  Math.min(256 * (sourceSize.width / sourceSize.height), Math.min(parent.width - 32, sourceSize.width))
-                    //width:  Math.min(parent.width - 32, sourceSize.width)
-                    height: width / (sourceSize.width/sourceSize.height)
-
-                    /*
-                    TODO: make this show the large image unscaled
-                    MouseArea {
-                        anchors.fill: parent
-                        property bool big: false
-                        onClicked: {
-                            if (big) {
-                                bigIconImage.source = assetOperations.assetInfo.images["large"];
-                            } else {
-                                bigIconImage.source = assetOperations.assetInfo.images["huge"];
-                            }
-
-                            big = !big;
-                        }
+                Item {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        margins: 32
                     }
-                    */
+                    height: width
+                    Image {
+                        id: bigIconImage
+                        source: assetOperations.assetInfo.images["huge"]
+                        asynchronous: true
+
+                        anchors.centerIn: parent
+                        fillMode: Image.PreserveAspectFit
+                        //width:  Math.min(256 * ratio, Math.min(parent.width - 32, sourceSize.width))
+                        width:  Math.min(parent.width, sourceSize.width)
+                        height: Math.min(parent.height, sourceSize.height)
+
+                        /*
+                        TODO: make this show the large image unscaled
+                        MouseArea {
+                            anchors.fill: parent
+                            property bool big: false
+                            onClicked: {
+                                if (big) {
+                                    bigIconImage.source = assetOperations.assetInfo.images["large"];
+                                } else {
+                                    bigIconImage.source = assetOperations.assetInfo.images["huge"];
+                                }
+
+                                big = !big;
+                            }
+                        }
+                        */
+                    }
                 }
                 PlasmaComponents.Label {
                     id: titleLabel
