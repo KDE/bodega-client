@@ -218,11 +218,13 @@ PlasmaComponents.Page {
                                       "",
                                       lastNameField.text);
                     registerJob.jobFinished.connect(registerAccountDone);
+                    registerJob.jobError.connect(passwordUpdateFailed);
                 } else {
                     if (passwordField.text != '') {
                         newPword = passwordField.text;
                         pwordJob = bodegaClient.session.changePassword(passwordField.text);
                         pwordJob.jobFinished.connect(pwordResetDone);
+                        pwordJob.jobError.connect(passwordUpdateFailed);
                     }
                 }
 
@@ -252,6 +254,11 @@ PlasmaComponents.Page {
                     bodegaClient.session.password = passwordField.text;
                     authenticate(bodegaClient.session.userName, passwordField.text)
                 }
+            }
+
+            function passwordUpdateFailed(job, error)
+            {
+                showMessage(error.title, error.description, savePasswordButton)
             }
 
             PlasmaComponents.BusyIndicator {
