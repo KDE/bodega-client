@@ -31,6 +31,17 @@ BrowserColumn {
 
     property variant installJob: null
 
+    function showMessage(title, message, visualParent)
+    {
+        inlineMessage.title = title
+        inlineMessage.message = message
+        inlineMessage.visualParent = visualParent
+        inlineMessage.open()
+    }
+
+    InlineMessage {
+        id: inlineMessage
+    }
     onAssetIdChanged: {
         if (assetId > 0) {
             assetOperations = bodegaClient.session.assetOperations(assetId);
@@ -182,7 +193,7 @@ BrowserColumn {
                             {
                                 opacity = 0
                                 indeterminate = false
-                                showMessage(error.title, error.description)
+                                showMessage(error.title, error.description, installButton)
                             }
                             Behavior on opacity {
                                 NumberAnimation {
