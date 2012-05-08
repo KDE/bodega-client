@@ -218,12 +218,12 @@ BrowserColumn {
                             } else if (assetOperations.assetInfo.canDownload) {
                                 downloadProgress.opacity = 1
                                 downloadProgress.indeterminate = true
-                            downloadProgress.indeterminate = false
-                            root.installJob = bodegaClient.session.install(assetOperations)
-                            root.installJob.progressChanged.connect(downloadProgress.updateProgress)
-                            root.installJob.jobFinished.connect(downloadProgress.operationFinished)
-                            root.installJob.jobError.connect(downloadProgress.installError)
-                            root.installJob.jobFinished.connect(assetOpJobCompleted)
+                                downloadProgress.indeterminate = false
+                                root.installJob = bodegaClient.session.install(assetOperations)
+                                root.installJob.progressChanged.connect(downloadProgress.updateProgress)
+                                root.installJob.jobFinished.connect(downloadProgress.operationFinished)
+                                root.installJob.jobError.connect(downloadProgress.installError)
+                                root.installJob.jobFinished.connect(assetOpJobCompleted)
                             } else {
                                 //ask to purchase
                                 questionBaloon.open()
