@@ -25,7 +25,6 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 Item {
     id: root
     property Item visualParent
-    opacity: 1
     z: 9000
     property int status: PlasmaComponents.DialogStatus.Closed
     default property alias data: contentItem.data
@@ -42,16 +41,12 @@ Item {
         appearAnimation.running = true
     }
 
-    //TODO: support multiple directions
-    x: internal.parentPos.x - internal.width/2 + root.visualParent.width/2
-    y: internal.parentPos.y + visualParent.height + tipSvg.height
-
     SequentialAnimation {
         id: appearAnimation
         NumberAnimation {
             duration: 250
             easing.type: Easing.InOutQuad
-            target: root
+            target: dismissArea
             properties: "opacity"
             to: root.status == PlasmaComponents.DialogStatus.Opening ? 1 : 0
         }
@@ -60,51 +55,53 @@ Item {
         }
     }
 
-    PlasmaCore.FrameSvgItem {
-        id: internal
-        property variant parentPos: root.parent.mapToItem(root.parent, root.visualParent.x, root.visualParent.y)
-        imagePath: "dialogs/background"
-        width: contentItem.width + margins.left + margins.right
-        height: contentItem.height + margins.top + margins.bottom
-
-        PlasmaCore.SvgItem {
-            id: tipSvg
-            svg: PlasmaCore.Svg {
-                id: backgroundSvg
-                imagePath: "dialogs/background"
-            }
-            elementId: "baloon-tip-top"
-            anchors {
-                horizontalCenter: parent.horizontalCenter
-                bottom: parent.top
-                bottomMargin: -backgroundSvg.elementSize("hint-top-shadow").height
-
-            }
-            width: naturalSize.width
-            height: naturalSize.height
-        }
-        Item {
-            id: contentItem
-            x: parent.margins.left
-            y: parent.margins.top
-            width: childrenRect.width
-            height: childrenRect.height
-        }
-    }
+        
     MouseArea {
         id: dismissArea
         z: 9000
         anchors.fill: parent
-        Rectangle {
-            anchors.fill: parent
-            color: "#00000020"
+        opacity: 0
+
+        PlasmaCore.FrameSvgItem {
+            id: internal
+            property variant parentPos: root.visualParent.mapToItem(dismissArea, root.visualParent.x-root.visualParent.x, root.visualParent.y-root.visualParent.y)
+            imagePath: "dialogs/background"
+            //TODO: support multiple directions
+            x: internal.parentPos.x - internal.width/2 + root.visualParent.width/2
+            y: internal.parentPos.y + root.visualParent.height
+            width: contentItem.width + margins.left + margins.right
+            height: contentItem.height + margins.top + margins.bottom
+
+            PlasmaCore.SvgItem {
+                id: tipSvg
+                svg: PlasmaCore.Svg {
+                    id: backgroundSvg
+                    imagePath: "dialogs/background"
+                }
+                elementId: "baloon-tip-top"
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    bottom: parent.top
+                    bottomMargin: -backgroundSvg.elementSize("hint-top-shadow").height
+
+                }
+                width: naturalSize.width
+                height: naturalSize.height
+            }
+            Item {
+                id: contentItem
+                x: parent.margins.left
+                y: parent.margins.top
+                width: childrenRect.width
+                height: childrenRect.height
+            }
         }
         onClicked: {
             root.close()
         }
         Component.onCompleted: {
             var candidate = root
-            while (root.parent) {
+            while (candidate.parent) {
                 candidate = candidate.parent
             }
             if (candidate) {
