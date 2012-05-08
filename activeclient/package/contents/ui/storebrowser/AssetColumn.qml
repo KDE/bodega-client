@@ -39,6 +39,18 @@ BrowserColumn {
         inlineMessage.open()
     }
 
+    function downloadAsset()
+    {
+        downloadProgress.opacity = 1
+        downloadProgress.indeterminate = true
+        downloadProgress.indeterminate = false
+        root.installJob = bodegaClient.session.install(assetOperations)
+        root.installJob.progressChanged.connect(downloadProgress.updateProgress)
+        root.installJob.jobFinished.connect(downloadProgress.operationFinished)
+        root.installJob.jobError.connect(downloadProgress.installError)
+        root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
+    }
+
     InlineMessage {
         id: inlineMessage
     }
@@ -96,6 +108,7 @@ BrowserColumn {
                                 downloadProgress.indeterminate = true
                                 var job = bodegaClient.session.purchaseAsset(assetId)
                                 job.jobFinished.connect(downloadProgress.operationFinished)
+                                job.jobFinished.connect(root.downloadAsset)
                                 job.jobFinished.connect(installButton.assetOpJobCompleted)
                                 job.jobError.connect(downloadProgress.installError)
                                 questionBaloon.close()
@@ -227,14 +240,7 @@ BrowserColumn {
                                     enabled = true;
                                 }
                             } else if (assetOperations.assetInfo.canDownload) {
-                                downloadProgress.opacity = 1
-                                downloadProgress.indeterminate = true
-                                downloadProgress.indeterminate = false
-                                root.installJob = bodegaClient.session.install(assetOperations)
-                                root.installJob.progressChanged.connect(downloadProgress.updateProgress)
-                                root.installJob.jobFinished.connect(downloadProgress.operationFinished)
-                                root.installJob.jobError.connect(downloadProgress.installError)
-                                root.installJob.jobFinished.connect(assetOpJobCompleted)
+                                root.downloadAsset()
                             } else {
                                 //ask to purchase
                                 questionBaloon.open()
