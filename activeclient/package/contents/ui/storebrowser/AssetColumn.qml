@@ -224,12 +224,18 @@ BrowserColumn {
                         }
                     }
                     PlasmaComponents.Button {
+                        visible: assetOperations.installed && assetOperations.launchText !== ""
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: assetOperations.launchText
+                        onClicked: assetOperations.launch()
+                    }
+                    PlasmaComponents.Button {
                         id: installButton
                         anchors.horizontalCenter: parent.horizontalCenter
                         enabled: root.installJob == null && root.assetOperations.ready
                         text: {
                             if (root.assetOperations.installed) {
-                                i18n("Uninstall")
+                                i18n("Remove")
                             } else {
                                 root.assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
                             }
@@ -251,12 +257,6 @@ BrowserColumn {
                             root.assetOperations = bodegaClient.session.assetOperations(assetId)
                             root.installJob = null
                         }
-                    }
-                    PlasmaComponents.Button {
-                        visible: assetOperations.installed && assetOperations.launchText !== ""
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: assetOperations.launchText
-                        onClicked: assetOperations.launch()
                     }
                     //TODO: make a component out of it
                     ExpandingLabel {
