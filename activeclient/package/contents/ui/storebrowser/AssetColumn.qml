@@ -59,250 +59,261 @@ BrowserColumn {
             contentWidth: width
             contentHeight: mainColumn.height
 
-            Column {
-                id: mainColumn
+            Item {
                 width: mainFlickable.width
-
-                spacing: 8
-
-                Item {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        margins: 32
+                height: mainColumn.height
+                Baloon {
+                    id: questionBaloon
+                    visualParent: installButton
+                    PlasmaComponents.Label {
+                        text: "Lorem ipsum?"
                     }
-                    height: width
-                    Image {
-                        id: bigIconImage
-                        source: assetOperations.assetInfo.images["huge"]
-                        asynchronous: true
+                }
+                Column {
+                    id: mainColumn
+                    width: mainFlickable.width
 
-                        anchors.centerIn: parent
-                        fillMode: Image.PreserveAspectFit
-                        //width:  Math.min(256 * ratio, Math.min(parent.width - 32, sourceSize.width))
-                        width:  Math.min(parent.width, sourceSize.width)
-                        height: Math.min(parent.height, sourceSize.height)
+                    spacing: 8
 
-                        /*
-                        TODO: make this show the large image unscaled
-                        MouseArea {
-                            anchors.fill: parent
-                            property bool big: false
-                            onClicked: {
-                                if (big) {
-                                    bigIconImage.source = assetOperations.assetInfo.images["large"];
-                                } else {
-                                    bigIconImage.source = assetOperations.assetInfo.images["huge"];
-                                }
-
-                                big = !big;
-                            }
+                    Item {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            margins: 32
                         }
-                        */
+                        height: width
+                        Image {
+                            id: bigIconImage
+                            source: assetOperations.assetInfo.images["huge"]
+                            asynchronous: true
+
+                            anchors.centerIn: parent
+                            fillMode: Image.PreserveAspectFit
+                            //width:  Math.min(256 * ratio, Math.min(parent.width - 32, sourceSize.width))
+                            width:  Math.min(parent.width, sourceSize.width)
+                            height: Math.min(parent.height, sourceSize.height)
+
+                            /*
+                            TODO: make this show the large image unscaled
+                            MouseArea {
+                                anchors.fill: parent
+                                property bool big: false
+                                onClicked: {
+                                    if (big) {
+                                        bigIconImage.source = assetOperations.assetInfo.images["large"];
+                                    } else {
+                                        bigIconImage.source = assetOperations.assetInfo.images["huge"];
+                                    }
+
+                                    big = !big;
+                                }
+                            }
+                            */
+                        }
                     }
-                }
-                PlasmaComponents.Label {
-                    id: titleLabel
-                    text: assetOperations.assetInfo.name
-                    font.pointSize: 20
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    wrapMode: Text.WordWrap
-                    horizontalAlignment: Text.AlignHCenter
-                }
-                PlasmaComponents.Label {
-                    text: assetOperations.assetInfo.points > 0 ? i18nc("Price in points", "%1 points", assetOperations.assetInfo.points) : i18n("Free")
-                    anchors.horizontalCenter: parent.horizontalCenter
-                }
-                Item {
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    height: downloadProgress.height
-                    PlasmaComponents.ProgressBar {
-                        id: downloadProgress
-                        opacity: 0
-                        minimumValue: 0
-                        maximumValue: 100
+                    PlasmaComponents.Label {
+                        id: titleLabel
+                        text: assetOperations.assetInfo.name
+                        font.pointSize: 20
                         anchors {
                             left: parent.left
                             right: parent.right
                         }
-                        function updateProgress(progress)
-                        {
-                            value = progress*100
+                        wrapMode: Text.WordWrap
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+                    PlasmaComponents.Label {
+                        text: assetOperations.assetInfo.points > 0 ? i18nc("Price in points", "%1 points", assetOperations.assetInfo.points) : i18n("Free")
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+                    Item {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
                         }
-                        onValueChanged: {
-                            if (value >= 100) {
-                                indeterminate = true
+                        height: downloadProgress.height
+                        PlasmaComponents.ProgressBar {
+                            id: downloadProgress
+                            opacity: 0
+                            minimumValue: 0
+                            maximumValue: 100
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                            }
+                            function updateProgress(progress)
+                            {
+                                value = progress*100
+                            }
+                            onValueChanged: {
+                                if (value >= 100) {
+                                    indeterminate = true
+                                }
+                            }
+                            function operationFinished(job)
+                            {
+                                opacity = 0
+                                indeterminate = false
+                            }
+                            function installError(job, error)
+                            {
+                                opacity = 0
+                                indeterminate = false
+                                showMessage(error.title, error.description)
+                            }
+                            Behavior on opacity {
+                                NumberAnimation {
+                                    duration: 250
+                                    easing.type: Easing.InOutQuad
+                                }
                             }
                         }
-                        function operationFinished(job)
-                        {
-                            opacity = 0
-                            indeterminate = false
-                        }
-                        function installError(job, error)
-                        {
-                            opacity = 0
-                            indeterminate = false
-                            showMessage(error.title, error.description)
-                        }
-                        Behavior on opacity {
-                            NumberAnimation {
-                                duration: 250
-                                easing.type: Easing.InOutQuad
+                    }
+                    PlasmaComponents.Button {
+                        id: installButton
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        enabled: root.installJob == null && assetOperations.isReady
+                        text: {
+                            if (assetOperations.installed) {
+                                i18n("Uninstall")
+                            } else {
+                                assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
                             }
                         }
-                    }
-                }
-                PlasmaComponents.Button {
-                    id: installButton
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    enabled: root.installJob == null && assetOperations.isReady
-                    text: {
-                        if (assetOperations.installed) {
-                            i18n("Uninstall")
-                        } else {
-                            assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
-                        }
-                    }
-                    onClicked: {
-                        downloadProgress.opacity = 1
-                        downloadProgress.indeterminate = true
+                        onClicked: {questionBaloon.open();return
+                            downloadProgress.opacity = 1
+                            downloadProgress.indeterminate = true
 
-                        if (assetOperations.installed) {
-                            var job = bodegaClient.session.uninstall(assetOperations)
-                            job.jobFinished.connect(downloadProgress.operationFinished)
-                            job.error.connect(downloadProgress.installError)
-                            job.jobFinished.connect(assetOpJobCompleted)
-                            if (job.finished) {
-                                downloadProgress.opacity = 0
-                                enabled = true;
+                            if (assetOperations.installed) {
+                                var job = bodegaClient.session.uninstall(assetOperations)
+                                job.jobFinished.connect(downloadProgress.operationFinished)
+                                job.error.connect(downloadProgress.installError)
+                                job.jobFinished.connect(assetOpJobCompleted)
+                                if (job.finished) {
+                                    downloadProgress.opacity = 0
+                                    enabled = true;
+                                }
+                            } else if (assetOperations.assetInfo.canDownload) {
+                            downloadProgress.indeterminate = false
+                            root.installJob = bodegaClient.session.install(assetOperations)
+                            root.installJob.progressChanged.connect(downloadProgress.updateProgress)
+                            root.installJob.jobFinished.connect(downloadProgress.operationFinished)
+                            root.installJob.jobError.connect(downloadProgress.installError)
+                            root.installJob.jobFinished.connect(assetOpJobCompleted)
+                            } else {
+                                // purchase
+                                var job = bodegaClient.session.purchaseAsset(assetId)
+                                job.jobFinished.connect(downloadProgress.operationFinished)
+                                job.jobFinished.connect(assetOpJobCompleted)
+                                job.jobError.connect(downloadProgress.installError)
                             }
-                        } else if (assetOperations.assetInfo.canDownload) {
-                           downloadProgress.indeterminate = false
-                           root.installJob = bodegaClient.session.install(assetOperations)
-                           root.installJob.progressChanged.connect(downloadProgress.updateProgress)
-                           root.installJob.jobFinished.connect(downloadProgress.operationFinished)
-                           root.installJob.jobError.connect(downloadProgress.installError)
-                           root.installJob.jobFinished.connect(assetOpJobCompleted)
-                        } else {
-                            // purchase
-                            var job = bodegaClient.session.purchaseAsset(assetId)
-                            job.jobFinished.connect(downloadProgress.operationFinished)
-                            job.jobFinished.connect(assetOpJobCompleted)
-                            job.jobError.connect(downloadProgress.installError)
+                        }
+
+                        function assetOpJobCompleted()
+                        {
+                            //TODO: need to show a success message methinks!
+                            root.assetOperations = bodegaClient.session.assetOperations(assetId)
+                        }
+                    }
+                    PlasmaComponents.Button {
+                        visible: assetOperations.installed && assetOperations.launchText !== ""
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: assetOperations.launchText
+                        onClicked: assetOperations.launch()
+                    }
+                    //TODO: make a component out of it
+                    ExpandingLabel {
+                        id: descriptionLabel
+                        visible: text != ''
+                        text: assetOperations.assetInfo.description
+                    }
+
+                    Grid {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        rows: 4
+                        columns: 2
+                        PlasmaComponents.Label {
+                            id: authorTitle
+                            verticalAlignment: Text.AlignTop
+                            anchors {
+                                top: authorLabel.top
+                                right: authorLabel.left
+                                rightMargin: theme.defaultFont.mSize.width
+                            }
+                            text: i18n("Author:")
+                            visible: authorLabel.visible
+                        }
+                        PlasmaComponents.Label {
+                            id: authorLabel
+                            verticalAlignment: Text.AlignTop
+                            visible: assetOperations.assetTags && assetOperations.assetTags.author != undefined && assetOperations.assetTags.author[0] != ""
+                            text: visible ? assetOperations.assetTags.author[0] : ''
+                            width: root.width - authorTitle.width - 40
+                            wrapMode: Text.WordWrap
+                        }
+                        PlasmaComponents.Label {
+                            verticalAlignment: Text.AlignTop
+                            anchors {
+                                right: versionLabel.left
+                                rightMargin: theme.defaultFont.mSize.width
+                            }
+                            text: i18n("Version:")
+                        }
+                        PlasmaComponents.Label {
+                            verticalAlignment: Text.AlignTop
+                            id: versionLabel
+                            text: AssetVersionRole
+                            wrapMode: Text.WordWrap
+                        }
+                        PlasmaComponents.Label {
+                            verticalAlignment: Text.AlignTop
+                            anchors {
+                                right: dateLabel.left
+                                rightMargin: theme.defaultFont.mSize.width
+                            }
+                            text: i18n("Date:")
+                            visible: dateLabel.visible
+                        }
+                        PlasmaComponents.Label {
+                            id: dateLabel
+                            verticalAlignment: Text.AlignTop
+                            visible: assetOperations.assetTags && assetOperations.assetTags.created != undefined && assetOperations.assetTags.created[0] != ""
+                            property variant splitDate: visible ? assetOperations.assetTags.created[0].split("-") : Date()
+                            text: Qt.formatDate(new Date(splitDate[0], splitDate[1], splitDate[2]), Qt.DefaultLocaleShortDate)
+                        }
+                        PlasmaComponents.Label {
+                            id: licenseTitle
+                            verticalAlignment: Text.AlignTop
+                            anchors {
+                                right: licenseLabel.left
+                                rightMargin: theme.defaultFont.mSize.width
+                            }
+                            text: i18n("License:")
+                            visible: licenseLabel.visible
+                        }
+                        PlasmaComponents.Label {
+                            id: licenseLabel
+                            verticalAlignment: Text.AlignTop
+                            visible: assetOperations.assetInfo.license != ''
+                            text: assetOperations.assetInfo.assetLicenseText != '' ? '<a href="' + assetOperations.assetInfo.assetLicenseText + '">' + assetOperations.assetInfo.license + '</a>'
+                                                                                : assetOperations.assetInfo.license
+                            width: root.width - licenseTitle.width - 40
+                            wrapMode: Text.WordWrap
                         }
                     }
 
-                    function assetOpJobCompleted()
-                    {
-                        //TODO: need to show a success message methinks!
-                        root.assetOperations = bodegaClient.session.assetOperations(assetId)
-                    }
+                    /*TODO
+                    SlideShow {
+                        model: ListModel {
+                            ListElement {
+                                fileName: "../../storebrowser/kpat1.jpg"
+                            }
+                            ListElement {
+                                fileName: "../../storebrowser/kpat2.jpg"
+                            }
+                        }
+                    }*/
                 }
-                PlasmaComponents.Button {
-                    visible: assetOperations.installed && assetOperations.launchText !== ""
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: assetOperations.launchText
-                    onClicked: assetOperations.launch()
-                }
-                //TODO: make a component out of it
-                ExpandingLabel {
-                    id: descriptionLabel
-                    visible: text != ''
-                    text: assetOperations.assetInfo.description
-                }
-
-                Grid {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    rows: 4
-                    columns: 2
-                    PlasmaComponents.Label {
-                        id: authorTitle
-                        verticalAlignment: Text.AlignTop
-                        anchors {
-                            top: authorLabel.top
-                            right: authorLabel.left
-                            rightMargin: theme.defaultFont.mSize.width
-                        }
-                        text: i18n("Author:")
-                        visible: authorLabel.visible
-                    }
-                    PlasmaComponents.Label {
-                        id: authorLabel
-                        verticalAlignment: Text.AlignTop
-                        visible: assetOperations.assetTags && assetOperations.assetTags.author != undefined && assetOperations.assetTags.author[0] != ""
-                        text: visible ? assetOperations.assetTags.author[0] : ''
-                        width: root.width - authorTitle.width - 40
-                        wrapMode: Text.WordWrap
-                    }
-                    PlasmaComponents.Label {
-                        verticalAlignment: Text.AlignTop
-                        anchors {
-                            right: versionLabel.left
-                            rightMargin: theme.defaultFont.mSize.width
-                        }
-                        text: i18n("Version:")
-                    }
-                    PlasmaComponents.Label {
-                        verticalAlignment: Text.AlignTop
-                        id: versionLabel
-                        text: AssetVersionRole
-                        wrapMode: Text.WordWrap
-                    }
-                    PlasmaComponents.Label {
-                        verticalAlignment: Text.AlignTop
-                        anchors {
-                            right: dateLabel.left
-                            rightMargin: theme.defaultFont.mSize.width
-                        }
-                        text: i18n("Date:")
-                        visible: dateLabel.visible
-                    }
-                    PlasmaComponents.Label {
-                        id: dateLabel
-                        verticalAlignment: Text.AlignTop
-                        visible: assetOperations.assetTags && assetOperations.assetTags.created != undefined && assetOperations.assetTags.created[0] != ""
-                        property variant splitDate: visible ? assetOperations.assetTags.created[0].split("-") : Date()
-                        text: Qt.formatDate(new Date(splitDate[0], splitDate[1], splitDate[2]), Qt.DefaultLocaleShortDate)
-                    }
-                    PlasmaComponents.Label {
-                        id: licenseTitle
-                        verticalAlignment: Text.AlignTop
-                        anchors {
-                            right: licenseLabel.left
-                            rightMargin: theme.defaultFont.mSize.width
-                        }
-                        text: i18n("License:")
-                        visible: licenseLabel.visible
-                    }
-                    PlasmaComponents.Label {
-                        id: licenseLabel
-                        verticalAlignment: Text.AlignTop
-                        visible: assetOperations.assetInfo.license != ''
-                        text: assetOperations.assetInfo.assetLicenseText != '' ? '<a href="' + assetOperations.assetInfo.assetLicenseText + '">' + assetOperations.assetInfo.license + '</a>'
-                                                                               : assetOperations.assetInfo.license
-                        width: root.width - licenseTitle.width - 40
-                        wrapMode: Text.WordWrap
-                    }
-                }
-
-                /*TODO
-                SlideShow {
-                    model: ListModel {
-                        ListElement {
-                            fileName: "../../storebrowser/kpat1.jpg"
-                        }
-                        ListElement {
-                            fileName: "../../storebrowser/kpat2.jpg"
-                        }
-                    }
-                }*/
             }
         }
         PlasmaComponents.ScrollBar {

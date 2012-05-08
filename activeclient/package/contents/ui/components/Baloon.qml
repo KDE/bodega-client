@@ -25,26 +25,29 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 Item {
     id: root
     property Item visualParent
+    opacity: 1
+    z: 9000
     property int status: PlasmaComponents.DialogStatus.Closed
     default property alias data: contentItem.data
 
     function open()
     {
         root.status = PlasmaComponents.DialogStatus.Opening
+        appearAnimation.running = true
     }
 
     function close()
     {
         root.status = PlasmaComponents.DialogStatus.Closing
+        appearAnimation.running = true
     }
 
     //TODO: support multiple directions
-    anchors {
-        horizontalCenter: visualParent.horizontalCenter
-        top: visualParent.bottom
-    }
+    x: internal.parentPos.x - internal.width/2 + root.visualParent.width/2
+    y: internal.parentPos.y + visualParent.height + tipSvg.height
 
     SequentialAnimation {
+        id: appearAnimation
         NumberAnimation {
             duration: 250
             easing.type: Easing.InOutQuad
@@ -58,11 +61,14 @@ Item {
     }
 
     PlasmaCore.FrameSvgItem {
+        id: internal
+        property variant parentPos: root.parent.mapToItem(root.parent, root.visualParent.x, root.visualParent.y)
         imagePath: "dialogs/background"
         width: contentItem.width + margins.left + margins.right
         height: contentItem.height + margins.top + margins.bottom
 
         PlasmaCore.SvgItem {
+            id: tipSvg
             svg: PlasmaCore.Svg {
                 id: backgroundSvg
                 imagePath: "dialogs/background"
@@ -88,7 +94,9 @@ Item {
     MouseArea {
         id: dismissArea
         z: 9000
+        anchors.fill: parent
         Rectangle {
+            anchors.fill: parent
             color: "#00000020"
         }
         onClicked: {
