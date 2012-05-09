@@ -40,6 +40,7 @@ namespace Bodega {
         Q_PROPERTY(QString deviceId READ deviceId)
         Q_PROPERTY(int points READ points)
         Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
+        Q_PROPERTY(QVariantMap parsedJson READ parsedJson NOTIFY parsedJsonChanged)
         Q_PROPERTY(Bodega::Error error READ error)
 
     public:
@@ -74,6 +75,7 @@ namespace Bodega {
         void jobError(Bodega::NetworkJob *job, const Bodega::Error &error);
         void jobFinished(Bodega::NetworkJob *job);
         void progressChanged(qreal progress);
+        void parsedJsonChanged(const QVariantMap &parsedJson);
 
     protected:
         virtual void netError(QNetworkReply::NetworkError code,

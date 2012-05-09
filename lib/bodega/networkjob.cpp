@@ -94,6 +94,7 @@ void NetworkJob::Private::netFinished()
             parsedJson = parser.parse(data, &ok).toMap();
             if (ok) {
                 q->netFinished(parsedJson);
+                emit q->parsedJsonChanged(parsedJson);
             } else {
                 this->error = Error(Error::Parsing,
                         QLatin1String("nj/01"),

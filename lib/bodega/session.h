@@ -118,6 +118,8 @@ namespace Bodega {
         Bodega::NetworkJob *redeemPointsCode(const QString &code);
         Bodega::NetworkJob *purchaseAsset(const QString &assetId);
 
+        Bodega::NetworkJob *paymentMethod();
+
         Bodega::ListBallotsJob *listBallots(int offset=-1, int pageSize=-1);
         Bodega::CreateBallotJob *createCollection(
             const QString &name,

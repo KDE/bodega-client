@@ -27,6 +27,14 @@ import "../components"
 PlasmaComponents.Page {
     id: root
 
+    property variant job
+
+    //TODO: meaningful position
+    PlasmaComponents.BusyIndicator {
+        id: indicator
+        visible: false
+        anchors.centerIn: parent
+    }
     Grid {
         id: mainColumn
         spacing: 4
@@ -112,4 +120,28 @@ PlasmaComponents.Page {
             id: addressField
         }
     }
+
+    function loadData()
+    {
+        indicator.visible = true;
+        indicator.running = true;
+        job = bodegaClient.session.paymentMethod();
+        job.jobFinished.connect(jobFinished);
+    }
+
+    function jobFinished()
+    {
+        if (job.failed) {
+            showMessage(job.error.title, job.error.id + ": " + job.error.description);
+        }
+
+        for (var i in job.parsedJson) {
+            print(i+": "+job.parsedJson[i])
+        }
+
+        infoSaveBusyIndicator.running = false;
+        infoSaveBusyIndicator.visible = false;
+    }
+
+    Component.onCompleted: loadData()
 }

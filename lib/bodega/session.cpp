@@ -400,6 +400,20 @@ Bodega::NetworkJob *Session::purchaseAsset(const QString &assetId)
     return job;
 }
 
+Bodega::NetworkJob *Session::paymentMethod()
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/participant/paymentMethod");
+    url.setEncodedPath(d->jsonPath(path));
+
+
+    qDebug()<<"url is " <<url;
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
 Bodega::RegisterJob * Session::registerAccount(const QString &email,
                                                const QString &password,
                                                const QString &firstName,
