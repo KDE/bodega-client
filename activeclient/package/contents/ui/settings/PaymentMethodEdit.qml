@@ -131,13 +131,7 @@ PlasmaComponents.Page {
             width: cwField.width * 2
         }
 
-        PlasmaComponents.Label {
-            text: i18n("Billing address (line2):")
-            anchors {
-                right: address2Field.left
-                rightMargin: theme.defaultFont.mSize.width
-            }
-        }
+        Item {width: 1; height: 1}
         PlasmaComponents.TextField {
             id: address2Field
             width: cwField.width * 2
@@ -176,7 +170,7 @@ PlasmaComponents.Page {
             id: zipField
         }
 
-        Item{}
+        Item {width: 1; height: 1}
         PlasmaComponents.Button {
             text: i18n("Save")
         }
