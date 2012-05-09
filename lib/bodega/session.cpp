@@ -429,9 +429,9 @@ Bodega::RegisterJob * Session::registerAccount(const QString &email,
     url.addQueryItem(QLatin1String("password"),    password);
     url.addQueryItem(QLatin1String("firstname"),   firstName);
     url.addQueryItem(QLatin1String("middlenames"), middleNames);
-    url.addQueryItem(QLatin1String("lastName"),    lastName);
+    url.addQueryItem(QLatin1String("lastname"),    lastName);
 
-    //qDebug()<<"url is " <<url;
+    qDebug()<<"url is " <<url;
 
     RegisterJob *job = new RegisterJob(d->get(url), this);
     d->jobConnect(job);
