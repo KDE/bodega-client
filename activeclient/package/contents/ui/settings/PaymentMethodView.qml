@@ -32,11 +32,7 @@ PlasmaComponents.Page {
     Column {
         id: mainColumn
         anchors.centerIn: parent
-        PlasmaComponents.BusyIndicator {
-            id: busyIndicator
-            visible: false
-            anchors.horizontalCenter: mainGrid.horizontalCenter
-        }
+      
         Grid {
             id: mainGrid
             spacing: 4
@@ -53,6 +49,7 @@ PlasmaComponents.Page {
             PlasmaComponents.Label {
                 id: cardTypeLabel
                 width: Math.max(paintedWidth, 1)
+                text: paymentMethodStack.cardType
             }
             
             
@@ -65,7 +62,7 @@ PlasmaComponents.Page {
             }
             PlasmaComponents.Label {
                 id: numberLabel
-                text: "**** **** **** ****"
+                text: "**** **** **** " + paymentMethodStack.last4
             }
 
             
@@ -79,6 +76,7 @@ PlasmaComponents.Page {
             PlasmaComponents.Label {
                 id: address1Label
                 width: Math.max(paintedWidth, 1)
+                text: paymentMethodStack.address1
             }
 
             //Spacer
@@ -86,6 +84,7 @@ PlasmaComponents.Page {
             PlasmaComponents.Label {
                 id: address2Label
                 width: Math.max(paintedWidth, 1)
+                text: paymentMethodStack.address2
             }
 
             PlasmaComponents.Label {
@@ -98,6 +97,7 @@ PlasmaComponents.Page {
             PlasmaComponents.Label {
                 id: countryLabel
                 width: Math.max(paintedWidth, 1)
+                text: paymentMethodStack.country
             }
 
             PlasmaComponents.Label {
@@ -110,6 +110,7 @@ PlasmaComponents.Page {
             PlasmaComponents.Label {
                 id: stateLabel
                 width: Math.max(paintedWidth, 1)
+                text: paymentMethodStack.state
             }
 
             PlasmaComponents.Label {
@@ -122,6 +123,7 @@ PlasmaComponents.Page {
             PlasmaComponents.Label {
                 id: zipLabel
                 width: Math.max(paintedWidth, 1)
+                text: paymentMethodStack.zip
             }
         }
         Column {
@@ -132,45 +134,14 @@ PlasmaComponents.Page {
             spacing: 4
             PlasmaComponents.Button {
                 text: i18n("Update")
-                onClicked: settingsStack.replace(Qt.createComponent("PaymentMethodEdit.qml"))
+                onClicked: paymentMethodStack.replace(Qt.createComponent("PaymentMethodEdit.qml"))
             }
             PlasmaComponents.Button {
                 text: i18n("Delete")
+                onClicked: {
+                    paymentMethodStack.replace(Qt.createComponent("PaymentMethodEdit.qml"))
+                }
             }
         }
     }
-
-    function loadData()
-    {
-        busyIndicator.visible = true;
-        busyIndicator.running = true;
-        job = bodegaClient.session.paymentMethod();
-        job.jobFinished.connect(jobFinished);
-    }
-
-    function jobFinished()
-    {
-        if (job.failed) {
-            showMessage(job.error.title, job.error.id + ": " + job.error.description);
-        }
-
-        var cardData = job.parsedJson
-        for (var i in cardData) {
-            print(i + ": " + cardData[i])
-        }
-
-        cardTypeLabel.text = cardData.type;
-        numberLabel.text = "**** **** **** " + cardData.last4;
-        countryLabel.text = cardData.address_country;
-        address1Label.text = cardData.address_line1;
-        address2Label.text = cardData.address_line2;
-        stateLabel.text = cardData.address_state;
-        zipLabel.text = cardData.address_zip;
-        
-        
-        busyIndicator.running = false;
-        busyIndicator.visible = false;
-    }
-
-    Component.onCompleted: loadData()
 }

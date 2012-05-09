@@ -37,6 +37,12 @@ PlasmaComponents.PageStack {
     property string state
     property string zip
 
+    PlasmaComponents.BusyIndicator {
+        id: busyIndicator
+        visible: false
+        anchors.centerIn: parent
+    }
+
     function loadData()
     {
         busyIndicator.visible = true;
