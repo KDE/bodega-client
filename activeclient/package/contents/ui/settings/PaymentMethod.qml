@@ -31,7 +31,7 @@ PlasmaComponents.Page {
 
     //TODO: meaningful position
     PlasmaComponents.BusyIndicator {
-        id: indicator
+        id: busyIndicator
         visible: false
         anchors.centerIn: parent
     }
@@ -40,7 +40,7 @@ PlasmaComponents.Page {
         spacing: 4
         anchors.centerIn: parent
         columns: 2
-        rows: 5
+        rows: 10
 
         PlasmaComponents.Label {
             text: i18n("Card type:")
@@ -53,13 +53,13 @@ PlasmaComponents.Page {
             id: cardColumn
             exclusive: true
             PlasmaComponents.RadioButton {
-                text: i18n("Visa")
+                text: "Visa"
             }
             PlasmaComponents.RadioButton {
-                text: i18n("Master Card")
+                text: "Master Card"
             }
             PlasmaComponents.RadioButton {
-                text: i18n("Diners Club")
+                text: "Diners Club"
             }
         }
         
@@ -74,7 +74,16 @@ PlasmaComponents.Page {
         Row {
             id: numberRow
             PlasmaComponents.TextField {
-                
+                id: numberField1
+            }
+            PlasmaComponents.TextField {
+                id: numberField2
+            }
+            PlasmaComponents.TextField {
+                id: numberField3
+            }
+            PlasmaComponents.TextField {
+                id: numberField4
             }
         }
 
@@ -88,7 +97,7 @@ PlasmaComponents.Page {
         Row {
             id: cwRow
             PlasmaComponents.TextField {
-                
+                id: cwField
             }
             PlasmaComponents.ToolButton {
                 id: cwHelpButton
@@ -112,19 +121,70 @@ PlasmaComponents.Page {
         PlasmaComponents.Label {
             text: i18n("Billing address:")
             anchors {
-                right: addressField.left
+                right: address1Field.left
                 rightMargin: theme.defaultFont.mSize.width
             }
         }
         PlasmaComponents.TextField {
-            id: addressField
+            id: address1Field
+            width: cwField.width * 2
+        }
+
+        PlasmaComponents.Label {
+            text: i18n("Billing address (line2):")
+            anchors {
+                right: address2Field.left
+                rightMargin: theme.defaultFont.mSize.width
+            }
+        }
+        PlasmaComponents.TextField {
+            id: address2Field
+            width: cwField.width * 2
+        }
+
+        PlasmaComponents.Label {
+            text: i18n("Country:")
+            anchors {
+                right: countryField.left
+                rightMargin: theme.defaultFont.mSize.width
+            }
+        }
+        PlasmaComponents.TextField {
+            id: countryField
+        }
+
+        PlasmaComponents.Label {
+            text: i18n("State:")
+            anchors {
+                right: stateField.left
+                rightMargin: theme.defaultFont.mSize.width
+            }
+        }
+        PlasmaComponents.TextField {
+            id: stateField
+        }
+
+        PlasmaComponents.Label {
+            text: i18n("ZIP:")
+            anchors {
+                right: zipField.left
+                rightMargin: theme.defaultFont.mSize.width
+            }
+        }
+        PlasmaComponents.TextField {
+            id: zipField
+        }
+
+        Item{}
+        PlasmaComponents.Button {
+            text: i18n("Save")
         }
     }
 
     function loadData()
     {
-        indicator.visible = true;
-        indicator.running = true;
+        busyIndicator.visible = true;
+        busyIndicator.running = true;
         job = bodegaClient.session.paymentMethod();
         job.jobFinished.connect(jobFinished);
     }
@@ -138,9 +198,24 @@ PlasmaComponents.Page {
         for (var i in job.parsedJson) {
             print(i+": "+job.parsedJson[i])
         }
+        var cardData = job.parsedJson
 
-        infoSaveBusyIndicator.running = false;
-        infoSaveBusyIndicator.visible = false;
+        for (var i = 0; i < cardColumn.children.length; ++i) {
+            if (cardColumn.children[i].text == cardData.type) {
+                cardColumn.children[i].checked = true;
+                break;
+            }
+        }
+
+        countryField.text = cardData.address_country;
+        address1Field.text = cardData.address_line1;
+        address2Field.text = cardData.address_line2;
+        stateField.text = cardData.address_state;
+        zipField.text = cardData.address_zip;
+        
+        
+        busyIndicator.running = false;
+        busyIndicator.visible = false;
     }
 
     Component.onCompleted: loadData()
