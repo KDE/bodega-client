@@ -84,6 +84,7 @@ PlasmaComponents.Page {
             }
             PlasmaComponents.TextField {
                 id: numberField4
+                text: paymentMethodStack.last4
             }
         }
 
@@ -129,12 +130,14 @@ PlasmaComponents.Page {
         PlasmaComponents.TextField {
             id: address1Field
             width: cwField.width * 2
+            text: paymentMethodStack.address1
         }
 
         Item {width: 1; height: 1}
         PlasmaComponents.TextField {
             id: address2Field
             width: cwField.width * 2
+            text: paymentMethodStack.address2
         }
 
         PlasmaComponents.Label {
@@ -146,6 +149,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: countryField
+            text: paymentMethodStack.country
         }
 
         PlasmaComponents.Label {
@@ -157,6 +161,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: stateField
+            text: paymentMethodStack.state
         }
 
         PlasmaComponents.Label {
@@ -168,6 +173,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: zipField
+            text: paymentMethodStack.zip
         }
 
         Item {width: 1; height: 1}
@@ -176,42 +182,15 @@ PlasmaComponents.Page {
         }
     }
 
-    function loadData()
-    {
-        busyIndicator.visible = true;
-        busyIndicator.running = true;
-        job = bodegaClient.session.paymentMethod();
-        job.jobFinished.connect(jobFinished);
-    }
-
-    function jobFinished()
-    {
-        if (job.failed) {
-            showMessage(job.error.title, job.error.id + ": " + job.error.description);
-        }
-
-        for (var i in job.parsedJson) {
-            print(i+": "+job.parsedJson[i])
-        }
-        var cardData = job.parsedJson
-
-        for (var i = 0; i < cardColumn.children.length; ++i) {
-            if (cardColumn.children[i].text == cardData.type) {
-                cardColumn.children[i].checked = true;
-                break;
+    Connections {
+        target: paymentMethodStack
+        onCardTypeChanged: {
+            for (var i = 0; i < cardColumn.children.length; ++i) {
+                if (cardColumn.children[i].text == paymentMethodStack.cardType) {
+                    cardColumn.children[i].checked = true;
+                    break;
+                }
             }
         }
-
-        countryField.text = cardData.address_country;
-        address1Field.text = cardData.address_line1;
-        address2Field.text = cardData.address_line2;
-        stateField.text = cardData.address_state;
-        zipField.text = cardData.address_zip;
-        
-        
-        busyIndicator.running = false;
-        busyIndicator.visible = false;
     }
-
-    Component.onCompleted: loadData()
 }
