@@ -39,7 +39,7 @@ Baloon {
                 left: parent.left
                 right: parent.right
             }
-            elide: Text.elideLeft
+            elide: Text.ElideLeft
             horizontalAlignment: Text.AlignHCenter
         }
         PlasmaComponents.Label {

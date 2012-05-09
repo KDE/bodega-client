@@ -55,7 +55,6 @@ Item {
         }
     }
 
-        
     MouseArea {
         id: dismissArea
         z: 9000
