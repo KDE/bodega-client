@@ -93,7 +93,7 @@ PlasmaComponents.Page {
                     Component.onCompleted: {
                         model.append({DisplayRole: i18n("Personal data"), component: "PersonalData" })
                         model.append({DisplayRole: i18n("Add Points"), component: "AddPoints" })
-                        model.append({DisplayRole: i18n("Payment Method"), component: "PaymentMethod" })
+                        model.append({DisplayRole: i18n("Payment Method"), component: "PaymentMethodStack" })
                         model.append({DisplayRole: i18n("Account History"), component: "AccountHistory" })
                     }
                 }

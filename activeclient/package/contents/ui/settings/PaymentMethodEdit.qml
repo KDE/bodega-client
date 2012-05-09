@@ -116,6 +116,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: expiryField
+            inputMask: "99/9999"
         }
         
         PlasmaComponents.Label {
