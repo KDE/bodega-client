@@ -27,19 +27,89 @@ import "../components"
 PlasmaComponents.Page {
     id: root
 
-    PlasmaComponents.ButtonColumn {
+    Grid {
         id: mainColumn
-        exclusive: true
         spacing: 4
         anchors.centerIn: parent
-        PlasmaComponents.RadioButton {
-            text: i18n("Credit card")
+        columns: 2
+        rows: 5
+
+        PlasmaComponents.Label {
+            text: i18n("Card type:")
+            anchors {
+                right: cardColumn.left
+                rightMargin: theme.defaultFont.mSize.width
+            }
         }
-        PlasmaComponents.RadioButton {
-            text: i18n("PayPal")
+        PlasmaComponents.ButtonColumn {
+            id: cardColumn
+            exclusive: true
+            PlasmaComponents.RadioButton {
+                text: i18n("Visa")
+            }
+            PlasmaComponents.RadioButton {
+                text: i18n("Master Card")
+            }
+            PlasmaComponents.RadioButton {
+                text: i18n("Diners Club")
+            }
         }
-        PlasmaComponents.RadioButton {
-            text: i18n("Bank transfer")
+        
+        
+        PlasmaComponents.Label {
+            text: i18n("Number:")
+            anchors {
+                right: numberRow.left
+                rightMargin: theme.defaultFont.mSize.width
+            }
+        }
+        Row {
+            id: numberRow
+            PlasmaComponents.TextField {
+                
+            }
+        }
+
+        PlasmaComponents.Label {
+            text: i18n("CW:")
+            anchors {
+                right: cwRow.left
+                rightMargin: theme.defaultFont.mSize.width
+            }
+        }
+        Row {
+            id: cwRow
+            PlasmaComponents.TextField {
+                
+            }
+            PlasmaComponents.ToolButton {
+                id: cwHelpButton
+                text: i18n("?")
+                width: height
+                onClicked: showMessage(i18n("Help"), i18n("explanation what is a CW"), cwHelpButton)
+            }
+        }
+
+        PlasmaComponents.Label {
+            text: i18n("Expiry month/Year:")
+            anchors {
+                right: expiryField.left
+                rightMargin: theme.defaultFont.mSize.width
+            }
+        }
+        PlasmaComponents.TextField {
+            id: expiryField
+        }
+        
+        PlasmaComponents.Label {
+            text: i18n("Billing address:")
+            anchors {
+                right: addressField.left
+                rightMargin: theme.defaultFont.mSize.width
+            }
+        }
+        PlasmaComponents.TextField {
+            id: addressField
         }
     }
 }
