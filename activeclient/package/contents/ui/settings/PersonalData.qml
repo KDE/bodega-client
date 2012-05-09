@@ -31,16 +31,6 @@ PlasmaComponents.Page {
     property int spacing: 4
     property variant job
 
-    //FIXME: proper solution needed
-    function showMessage(title, message)
-    {
-        print(title + ": " + message);
-    }
-
-    function hideMessage()
-    {
-    }
-
     Grid {
         id: grid
         anchors.centerIn: parent
@@ -59,6 +49,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: nameField
+            text: 'Aaron'
             width: theme.defaultFont.mSize.width * 20
         }
 
@@ -71,6 +62,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: lastNameField
+            text: 'Seigo'
             width: nameField.width
         }
 
@@ -82,6 +74,7 @@ PlasmaComponents.Page {
             }
         }
         PlasmaComponents.TextField {
+            text: 'aseigo@bddf.ca'
             id: emailField
             width: nameField.width
         }
@@ -152,6 +145,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: passwordField
+            text: 'aseigofoo'
             echoMode: TextInput.Password
             width: nameField.width
         }
@@ -166,6 +160,7 @@ PlasmaComponents.Page {
 
         PlasmaComponents.TextField {
             id: password2Field
+            text: 'aseigofoo'
             echoMode: TextInput.Password
             width: nameField.width
             Row {
@@ -210,7 +205,6 @@ PlasmaComponents.Page {
 
             onClicked: {
                 if (creation) {
-                    mainStack.push(Qt.createComponent("../ConnectingPage.qml"))
                     registerJob = bodegaClient.session.registerAccount(
                                       emailField.text,
                                       passwordField.text,
@@ -240,6 +234,7 @@ PlasmaComponents.Page {
                     authenticate(bodegaClient.session.userName, newPword)
                 }
 
+                mainStack.pop()
                 passwordField.text = '';
                 password2Field.text = '';
                 enabled = passwordField.text == password2Field.text;
@@ -247,18 +242,18 @@ PlasmaComponents.Page {
 
             function registerAccountDone()
             {
-                mainStack.pop()
-                if (registerJob.failed) {
-                    showMessage(registerJob.error.title, registerJob.error.errorId + ': ' + registerJob.error.description);
-                } else {
+                if (!registerJob.failed) {
+                    bodegaClient.session.userName = emailField.text;
                     bodegaClient.session.password = passwordField.text;
-                    authenticate(bodegaClient.session.userName, passwordField.text)
+                    bodegaClient.saveCredentials();
+                    mainStack.push(Qt.createComponent("../AccountCreatedPage.qml"));
                 }
             }
 
             function passwordUpdateFailed(job, error)
             {
                 showMessage(error.title, error.description, savePasswordButton)
+                savePasswordButton.enabled = true
             }
 
             PlasmaComponents.BusyIndicator {
