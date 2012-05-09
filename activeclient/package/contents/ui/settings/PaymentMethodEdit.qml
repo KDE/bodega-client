@@ -75,12 +75,27 @@ PlasmaComponents.Page {
             id: numberRow
             PlasmaComponents.TextField {
                 id: numberField1
+                onTextChanged: {
+                    if (text.length >= 4) {
+                        numberField2.forceActiveFocus()
+                    }
+                }
             }
             PlasmaComponents.TextField {
                 id: numberField2
+                onTextChanged: {
+                    if (text.length >= 4) {
+                        numberField3.forceActiveFocus()
+                    }
+                }
             }
             PlasmaComponents.TextField {
                 id: numberField3
+                onTextChanged: {
+                    if (text.length >= 4) {
+                        numberField4.forceActiveFocus()
+                    }
+                }
             }
             PlasmaComponents.TextField {
                 id: numberField4

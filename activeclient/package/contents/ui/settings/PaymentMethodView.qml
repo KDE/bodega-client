@@ -134,7 +134,7 @@ PlasmaComponents.Page {
             spacing: 4
             PlasmaComponents.Button {
                 text: i18n("Update")
-                onClicked: paymentMethodStack.replace(Qt.createComponent("PaymentMethodEdit.qml"))
+                onClicked: paymentMethodStack.push(Qt.createComponent("PaymentMethodEdit.qml"))
             }
             PlasmaComponents.Button {
                 text: i18n("Delete")
