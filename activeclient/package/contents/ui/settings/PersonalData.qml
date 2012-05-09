@@ -49,7 +49,6 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: nameField
-            text: 'Aaron'
             width: theme.defaultFont.mSize.width * 20
         }
 
@@ -62,7 +61,6 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: lastNameField
-            text: 'Seigo'
             width: nameField.width
         }
 
@@ -74,7 +72,6 @@ PlasmaComponents.Page {
             }
         }
         PlasmaComponents.TextField {
-            text: 'aseigo@bddf.ca'
             id: emailField
             width: nameField.width
         }
@@ -145,7 +142,6 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: passwordField
-            text: 'aseigofoo'
             echoMode: TextInput.Password
             width: nameField.width
         }
@@ -160,7 +156,6 @@ PlasmaComponents.Page {
 
         PlasmaComponents.TextField {
             id: password2Field
-            text: 'aseigofoo'
             echoMode: TextInput.Password
             width: nameField.width
             Row {
