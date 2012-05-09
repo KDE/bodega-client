@@ -72,10 +72,6 @@ PlasmaComponents.Page {
                     }
 
                     model: ListModel {
-                        ListElement { DisplayRole: "Personal data"; component: "PersonalData" }
-                        ListElement { DisplayRole: "Add points"; component: "AddPoints" }
-                        //ListElement { DisplayRole: "Payment methods"; component: "PaymentMethods" }
-                        ListElement { DisplayRole: "Account history"; component: "AccountHistory" }
                     }
 
                     delegate: StoreListItem {
@@ -92,6 +88,13 @@ PlasmaComponents.Page {
                                 scrollAnimation.running = true
                             }
                         }
+                    }
+
+                    Component.onCompleted: {
+                        model.append({DisplayRole: i18n("Personal data"), component: "PersonalData" })
+                        model.append({DisplayRole: i18n("Add Points"), component: "AddPoints" })
+                        model.append({DisplayRole: i18n("Payment Methods"), component: "PaymentMethods" })
+                        model.append({DisplayRole: i18n("Account History"), component: "AccountHistory" })
                     }
                 }
 
