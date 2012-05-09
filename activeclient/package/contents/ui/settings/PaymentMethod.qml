@@ -28,156 +28,114 @@ PlasmaComponents.Page {
     id: root
 
     property variant job
-
-    //TODO: meaningful position
-    PlasmaComponents.BusyIndicator {
-        id: busyIndicator
-        visible: false
-        anchors.centerIn: parent
-    }
-    Grid {
+    
+    Column {
         id: mainColumn
-        spacing: 4
         anchors.centerIn: parent
-        columns: 2
-        rows: 10
+        PlasmaComponents.BusyIndicator {
+            id: busyIndicator
+            visible: false
+            anchors.horizontalCenter: mainGrid.horizontalCenter
+        }
+        Grid {
+            id: mainGrid
+            spacing: 4
+            columns: 2
+            rows: 12
 
-        PlasmaComponents.Label {
-            text: i18n("Card type:")
-            anchors {
-                right: cardColumn.left
-                rightMargin: theme.defaultFont.mSize.width
+            PlasmaComponents.Label {
+                text: i18n("Card type:")
+                anchors {
+                    right: cardTypeLabel.left
+                    rightMargin: theme.defaultFont.mSize.width
+                }
             }
-        }
-        PlasmaComponents.ButtonColumn {
-            id: cardColumn
-            exclusive: true
-            PlasmaComponents.RadioButton {
-                text: "Visa"
+            PlasmaComponents.Label {
+                id: cardTypeLabel
+                width: Math.max(paintedWidth, 1)
             }
-            PlasmaComponents.RadioButton {
-                text: "Master Card"
+            
+            
+            PlasmaComponents.Label {
+                text: i18n("Number:")
+                anchors {
+                    right: numberLabel.left
+                    rightMargin: theme.defaultFont.mSize.width
+                }
             }
-            PlasmaComponents.RadioButton {
-                text: "Diners Club"
+            PlasmaComponents.Label {
+                id: numberLabel
+                text: "**** **** **** ****"
             }
-        }
-        
-        
-        PlasmaComponents.Label {
-            text: i18n("Number:")
-            anchors {
-                right: numberRow.left
-                rightMargin: theme.defaultFont.mSize.width
-            }
-        }
-        Row {
-            id: numberRow
-            PlasmaComponents.TextField {
-                id: numberField1
-            }
-            PlasmaComponents.TextField {
-                id: numberField2
-            }
-            PlasmaComponents.TextField {
-                id: numberField3
-            }
-            PlasmaComponents.TextField {
-                id: numberField4
-            }
-        }
 
-        PlasmaComponents.Label {
-            text: i18n("CW:")
-            anchors {
-                right: cwRow.left
-                rightMargin: theme.defaultFont.mSize.width
+            
+            PlasmaComponents.Label {
+                text: i18n("Billing address:")
+                anchors {
+                    right: address1Label.left
+                    rightMargin: theme.defaultFont.mSize.width
+                }
             }
-        }
-        Row {
-            id: cwRow
-            PlasmaComponents.TextField {
-                id: cwField
+            PlasmaComponents.Label {
+                id: address1Label
+                width: Math.max(paintedWidth, 1)
             }
-            PlasmaComponents.ToolButton {
-                id: cwHelpButton
-                text: i18n("?")
-                width: height
-                onClicked: showMessage(i18n("Help"), i18n("explanation what is a CW"), cwHelpButton)
-            }
-        }
 
-        PlasmaComponents.Label {
-            text: i18n("Expiry month/Year:")
-            anchors {
-                right: expiryField.left
-                rightMargin: theme.defaultFont.mSize.width
+            //Spacer
+            Item {width: 1; height: 1}
+            PlasmaComponents.Label {
+                id: address2Label
+                width: Math.max(paintedWidth, 1)
             }
-        }
-        PlasmaComponents.TextField {
-            id: expiryField
-        }
-        
-        PlasmaComponents.Label {
-            text: i18n("Billing address:")
-            anchors {
-                right: address1Field.left
-                rightMargin: theme.defaultFont.mSize.width
-            }
-        }
-        PlasmaComponents.TextField {
-            id: address1Field
-            width: cwField.width * 2
-        }
 
-        PlasmaComponents.Label {
-            text: i18n("Billing address (line2):")
-            anchors {
-                right: address2Field.left
-                rightMargin: theme.defaultFont.mSize.width
+            PlasmaComponents.Label {
+                text: i18n("Country:")
+                anchors {
+                    right: countryLabel.left
+                    rightMargin: theme.defaultFont.mSize.width
+                }
+            }
+            PlasmaComponents.Label {
+                id: countryLabel
+                width: Math.max(paintedWidth, 1)
+            }
+
+            PlasmaComponents.Label {
+                text: i18n("State:")
+                anchors {
+                    right: stateLabel.left
+                    rightMargin: theme.defaultFont.mSize.width
+                }
+            }
+            PlasmaComponents.Label {
+                id: stateLabel
+                width: Math.max(paintedWidth, 1)
+            }
+
+            PlasmaComponents.Label {
+                text: i18n("ZIP:")
+                anchors {
+                    right: zipLabel.left
+                    rightMargin: theme.defaultFont.mSize.width
+                }
+            }
+            PlasmaComponents.Label {
+                id: zipLabel
+                width: Math.max(paintedWidth, 1)
             }
         }
-        PlasmaComponents.TextField {
-            id: address2Field
-            width: cwField.width * 2
-        }
-
-        PlasmaComponents.Label {
-            text: i18n("Country:")
+        Column {
             anchors {
-                right: countryField.left
-                rightMargin: theme.defaultFont.mSize.width
+                top: mainGrid.bottom
+                horizontalCenter: mainGrid.horizontalCenter
             }
-        }
-        PlasmaComponents.TextField {
-            id: countryField
-        }
-
-        PlasmaComponents.Label {
-            text: i18n("State:")
-            anchors {
-                right: stateField.left
-                rightMargin: theme.defaultFont.mSize.width
+            spacing: 4
+            PlasmaComponents.Button {
+                text: i18n("Update")
             }
-        }
-        PlasmaComponents.TextField {
-            id: stateField
-        }
-
-        PlasmaComponents.Label {
-            text: i18n("ZIP:")
-            anchors {
-                right: zipField.left
-                rightMargin: theme.defaultFont.mSize.width
+            PlasmaComponents.Button {
+                text: i18n("Delete")
             }
-        }
-        PlasmaComponents.TextField {
-            id: zipField
-        }
-
-        Item{}
-        PlasmaComponents.Button {
-            text: i18n("Save")
         }
     }
 
@@ -195,23 +153,18 @@ PlasmaComponents.Page {
             showMessage(job.error.title, job.error.id + ": " + job.error.description);
         }
 
-        for (var i in job.parsedJson) {
-            print(i+": "+job.parsedJson[i])
-        }
         var cardData = job.parsedJson
-
-        for (var i = 0; i < cardColumn.children.length; ++i) {
-            if (cardColumn.children[i].text == cardData.type) {
-                cardColumn.children[i].checked = true;
-                break;
-            }
+        for (var i in cardData) {
+            print(i + ": " + cardData[i])
         }
 
-        countryField.text = cardData.address_country;
-        address1Field.text = cardData.address_line1;
-        address2Field.text = cardData.address_line2;
-        stateField.text = cardData.address_state;
-        zipField.text = cardData.address_zip;
+        cardTypeLabel.text = cardData.type;
+        numberLabel.text = "**** **** **** " + cardData.last4;
+        countryLabel.text = cardData.address_country;
+        address1Label.text = cardData.address_line1;
+        address2Label.text = cardData.address_line2;
+        stateLabel.text = cardData.address_state;
+        zipLabel.text = cardData.address_zip;
         
         
         busyIndicator.running = false;
