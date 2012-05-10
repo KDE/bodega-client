@@ -77,6 +77,7 @@ BrowserColumn {
                 Baloon {
                     id: questionBaloon
                     visualParent: installButton
+                    property bool canPurchase:(bodegaClient.session.points >= assetOperations.assetInfo.points)
                     Column {
                         spacing: 4
                         width: theme.defaultFont.mSize.width*18
@@ -85,22 +86,32 @@ BrowserColumn {
                                 left: parent.left
                                 right:parent.right
                             }
-                            text: i18n("Confirm purchase of \"%1\" for %2 points.", assetOperations.assetInfo.name,  assetOperations.assetInfo.points)
+                            text: {
+                                if (questionBaloon.canPurchase) {
+                                    i18n("Confirm purchase of \"%1\" for %2 points.", assetOperations.assetInfo.name,  assetOperations.assetInfo.points)
+                                } else {
+                                    i18n("You need to buy %2 extra points to be able to buy this asset.",  assetOperations.assetInfo.points)
+                                }
+                            }
                             wrapMode: Text.Wrap
                         }
                         PlasmaComponents.Button {
-                            text: i18n("Confirm")
+                            text: questionBaloon.canPurchase ? i18n("Confirm") : i18n("Add Points")
                             anchors.horizontalCenter: parent.horizontalCenter
                             onClicked: {
-                                // purchase
-                                downloadProgress.opacity = 1
-                                downloadProgress.indeterminate = true
-                                var job = bodegaClient.session.purchaseAsset(assetId)
-                                job.jobFinished.connect(downloadProgress.operationFinished)
-                                job.jobFinished.connect(root.downloadAsset)
-                                job.jobFinished.connect(installButton.assetOpJobCompleted)
-                                job.jobError.connect(downloadProgress.installError)
-                                root.installJob = job
+                                if (questionBaloon.canPurchase) {
+                                    // purchase
+                                    downloadProgress.opacity = 1
+                                    downloadProgress.indeterminate = true
+                                    var job = bodegaClient.session.purchaseAsset(assetId)
+                                    job.jobFinished.connect(downloadProgress.operationFinished)
+                                    job.jobFinished.connect(root.downloadAsset)
+                                    job.jobFinished.connect(installButton.assetOpJobCompleted)
+                                    job.jobError.connect(downloadProgress.installError)
+                                    root.installJob = job
+                                } else {
+                                    mainStack.push(Qt.createComponent("../settings/AddPoints.qml"))
+                                }
                                 questionBaloon.close()
                             }
                         }
