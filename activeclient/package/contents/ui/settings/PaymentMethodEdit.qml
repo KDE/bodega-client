@@ -77,7 +77,7 @@ PlasmaComponents.Page {
                 id: numberField1
                 inputMask: "9999"
                 onTextChanged: {
-                    if (text.length >= 4) {
+                    if (cursorPosition >= 4) {
                         numberField2.forceActiveFocus()
                         numberField2.cursorPosition = 0
                     }
@@ -92,7 +92,7 @@ PlasmaComponents.Page {
                 id: numberField2
                 inputMask: "9999"
                 onTextChanged: {
-                    if (text.length >= 4) {
+                    if (cursorPosition >= 4) {
                         numberField3.forceActiveFocus()
                         numberField3.cursorPosition = 0
                     }
@@ -102,7 +102,7 @@ PlasmaComponents.Page {
                 id: numberField3
                 inputMask: "9999"
                 onTextChanged: {
-                    if (text.length >= 4) {
+                    if (cursorPosition >= 4) {
                         numberField4.forceActiveFocus()
                         numberField4.cursorPosition = 0
                     }
@@ -138,13 +138,35 @@ PlasmaComponents.Page {
         PlasmaComponents.Label {
             text: i18n("Expiry month/Year:")
             anchors {
-                right: expiryField.left
+                right: expiryRow.left
                 rightMargin: theme.defaultFont.mSize.width
             }
         }
-        PlasmaComponents.TextField {
-            id: expiryField
-            inputMask: "99/9999"
+        Row {
+            id: expiryRow
+            PlasmaComponents.TextField {
+                id: expiryMonth
+                inputMask: "99"
+                validator: IntValidator {
+                    bottom: 1
+                    top: 12
+                }
+                onTextChanged: {
+                    if (cursorPosition >= 2 && acceptableInput) {
+                        expiryYear.forceActiveFocus()
+                        expiryYear.cursorPosition = 0
+                    }
+                }
+                Keys.onPressed: {
+                    if (text.length == 0) {
+                        expiryMonth.cursorPosition = 0
+                    }
+                }
+            }
+            PlasmaComponents.TextField {
+                id: expiryYear
+                inputMask: "9999"
+            }
         }
         
         PlasmaComponents.Label {
