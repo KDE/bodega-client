@@ -75,30 +75,42 @@ PlasmaComponents.Page {
             id: numberRow
             PlasmaComponents.TextField {
                 id: numberField1
+                inputMask: "9999"
                 onTextChanged: {
                     if (text.length >= 4) {
                         numberField2.forceActiveFocus()
+                        numberField2.cursorPosition = 0
+                    }
+                }
+                Keys.onPressed: {
+                    if (text.length == 0) {
+                        numberField1.cursorPosition = 0
                     }
                 }
             }
             PlasmaComponents.TextField {
                 id: numberField2
+                inputMask: "9999"
                 onTextChanged: {
                     if (text.length >= 4) {
                         numberField3.forceActiveFocus()
+                        numberField3.cursorPosition = 0
                     }
                 }
             }
             PlasmaComponents.TextField {
                 id: numberField3
+                inputMask: "9999"
                 onTextChanged: {
                     if (text.length >= 4) {
                         numberField4.forceActiveFocus()
+                        numberField4.cursorPosition = 0
                     }
                 }
             }
             PlasmaComponents.TextField {
                 id: numberField4
+                inputMask: "9999"
                 text: paymentMethodStack.last4
             }
         }
