@@ -414,7 +414,7 @@ Bodega::NetworkJob *Session::paymentMethod()
     return job;
 }
 
-Bodega::NetworkJob *Session::setPaymentMethod(const QString &number, const QString &expiryMonth, const QString &expiryYear, const QString &cvc, const QString &name)
+Bodega::NetworkJob *Session::setPaymentMethod(const QString &number, const QString &expiryMonth, const QString &expiryYear, const QString &cvc, const QString &name, const QString &address1, const QString &address2, const QString &addressZip, const QString &addressState, const QString &addressCountry)
 {
     QUrl url = d->baseUrl;
     const QString path = QString::fromLatin1("/participant/changeAccountDetails");
@@ -440,7 +440,25 @@ Bodega::NetworkJob *Session::setPaymentMethod(const QString &number, const QStri
         url.addQueryItem(QLatin1String("card[name]"), name);
     }
 
-    
+    if (!address1.isEmpty()) {
+        url.addQueryItem(QLatin1String("card[address_line1]"), address1);
+    }
+
+    if (!address2.isEmpty()) {
+        url.addQueryItem(QLatin1String("card[address_line2]"), address2);
+    }
+
+    if (!addressZip.isEmpty()) {
+        url.addQueryItem(QLatin1String("card[address_zip]"), addressZip);
+    }
+
+    if (!addressState.isEmpty()) {
+        url.addQueryItem(QLatin1String("card[address_state]"), addressState);
+    }
+
+    if (!addressCountry.isEmpty()) {
+        url.addQueryItem(QLatin1String("card[address_country]"), addressCountry);
+    }
 
     qDebug()<<"url is " <<url;
 

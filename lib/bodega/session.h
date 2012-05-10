@@ -119,7 +119,7 @@ namespace Bodega {
         Bodega::NetworkJob *purchaseAsset(const QString &assetId);
 
         Bodega::NetworkJob *paymentMethod();
-        Bodega::NetworkJob *setPaymentMethod(const QString &number, const QString &expiryMonth, const QString &expiryYear, const QString &cvc, const QString &name);
+        Bodega::NetworkJob *setPaymentMethod(const QString &number, const QString &expiryMonth, const QString &expiryYear, const QString &cvc, const QString &name, const QString &address1, const QString &address2, const QString &addressZip, const QString &addressState, const QString &addressCountry);
 
         Bodega::ListBallotsJob *listBallots(int offset=-1, int pageSize=-1);
         Bodega::CreateBallotJob *createCollection(
