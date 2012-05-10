@@ -30,7 +30,7 @@ Item {
 
     function open()
     {
-        internal.parentPos = root.visualParent.mapToItem(dismissArea.parent, 0, 0)
+        internal.parentPos = root.mapToItem(dismissArea.parent, 0, 0)
         root.status = PlasmaComponents.DialogStatus.Opening
         appearAnimation.running = true
     }
@@ -65,7 +65,7 @@ Item {
             id: internal
             property variant parentPos
             imagePath: "dialogs/background"
-            property bool under: internal.parentPos.y + root.visualParent.height + height < dismissArea.height
+            property bool under: internal.parentPos.y + root.height + height < dismissArea.height
             //bindings won't work inside anchers definition
             onUnderChanged: {
                 if (under) {
@@ -77,10 +77,10 @@ Item {
                 }
             }
 
-            x: internal.parentPos.x - internal.width/2 + root.visualParent.width/2
+            x: internal.parentPos.x - internal.width/2 + root.width/2
             y: {
                 if (under) {
-                    internal.parentPos.y + root.visualParent.height
+                    internal.parentPos.y + root.height
                 } else {
                     internal.parentPos.y - internal.height
                 }
@@ -127,6 +127,7 @@ Item {
             } else {
                 dismissArea.visible = false
             }
+            internal.parentPos = root.mapToItem(dismissArea.parent, 0, 0)
         }
     }
 }
