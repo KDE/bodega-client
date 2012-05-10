@@ -70,13 +70,13 @@ PlasmaComponents.PageStack {
         if (job.failed) {
             paymentMethodStack.push(Qt.createComponent("PaymentMethodEdit.qml"))
         } else {
-            cardType = cardData.type;
-            last4 = cardData.last4;
-            country = cardData.address_country;
-            address1 = cardData.address_line1;
-            address2 = cardData.address_line2;
-            state = cardData.address_state;
-            zip = cardData.address_zip;
+            if (cardData.type) cardType = cardData.type;
+            if (cardData.last4) last4 = cardData.last4;
+            if (cardData.address_country) country = cardData.address_country;
+            if (cardData.address_line1) address1 = cardData.address_line1;
+            if (cardData.address_line2) address2 = cardData.address_line2;
+            if (cardData.address_state) state = cardData.address_state;
+            if (cardData.address_zip) zip = cardData.address_zip;
             paymentMethodStack.push(Qt.createComponent("PaymentMethodView.qml"))
         }
 
