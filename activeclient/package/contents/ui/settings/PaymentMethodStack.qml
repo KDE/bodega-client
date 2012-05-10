@@ -29,6 +29,7 @@ PlasmaComponents.PageStack {
 
     property variant job
 
+    property string name
     property string cardType
     property string last4
     property string country

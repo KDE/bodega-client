@@ -40,7 +40,7 @@ PlasmaComponents.Page {
         spacing: 4
         anchors.centerIn: parent
         columns: 2
-        rows: 10
+        rows: 11
 
         PlasmaComponents.Label {
             text: i18n("Card type:")
@@ -62,7 +62,19 @@ PlasmaComponents.Page {
                 text: "Diners Club"
             }
         }
-        
+
+        PlasmaComponents.Label {
+            text: i18n("Holder:")
+            anchors {
+                right: holderField.left
+                rightMargin: theme.defaultFont.mSize.width
+            }
+        }
+        PlasmaComponents.TextField {
+            id: holderField
+            width: cwField.width * 2
+            text: paymentMethodStack.name
+        }
         
         PlasmaComponents.Label {
             text: i18n("Number:")
@@ -228,6 +240,31 @@ PlasmaComponents.Page {
         Item {width: 1; height: 1}
         PlasmaComponents.Button {
             text: i18n("Save")
+            onClicked: {
+                job = bodegaClient.session.setPaymentMethod(numberField1.text + numberField2.text + numberField3.text + numberField4.text,
+                                        expiryMonth.text, expiryYear.text,
+                                        cwField.text, holderField.text)
+
+                job.jobFinished.connect(jobFinished);
+            }
+        }
+    }
+
+    function jobFinished()
+    {
+        if (job.failed) {
+            showMessage(job.error.title, job.error.errorId + ": " + job.error.description);
+        }
+
+        print("Error")
+        for (var i in job.error) {
+            print(i + ": " + job.error[i])
+        }
+
+        print("Answer")
+        var response = job.parsedJson
+        for (var i in response) {
+            print(i + ": " + response[i])
         }
     }
 

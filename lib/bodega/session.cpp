@@ -414,6 +414,42 @@ Bodega::NetworkJob *Session::paymentMethod()
     return job;
 }
 
+Bodega::NetworkJob *Session::setPaymentMethod(const QString &number, const QString &expiryMonth, const QString &expiryYear, const QString &cvc, const QString &name)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/participant/changeAccountDetails");
+    url.setEncodedPath(d->jsonPath(path));
+
+    if (!number.isEmpty()) {
+        url.addQueryItem(QLatin1String("card[number]"), number);
+    }
+
+    if (!expiryMonth.isEmpty()) {
+        url.addQueryItem(QLatin1String("card[exp_month]"), expiryMonth);
+    }
+
+    if (!expiryYear.isEmpty()) {
+        url.addQueryItem(QLatin1String("card[exp_year]"), expiryYear);
+    }
+
+    if (!cvc.isEmpty()) {
+        url.addQueryItem(QLatin1String("card[cvc]"), cvc);
+    }
+
+    if (!name.isEmpty()) {
+        url.addQueryItem(QLatin1String("card[name]"), name);
+    }
+
+    
+
+    qDebug()<<"url is " <<url;
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+
 Bodega::RegisterJob * Session::registerAccount(const QString &email,
                                                const QString &password,
                                                const QString &firstName,
