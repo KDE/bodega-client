@@ -50,6 +50,7 @@ PlasmaComponents.Page {
         PlasmaComponents.TextField {
             id: nameField
             width: theme.defaultFont.mSize.width * 20
+            Keys.onTabPressed: lastNameField.forceActiveFocus()
         }
 
         PlasmaComponents.Label {
@@ -62,6 +63,7 @@ PlasmaComponents.Page {
         PlasmaComponents.TextField {
             id: lastNameField
             width: nameField.width
+            Keys.onTabPressed: emailField.forceActiveFocus()
         }
 
         PlasmaComponents.Label {
@@ -74,6 +76,7 @@ PlasmaComponents.Page {
         PlasmaComponents.TextField {
             id: emailField
             width: nameField.width
+            Keys.onTabPressed: saveInfoButton.forceActiveFocus()
         }
 
         //just a placeholder
@@ -144,6 +147,7 @@ PlasmaComponents.Page {
             id: passwordField
             echoMode: TextInput.Password
             width: nameField.width
+            Keys.onTabPressed: password2Field.forceActiveFocus()
         }
 
         PlasmaComponents.Label {
@@ -158,6 +162,7 @@ PlasmaComponents.Page {
             id: password2Field
             echoMode: TextInput.Password
             width: nameField.width
+            Keys.onTabPressed: savePasswordButton.forceActiveFocus()
             Row {
                 opacity: passwordField.text ? 1 : 0
                 anchors.left: parent.right
