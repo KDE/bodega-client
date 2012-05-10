@@ -243,7 +243,12 @@ PlasmaComponents.Page {
             onClicked: {
                 job = bodegaClient.session.setPaymentMethod(numberField1.text + numberField2.text + numberField3.text + numberField4.text,
                                         expiryMonth.text, expiryYear.text,
-                                        cwField.text, holderField.text)
+                                        cwField.text, holderField.text,
+                                        address1Field.text,
+                                        address2Field.text,
+                                        zipField.text,
+                                        stateField.text,
+                                        countryField.text)
 
                 job.jobFinished.connect(jobFinished);
             }
