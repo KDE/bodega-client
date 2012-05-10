@@ -28,6 +28,8 @@ import "../components"
 PlasmaComponents.Page {
     id: root
 
+    property variant paymentMethodJob
+
     Grid {
         id: mainGrid
         rows: 7
@@ -157,6 +159,27 @@ PlasmaComponents.Page {
         Item {width: 1; height:1}
         PlasmaComponents.Button {
             text: i18n("Purchase")
+            onClicked: {
+                paymentMethodJob = bodegaClient.session.paymentMethod()
+                paymentMethodJob.jobFinished.connect(paymentMethodJobFinished)
+            }
+        }
+    }
+
+    function paymentMethodJobFinished()
+    {
+        if (paymentMethodJob.failed) {
+            showMessage(paymentMethodJob.error.title, paymentMethodJob.error.id + ": " + paymentMethodJob.error.description);
+        }
+        
+        var cardData = paymentMethodJob.parsedJson
+        //check if the paymentMethod exists *and* there is data
+        //FIXME: more reliable validity chaching that the last4?
+        //there should be a back and forth to payment method page until the actual payment succeeded
+        if (!paymentMethodJob.failed && cardData.last4) {
+            //Do the actual payment
+        } else {
+            root.pageStack.push(Qt.createComponent("PaymentMethodStack.qml"))
         }
     }
 }
