@@ -22,6 +22,7 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtraComponents
 import org.kde.qtextracomponents 0.1
+import com.coherenttheory.addonsapp 1.0
 import "../components"
 
 
@@ -168,7 +169,7 @@ PlasmaComponents.Page {
 
     function paymentMethodJobFinished()
     {
-        if (paymentMethodJob.failed) {
+        if (paymentMethodJob.failed && paymentMethodJob.error.id != ErrorCode.PaymentMethodMissing) {
             showMessage(paymentMethodJob.error.title, paymentMethodJob.error.id + ": " + paymentMethodJob.error.description);
         }
         

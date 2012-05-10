@@ -50,6 +50,7 @@
 
 using namespace Bodega;
 
+
 QScriptValue qScriptValueFromError(QScriptEngine *engine, const Bodega::Error &error)
 {
     QScriptValue obj = engine->newObject();
@@ -287,6 +288,7 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::InstallJob>();
     qmlRegisterType<Bodega::InstallJobsModel>();
     qmlRegisterType<Bodega::UninstallJob>();
+    qmlRegisterUncreatableType<ErrorCode>("com.coherenttheory.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
 
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ChannelInfo>(declarativeView()->scriptEngine(), qScriptValueFromChannelInfo, channelInfoFromQScriptValue, QScriptValue());
