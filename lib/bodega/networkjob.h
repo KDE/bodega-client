@@ -33,15 +33,15 @@ namespace Bodega {
     class BODEGA_EXPORT NetworkJob : public QObject
     {
         Q_OBJECT
-        Q_PROPERTY(QUrl url READ url)
-        Q_PROPERTY(bool finished READ isFinished)
-        Q_PROPERTY(bool failed READ failed)
-        Q_PROPERTY(bool authSuccess READ authSuccess)
-        Q_PROPERTY(QString deviceId READ deviceId)
-        Q_PROPERTY(int points READ points)
+        Q_PROPERTY(QUrl url READ url CONSTANT)
+        Q_PROPERTY(bool finished READ isFinished NOTIFY finishedChanged)
+        Q_PROPERTY(bool failed READ failed NOTIFY failedChanged)
+        Q_PROPERTY(bool authSuccess READ authSuccess NOTIFY authSuccessChanged)
+        Q_PROPERTY(QString deviceId READ deviceId NOTIFY deviceIdChanged)
+        Q_PROPERTY(int points READ points NOTIFY pointsChanged)
         Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
         Q_PROPERTY(QVariantMap parsedJson READ parsedJson NOTIFY parsedJsonChanged)
-        Q_PROPERTY(Bodega::Error error READ error)
+        Q_PROPERTY(Bodega::Error error READ error NOTIFY errorChanged)
 
     public:
         NetworkJob(QNetworkReply *reply, Session *parent, bool parseResponse = true);
@@ -76,6 +76,12 @@ namespace Bodega {
         void jobFinished(Bodega::NetworkJob *job);
         void progressChanged(qreal progress);
         void parsedJsonChanged(const QVariantMap &parsedJson);
+        void finishedChanged(bool finished);
+        void failedChanged(bool failed);
+        void authSuccessChanged(bool authSuccess);
+        void deviceIdChanged(const QString &deviceId);
+        void pointsChanged(int points);
+        void errorChanged(const Error &error);
 
     protected:
         virtual void netError(QNetworkReply::NetworkError code,

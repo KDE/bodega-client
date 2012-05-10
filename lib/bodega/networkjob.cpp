@@ -89,9 +89,9 @@ void NetworkJob::Private::netFinished()
     if (reply->error() == QNetworkReply::NoError) {
         if (expectingJson) {
             const QByteArray data = reply->readAll();
-            //qDebug() << "response from" << reply->url() << "is" << data;
             bool ok = false;
             parsedJson = parser.parse(data, &ok).toMap();
+            //qDebug() << "response from" << reply->url() << "is" << parsedJson;
             if (ok) {
                 q->netFinished(parsedJson);
                 emit q->parsedJsonChanged(parsedJson);
@@ -102,6 +102,8 @@ void NetworkJob::Private::netFinished()
                         tr("Server has sent an invalid response."));
                 failed = true;
                 emit q->jobError(q, this->error);
+                emit q->failedChanged(true);
+                emit q->errorChanged(this->error);
             }
 
             q->setFinished();
@@ -124,6 +126,8 @@ void NetworkJob::Private::readFromNetwork()
                             tr("Error downloading the asset."));
         failed = true;
         emit q->jobError(q, this->error);
+        emit q->failedChanged(true);
+        emit q->errorChanged(this->error);
     }
 }
 
@@ -165,6 +169,8 @@ void NetworkJob::netError(QNetworkReply::NetworkError code,
     d->error = Error(Error::Network,
                      id, tr("Network Error"), msg);
     emit jobError(this, d->error);
+    emit failedChanged(true);
+    emit errorChanged(d->error);
 }
 
 bool NetworkJob::isFinished() const
@@ -206,6 +212,8 @@ void NetworkJob::parseErrors(const QVariantMap &jsonMap)
     }
 
     emit jobError(this, d->error);
+    emit failedChanged(true);
+    emit errorChanged(d->error);
 }
 
 void NetworkJob::parseCommon(const QVariantMap &result)
@@ -221,6 +229,9 @@ void NetworkJob::parseCommon(const QVariantMap &result)
     } else {
         d->deviceId = QString();
     }
+    emit deviceIdChanged(d->deviceId);
+    emit pointsChanged(d->points);
+    emit authSuccessChanged(d->authSuccess);
 
     parseErrors(result);
 }
@@ -264,12 +275,14 @@ void NetworkJob::setFinished()
 {
     d->finished = true;
     emit jobFinished(this);
+    emit finishedChanged(true);
 }
 
 void NetworkJob::setError(const Bodega::Error &e)
 {
     d->error = e;
     emit jobError(this, d->error);
+    emit errorChanged(d->error);
 }
 
 void NetworkJob::downloadFinished(const QString &filename)

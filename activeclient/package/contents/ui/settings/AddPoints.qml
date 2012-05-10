@@ -169,7 +169,7 @@ PlasmaComponents.Page {
 
     function paymentMethodJobFinished()
     {
-        if (paymentMethodJob.failed && paymentMethodJob.error.id != ErrorCode.PaymentMethodMissing) {
+        if (paymentMethodJob.failed) {
             showMessage(paymentMethodJob.error.title, paymentMethodJob.error.id + ": " + paymentMethodJob.error.description);
         }
         

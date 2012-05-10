@@ -54,7 +54,11 @@ PlasmaComponents.PageStack {
     function jobFinished()
     {
         if (job.failed) {
-            showMessage(job.error.title, job.error.id + ": " + job.error.description);
+            showMessage(job.error.title, job.error.errorId + ": " + job.error.description);
+        }
+
+        for (var i in job.error) {
+            print(i + ": " + job.error[i])
         }
 
         var cardData = job.parsedJson
@@ -62,18 +66,17 @@ PlasmaComponents.PageStack {
             print(i + ": " + cardData[i])
         }
 
-        cardType = cardData.type;
-        last4 = cardData.last4;
-        country = cardData.address_country;
-        address1 = cardData.address_line1;
-        address2 = cardData.address_line2;
-        state = cardData.address_state;
-        zip = cardData.address_zip;
-
-        if (cardType) {
-            paymentMethodStack.push(Qt.createComponent("PaymentMethodView.qml"))
-        } else {
+        if (job.failed) {
             paymentMethodStack.push(Qt.createComponent("PaymentMethodEdit.qml"))
+        } else {
+            cardType = cardData.type;
+            last4 = cardData.last4;
+            country = cardData.address_country;
+            address1 = cardData.address_line1;
+            address2 = cardData.address_line2;
+            state = cardData.address_state;
+            zip = cardData.address_zip;
+            paymentMethodStack.push(Qt.createComponent("PaymentMethodView.qml"))
         }
 
         busyIndicator.running = false;
