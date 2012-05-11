@@ -28,6 +28,7 @@ PlasmaComponents.Page {
     id: root
 
     property variant job
+    signal paymentMethodAdded
 
     //TODO: meaningful position
     PlasmaComponents.BusyIndicator {
@@ -289,6 +290,7 @@ PlasmaComponents.Page {
             }
             root.pageStack.clear()
             root.pageStack.loadData()
+            root.paymentMethodAdded()
         }
     }
 

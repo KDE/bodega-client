@@ -210,8 +210,15 @@ PlasmaComponents.Page {
             buyJob = bodegaClient.session.buyPoints(root.amount)
             buyJob.jobFinished.connect(buyJobFinished)
         } else {
-            root.pageStack.push(Qt.createComponent("PaymentMethodStack.qml"))
+            var paymentMethodPage = root.pageStack.push(Qt.createComponent("PaymentMethodStack.qml"))
+            paymentMethodPage.paymentMethodAdded.connect(paymentMethodAdded)
         }
+    }
+
+    function paymentMethodAdded()
+    {
+        //kills the payment method page, never call this method directly
+        root.pageStack.pop()
     }
 
     function buyJobFinished()
