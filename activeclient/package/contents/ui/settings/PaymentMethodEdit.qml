@@ -88,7 +88,7 @@ PlasmaComponents.Page {
             PlasmaComponents.TextField {
                 id: numberField1
                 inputMask: "9999"
-                width: Math.min(implicitWidth, root.width/5)
+                width: Math.min(implicitWidth, root.width/5)-10
                 onTextChanged: {
                     if (cursorPosition >= 4) {
                         numberField2.forceActiveFocus()
@@ -104,7 +104,7 @@ PlasmaComponents.Page {
             PlasmaComponents.TextField {
                 id: numberField2
                 inputMask: "9999"
-                width: Math.min(implicitWidth, root.width/5)
+                width: numberField1.width
                 onTextChanged: {
                     if (cursorPosition >= 4) {
                         numberField3.forceActiveFocus()
@@ -115,7 +115,7 @@ PlasmaComponents.Page {
             PlasmaComponents.TextField {
                 id: numberField3
                 inputMask: "9999"
-                width: Math.min(implicitWidth, root.width/5)
+                width: numberField1.width
                 onTextChanged: {
                     if (cursorPosition >= 4) {
                         numberField4.forceActiveFocus()
@@ -126,7 +126,7 @@ PlasmaComponents.Page {
             PlasmaComponents.TextField {
                 id: numberField4
                 inputMask: "9999"
-                width: Math.min(implicitWidth, root.width/5)
+                width: numberField1.width
                 text: paymentMethodStack.last4
             }
         }
@@ -142,6 +142,7 @@ PlasmaComponents.Page {
             id: cvcRow
             PlasmaComponents.TextField {
                 id: cvcField
+                width: numberField1.width
             }
             PlasmaComponents.ToolButton {
                 id: cvcHelpButton
@@ -162,6 +163,7 @@ PlasmaComponents.Page {
             id: expiryRow
             PlasmaComponents.TextField {
                 id: expiryMonth
+                width: cvcField.width
                 inputMask: "99"
                 validator: IntValidator {
                     bottom: 1
@@ -181,6 +183,7 @@ PlasmaComponents.Page {
             }
             PlasmaComponents.TextField {
                 id: expiryYear
+                width: cvcField.width
                 inputMask: "9999"
             }
         }
