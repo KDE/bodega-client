@@ -103,7 +103,6 @@ void NetworkJob::Private::netFinished()
                 failed = true;
                 emit q->jobError(q, this->error);
                 emit q->failedChanged(true);
-                emit q->errorChanged(this->error);
             }
 
             q->setFinished();
@@ -127,7 +126,6 @@ void NetworkJob::Private::readFromNetwork()
         failed = true;
         emit q->jobError(q, this->error);
         emit q->failedChanged(true);
-        emit q->errorChanged(this->error);
     }
 }
 
@@ -170,7 +168,6 @@ void NetworkJob::netError(QNetworkReply::NetworkError code,
                      id, tr("Network Error"), msg);
     emit jobError(this, d->error);
     emit failedChanged(true);
-    emit errorChanged(d->error);
 }
 
 bool NetworkJob::isFinished() const
@@ -213,7 +210,6 @@ void NetworkJob::parseErrors(const QVariantMap &jsonMap)
 
     emit jobError(this, d->error);
     emit failedChanged(true);
-    emit errorChanged(d->error);
 }
 
 void NetworkJob::parseCommon(const QVariantMap &result)
@@ -284,7 +280,6 @@ void NetworkJob::setError(const Bodega::Error &e)
     if (!e.errorId().isEmpty()) {
         d->failed = true;
         emit jobError(this, d->error);
-        emit errorChanged(d->error);
     }
 }
 
