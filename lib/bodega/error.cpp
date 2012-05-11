@@ -102,6 +102,18 @@ void Error::Private::initServerCodeDict()
     ADD_SERVER_CODE(TooManyPoints)
     ADD_SERVER_CODE(CollectionExists)
     ADD_SERVER_CODE(AssetExists)
+    ADD_SERVER_CODE(CardDeclined)
+    ADD_SERVER_CODE(CardIncorrectNumber)
+    ADD_SERVER_CODE(CardInvalidNumber)
+    ADD_SERVER_CODE(CardInvalidExpiryMonth)
+    ADD_SERVER_CODE(CardInvalidExpiryYear)
+    ADD_SERVER_CODE(CardInvalidCVC)
+    ADD_SERVER_CODE(CardExpired)
+    ADD_SERVER_CODE(CardInvalidAmount)
+    ADD_SERVER_CODE(CardDuplicateTransaction)
+    ADD_SERVER_CODE(CardProcessingError)
+    ADD_SERVER_CODE(PurchaseNotEnoughPoints)
+    ADD_SERVER_CODE(PurchaseTooManyPoints)
 }
 
 void Error::Private::setServerCode(ServerCode c)
@@ -206,6 +218,62 @@ void Error::Private::setServerCode(ServerCode c)
         case AssetExists:
             title = QObject::tr("Creation Error");
             description = QObject::tr("The asset already exists.");
+        break;
+
+        case CardDeclined:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("Your card has been declined. Please try another payment method");
+        break;
+
+        case CardIncorrectNumber:
+        case CardInvalidNumber:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("The card number supplied is incorrect. Please check it and try again.");
+        break;
+
+        case CardInvalidExpiryMonth:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("The card expiry month supplied is incorrect.");
+        break;
+
+        case CardInvalidExpiryYear:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("The card expiry year supplied is incorrect.");
+        break;
+
+        case CardInvalidCVC:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("The card CVC supplied is incorrect.");
+        break;
+
+        case CardExpired:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("Your card has expired. Please try another payment method.");
+        break;
+
+        case CardInvalidAmount:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("The purchase amount was invalid. Please try again.");
+        break;
+
+        case CardDuplicateTransaction:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("This transaction was already processed.");
+        break;
+
+        case CardProcessingError:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("A processing error occured when making the purchase. Please try again.");
+        break;
+
+        case PurchaseNotEnoughPoints:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("Too few points were requested. A minimum of 500 points per purchase is required.");
+        break;
+
+        case PurchaseTooManyPoints:
+            title = QObject::tr("Transaction Error");
+            description = QObject::tr("Too many points were requested. Please purchase fewer points.");
         break;
 
         // NoCode, Unknown or out of bounds errors

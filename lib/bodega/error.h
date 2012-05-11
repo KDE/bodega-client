@@ -60,7 +60,19 @@ namespace Bodega {
             NotEnoughPoints       = 26, //not enough points for a purchase
             TooManyPoints         = 27,  //tried to buy too many points at once
             CollectionExists      = 28, //collection already exists
-            AssetExists           = 29  //asset already exists
+            AssetExists           = 29,  //asset already exists
+            CardDeclined           = 30,//credit card was declined
+            CardIncorrectNumber    = 31,//incorrect credit card number
+            CardInvalidNumber      = 32,//invalid credit card number
+            CardInvalidExpiryMonth = 33,//invalid credit card expiry month
+            CardInvalidExpiryYear  = 34,//invalid credit card expiry year
+            CardInvalidCVC         = 35,//invalid credit card cvs
+            CardExpired            = 36,//card expired
+            CardInvalidAmount      = 37,//invalid payment amount
+            CardDuplicateTransaction = 38,//same transaction was just submitted
+            CardProcessingError    = 39,//error occurred while processing the card
+            PurchaseNotEnoughPoints       = 40, //not enough points for a purchase
+            PurchaseTooManyPoints         = 41,  //tried to buy too many points at once
         };
 
         enum Type {
