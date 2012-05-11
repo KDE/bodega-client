@@ -251,6 +251,7 @@ PlasmaComponents.Page {
 
         Item {width: 1; height: 1}
         PlasmaComponents.Button {
+            id: saveButton
             text: i18n("Save")
             onClicked: {
                 if (expiryYear.text.length == 2) {
@@ -280,6 +281,7 @@ PlasmaComponents.Page {
             for (var i in job.error) {
                 print(i + ": " + job.error[i])
             }
+            showMessage(i18n("Error"), buyJob.error.description, saveButton)
         } else {
             print("Answer")
             var response = job.parsedJson

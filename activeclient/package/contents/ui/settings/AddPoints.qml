@@ -185,6 +185,7 @@ PlasmaComponents.Page {
 
         Item {width: 1; height:1}
         PlasmaComponents.Button {
+            id: buyButton
             enabled: root.amount > 0
             text: i18n("Purchase")
             onClicked: {
@@ -222,6 +223,7 @@ PlasmaComponents.Page {
             for (var i in buyJob.error) {
                 print(i + ": " + buyJob.error[i])
             }
+            showMessage(i18n("Error"), buyJob.error.description, buyButton)
         } else {
             print("Answer")
             var response = buyJob.parsedJson
