@@ -229,6 +229,11 @@ PlasmaComponents.Page {
             for (var i in response) {
                 print(i + ": " + response[i])
             }
+            if (root.pageStack.depth == 1) {
+                showMessage("", i18n("%1 points successfully purchased", root.amount), buyButton)
+            } else {
+                root.pageStack.pop()
+            }
         }
     }
 }
