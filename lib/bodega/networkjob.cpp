@@ -281,8 +281,11 @@ void NetworkJob::setFinished()
 void NetworkJob::setError(const Bodega::Error &e)
 {
     d->error = e;
-    emit jobError(this, d->error);
-    emit errorChanged(d->error);
+    if (!e.errorId().isEmpty()) {
+        d->failed = true;
+        emit jobError(this, d->error);
+        emit errorChanged(d->error);
+    }
 }
 
 void NetworkJob::downloadFinished(const QString &filename)
