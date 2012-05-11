@@ -32,6 +32,7 @@ PlasmaComponents.Page {
     property variant paymentMethodJob
     property variant buyJob
     property int amount: 0
+    property real price: 0
 
     Grid {
         id: mainGrid
@@ -190,9 +191,23 @@ PlasmaComponents.Page {
             enabled: root.amount > 0
             text: i18n("Purchase")
             onClicked: {
-                questionBaloon.open()
+                pointsPriceJob = bodegaClient.session.pointsPrice(root.amount)
+                pointsPriceJob.jobFinished.connect(pointsPriceJobFinished)
             }
         }
+    }
+
+    function pointsPriceJobFinished()
+    {
+        if (pointsPriceJob.failed) {
+            showMessage(pointsPriceJob.error.title, pointsPriceJob.error.id + ": " + pointsPriceJob.error.description, buyButton);
+            return;
+        }
+        
+        var data = pointsPriceJob.parsedJson
+
+        root.price = data.USD
+        questionBaloon.open()
     }
 
     Baloon {
@@ -207,7 +222,7 @@ PlasmaComponents.Page {
                     right:parent.right
                 }
                 //TODO: for x dollars
-                text: i18n("Do you want to purchase %1 points?", root.amount)
+                text: i18n("Do you want to purchase %1 points for %2 USD?", root.amount, root.price)
                 wrapMode: Text.Wrap
             }
             PlasmaComponents.Button {
@@ -225,7 +240,7 @@ PlasmaComponents.Page {
     function paymentMethodJobFinished()
     {
         if (paymentMethodJob.failed) {
-            showMessage(paymentMethodJob.error.title, paymentMethodJob.error.id + ": " + paymentMethodJob.error.description);
+            showMessage(paymentMethodJob.error.title, paymentMethodJob.error.id + ": " + paymentMethodJob.error.description, buyButton);
         }
         
         var cardData = paymentMethodJob.parsedJson

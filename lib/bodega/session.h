@@ -117,6 +117,7 @@ namespace Bodega {
 
         Bodega::NetworkJob *redeemPointsCode(const QString &code);
         Bodega::NetworkJob *buyPoints(int points);
+        Bodega::NetworkJob *pointsPrice(int points);
         Bodega::NetworkJob *purchaseAsset(const QString &assetId);
 
         Bodega::NetworkJob *paymentMethod();
