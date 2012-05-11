@@ -187,20 +187,32 @@ PlasmaComponents.Page {
 
         Item {width: 1; height:1}
         PlasmaComponents.Button {
-            id: buyButton
+            id: purchaseButton
             enabled: root.amount > 0
             text: i18n("Purchase")
             onClicked: {
+                purchaseBusy.running = true;
                 pointsPriceJob = bodegaClient.session.pointsPrice(root.amount)
                 pointsPriceJob.jobFinished.connect(pointsPriceJobFinished)
+            }
+            PlasmaComponents.BusyIndicator {
+                id: purchaseBusy;
+                visible: running
+                running: false
+                height: purchaseButton.height
+                width: height
+                anchors {
+                    left: parent.right
+                }
             }
         }
     }
 
     function pointsPriceJobFinished()
     {
+        purchaseBusy.running = false
         if (pointsPriceJob.failed) {
-            showMessage(pointsPriceJob.error.title, pointsPriceJob.error.id + ": " + pointsPriceJob.error.description, buyButton);
+            showMessage(pointsPriceJob.error.title, pointsPriceJob.error.id + ": " + pointsPriceJob.error.description, purchaseButton);
             return;
         }
         
@@ -212,7 +224,7 @@ PlasmaComponents.Page {
 
     Baloon {
         id: questionBaloon
-        visualParent: buyButton
+        visualParent: purchaseButton
         Column {
             spacing: 4
             width: theme.defaultFont.mSize.width*18
@@ -222,13 +234,14 @@ PlasmaComponents.Page {
                     right:parent.right
                 }
                 //TODO: for x dollars
-                text: i18n("Do you want to purchase %1 points for %2 USD?", root.amount, root.price)
+                text: i18n("Do you want to purchase %1 points for %2 USD?", root.amount, Math.round(root.price))
                 wrapMode: Text.Wrap
             }
             PlasmaComponents.Button {
                 text: i18n("Confirm")
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: {
+                    purchaseBusy.running = true
                     paymentMethodJob = bodegaClient.session.paymentMethod()
                     paymentMethodJob.jobFinished.connect(paymentMethodJobFinished)
                     questionBaloon.close()
@@ -239,8 +252,9 @@ PlasmaComponents.Page {
 
     function paymentMethodJobFinished()
     {
+        purchaseBusy.running = false
         if (paymentMethodJob.failed) {
-            showMessage(paymentMethodJob.error.title, paymentMethodJob.error.id + ": " + paymentMethodJob.error.description, buyButton);
+            showMessage(paymentMethodJob.error.title, paymentMethodJob.error.id + ": " + paymentMethodJob.error.description, purchaseButton);
         }
         
         var cardData = paymentMethodJob.parsedJson
@@ -270,7 +284,7 @@ PlasmaComponents.Page {
     function buyJobFinished()
     {
         if (buyJob.failed) {
-            showMessage(buyJob.error.title, buyJob.error.errorId + ": " + buyJob.error.description, buyButton);
+            showMessage(buyJob.error.title, buyJob.error.errorId + ": " + buyJob.error.description, purchaseButton);
 
             print("Error")
             for (var i in buyJob.error) {
@@ -283,7 +297,7 @@ PlasmaComponents.Page {
                 print(i + ": " + response[i])
             }
             if (root.pageStack.depth == 1) {
-                showMessage("", i18n("%1 points successfully purchased", root.amount), buyButton)
+                showMessage("", i18n("%1 points successfully purchased", root.amount), purchaseButton)
             } else {
                 root.pageStack.pop()
             }
