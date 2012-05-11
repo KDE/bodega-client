@@ -219,6 +219,10 @@ PlasmaComponents.Page {
     {
         //kills the payment method page, never call this method directly
         root.pageStack.pop()
+
+        //Do the actual payment
+        buyJob = bodegaClient.session.buyPoints(root.amount)
+        buyJob.jobFinished.connect(buyJobFinished)
     }
 
     function buyJobFinished()
