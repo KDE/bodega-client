@@ -266,17 +266,19 @@ PlasmaComponents.Page {
     {
         if (job.failed) {
             showMessage(job.error.title, job.error.errorId + ": " + job.error.description);
-        }
 
-        print("Error")
-        for (var i in job.error) {
-            print(i + ": " + job.error[i])
-        }
-
-        print("Answer")
-        var response = job.parsedJson
-        for (var i in response) {
-            print(i + ": " + response[i])
+            print("Error")
+            for (var i in job.error) {
+                print(i + ": " + job.error[i])
+            }
+        } else {
+            print("Answer")
+            var response = job.parsedJson
+            for (var i in response) {
+                print(i + ": " + response[i])
+            }
+            root.pageStack.clear()
+            root.pageStack.loadData()
         }
     }
 

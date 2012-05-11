@@ -30,6 +30,8 @@ PlasmaComponents.Page {
     id: root
 
     property variant paymentMethodJob
+    property variant buyJob
+    property int amount: 0
 
     Grid {
         id: mainGrid
@@ -130,21 +132,42 @@ PlasmaComponents.Page {
 
             PlasmaComponents.RadioButton {
                 text: i18n("500 points")
+                onCheckedChanged: {
+                    if (checked) {
+                        root.amount = 500
+                    }
+                }
             }
             PlasmaComponents.RadioButton {
                 text: i18n("1000 points")
+                onCheckedChanged: {
+                    if (checked) {
+                        root.amount = 1000
+                    }
+                }
             }
             PlasmaComponents.RadioButton {
                 text: i18n("5000 points")
+                onCheckedChanged: {
+                    if (checked) {
+                        root.amount = 5000
+                    }
+                }
             }
             PlasmaComponents.RadioButton {
                 text: i18n("10,000 points")
+                onCheckedChanged: {
+                    if (checked) {
+                        root.amount = 10000
+                    }
+                }
             }
             PlasmaComponents.RadioButton {
                 text: i18n("Other:")
                 onCheckedChanged: {
                     if (checked) {
                         otherField.forceActiveFocus()
+                        root.amount = otherField.text
                     }
                 }
                 PlasmaComponents.TextField {
@@ -153,12 +176,16 @@ PlasmaComponents.Page {
                         left: parent.right
                         leftMargin: mainGrid.spacing * 2
                     }
+                    onTextChanged: {
+                        root.amount = otherField.text
+                    }
                 }
             }
         }
 
         Item {width: 1; height:1}
         PlasmaComponents.Button {
+            enabled: root.amount > 0
             text: i18n("Purchase")
             onClicked: {
                 paymentMethodJob = bodegaClient.session.paymentMethod()
@@ -177,10 +204,30 @@ PlasmaComponents.Page {
         //check if the paymentMethod exists *and* there is data
         //FIXME: more reliable validity chaching that the last4?
         //there should be a back and forth to payment method page until the actual payment succeeded
-        if (!paymentMethodJob.failed && cardData.last4) {
+        if (!paymentMethodJob.failed) {
             //Do the actual payment
+            buyJob = bodegaClient.session.buyPoints(root.amount)
+            buyJob.jobFinished.connect(buyJobFinished)
         } else {
             root.pageStack.push(Qt.createComponent("PaymentMethodStack.qml"))
+        }
+    }
+
+    function buyJobFinished()
+    {
+        if (buyJob.failed) {
+            showMessage(buyJob.error.title, buyJob.error.errorId + ": " + buyJob.error.description);
+
+            print("Error")
+            for (var i in buyJob.error) {
+                print(i + ": " + buyJob.error[i])
+            }
+        } else {
+            print("Answer")
+            var response = buyJob.parsedJson
+            for (var i in response) {
+                print(i + ": " + response[i])
+            }
         }
     }
 }

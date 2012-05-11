@@ -388,6 +388,23 @@ Bodega::NetworkJob *Session::redeemPointsCode(const QString &code)
     return job;
 }
 
+Bodega::NetworkJob *Session::buyPoints(int points)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QLatin1String("/points/buy/");
+    url.setEncodedPath(d->jsonPath(path));
+
+    if (points > 0) {
+        url.addQueryItem(QLatin1String("amount"), QString::number(points));
+    }
+
+    qDebug() << "url is" << url;
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
 Bodega::NetworkJob *Session::purchaseAsset(const QString &assetId)
 {
     QUrl url = d->baseUrl;
@@ -407,7 +424,7 @@ Bodega::NetworkJob *Session::paymentMethod()
     url.setEncodedPath(d->jsonPath(path));
 
 
-    qDebug()<<"url is " <<url;
+    //qDebug()<<"url is " <<url;
 
     NetworkJob *job = new NetworkJob(d->get(url), this);
     d->jobConnect(job);
