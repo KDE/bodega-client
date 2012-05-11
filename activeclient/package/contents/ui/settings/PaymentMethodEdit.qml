@@ -275,13 +275,12 @@ PlasmaComponents.Page {
     function jobFinished()
     {
         if (job.failed) {
-            showMessage(job.error.title, job.error.errorId + ": " + job.error.description);
+            showMessage(job.error.title, job.error.errorId + ": " + job.error.description, saveButton);
 
             print("Error")
             for (var i in job.error) {
                 print(i + ": " + job.error[i])
             }
-            showMessage(i18n("Error"), buyJob.error.description, saveButton)
         } else {
             print("Answer")
             var response = job.parsedJson

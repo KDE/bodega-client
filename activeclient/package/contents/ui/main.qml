@@ -23,6 +23,7 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.qtextracomponents 0.1
 import "storebrowser"
+import "components"
 
 
 Image {
@@ -32,6 +33,29 @@ Image {
 
     width: 360
     height: 360
+
+    function showMessage(title, message, visualParent)
+    {
+        if (visualParent) {
+            inlineMessage.title = title
+            inlineMessage.message = message
+            inlineMessage.visualParent = visualParent
+            inlineMessage.open()
+        } else {
+            messageBox.title = title
+            messageBox.text = message
+            messageBox.state = "right"
+            messageBox.state = ""
+        }
+    }
+    function hideMessage()
+    {
+        messageBox.state = "left"
+    }
+
+    InlineMessage {
+        id: inlineMessage
+    }
 
     //Signon functions
     function authenticate(username, password)
@@ -124,4 +148,101 @@ Image {
         }
     }
 
+    PlasmaCore.FrameSvgItem {
+        id: messageBox
+        z: 9999
+        property alias title: messageTitleLabel.text
+        property alias text: messageLabel.text
+        state: "right"
+
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            bottom: parent.bottom
+            bottomMargin: theme.defaultFont.mSize.height * 2
+        }
+
+        imagePath: "dialogs/background"
+        prefix: "raised"
+        width: parent.width/3
+        height: childrenRect.height + margins.top + margins.bottom
+        Column {
+            id: mainColumn
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+                leftMargin: parent.margins.left
+                rightMargin: parent.margins.right
+                topMargin: parent.margins.top
+            }
+            PlasmaComponents.Label {
+                id: messageTitleLabel
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            PlasmaComponents.Label {
+                id: messageLabel
+
+                wrapMode: Text.WordWrap
+                horizontalAlignment: paintedHeight > theme.defaultFont.mSize.height ? Text.AlignJustify : Text.AlignHCenter
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+            }
+        }
+        MouseArea {
+            anchors.fill: mainColumn
+            onClicked: appRoot.hideMessage()
+        }
+
+        transform: Translate {
+            id: translateTransform
+        }
+        states: [
+            State {
+                name: ""
+                PropertyChanges {
+                    target: translateTransform
+                    x: 0
+                }
+
+            },
+            State {
+                name: "right"
+                PropertyChanges {
+                    target: translateTransform
+                    x: appRoot.width - messageBox.x
+                }
+            },
+            State {
+                name: "left"
+                PropertyChanges {
+                    target: translateTransform
+                    x: - messageBox.x - messageBox.width
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                from: "right"
+                to: ""
+                NumberAnimation {
+                    targets: translateTransform
+                    properties: "x"
+                    duration: 250
+                    easing.type: "OutQuad"
+                }
+            },
+            Transition {
+                from: ""
+                to: "left"
+                NumberAnimation {
+                    targets: translateTransform
+                    properties: "x"
+                    duration: 250
+                    easing.type: "InQuad"
+                }
+            }
+        ]
+    }
 }
