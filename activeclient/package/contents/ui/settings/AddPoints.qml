@@ -31,6 +31,7 @@ PlasmaComponents.Page {
 
     property variant paymentMethodJob
     property variant buyJob
+    property variant redeemJob
     property int amount: 0
     property real price: 0
 
@@ -79,17 +80,18 @@ PlasmaComponents.Page {
                 redeemBusy.visible = true;
                 enabled = false;
 
-                job = bodegaClient.session.redeemPointsCode(pointsCode.text);
-                job.jobFinished.connect(redeemed)
-                job.jobError.connect(redeemFailed)
+                redeemJob = bodegaClient.session.redeemPointsCode(pointsCode.text);
+                redeemJob.jobFinished.connect(redeemed)
+                redeemJob.jobError.connect(redeemFailed)
             }
 
             function redeemed(job)
             {
-                if (job.failed) {
-                    showMessage(job.error.title, job.error.description, redemptionButton);
+                if (redeemJob.failed) {
+                    showMessage(redeemJob.error.title, redeemJob.error.description, redemptionButton);
                 } else {
                     pointsCode.text = '';
+                    showMessage(i18n("Success"), i18n("Added %1 points to your account.", redeemJob.parsedJson.addedPoints), redemptionButton);
                 }
 
                 redeemBusy.running = false;
@@ -297,7 +299,7 @@ PlasmaComponents.Page {
                 print(i + ": " + response[i])
             }
             if (root.pageStack.depth == 1) {
-                showMessage("", i18n("%1 points successfully purchased", root.amount), purchaseButton)
+                showMessage(i18n("Success"), i18n("%1 points successfully purchased", root.amount), purchaseButton)
             } else {
                 root.pageStack.pop()
             }
