@@ -72,7 +72,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: holderField
-            width: cwField.width * 2
+            width: cvcField.width * 2
             text: paymentMethodStack.name
         }
         
@@ -88,6 +88,7 @@ PlasmaComponents.Page {
             PlasmaComponents.TextField {
                 id: numberField1
                 inputMask: "9999"
+                width: Math.min(implicitWidth, root.width/5)
                 onTextChanged: {
                     if (cursorPosition >= 4) {
                         numberField2.forceActiveFocus()
@@ -103,6 +104,7 @@ PlasmaComponents.Page {
             PlasmaComponents.TextField {
                 id: numberField2
                 inputMask: "9999"
+                width: Math.min(implicitWidth, root.width/5)
                 onTextChanged: {
                     if (cursorPosition >= 4) {
                         numberField3.forceActiveFocus()
@@ -113,6 +115,7 @@ PlasmaComponents.Page {
             PlasmaComponents.TextField {
                 id: numberField3
                 inputMask: "9999"
+                width: Math.min(implicitWidth, root.width/5)
                 onTextChanged: {
                     if (cursorPosition >= 4) {
                         numberField4.forceActiveFocus()
@@ -123,27 +126,28 @@ PlasmaComponents.Page {
             PlasmaComponents.TextField {
                 id: numberField4
                 inputMask: "9999"
+                width: Math.min(implicitWidth, root.width/5)
                 text: paymentMethodStack.last4
             }
         }
 
         PlasmaComponents.Label {
-            text: i18n("CW:")
+            text: i18n("cvc:")
             anchors {
-                right: cwRow.left
+                right: cvcRow.left
                 rightMargin: theme.defaultFont.mSize.width
             }
         }
         Row {
-            id: cwRow
+            id: cvcRow
             PlasmaComponents.TextField {
-                id: cwField
+                id: cvcField
             }
             PlasmaComponents.ToolButton {
-                id: cwHelpButton
+                id: cvcHelpButton
                 text: i18n("?")
                 width: height
-                onClicked: showMessage(i18n("Help"), i18n("explanation what is a CW"), cwHelpButton)
+                onClicked: showMessage(i18n("Help"), i18n("The CVC (Card Verification Code) is the 3-digit number located on the back of your card, usually at the top of the signature strip. By including it with your order, you help protect your account from fraud and you give us one more way of being sure your order is legitimate."), cvcHelpButton)
             }
         }
 
@@ -190,14 +194,14 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: address1Field
-            width: cwField.width * 2
+            width: cvcField.width * 2
             text: paymentMethodStack.address1
         }
 
         Item {width: 1; height: 1}
         PlasmaComponents.TextField {
             id: address2Field
-            width: cwField.width * 2
+            width: cvcField.width * 2
             text: paymentMethodStack.address2
         }
 
@@ -243,7 +247,7 @@ PlasmaComponents.Page {
             onClicked: {
                 job = bodegaClient.session.setPaymentMethod(numberField1.text + numberField2.text + numberField3.text + numberField4.text,
                                         expiryMonth.text, expiryYear.text,
-                                        cwField.text, holderField.text,
+                                        cvcField.text, holderField.text,
                                         address1Field.text,
                                         address2Field.text,
                                         zipField.text,
