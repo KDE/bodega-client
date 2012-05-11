@@ -90,7 +90,7 @@ BrowserColumn {
                                 if (questionBaloon.canPurchase) {
                                     i18n("Confirm purchase of \"%1\" for %2 points.", assetOperations.assetInfo.name,  assetOperations.assetInfo.points)
                                 } else {
-                                    i18n("You need to buy %2 extra points to be able to buy this asset.",  assetOperations.assetInfo.points)
+                                    i18n("You need to buy %1 extra points to be able to buy this asset.",  assetOperations.assetInfo.points)
                                 }
                             }
                             wrapMode: Text.Wrap
