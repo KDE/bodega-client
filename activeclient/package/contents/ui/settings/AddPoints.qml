@@ -167,17 +167,18 @@ PlasmaComponents.Page {
                 onCheckedChanged: {
                     if (checked) {
                         otherField.forceActiveFocus()
-                        root.amount = otherField.text
+                        root.amount = otherField.text ? otherField.text : 0
                     }
                 }
                 PlasmaComponents.TextField {
                     id: otherField
+                    inputMask: "99999"
                     anchors {
                         left: parent.right
                         leftMargin: mainGrid.spacing * 2
                     }
                     onTextChanged: {
-                        root.amount = otherField.text
+                        root.amount = otherField.text ? otherField.text : 0
                     }
                 }
             }
@@ -189,8 +190,34 @@ PlasmaComponents.Page {
             enabled: root.amount > 0
             text: i18n("Purchase")
             onClicked: {
-                paymentMethodJob = bodegaClient.session.paymentMethod()
-                paymentMethodJob.jobFinished.connect(paymentMethodJobFinished)
+                questionBaloon.open()
+            }
+        }
+    }
+
+    Baloon {
+        id: questionBaloon
+        visualParent: buyButton
+        Column {
+            spacing: 4
+            width: theme.defaultFont.mSize.width*18
+            PlasmaComponents.Label {
+                anchors {
+                    left: parent.left
+                    right:parent.right
+                }
+                //TODO: for x dollars
+                text: i18n("Do you want to purchase %1 points?", root.amount)
+                wrapMode: Text.Wrap
+            }
+            PlasmaComponents.Button {
+                text: i18n("Confirm")
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: {
+                    paymentMethodJob = bodegaClient.session.paymentMethod()
+                    paymentMethodJob.jobFinished.connect(paymentMethodJobFinished)
+                    questionBaloon.close()
+                }
             }
         }
     }
