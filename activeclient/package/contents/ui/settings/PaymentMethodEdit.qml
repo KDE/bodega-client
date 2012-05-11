@@ -64,7 +64,7 @@ PlasmaComponents.Page {
         }
 
         PlasmaComponents.Label {
-            text: i18n("Holder:")
+            text: i18n("Name on card:")
             anchors {
                 right: holderField.left
                 rightMargin: theme.defaultFont.mSize.width
@@ -75,7 +75,7 @@ PlasmaComponents.Page {
             width: cvcField.width * 2
             text: paymentMethodStack.name
         }
-        
+
         PlasmaComponents.Label {
             text: i18n("Number:")
             anchors {
@@ -153,7 +153,7 @@ PlasmaComponents.Page {
         }
 
         PlasmaComponents.Label {
-            text: i18n("Expiry month/Year:")
+            text: i18n("Expires:")
             anchors {
                 right: expiryRow.left
                 rightMargin: theme.defaultFont.mSize.width
@@ -181,13 +181,18 @@ PlasmaComponents.Page {
                     }
                 }
             }
+
+            PlasmaComponents.Label {
+                text: "/";
+            }
+
             PlasmaComponents.TextField {
                 id: expiryYear
                 width: cvcField.width
                 inputMask: "9999"
             }
         }
-        
+
         PlasmaComponents.Label {
             text: i18n("Billing address:")
             anchors {
@@ -248,6 +253,10 @@ PlasmaComponents.Page {
         PlasmaComponents.Button {
             text: i18n("Save")
             onClicked: {
+                if (expiryYear.text.length == 2) {
+                    expiryYear.text = "20" + expiryYear.text;
+                }
+
                 job = bodegaClient.session.setPaymentMethod(numberField1.text + numberField2.text + numberField3.text + numberField4.text,
                                         expiryMonth.text, expiryYear.text,
                                         cvcField.text, holderField.text,
