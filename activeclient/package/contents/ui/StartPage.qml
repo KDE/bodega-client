@@ -29,17 +29,19 @@ SimplePage {
     Column {
         anchors.centerIn: parent
         spacing: theme.defaultFont.mSize.height * 1.5
+        PlasmaComponents.Label {
+            text: i18n("Use your free Make·Play·Live account to get add-ons.")
+            wrapMode: Text.WordWrap
+        }
         PlasmaComponents.ToolButton {
             anchors.horizontalCenter: parent.horizontalCenter;
-            text: i18n("Add an existing account")
-            iconSource: "list-add"
+            text: i18n("I already have an account")
             font.pointSize: theme.defaultFont.pointSize * 1.5
             onClicked: mainStack.push(Qt.createComponent("PasswordPage.qml"))
         }
         PlasmaComponents.ToolButton {
             anchors.horizontalCenter: parent.horizontalCenter;
-            text: i18n("Create a new account")
-            iconSource: "contact-new"
+            text: i18n("Create a new account for me")
             font.pointSize: theme.defaultFont.pointSize * 1.5
             onClicked: mainStack.push(Qt.createComponent("CreateUser.qml"))
         }
