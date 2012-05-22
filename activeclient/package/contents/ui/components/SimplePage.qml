@@ -46,7 +46,7 @@ PlasmaComponents.Page {
 
     PlasmaComponents.Label {
         id: titleLabel
-        text: i18n("add-ons and content store")
+        text: i18n("apps, books, art and more for your device")
         visible: titleShown
         anchors {
             top: logo.bottom
