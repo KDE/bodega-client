@@ -198,7 +198,8 @@ PlasmaComponents.Page {
         PlasmaComponents.Button {
             id: savePasswordButton
             text: creation ? i18n("Create") : i18n("Update Password")
-            enabled: passwordField.text == password2Field.text
+            enabled: passwordField.text != '' && passwordField.text == password2Field.text
+            width: emailField.width
             property variant pwordJob
             property variant registerJob
             property string newPword
