@@ -28,6 +28,10 @@
 #include "assetoperations.h"
 #include "bookhandler.h"
 
+#ifdef USE_NEPOMUK
+#include <nepomuk/resource.h>
+#endif
+
 namespace Bodega
 {
 
@@ -57,6 +61,11 @@ void BookInstallJob::downloadFinished(const QString &localFile)
                        QLatin1String("ij/01"),
                        tr("Install failed"),
                        tr("Impossible to install the book, wrong permissions or no space left on device.")));
+    } else {
+#ifdef USE_NEPOMUK
+        Nepomuk::Resource r(dir.filePath(m_handler->filePath()));
+        r.addType(QUrl(QLatin1String("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#Document")));
+#endif
     }
     setFinished();
 }
