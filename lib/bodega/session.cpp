@@ -364,6 +364,9 @@ Bodega::InstallJob *Session::install(AssetOperations *operations)
     QUrl url = d->baseUrl;
     const QString path = QLatin1String("/download/") + operations->assetInfo().id;
     url.setEncodedPath(d->jsonPath(path));
+
+    //qDebug() << "url is" << url;
+
     QNetworkReply *reply = d->get(url);
     InstallJob *job = operations->install(reply, this);
     d->jobConnect(job);

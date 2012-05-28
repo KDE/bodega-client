@@ -73,8 +73,9 @@ QString RpmHandler::packageName() const
 {
     if (remoteNameIsPackageId()) {
         return remoteName().split(QLatin1Char(';'), QString::KeepEmptyParts).first();
+    //is a rpm name
     } else {
-        return remoteName();
+        return remoteName().split(QLatin1Char('-'), QString::KeepEmptyParts).first();
     }
 }
 
