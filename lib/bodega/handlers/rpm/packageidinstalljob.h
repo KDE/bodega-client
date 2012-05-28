@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef BODEGA_RPMINSTALLJOB_H
-#define BODEGA_RPMINSTALLJOB_H
+#ifndef BODEGA_PACKAGEIDINSTALLJOB_H
+#define BODEGA_PACKAGEIDINSTALLJOB_H
 
 #include <bodega/installjob.h>
 #include <bodega/globals.h>
@@ -28,26 +28,25 @@
 namespace Bodega {
     class RpmHandler;
 
-    class RpmInstallJob : public InstallJob
+    class PackageIdInstallJob : public InstallJob
     {
         Q_OBJECT
 
     public:
-        RpmInstallJob(QNetworkReply *reply, Session *session, RpmHandler *handler);
-        ~RpmInstallJob();
+        PackageIdInstallJob(QNetworkReply *reply, Session *session, RpmHandler *handler);
+        ~PackageIdInstallJob();
 
     protected:
         void downloadFinished(const QString &localFile);
 
     private Q_SLOTS:
         void errorOccurred(PackageKit::Transaction::Error error, const QString &message);
-        void removeRepoFinished();
         void simulateInstallFinished(PackageKit::Transaction::Exit status, uint runtime);
         void installFinished(PackageKit::Transaction::Exit status, uint runtime);
 
     private:
         RpmHandler *m_handler;
-        QString m_packagePath;
+        QString m_packageId;
     };
 }
 

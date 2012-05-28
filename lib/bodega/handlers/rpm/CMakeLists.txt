@@ -5,6 +5,7 @@ set (rpmhandlerplugin_SRCS
      rpmhandler.cpp
      rpminstalljob.cpp
      rpmuninstalljob.cpp
+     packageidinstalljob.cpp
      )
 
 include_directories(${CMAKE_SOURCE_DIR}/libs/bodega/ ${CMAKE_SOURCE_DIR}/libs/bodega/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/bodega ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES} ${PACKAGEKIT_QT2_INCLUDE_DIR})

@@ -46,6 +46,8 @@ namespace Bodega {
         QString launchText() const;
         bool isInstalled() const;
 
+        QString remoteName() const;
+        bool remoteNameIsPackageId() const;
         QString packageName() const;
         const PackageKit::Package &package() const;
 
@@ -56,12 +58,12 @@ namespace Bodega {
 
     private Q_SLOTS:
         void gotPackage(const PackageKit::Package &package);
-        void resolveFinished();
+        void resolveFinished(PackageKit::Transaction::Exit status, uint runtime);
         void gotFiles(const PackageKit::Package &package, const QStringList &filenames);
         void installJobFinished();
 
     private:
-        QWeakPointer<RpmInstallJob> m_installJob;
+        QWeakPointer<InstallJob> m_installJob;
         QWeakPointer<RpmUninstallJob> m_uninstallJob;
         PackageKit::Package m_package;
         QString m_desktopFile;

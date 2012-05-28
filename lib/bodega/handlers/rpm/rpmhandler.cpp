@@ -29,6 +29,7 @@
 #include <Daemon>
 
 #include "rpminstalljob.h"
+#include "packageidinstalljob.h"
 
 using namespace Bodega;
 
@@ -43,20 +44,38 @@ RpmHandler::~RpmHandler()
 
 void RpmHandler::init()
 {
+    QFileInfo info(operations()->assetInfo().filename);
     PackageKit::Transaction *t = new PackageKit::Transaction;
-    t->resolve(packageName(), PackageKit::Transaction::FilterInstalled);
+    t->resolve(packageName());
+
     connect(t, SIGNAL(package(const PackageKit::Package &)),
             this, SLOT(gotPackage(const PackageKit::Package &)));
     connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(resolveFinished()));
+            this, SLOT(resolveFinished(PackageKit::Transaction::Exit, uint)));
 }
 
-QString RpmHandler::packageName() const
+QString RpmHandler::remoteName() const
 {
     const QString name = operations()->assetInfo().filename;
     qDebug() << "Asked for package name of" << operations()->assetInfo().filename  << "Got" << name;
     //try to extract a package name from a file name
     return name;
+}
+
+bool RpmHandler::remoteNameIsPackageId() const
+{
+    //Package ids are composed of 4 parts separed by mandattory ;
+    //http://www.packagekit.org/gtk-doc/concepts.html#introduction-ideas-packageid
+    return operations()->assetInfo().filename.split(QLatin1Char(';'), QString::KeepEmptyParts).count() == 4;
+}
+
+QString RpmHandler::packageName() const
+{
+    if (remoteNameIsPackageId()) {
+        return remoteName().split(QLatin1Char(';'), QString::KeepEmptyParts).first();
+    } else {
+        return remoteName();
+    }
 }
 
 const PackageKit::Package &RpmHandler::package() const
@@ -74,7 +93,14 @@ bool RpmHandler::isInstalled() const
 Bodega::InstallJob *RpmHandler::install(QNetworkReply *reply, Session *session)
 {
     if (!m_installJob) {
-        m_installJob = new RpmInstallJob(reply, session, this);
+        QFileInfo info(operations()->assetInfo().filename);
+
+        //Have a package id
+        if (info.suffix() == QLatin1String("rpm")) {
+            m_installJob = new RpmInstallJob(reply, session, this);
+        } else {
+            m_installJob = new PackageIdInstallJob(reply, session, this);
+        }
         connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob *)),
                 this, SLOT(installJobFinished()));
     }
@@ -115,8 +141,11 @@ void RpmHandler::gotPackage(const PackageKit::Package &package)
             this, SLOT(gotFiles(const PackageKit::Package &, const QStringList &)));
 }
 
-void RpmHandler::resolveFinished()
+void RpmHandler::resolveFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
+    Q_UNUSED(runtime)
+
+    qDebug() << "Got status:" << status;
     setReady(true);
 }
 
@@ -124,7 +153,7 @@ void RpmHandler::installJobFinished()
 {
     PackageKit::Transaction *t = new PackageKit::Transaction;
     m_package = PackageKit::Package();
-    t->resolve(packageName(), PackageKit::Transaction::FilterInstalled);
+    t->resolve(remoteName(), PackageKit::Transaction::FilterInstalled);
     connect(t, SIGNAL(package(const PackageKit::Package &)),
             this, SLOT(gotPackage(const PackageKit::Package &)));
 }
