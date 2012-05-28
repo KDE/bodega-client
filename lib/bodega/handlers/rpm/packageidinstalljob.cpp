@@ -50,7 +50,7 @@ void PackageIdInstallJob::downloadFinished(const QString &localFile)
     while (pkgId.isEmpty() && !idFile.atEnd()) {
         pkgId = QLatin1String(idFile.readLine());
     }
-    m_packageId = m_handler->packageName();
+    m_packageId = m_handler->remoteName();
 
     qDebug() << "Simulate install" << m_packageId;
 
@@ -61,6 +61,8 @@ void PackageIdInstallJob::downloadFinished(const QString &localFile)
             this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(simulateInstallFinished(PackageKit::Transaction::Exit, uint)));
+    connect(transaction, SIGNAL(changed()),
+            this, SLOT(transactionChanged()));
 }
 
 
@@ -76,7 +78,19 @@ void PackageIdInstallJob::simulateInstallFinished(PackageKit::Transaction::Exit 
                 this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
         connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
                 this, SLOT(installFinished(PackageKit::Transaction::Exit, uint)));
+        connect(transaction, SIGNAL(changed()),
+            this, SLOT(transactionChanged()));
     }
+}
+
+void PackageIdInstallJob::transactionChanged()
+{
+    PackageKit::Transaction *transaction = qobject_cast<PackageKit::Transaction *>(sender());
+    if (!transaction) {
+        return;
+    }
+
+    setProgress((qreal)transaction->percentage()/(qreal)100);
 }
 
 void PackageIdInstallJob::errorOccurred(PackageKit::Transaction::Error error, const QString &message)

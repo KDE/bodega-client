@@ -211,6 +211,7 @@ BrowserColumn {
                             function updateProgress(progress)
                             {
                                 value = progress*100
+                                indeterminate = (value >= 100)
                             }
                             onValueChanged: {
                                 if (value >= 100) {

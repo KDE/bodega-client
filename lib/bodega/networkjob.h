@@ -88,6 +88,7 @@ namespace Bodega {
         virtual void netFinished(const QVariantMap &jsonMap);
         virtual void downloadFinished(const QString &filename);
 
+        void setProgress(qreal progress);
         void parseCommon(const QVariantMap &jsonMap);
         void parseErrors(const QVariantMap &jsonMap);
         //For errors not related to network

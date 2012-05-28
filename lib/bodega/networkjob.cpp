@@ -132,8 +132,7 @@ void NetworkJob::Private::readFromNetwork()
 void NetworkJob::Private::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
     if (bytesReceived > 0 && bytesTotal > 0) {
-        progress = (qreal)1.0 / qreal(bytesTotal / bytesReceived);
-        emit q->progressChanged(progress);
+        q->setProgress((qreal)1.0 / qreal(bytesTotal / bytesReceived));
     }
 }
 
@@ -250,6 +249,16 @@ int NetworkJob::points() const
 qreal NetworkJob::progress() const
 {
     return d->progress;
+}
+
+void NetworkJob::setProgress(qreal progress)
+{
+    if (d->progress == progress) {
+        return;
+    }
+
+    d->progress = progress;
+    emit progressChanged(progress);
 }
 
 Session *NetworkJob::session() const

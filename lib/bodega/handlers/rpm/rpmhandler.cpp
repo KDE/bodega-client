@@ -93,13 +93,11 @@ bool RpmHandler::isInstalled() const
 Bodega::InstallJob *RpmHandler::install(QNetworkReply *reply, Session *session)
 {
     if (!m_installJob) {
-        QFileInfo info(operations()->assetInfo().filename);
-
         //Have a package id
-        if (info.suffix() == QLatin1String("rpm")) {
-            m_installJob = new RpmInstallJob(reply, session, this);
-        } else {
+        if (remoteNameIsPackageId()) {
             m_installJob = new PackageIdInstallJob(reply, session, this);
+        } else {
+            m_installJob = new RpmInstallJob(reply, session, this);
         }
         connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob *)),
                 this, SLOT(installJobFinished()));
@@ -112,8 +110,9 @@ Bodega::UninstallJob *RpmHandler::uninstall(Session *session)
 {
     if (!m_uninstallJob) {
         m_uninstallJob = new RpmUninstallJob(session, this);
+        //if not QueuedConnection resolve sudenly after the installation will fail
         connect(m_uninstallJob.data(), SIGNAL(jobFinished(Bodega::UninstallJob *)),
-                this, SLOT(installJobFinished()));
+                this, SLOT(installJobFinished()), Qt::QueuedConnection);
     }
 
     return m_uninstallJob.data();
@@ -145,7 +144,7 @@ void RpmHandler::resolveFinished(PackageKit::Transaction::Exit status, uint runt
 {
     Q_UNUSED(runtime)
 
-    qDebug() << "Got status:" << status;
+    qDebug() << "Package resolving operation finished, got status:" << status;
     setReady(true);
 }
 
@@ -153,7 +152,8 @@ void RpmHandler::installJobFinished()
 {
     PackageKit::Transaction *t = new PackageKit::Transaction;
     m_package = PackageKit::Package();
-    t->resolve(remoteName(), PackageKit::Transaction::FilterInstalled);
+
+    t->resolve(packageName());
     connect(t, SIGNAL(package(const PackageKit::Package &)),
             this, SLOT(gotPackage(const PackageKit::Package &)));
 }

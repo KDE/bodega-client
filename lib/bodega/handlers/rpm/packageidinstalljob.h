@@ -43,6 +43,7 @@ namespace Bodega {
         void errorOccurred(PackageKit::Transaction::Error error, const QString &message);
         void simulateInstallFinished(PackageKit::Transaction::Exit status, uint runtime);
         void installFinished(PackageKit::Transaction::Exit status, uint runtime);
+        void transactionChanged();
 
     private:
         RpmHandler *m_handler;
