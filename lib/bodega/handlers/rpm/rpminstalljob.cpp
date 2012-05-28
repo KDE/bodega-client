@@ -70,6 +70,8 @@ void RpmInstallJob::removeRepoFinished()
 {
     qDebug() << "Simulate install" << m_packagePath;
 
+    disconnect(sender(), 0, this, 0);
+
     PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
     transaction->simulateInstallFile(m_packagePath);
 
@@ -83,6 +85,8 @@ void RpmInstallJob::simulateInstallFinished(PackageKit::Transaction::Exit status
 {
     if (status == PackageKit::Transaction::ExitSuccess) {
         qDebug() << "Trying to install" << m_packagePath;
+
+        disconnect(sender(), 0, this, 0);
 
         PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
         transaction->installFile(m_packagePath, false);
