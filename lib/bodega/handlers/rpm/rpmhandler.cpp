@@ -62,17 +62,17 @@ QString RpmHandler::remoteName() const
     return name;
 }
 
-bool RpmHandler::remoteNameIsPackageId() const
+bool RpmHandler::remoteNameIsDescriptor() const
 {
     //Package ids are composed of 4 parts separed by mandattory ;
     //http://www.packagekit.org/gtk-doc/concepts.html#introduction-ideas-packageid
-    return operations()->assetInfo().filename.split(QLatin1Char(';'), QString::KeepEmptyParts).count() == 4;
+    return operations()->assetInfo().filename.split(QLatin1Char('.'), QString::KeepEmptyParts).last() == QLatin1String("desc");
 }
 
 QString RpmHandler::packageName() const
 {
-    if (remoteNameIsPackageId()) {
-        return remoteName().split(QLatin1Char(';'), QString::KeepEmptyParts).first();
+    if (remoteNameIsDescriptor()) {
+        return remoteName().split(QLatin1Char('.'), QString::KeepEmptyParts).first();
     //is a rpm name
     } else {
         return remoteName().split(QLatin1Char('-'), QString::KeepEmptyParts).first();
@@ -95,7 +95,7 @@ Bodega::InstallJob *RpmHandler::install(QNetworkReply *reply, Session *session)
 {
     if (!m_installJob) {
         //Have a package id
-        if (remoteNameIsPackageId()) {
+        if (remoteNameIsDescriptor()) {
             m_installJob = new PackageIdInstallJob(reply, session, this);
         } else {
             m_installJob = new RpmInstallJob(reply, session, this);

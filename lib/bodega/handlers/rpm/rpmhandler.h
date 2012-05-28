@@ -47,7 +47,7 @@ namespace Bodega {
         bool isInstalled() const;
 
         QString remoteName() const;
-        bool remoteNameIsPackageId() const;
+        bool remoteNameIsDescriptor() const;
         QString packageName() const;
         const PackageKit::Package &package() const;
 

@@ -47,10 +47,29 @@ void PackageIdInstallJob::downloadFinished(const QString &localFile)
     QFile idFile(localFile);
 
     QString pkgId;
-    while (pkgId.isEmpty() && !idFile.atEnd()) {
-        pkgId = QLatin1String(idFile.readLine());
+    if (!idFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        setError(Error(Error::Session,
+                   QString(QLatin1String("packageid/1")),
+                   tr("Install error"),
+                   tr("failed to open the descriptor file")));
+        return;
     }
-    m_packageId = m_handler->remoteName();
+
+    while (!idFile.atEnd()) {
+        pkgId = QLatin1String(idFile.readLine());
+        if(pkgId.split(QLatin1Char(';'), QString::KeepEmptyParts).count() == 4) {
+            m_packageId = pkgId;
+            break;
+        }
+    }
+    idFile.close();
+    if (m_packageId.isEmpty()) {
+        setError(Error(Error::Session,
+                   QString(QLatin1String("packageid/2")),
+                   tr("Install error"),
+                   tr("failed to parse the descriptor file")));
+        return;
+    }
 
     qDebug() << "Simulate install" << m_packageId;
 
