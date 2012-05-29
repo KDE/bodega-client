@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Store
+Name[et]=Pood
 Name[nl]=Opslaan
 Name[pl]=Sklep
 Name[pt]=Armazém
@@ -10,6 +11,7 @@ Name[uk]=Сховище
 Name[x-test]=xxStorexx
 GenericName=Add Ons
 GenericName[es]=Complementos
+GenericName[et]=Lisandid
 GenericName[nl]=Add-ons
 GenericName[pl]=Dodatki
 GenericName[pt]=Extensões
@@ -19,6 +21,7 @@ GenericName[sv]=Tillägg
 GenericName[uk]=Додатки
 GenericName[x-test]=xxAdd Onsxx
 Comment=Content store for Plasma Active
+Comment[et]=Plasma Active'i sisupood
 Comment[nl]=Opslag voor inhoud van Plasma Active
 Comment[pl]=Sklep treści dla Plasma Active
 Comment[pt]=Armazém de conteúdos para o Plasma Active
