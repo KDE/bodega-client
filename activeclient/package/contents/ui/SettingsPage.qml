@@ -109,6 +109,16 @@ PlasmaComponents.Page {
                         right: parent.right
                     }
 
+                    InlineConfirmationDialog {
+                        id: confirmDisconnect
+                        visualParent: disconnectAccountButton
+                        message: i18n("Are you sure you wish to disconnect your account from this device?")
+                        onAccepted: {
+                            bodegaClient.forgetCredentials()
+                            bodegaClient.session.signOut()
+                            mainStack.pop(mainStack.initialPage)
+                        }
+                    }
                     tools: PlasmaComponents.ToolBarLayout {
                         PlasmaComponents.ToolButton {
                             id: backButton
@@ -123,10 +133,7 @@ PlasmaComponents.Page {
                             text: i18n("Disconnect account")
                             anchors.verticalCenter: parent.verticalCenter
                             onClicked: {
-                                //make kwallet forget
-                                bodegaClient.forgetCredentials()
-                                bodegaClient.session.signOut()
-                                mainStack.pop(mainStack.initialPage)
+                                confirmDisconnect.open()
                             }
                         }
                     }
