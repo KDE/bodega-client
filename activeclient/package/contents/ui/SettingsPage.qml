@@ -55,7 +55,7 @@ PlasmaComponents.Page {
                     bottom: parent.bottom
                     left: parent.left
                 }
-                width: root.width/Math.round(root.width/(theme.defaultFont.mSize.width*30))
+                width: Math.max(backButton.width + disconnectAccountButton.width + 30, root.width/Math.round(root.width/(theme.defaultFont.mSize.width*25)))
 
                 ListView {
                     id: categoriesView
@@ -119,6 +119,7 @@ PlasmaComponents.Page {
                             onClicked: mainStack.pop()
                         }
                         PlasmaComponents.Button {
+                            id: disconnectAccountButton
                             text: i18n("Disconnect account")
                             anchors.verticalCenter: parent.verticalCenter
                             onClicked: {
