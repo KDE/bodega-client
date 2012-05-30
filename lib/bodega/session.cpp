@@ -497,7 +497,7 @@ Bodega::NetworkJob *Session::setPaymentMethod(const QString &number, const QStri
         url.addQueryItem(QLatin1String("card[address_country]"), addressCountry);
     }
 
-    qDebug()<<"url is " <<url;
+    //qDebug()<<"url is " <<url;
 
     NetworkJob *job = new NetworkJob(d->get(url), this);
     d->jobConnect(job);
