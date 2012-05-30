@@ -56,8 +56,6 @@ PlasmaComponents.Page {
                     left: parent.left
                 }
                 width: root.width/Math.round(root.width/(theme.defaultFont.mSize.width*30))
-                //FIXME: why necessary?
-                visible: true
 
                 ListView {
                     id: categoriesView
