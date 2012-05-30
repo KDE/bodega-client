@@ -55,19 +55,6 @@ PlasmaComponents.PageStack {
     function jobFinished()
     {
         if (job.failed) {
-            showMessage(job.error.title, job.error.errorId + ": " + job.error.description);
-        }
-
-        for (var i in job.error) {
-            print(i + ": " + job.error[i])
-        }
-
-        var cardData = job.parsedJson
-        for (var i in cardData) {
-            print(i + ": " + cardData[i])
-        }
-
-        if (job.failed) {
             paymentMethodStack.push(Qt.createComponent("PaymentMethodEdit.qml"))
         } else {
             if (cardData.type) cardType = cardData.type;
