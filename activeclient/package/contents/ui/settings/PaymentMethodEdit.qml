@@ -60,6 +60,9 @@ PlasmaComponents.Page {
                 text: "Master Card"
             }
             PlasmaComponents.RadioButton {
+                text: "American Express"
+            }
+            PlasmaComponents.RadioButton {
                 text: "Diners Club"
             }
         }
@@ -73,7 +76,7 @@ PlasmaComponents.Page {
         }
         PlasmaComponents.TextField {
             id: holderField
-            width: cvcField.width * 2
+            width: cvcField.width * 4
             text: paymentMethodStack.name
         }
 
@@ -194,62 +197,6 @@ PlasmaComponents.Page {
             }
         }
 
-        PlasmaComponents.Label {
-            text: i18n("Billing address:")
-            anchors {
-                right: address1Field.left
-                rightMargin: theme.defaultFont.mSize.width
-            }
-        }
-        PlasmaComponents.TextField {
-            id: address1Field
-            width: cvcField.width * 2
-            text: paymentMethodStack.address1
-        }
-
-        Item {width: 1; height: 1}
-        PlasmaComponents.TextField {
-            id: address2Field
-            width: cvcField.width * 2
-            text: paymentMethodStack.address2
-        }
-
-        PlasmaComponents.Label {
-            text: i18n("Country:")
-            anchors {
-                right: countryField.left
-                rightMargin: theme.defaultFont.mSize.width
-            }
-        }
-        PlasmaComponents.TextField {
-            id: countryField
-            text: paymentMethodStack.country
-        }
-
-        PlasmaComponents.Label {
-            text: i18n("State:")
-            anchors {
-                right: stateField.left
-                rightMargin: theme.defaultFont.mSize.width
-            }
-        }
-        PlasmaComponents.TextField {
-            id: stateField
-            text: paymentMethodStack.state
-        }
-
-        PlasmaComponents.Label {
-            text: i18n("ZIP:")
-            anchors {
-                right: zipField.left
-                rightMargin: theme.defaultFont.mSize.width
-            }
-        }
-        PlasmaComponents.TextField {
-            id: zipField
-            text: paymentMethodStack.zip
-        }
-
         Item {width: 1; height: 1}
         PlasmaComponents.Button {
             id: saveButton
@@ -261,12 +208,7 @@ PlasmaComponents.Page {
 
                 job = bodegaClient.session.setPaymentMethod(numberField1.text + numberField2.text + numberField3.text + numberField4.text,
                                         expiryMonth.text, expiryYear.text,
-                                        cvcField.text, holderField.text,
-                                        address1Field.text,
-                                        address2Field.text,
-                                        zipField.text,
-                                        stateField.text,
-                                        countryField.text)
+                                        cvcField.text, holderField.text)
 
                 job.jobFinished.connect(jobFinished);
             }
@@ -278,16 +220,20 @@ PlasmaComponents.Page {
         if (job.failed) {
             showMessage(job.error.title, job.error.errorId + ": " + job.error.description, saveButton);
 
+            /*
             print("Error")
             for (var i in job.error) {
                 print(i + ": " + job.error[i])
             }
+            */
         } else {
+            /*
             print("Answer")
             var response = job.parsedJson
             for (var i in response) {
                 print(i + ": " + response[i])
             }
+            */
             root.pageStack.clear()
             root.pageStack.loadData()
             root.paymentMethodAdded()
