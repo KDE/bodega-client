@@ -91,7 +91,6 @@ BrowserColumn {
                         var channelsPage = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
                         channelsPage.rootIndex = categoriesView.model.modelIndex(index)
                         channelsPage.channelId = model.ChannelIdRole
-
                     } else if (model.AssetIdRole) {
                         var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
                         assetPage.assetId = model.AssetIdRole

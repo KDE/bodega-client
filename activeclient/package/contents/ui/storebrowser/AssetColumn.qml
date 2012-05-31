@@ -304,6 +304,7 @@ BrowserColumn {
                         }
                         PlasmaComponents.Label {
                             verticalAlignment: Text.AlignTop
+                            visible: versionLabel.visible
                             anchors {
                                 right: versionLabel.left
                                 rightMargin: theme.defaultFont.mSize.width
@@ -313,6 +314,7 @@ BrowserColumn {
                         PlasmaComponents.Label {
                             verticalAlignment: Text.AlignTop
                             id: versionLabel
+                            visible: text != ''
                             text: AssetVersionRole
                             wrapMode: Text.WordWrap
                         }
@@ -345,7 +347,7 @@ BrowserColumn {
                         PlasmaComponents.Label {
                             id: licenseLabel
                             verticalAlignment: Text.AlignTop
-                            visible: assetOperations.assetInfo.license != ''
+                            visible: text != ''
                             text: assetOperations.assetInfo.assetLicenseText != '' ? '<a href="' + assetOperations.assetInfo.assetLicenseText + '">' + assetOperations.assetInfo.license + '</a>'
                                                                                 : assetOperations.assetInfo.license
                             width: root.width - licenseTitle.width - 40
