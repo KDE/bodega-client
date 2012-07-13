@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Store
 Name[et]=Pood
+Name[fr]=Boutique
 Name[km]=រក្សាទុក
 Name[nl]=Opslaan
 Name[pl]=Sklep
@@ -13,6 +14,7 @@ Name[x-test]=xxStorexx
 GenericName=Add Ons
 GenericName[es]=Complementos
 GenericName[et]=Lisandid
+GenericName[fr]=Modules complémentaires
 GenericName[km]=បន្ថែម​កម្មវិធី
 GenericName[nl]=Add-ons
 GenericName[pl]=Dodatki
@@ -24,6 +26,7 @@ GenericName[uk]=Додатки
 GenericName[x-test]=xxAdd Onsxx
 Comment=Content store for Plasma Active
 Comment[et]=Plasma Active'i sisutoodete pood
+Comment[fr]=Contient la boutique de Plasma Active
 Comment[km]=មាតិកា​រក្សាទុក​សម្រាប់​ប្លាស្មា​សកម្ម
 Comment[nl]=Opslag voor inhoud van Plasma Active
 Comment[pl]=Sklep treści dla Plasma Active
