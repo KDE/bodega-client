@@ -1,6 +1,10 @@
 
 link_directories(${LINK_DIRECTORIES} ${QJSON_LIBRARY_DIRS})
 
+find_package(KDE4 REQUIRED)
+include_directories(${CMAKE_SOURCE_DIR}/libs/bodega/ ${CMAKE_SOURCE_DIR}/libs/bodega/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/bodega ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES} ${KDE4_INCLUDES} )
+
+include("../../CMakeQtUsage")
 
 find_package(Nepomuk)
 find_package(Soprano)
@@ -11,9 +15,6 @@ set (bookhandlerplugin_SRCS
      bookuninstalljob.cpp
      )
 
-include_directories(${CMAKE_SOURCE_DIR}/libs/bodega/ ${CMAKE_SOURCE_DIR}/libs/bodega/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/bodega ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES})
-
-include("../../CMakeQtUsage")
 
 qt4_automoc(${bookhandlerplugin_SRCS})
 
