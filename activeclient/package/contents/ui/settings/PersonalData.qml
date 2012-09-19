@@ -76,7 +76,7 @@ PlasmaComponents.Page {
         PlasmaComponents.TextField {
             id: emailField
             width: nameField.width
-            Keys.onTabPressed: saveInfoButton.forceActiveFocus()
+            Keys.onTabPressed: creation ? passwordField.forceActiveFocus() : saveInfoButton.forceActiveFocus()
         }
 
         //just a placeholder
@@ -125,6 +125,8 @@ PlasmaComponents.Page {
                     left: parent.right
                 }
             }
+
+            Keys.onTabPressed: passwordField.forceActiveFocus()
         }
 
         Item {
