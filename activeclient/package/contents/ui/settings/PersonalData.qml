@@ -303,5 +303,6 @@ PlasmaComponents.Page {
         if (!creation) {
             loadData();
         }
+        nameField.forceActiveFocus();
     }
 }
