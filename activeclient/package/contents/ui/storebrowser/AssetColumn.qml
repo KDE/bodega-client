@@ -64,6 +64,7 @@ BrowserColumn {
 
         Flickable {
             id: mainFlickable
+            interactive: height > contentHeight
             anchors {
                 fill: parent
                 margins: 8
