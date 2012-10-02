@@ -110,7 +110,7 @@ BrowserColumn {
                 target: categoriesView
                 onAtYEndChanged: {
                     if (categoriesView.atYEnd) {
-                        loaderFooter.visible = bodegaClient.channelsModel.canFetchMore(rootIndex)
+                        loaderFooter.visible = categoriesView.model.canFetchMore(rootIndex)
                     } else {
                         loaderFooter.visible = false
                     }
