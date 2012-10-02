@@ -179,7 +179,6 @@ void Model::Private::channelsJobFinished(Bodega::NetworkJob *job)
     Q_ASSERT(indexForJobs.contains(channelsJob));
 
 
-
     QPersistentModelIndex idx = indexForJobs.value(channelsJob);
 
     //remove from bookkeeping
