@@ -108,9 +108,11 @@ void NetworkJob::Private::netFinished()
             q->setFinished();
         } else {
             file->close();
+            //qDebug() << "download finished to" << file->fileName();
             q->downloadFinished(file->fileName());
         }
     } else {
+        //qDebug() << "ERRROR!!!!!" << reply->error();
         q->setFinished();
     }
 }
