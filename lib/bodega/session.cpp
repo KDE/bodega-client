@@ -35,7 +35,6 @@
 #include "listballotsjob.h"
 #include "participantinfojob.h"
 #include "registerjob.h"
-#include "searchjob.h"
 #include "signonjob.h"
 
 #include <QNetworkAccessManager>

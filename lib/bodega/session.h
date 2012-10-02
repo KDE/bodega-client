@@ -47,7 +47,6 @@ namespace Bodega {
     class ParticipantInfoJob;
     class RegisterJob;
     class ResetPasswordJob;
-    class SearchJob;
     class SignOnJob;
     class UninstallJob;
 

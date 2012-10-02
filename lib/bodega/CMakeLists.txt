@@ -21,7 +21,6 @@ set (bodega_HEADERS
      networkjob.h
      participantinfojob.h
      registerjob.h
-     searchjob.h
      session_p.h
      session.h
      signonjob.h
@@ -50,7 +49,6 @@ set (bodega_SRCS
      participantinfojob.cpp
      registerjob.cpp
      session.cpp
-     searchjob.cpp
      signonjob.cpp
      uninstalljob.cpp
      )
