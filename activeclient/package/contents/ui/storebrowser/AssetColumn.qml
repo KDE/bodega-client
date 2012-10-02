@@ -46,7 +46,7 @@ BrowserColumn {
     onAssetIdChanged: {
         if (assetId > 0) {
             assetOperations = bodegaClient.session.assetOperations(assetId);
-            
+
             root.installJob = bodegaClient.session.installJobsModel.jobForAsset(root.assetId)
             if (root.installJob) {
                 downloadProgress.opacity = 1
