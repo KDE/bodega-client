@@ -143,7 +143,7 @@ void Error::Private::setServerCode(ServerCode c)
             description = QObject::tr("This account is not active.");
         break;
         case AccountExists:
-            description = QObject::tr("An account under that name already exists.");
+            description = QObject::tr("An account for that email already exists.");
         break;
         case PurchaseFailed:
             description = QObject::tr("Could not purchase the requested item.");
