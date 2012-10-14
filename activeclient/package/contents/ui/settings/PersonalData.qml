@@ -166,16 +166,18 @@ PlasmaComponents.Page {
             width: nameField.width
             Keys.onTabPressed: savePasswordButton.forceActiveFocus()
             Row {
-                opacity: passwordField.text ? 1 : 0
+                opacity: passwordField.text && (passwordField.text.length < 8 || passwordField.text != password2Field.text) ? 1 : 0
                 anchors.left: parent.right
+                spacing: root.spacing
                 QIconItem {
                     width: theme.smallMediumIconSize
                     height: width
-                    icon: (passwordField.text == password2Field.text) ? "dialog-ok" : "dialog-cancel"
+                    icon: passwordCheck.text.length > 0 ? "dialog-cancel" : "dialog-ok"
                 }
                 PlasmaComponents.Label {
-                    opacity: passwordField.text != password2Field.text ? 1 : 0
-                    text: i18n("Password mismatch")
+                    id: passwordCheck
+                    text: passwordField.text.length > 7 ? password2Field.text.length > 0 ? i18n("Password mismatch") : null
+                                                        : i18n("Password too short")
                     Behavior on opacity {
                         NumberAnimation {
                             duration: 250
@@ -200,7 +202,7 @@ PlasmaComponents.Page {
         PlasmaComponents.Button {
             id: savePasswordButton
             text: creation ? i18n("Create") : i18n("Update Password")
-            enabled: passwordField.text != '' && passwordField.text == password2Field.text
+            enabled: passwordField.text.length >= 8 && passwordField.text == password2Field.text
             width: emailField.width
             property variant pwordJob
             property variant registerJob
