@@ -1,20 +1,5 @@
 [Desktop Entry]
 Name=File browser
-Name[cs]=Prohlížeč souborů
-Name[de]=Dateiverwaltung
-Name[es]=Navegador de archivos
-Name[et]=Failibrauser
-Name[fr]=Explorateur de systèmes de fichiers
-Name[hu]=Fájlböngésző
-Name[km]=កម្មវិធី​រុករក​ឯកសារ
-Name[nl]=Bestandsbrowser
-Name[pl]=Przeglądarka plików
-Name[pt]=Navegador de ficheiros
-Name[pt_BR]=Navegador de arquivos
-Name[sk]=Prehliadač súborov
-Name[sv]=Filbläddrare
-Name[uk]=Керування файлами
-Name[x-test]=xxFile browserxx
 Encoding=UTF-8
 Type=Service
 X-KDE-ParentApp=
