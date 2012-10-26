@@ -29,7 +29,10 @@
 #include "bookhandler.h"
 
 #ifdef USE_NEPOMUK
-#include <nepomuk/resource.h>
+#include <nepomuk2/nco.h>
+#include <nepomuk2/nfo.h>
+#include <nepomuk2/resource.h>
+#include <nepomuk2/variant.h>
 #endif
 
 namespace Bodega
@@ -63,8 +66,17 @@ void BookInstallJob::downloadFinished(const QString &localFile)
                        tr("Impossible to install the book, wrong permissions or no space left on device.")));
     } else {
 #ifdef USE_NEPOMUK
-        Nepomuk::Resource r(dir.filePath(m_handler->filePath()));
-        r.addType(QUrl(QLatin1String("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#Document")));
+        Nepomuk2::Resource r(dir.filePath(m_handler->filePath()));
+        r.addType(Nepomuk2::Vocabulary::NFO::Document());
+
+        //add an author if possuble
+        if (m_handler->operations()->assetTags().contains(QLatin1String("author"))) {
+
+            Nepomuk2::Resource authorRes = Nepomuk2::Resource();
+            authorRes.addType(Nepomuk2::Vocabulary::NCO::Contact());
+            authorRes.addProperty(Nepomuk2::Vocabulary::NCO::fullname(), m_handler->operations()->assetTags().value(QLatin1String("author")));
+            r.addProperty(Nepomuk2::Vocabulary::NCO::creator(), authorRes);
+        }
 #endif
     }
     setFinished();
