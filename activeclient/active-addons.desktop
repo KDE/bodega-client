@@ -1,7 +1,25 @@
 [Desktop Entry]
 Name=Add Ons
+Name[nl]=Add-ons
+Name[pt]=Extensões
+Name[pt_BR]=Extensões
+Name[sv]=Tillägg
+Name[uk]=Додатки
+Name[x-test]=xxAdd Onsxx
 GenericName=Add Ons
+GenericName[nl]=Add-ons
+GenericName[pt]=Extensões
+GenericName[pt_BR]=Extensões
+GenericName[sv]=Tillägg
+GenericName[uk]=Додатки
+GenericName[x-test]=xxAdd Onsxx
 Comment=Content store for Plasma Active
+Comment[nl]=Opslag voor inhoud van Plasma Active
+Comment[pt]=Armazém de conteúdos para o Plasma Active
+Comment[pt_BR]=Armazém de conteúdos para o Plasma Active
+Comment[sv]=Innehållslagring för Plasma Aktiv
+Comment[uk]=Сховища даних для портативної Плазми
+Comment[x-test]=xxContent store for Plasma Activexx
 Icon=preferences-desktop-default-applications
 Exec=active-addons -graphicssystem raster %u
 Terminal=false

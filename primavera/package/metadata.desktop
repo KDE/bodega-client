@@ -1,5 +1,11 @@
 [Desktop Entry]
 Name=Primavera
+Name[nl]=Primavera
+Name[pt]=Primavera
+Name[pt_BR]=Primavera
+Name[sv]=Primavera
+Name[uk]=Primavera
+Name[x-test]=xxPrimaveraxx
 Encoding=UTF-8
 Type=Service
 X-KDE-ParentApp=
