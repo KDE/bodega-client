@@ -21,6 +21,7 @@ import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
 
 BrowserColumn {
@@ -38,103 +39,95 @@ BrowserColumn {
     }
 
 
-    ListView {
-        id: categoriesView
-        currentIndex: -1
-        clip: true
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
+    PlasmaExtras.ScrollArea {
+        anchors.fill:parent
+        ListView {
+            id: categoriesView
+            currentIndex: -1
+            clip: true
+            anchors.fill:parent
 
-        model: channelsModel
+            model: channelsModel
 
-        delegate: Component {
-            id: delegateComponent
-            PlasmaComponents.ListItem {
-                id: listItem
-                enabled: true
-                checked: categoriesView.currentIndex == index
-                Row {
-                    id: delegateRow
-                    spacing: theme.defaultFont.mSize.width
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                    }
-                    Image {
-                        id: iconImage
-                        source: model.ImageMediumRole
-                        width: theme.mediumIconSize
-                        height: width
-                    }
-                    Column {
-                        PlasmaComponents.Label {
-                            text: model.DisplayRole
-                            width: delegateRow.width - iconImage.width - theme.defaultFont.mSize.width
-                            elide: Text.ElideRight
+            delegate: Component {
+                id: delegateComponent
+                PlasmaComponents.ListItem {
+                    id: listItem
+                    enabled: true
+                    checked: categoriesView.currentIndex == index
+                    Row {
+                        id: delegateRow
+                        spacing: theme.defaultFont.mSize.width
+                        anchors {
+                            left: parent.left
+                            right: parent.right
                         }
-                        PlasmaComponents.ProgressBar {
-                            id: downloadProgress
-                            visible: value < maximumValue
-                            minimumValue: 0
-                            maximumValue: 100
-                            value: model.ProgressRole*100
-                            height: doneLabel.height
-                            anchors {
-                                left: parent.left
-                                right: parent.right
+                        Image {
+                            id: iconImage
+                            source: model.ImageMediumRole
+                            width: theme.mediumIconSize
+                            height: width
+                        }
+                        Column {
+                            PlasmaComponents.Label {
+                                text: model.DisplayRole
+                                width: delegateRow.width - iconImage.width - theme.defaultFont.mSize.width
+                                elide: Text.ElideRight
+                            }
+                            PlasmaComponents.ProgressBar {
+                                id: downloadProgress
+                                visible: value < maximumValue
+                                minimumValue: 0
+                                maximumValue: 100
+                                value: model.ProgressRole*100
+                                height: doneLabel.height
+                                anchors {
+                                    left: parent.left
+                                    right: parent.right
+                                }
+                            }
+                            PlasmaComponents.Label {
+                                id: doneLabel
+                                text: i18n("Download finished")
+                                height: paintedHeight
+                                visible: !downloadProgress.visible
+                                font.pointSize: theme.smallestFont.pointSize
                             }
                         }
-                        PlasmaComponents.Label {
-                            id: doneLabel
-                            text: i18n("Download finished")
-                            height: paintedHeight
-                            visible: !downloadProgress.visible
-                            font.pointSize: theme.smallestFont.pointSize
+                    }
+                    onClicked: {
+                        if (categoriesView.currentIndex == index) {
+                            return
+                        }
+                        categoriesView.currentIndex = index
+                        itemBrowser.pop(root)
+
+                        if (model.AssetIdRole) {
+                            var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
+                            assetPage.assetId = model.AssetIdRole
                         }
                     }
                 }
-                onClicked: {
-                    if (categoriesView.currentIndex == index) {
-                        return
-                    }
-                    categoriesView.currentIndex = index
-                    itemBrowser.pop(root)
+            }
 
-                    if (model.AssetIdRole) {
-                        var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
-                        assetPage.assetId = model.AssetIdRole
+            footer: PlasmaComponents.ListItem {
+                id: loaderFooter
+                Connections {
+                    target: categoriesView
+                    onAtYEndChanged: {
+                        if (categoriesView.atYEnd) {
+                            loaderFooter.visible = bodegaClient.channelsModel.canFetchMore(rootIndex)
+                        } else {
+                            loaderFooter.visible = false
+                        }
                     }
+                }
+                PlasmaComponents.BusyIndicator {
+                    running: parent.visible
+                    anchors.centerIn: parent
                 }
             }
         }
-
-        footer: PlasmaComponents.ListItem {
-            id: loaderFooter
-            Connections {
-                target: categoriesView
-                onAtYEndChanged: {
-                    if (categoriesView.atYEnd) {
-                        loaderFooter.visible = bodegaClient.channelsModel.canFetchMore(rootIndex)
-                    } else {
-                        loaderFooter.visible = false
-                    }
-                }
-            }
-            PlasmaComponents.BusyIndicator {
-                running: parent.visible
-                anchors.centerIn: parent
-            }
-        }
-    }
-    PlasmaComponents.ScrollBar {
-        id: scrollBar
-        z: 800
-        flickableItem: categoriesView
-        orientation: Qt.Vertical
     }
 
     PlasmaComponents.ToolButton {

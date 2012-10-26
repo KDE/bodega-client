@@ -21,70 +21,72 @@ import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
 
 BrowserColumn {
     id: root
     clip: true
 
-    //It's a flickable+repeater because we need to mix other items to the model
-    //results should be small enough to be loaded all at once
-    Flickable {
-        id: categoriesFlickable
-        clip: true
-        interactive: true
+    PlasmaExtras.ScrollArea {
         anchors {
             top: parent.top
             left: parent.left
             right: parent.right
             bottom: statusFrame.top
         }
-        Column {
-            id: categoriesColumn
-            property int currentIndex: -1
-            width: categoriesFlickable.width
+        //It's a flickable+repeater because we need to mix other items to the model
+        //results should be small enough to be loaded all at once
+        Flickable {
+            id: categoriesFlickable
+            interactive: height < contentHeight
+            anchors.fill: parent
+            contentWidth: categoriesColumn.width
+            contentHeight: categoriesColumn.height
+            Column {
+                id: categoriesColumn
+                property int currentIndex: -1
+                width: categoriesFlickable.width
 
-            Repeater {
-                model: VisualDataModel {
-                    id: visualDataModel
-                    model: bodegaClient.channelsModel
-                    delegate: StoreListItem {
-                        checked: categoriesColumn.currentIndex == index
-                        onClicked: {
-                            if (categoriesColumn.currentIndex == index) {
-                                return
+                Repeater {
+                    model: VisualDataModel {
+                        id: visualDataModel
+                        model: bodegaClient.channelsModel
+                        delegate: StoreListItem {
+                            checked: categoriesColumn.currentIndex == index
+                            onClicked: {
+                                if (categoriesColumn.currentIndex == index) {
+                                    return
+                                }
+                                categoriesColumn.currentIndex = index
+                                itemBrowser.pop(root)
+                                var channels = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
+                                channels.rootIndex = visualDataModel.modelIndex(index)
+                                channels.channelId = model.ChannelIdRole
                             }
-                            categoriesColumn.currentIndex = index
-                            itemBrowser.pop(root)
-                            var channels = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
-                            channels.rootIndex = visualDataModel.modelIndex(index)
-                            channels.channelId = model.ChannelIdRole
                         }
                     }
                 }
-            }
-            StoreListItem {
-                visible: count > 0
-                icon: "folder-downloads"
-                label: i18n("Downloads")
-                property int index: visualDataModel.count
-                count: bodegaClient.session.installJobsModel.count
-                checked: categoriesColumn.currentIndex == index
-                onClicked: {
-                    if (categoriesColumn.currentIndex == index) {
-                        return
+                StoreListItem {
+                    visible: count > 0
+                    icon: "folder-downloads"
+                    label: i18n("Downloads")
+                    property int index: visualDataModel.count
+                    count: bodegaClient.session.installJobsModel.count
+                    checked: categoriesColumn.currentIndex == index
+                    onClicked: {
+                        if (categoriesColumn.currentIndex == index) {
+                            return
+                        }
+                        categoriesColumn.currentIndex = index
+                        itemBrowser.pop(root)
+                        var channels = itemBrowser.push(Qt.createComponent("InstallJobsColumn.qml"))
                     }
-                    categoriesColumn.currentIndex = index
-                    itemBrowser.pop(root)
-                    var channels = itemBrowser.push(Qt.createComponent("InstallJobsColumn.qml"))
                 }
             }
         }
     }
-    PlasmaComponents.ScrollBar {
-        flickableItem: categoriesFlickable
-        orientation: Qt.Vertical
-    }
+
     PlasmaCore.FrameSvgItem {
         id: statusFrame
         imagePath: "widgets/frame"

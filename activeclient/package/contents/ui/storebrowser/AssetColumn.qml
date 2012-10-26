@@ -21,6 +21,7 @@ import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
 
 BrowserColumn {
@@ -58,24 +59,22 @@ BrowserColumn {
         }
     }
 
-    Item {
+    PlasmaExtras.ScrollArea {
         anchors.fill: parent
         //color: theme.backgroundColor
 
         Flickable {
             id: mainFlickable
             interactive: height < contentHeight
-            anchors {
-                fill: parent
-                margins: 8
-            }
+            anchors.fill: parent
+
             contentWidth: width
             contentHeight: mainColumn.height
 
             Item {
                 width: mainFlickable.width
                 height: mainColumn.height
-                Baloon {
+                Baloon {Text{text: mainFlickable.height}
                     id: questionBaloon
                     visualParent: installButton
                     property bool canPurchase:(bodegaClient.session.points >= assetOperations.assetInfo.points)
@@ -369,10 +368,6 @@ BrowserColumn {
                     }*/
                 }
             }
-        }
-        PlasmaComponents.ScrollBar {
-            orientation: Qt.Vertical
-            flickableItem: mainFlickable
         }
     }
 }

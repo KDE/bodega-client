@@ -21,6 +21,7 @@ import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
 
 BrowserColumn {
@@ -63,70 +64,63 @@ BrowserColumn {
         }
     }
 
-    ListView {
-        id: categoriesView
-        currentIndex: -1
-        clip: true
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
+    PlasmaExtras.ScrollArea {
+        anchors.fill: parent
+        
+        ListView {
+            id: categoriesView
+            currentIndex: -1
+            clip: true
+            anchors.fill: parent
 
-        model: channelsModel
+            model: channelsModel
 
-        Component {
-            id: delegateComponent
-            StoreListItem {
-                checked: categoriesView.currentIndex == index
-                onClicked: {
-                    if (categoriesView.currentIndex == index) {
-                        return
-                    }
-                    categoriesView.currentIndex = index
-                    itemBrowser.pop(root)
+            Component {
+                id: delegateComponent
+                StoreListItem {
+                    checked: categoriesView.currentIndex == index
+                    onClicked: {
+                        if (categoriesView.currentIndex == index) {
+                            return
+                        }
+                        categoriesView.currentIndex = index
+                        itemBrowser.pop(root)
 
-                    if (model.ChannelIdRole) {
-                        var channelsPage = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
-                        channelsPage.rootIndex = categoriesView.model.modelIndex(index)
-                        channelsPage.channelId = model.ChannelIdRole
-                    } else if (model.AssetIdRole) {
-                        var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
-                        assetPage.assetId = model.AssetIdRole
-                    }
-                }
-            }
-        }
-
-        header: Item {
-            width: parent.width
-            height: toolBar.height
-        }
-
-        footer: PlasmaComponents.ListItem {
-            id: loaderFooter
-            Connections {
-                target: categoriesView
-                onAtYEndChanged: {
-                    if (categoriesView.atYEnd) {
-                        loaderFooter.visible = categoriesView.model.canFetchMore(rootIndex)
-                    } else {
-                        loaderFooter.visible = false
+                        if (model.ChannelIdRole) {
+                            var channelsPage = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
+                            channelsPage.rootIndex = categoriesView.model.modelIndex(index)
+                            channelsPage.channelId = model.ChannelIdRole
+                        } else if (model.AssetIdRole) {
+                            var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
+                            assetPage.assetId = model.AssetIdRole
+                        }
                     }
                 }
             }
-            PlasmaComponents.BusyIndicator {
-                running: parent.visible
-                anchors.centerIn: parent
+
+            header: Item {
+                width: parent.width
+                height: toolBar.height
+            }
+
+            footer: PlasmaComponents.ListItem {
+                id: loaderFooter
+                Connections {
+                    target: categoriesView
+                    onAtYEndChanged: {
+                        if (categoriesView.atYEnd) {
+                            loaderFooter.visible = categoriesView.model.canFetchMore(rootIndex)
+                        } else {
+                            loaderFooter.visible = false
+                        }
+                    }
+                }
+                PlasmaComponents.BusyIndicator {
+                    running: parent.visible
+                    anchors.centerIn: parent
+                }
             }
         }
-    }
-    PlasmaComponents.ScrollBar {
-        id: scrollBar
-        z: 800
-        flickableItem: categoriesView
-        orientation: Qt.Vertical
     }
 
     PlasmaComponents.ToolButton {

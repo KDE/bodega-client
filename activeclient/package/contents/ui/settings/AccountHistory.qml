@@ -20,6 +20,7 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 import org.kde.qtextracomponents 0.1
 import "../components"
 
@@ -39,43 +40,40 @@ PlasmaComponents.Page {
         }
     }
 
-    ListView {
-        id: listView
-        anchors.centerIn: parent
-        clip: true
-        height: parent.height
-        width: parent.width
-        model: bodegaClient.historyModel
+    PlasmaExtras.ScrollArea {
+        anchors.fill: parent
+        ListView {
+            id: listView
+            anchors.fill: parent
 
-        delegate: PlasmaComponents.ListItem {
-            Column {
-                spacing: 0
-                PlasmaComponents.Label {
-                    text: model.DisplayRole
-                    wrapMode: Text.Wrap
-                    width: root.width
-                    visible: text.length > 0
-                }
+            model: bodegaClient.historyModel
 
-                PlasmaComponents.Label {
-                    text: model.DescriptionRole
-                    wrapMode: Text.Wrap
-                    width: root.width
-                    visible: text.length > 0
-                }
+            delegate: PlasmaComponents.ListItem {
+                Column {
+                    spacing: 0
+                    PlasmaComponents.Label {
+                        text: model.DisplayRole
+                        wrapMode: Text.Wrap
+                        width: root.width
+                        visible: text.length > 0
+                    }
 
-                PlasmaComponents.Label {
-                    text: model.DateRole
-                    visible: text.length > 0
+                    PlasmaComponents.Label {
+                        text: model.DescriptionRole
+                        wrapMode: Text.Wrap
+                        width: root.width
+                        visible: text.length > 0
+                    }
+
+                    PlasmaComponents.Label {
+                        text: model.DateRole
+                        visible: text.length > 0
+                    }
                 }
             }
         }
     }
 
-    PlasmaComponents.ScrollBar {
-        flickableItem: listView
-        orientation: Qt.Vertical
-    }
 
     Component.onCompleted: {
         bodegaClient.historyInUse(true);

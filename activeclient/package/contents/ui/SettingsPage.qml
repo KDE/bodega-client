@@ -20,6 +20,7 @@
 import QtQuick 1.1
 import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
+import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "./components"
 
 PlasmaComponents.Page {
@@ -27,156 +28,148 @@ PlasmaComponents.Page {
     width: 300
     height: 300
 
-    Flickable {
-        id: mainFlickable
+    PlasmaExtras.ScrollArea {
         anchors.fill: parent
-        contentHeight: height
-        contentWidth: contentItem.width
-        boundsBehavior: Flickable.StopAtBounds
-        Item {
-            id: contentItem
-            height: parent.height
-            width: Math.max(root.width, sideBar.width * 2)
-            NumberAnimation {
-                id: scrollAnimation
-                target: mainFlickable
-                properties: "contentX"
-                duration: 250
-                easing.type: Easing.InOutQuad
-            }
-
-            Image {
-                source: "image://appbackgrounds/standard"
-                fillMode: Image.Tile
-                id: sideBar
-                clip: true
-                anchors {
-                    top: parent.top
-                    bottom: parent.bottom
-                    left: parent.left
+        Flickable {
+            id: mainFlickable
+            anchors.fill: parent
+            contentHeight: height
+            contentWidth: contentItem.width
+            boundsBehavior: Flickable.StopAtBounds
+            Item {
+                id: contentItem
+                height: parent.height
+                width: Math.max(root.width, sideBar.width * 2)
+                NumberAnimation {
+                    id: scrollAnimation
+                    target: mainFlickable
+                    properties: "contentX"
+                    duration: 250
+                    easing.type: Easing.InOutQuad
                 }
-                width: Math.max(backButton.width + disconnectAccountButton.width + 30, root.width/Math.round(root.width/(theme.defaultFont.mSize.width*25)))
 
-                ListView {
-                    id: categoriesView
+                Image {
+                    source: "image://appbackgrounds/standard"
+                    fillMode: Image.Tile
+                    id: sideBar
                     clip: true
-                    currentIndex: 0
-
                     anchors {
                         top: parent.top
-                        bottom: toolBar.top
-                        left: parent.left
-                        right: parent.right
-                    }
-
-                    model: ListModel {
-                    }
-
-                    delegate: StoreListItem {
-                        checked: categoriesView.currentIndex == index
-                        onClicked: {
-                            if (categoriesView.currentIndex == index) {
-                                return
-                            }
-                            settingsStack.replace(Qt.createComponent("settings/" + component + ".qml"))
-                            categoriesView.currentIndex = index
-
-                            if (contentItem.width > mainFlickable.width) {
-                                scrollAnimation.to = sideBar.width
-                                scrollAnimation.running = true
-                            }
-                        }
-                    }
-
-                    Component.onCompleted: {
-                        model.append({DisplayRole: i18n("Personal data"), component: "PersonalData" })
-                        model.append({DisplayRole: i18n("Add Points"), component: "AddPoints" })
-                        model.append({DisplayRole: i18n("Payment Method"), component: "PaymentMethodStack" })
-                        model.append({DisplayRole: i18n("Account History"), component: "AccountHistory" })
-                    }
-                }
-
-                PlasmaComponents.ScrollBar {
-                    flickableItem: categoriesView
-                    orientation: Qt.Vertical
-                }
-
-                PlasmaComponents.ToolBar {
-                    id: toolBar
-                    anchors {
                         bottom: parent.bottom
                         left: parent.left
-                        right: parent.right
+                    }
+                    width: Math.max(backButton.width + disconnectAccountButton.width + 30, root.width/Math.round(root.width/(theme.defaultFont.mSize.width*25)))
+
+                    PlasmaExtras.ScrollArea {
+                        anchors.fill: parent
+                        ListView {
+                            id: categoriesView
+                            clip: true
+                            currentIndex: 0
+
+                            anchors.fill: parent
+                            model: ListModel {
+                            }
+
+                            delegate: StoreListItem {
+                                checked: categoriesView.currentIndex == index
+                                onClicked: {
+                                    if (categoriesView.currentIndex == index) {
+                                        return
+                                    }
+                                    settingsStack.replace(Qt.createComponent("settings/" + component + ".qml"))
+                                    categoriesView.currentIndex = index
+
+                                    if (contentItem.width > mainFlickable.width) {
+                                        scrollAnimation.to = sideBar.width
+                                        scrollAnimation.running = true
+                                    }
+                                }
+                            }
+
+                            Component.onCompleted: {
+                                model.append({DisplayRole: i18n("Personal data"), component: "PersonalData" })
+                                model.append({DisplayRole: i18n("Add Points"), component: "AddPoints" })
+                                model.append({DisplayRole: i18n("Payment Method"), component: "PaymentMethodStack" })
+                                model.append({DisplayRole: i18n("Account History"), component: "AccountHistory" })
+                            }
+                        }
                     }
 
-                    InlineConfirmationDialog {
-                        id: confirmDisconnect
-                        visualParent: disconnectAccountButton
-                        message: i18n("Are you sure you wish to disconnect your account from this device?")
-                        onAccepted: {
-                            bodegaClient.forgetCredentials()
-                            bodegaClient.session.signOut()
-                            mainStack.pop(mainStack.initialPage)
+
+                    PlasmaComponents.ToolBar {
+                        id: toolBar
+                        anchors {
+                            bottom: parent.bottom
+                            left: parent.left
+                            right: parent.right
                         }
-                    }
-                    tools: PlasmaComponents.ToolBarLayout {
-                        PlasmaComponents.ToolButton {
-                            id: backButton
-                            iconSource: "go-previous"
-                            width: theme.largeIconSize
-                            height: width
-                            flat: false
-                            onClicked: mainStack.pop()
+
+                        InlineConfirmationDialog {
+                            id: confirmDisconnect
+                            visualParent: disconnectAccountButton
+                            message: i18n("Are you sure you wish to disconnect your account from this device?")
+                            onAccepted: {
+                                bodegaClient.forgetCredentials()
+                                bodegaClient.session.signOut()
+                                mainStack.pop(mainStack.initialPage)
+                            }
                         }
-                        PlasmaComponents.Button {
-                            id: disconnectAccountButton
-                            text: i18n("Disconnect account")
-                            anchors.verticalCenter: parent.verticalCenter
-                            onClicked: {
-                                confirmDisconnect.open()
+                        tools: PlasmaComponents.ToolBarLayout {
+                            PlasmaComponents.ToolButton {
+                                id: backButton
+                                iconSource: "go-previous"
+                                width: theme.largeIconSize
+                                height: width
+                                flat: false
+                                onClicked: mainStack.pop()
+                            }
+                            PlasmaComponents.Button {
+                                id: disconnectAccountButton
+                                text: i18n("Disconnect account")
+                                anchors.verticalCenter: parent.verticalCenter
+                                onClicked: {
+                                    confirmDisconnect.open()
+                                }
                             }
                         }
                     }
                 }
-            }
-            Image {
-                z: 800
-                source: "image://appbackgrounds/shadow-right"
-                fillMode: Image.TileVertically
-                anchors {
-                    left: sideBar.right
-                    top: sideBar.top
-                    bottom: sideBar.bottom
-                }
-            }
-
-            Image {
-                source: "image://appbackgrounds/standard"
-                fillMode: Image.Tile
-
-                anchors {
-                    left: sideBar.right
-                    right: parent.right
-                    top: parent.top
-                    bottom: parent.bottom
-                }
-                PlasmaComponents.PageStack {
-                    id: settingsStack
+                Image {
+                    z: 800
+                    source: "image://appbackgrounds/shadow-right"
+                    fillMode: Image.TileVertically
                     anchors {
+                        left: sideBar.right
+                        top: sideBar.top
+                        bottom: sideBar.bottom
+                    }
+                }
+
+                Image {
+                    source: "image://appbackgrounds/standard"
+                    fillMode: Image.Tile
+
+                    anchors {
+                        left: sideBar.right
+                        right: parent.right
                         top: parent.top
-                        left: parent.left
-                        right: parent.right
                         bottom: parent.bottom
-                        margins: 8
                     }
-                    clip: true
-                    initialPage: Qt.createComponent("settings/PersonalData.qml")
+                    PlasmaComponents.PageStack {
+                        id: settingsStack
+                        anchors {
+                            top: parent.top
+                            left: parent.left
+                            right: parent.right
+                            bottom: parent.bottom
+                            margins: 8
+                        }
+                        clip: true
+                        initialPage: Qt.createComponent("settings/PersonalData.qml")
+                    }
                 }
             }
         }
-    }
-    PlasmaComponents.ScrollBar {
-        flickableItem: mainFlickable
-        orientation: Qt.Horizontal
     }
 }
