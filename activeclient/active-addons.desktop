@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Add Ons
+Name[cs]=Doplňky
 Name[da]=Tilføjelser
+Name[et]=Lisandid
 Name[nl]=Add-ons
 Name[pt]=Extensões
 Name[pt_BR]=Extensões
@@ -9,7 +11,9 @@ Name[sv]=Tillägg
 Name[uk]=Додатки
 Name[x-test]=xxAdd Onsxx
 GenericName=Add Ons
+GenericName[cs]=Doplňky
 GenericName[da]=Tilføjelser
+GenericName[et]=Lisandid
 GenericName[nl]=Add-ons
 GenericName[pt]=Extensões
 GenericName[pt_BR]=Extensões
@@ -19,6 +23,7 @@ GenericName[uk]=Додатки
 GenericName[x-test]=xxAdd Onsxx
 Comment=Content store for Plasma Active
 Comment[da]=Indholdsbutik til Plasma Active
+Comment[et]=Plasma Active'i sisutoodete pood
 Comment[nl]=Opslag voor inhoud van Plasma Active
 Comment[pt]=Armazém de conteúdos para o Plasma Active
 Comment[pt_BR]=Armazém de conteúdos para o Plasma Active
