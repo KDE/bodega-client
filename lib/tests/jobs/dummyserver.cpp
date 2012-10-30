@@ -1,5 +1,6 @@
 #include "dummyserver.h"
 
+#include <QDebug>
 #include <QFile>
 #include <QStringList>
 
