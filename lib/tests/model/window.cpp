@@ -57,7 +57,7 @@ void Window::signOn()
         m_session->setBaseUrl(QUrl(QLatin1String("http://127.0.0.1:3000/bodega/v1/json/")));
         m_session->setUserName(ui.usernameEdit->text());
         m_session->setPassword(ui.passwordEdit->text());
-        m_session->setDeviceId(ui.deviceIdEdit->text());
+        m_session->setStoreId(ui.storeIdEdit->text());
         connect(m_session->signOn(), SIGNAL(error(Bodega::NetworkJob*,Bodega::Error)),
                 this, SLOT(error(Bodega::NetworkJob*,Bodega::Error)));
     }

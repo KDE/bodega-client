@@ -13,7 +13,7 @@ public:
 public slots:
     void signOn(const QString &name,
                 const QString &password,
-                const QString &deviceId);
+                const QString &storeId);
     void listChannels();
 
 private slots:

@@ -15,12 +15,12 @@ Tester::Tester()
 
 void Tester::signOn(const QString &name,
                     const QString &password,
-                    const QString &deviceId)
+                    const QString &storeId)
 {
-    qDebug() << "signing on with" << name << password << deviceId;
+    qDebug() << "signing on with" << name << password << storeId;
     session->setUserName(name);
     session->setPassword(password);
-    session->setDeviceId(deviceId);
+    session->setStoreId(storeId);
 
     SignOnJob *job = session->signOn();
 

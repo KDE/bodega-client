@@ -91,7 +91,7 @@ void TestJobs::sessionBasics()
     QCOMPARE(session->isAuthenticated(), false);
     QCOMPARE(session->userName(), QString());
     QCOMPARE(session->password(), QString());
-    QCOMPARE(session->deviceId(), QString());
+    QCOMPARE(session->storeId(), QString());
     QCOMPARE(session->baseUrl(), QUrl());
 
     session->setUserName(QLatin1String("zack@kde.org"));
@@ -100,8 +100,8 @@ void TestJobs::sessionBasics()
     session->setPassword(QLatin1String("zack"));
     QCOMPARE(session->password(),
              QLatin1String("zack"));
-    session->setDeviceId(QLatin1String("2"));
-    QCOMPARE(session->deviceId(),
+    session->setStoreId(QLatin1String("2"));
+    QCOMPARE(session->storeId(),
              QLatin1String("2"));
     session->setBaseUrl(
         QUrl(QLatin1String("http://127.0.0.1:3000")));
@@ -122,11 +122,11 @@ void TestJobs::signOn_data()
         QTest::addColumn<QString>("url");
         QTest::addColumn<QString>("username");
         QTest::addColumn<QString>("password");
-        QTest::addColumn<QString>("deviceId");
+        QTest::addColumn<QString>("storeId");
         QTest::addColumn<bool>("finished");
         QTest::addColumn<bool>("failed");
         QTest::addColumn<QString>("errorId");
-        QTest::addColumn<QString>("deviceIdRet");
+        QTest::addColumn<QString>("storeIdRet");
         QTest::addColumn<int>("points");
         QTest::addColumn<QUrl>("tinyUrl");
         QTest::addColumn<QUrl>("smallUrl");
@@ -140,11 +140,11 @@ void TestJobs::signOn_data()
             QString query = settings->value(QString::fromLatin1("url")).toString();
             QString username = settings->value(QString::fromLatin1("arg1")).toString();
             QString password = settings->value(QString::fromLatin1("arg2")).toString();
-            QString deviceId = settings->value(QString::fromLatin1("arg3")).toString();
+            QString storeId = settings->value(QString::fromLatin1("arg3")).toString();
             bool finished = settings->value(QString::fromLatin1("finished")).toBool();
             bool failed = settings->value(QString::fromLatin1("failed")).toBool();
             QString error = settings->value(QString::fromLatin1("error")).toString();
-            QString deviceIdRet = settings->value(QString::fromLatin1("device")).toString();
+            QString storeIdRet = settings->value(QString::fromLatin1("device")).toString();
             int points = settings->value(QString::fromLatin1("points")).toInt();
             QUrl tinyUrl = settings->value(QString::fromLatin1("tinyUrl")).toUrl();
             QUrl smallUrl = settings->value(QString::fromLatin1("smallUrl")).toUrl();
@@ -159,8 +159,8 @@ void TestJobs::signOn_data()
                                 .arg(group);
             QTest::newRow(groupName.toLatin1().constData())
                 << query << username << password
-                << deviceId << finished << failed
-                << error << deviceIdRet << points
+                << storeId << finished << failed
+                << error << storeIdRet << points
                 << tinyUrl << smallUrl << mediumUrl
                 << largeUrl << hugeUrl << previewsUrl;
             settings->endGroup();
@@ -175,11 +175,11 @@ void TestJobs::signOn()
     QFETCH(QString,  url);
     QFETCH(QString,  username);
     QFETCH(QString,  password);
-    QFETCH(QString,  deviceId);
+    QFETCH(QString,  storeId);
     QFETCH(bool,  finished);
     QFETCH(bool,  failed);
     QFETCH(QString,  errorId);
-    QFETCH(QString,  deviceIdRet);
+    QFETCH(QString,  storeIdRet);
     QFETCH(int,  points);
     QFETCH(QUrl,  tinyUrl);
     QFETCH(QUrl,  smallUrl);
@@ -190,7 +190,7 @@ void TestJobs::signOn()
 
     session->setUserName(username);
     session->setPassword(password);
-    session->setDeviceId(deviceId);
+    session->setStoreId(storeId);
     SignOnJob *job = session->signOn();
 
     QVERIFY(job);
@@ -207,7 +207,7 @@ void TestJobs::signOn()
     QCOMPARE(job->isFinished(), finished);
     QCOMPARE(job->failed(), failed);
     QCOMPARE(job->error().errorId(), errorId);
-    QCOMPARE(job->deviceId(), deviceIdRet);
+    QCOMPARE(job->storeId(), storeIdRet);
     QCOMPARE(job->points(), points);
     QCOMPARE(job->imageUrls()[ImageTiny],
              tinyUrl);

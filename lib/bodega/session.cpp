@@ -135,7 +135,7 @@ SignOnJob *Session::signOn()
     url.setEncodedPath(d->jsonPath("/auth"));
     url.addQueryItem(QLatin1String("auth_user"), d->userName);
     url.addQueryItem(QLatin1String("auth_password"), d->password);
-    url.addQueryItem(QLatin1String("auth_device"), d->deviceId);
+    url.addQueryItem(QLatin1String("auth_device"), d->storeId);
 
     //qDebug()<<"url is " <<url;
 
@@ -180,16 +180,16 @@ void Session::setPassword(const QString &password)
     }
 }
 
-QString Session::deviceId() const
+QString Session::storeId() const
 {
-    return d->deviceId;
+    return d->storeId;
 }
 
-void Bodega::Session::setDeviceId(const QString &device)
+void Bodega::Session::setStoreId(const QString &id)
 {
-    if (d->deviceId != device) {
-        d->deviceId = device;
-        emit deviceChanged();
+    if (d->storeId != id) {
+        d->storeId = id;
+        emit storeIdChanged();
     }
 }
 

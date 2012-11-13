@@ -43,6 +43,7 @@ public:
         }
         return str.toUtf8();
     }
+
     QByteArray jsonPath(const QString &str, bool includeBasePath=true) const
     {
         return jsonPath(str.toUtf8().constData(), includeBasePath);
@@ -66,7 +67,7 @@ public:
     QUrl baseUrl;
     QString userName;
     QString password;
-    QString deviceId;
+    QString storeId;
     bool authenticated;
     int points;
     QMap<ImageUrl, QUrl> imageUrls;

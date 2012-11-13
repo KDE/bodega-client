@@ -37,7 +37,7 @@ namespace Bodega {
         Q_PROPERTY(bool finished READ isFinished NOTIFY finishedChanged)
         Q_PROPERTY(bool failed READ failed NOTIFY failedChanged)
         Q_PROPERTY(bool authSuccess READ authSuccess NOTIFY authSuccessChanged)
-        Q_PROPERTY(QString deviceId READ deviceId NOTIFY deviceIdChanged)
+        Q_PROPERTY(QString storeId READ storeId NOTIFY storeIdChanged)
         Q_PROPERTY(int points READ points NOTIFY pointsChanged)
         Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
         Q_PROPERTY(QVariantMap parsedJson READ parsedJson NOTIFY parsedJsonChanged)
@@ -57,7 +57,7 @@ namespace Bodega {
 
         bool authSuccess() const;
 
-        QString deviceId() const;
+        QString storeId() const;
 
         int points() const;
 
@@ -79,7 +79,7 @@ namespace Bodega {
         void finishedChanged(bool finished);
         void failedChanged(bool failed);
         void authSuccessChanged(bool authSuccess);
-        void deviceIdChanged(const QString &deviceId);
+        void storeIdChanged(const QString &storeId);
         void pointsChanged(int points);
 
     protected:

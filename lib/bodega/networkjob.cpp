@@ -46,7 +46,7 @@ public:
     Error error;
     bool authSuccess;
     bool expectingJson;
-    QString deviceId;
+    QString storeId;
     int points;
     QTemporaryFile *file;
     qreal progress;
@@ -219,14 +219,14 @@ void NetworkJob::parseCommon(const QVariantMap &result)
     d->points = result[QLatin1String("points")].toInt();
 
     QVariant var = result[QLatin1String("device")];
-    // Otherwise we'll make d->deviceId == "0" because
+    // Otherwise we'll make d->storeId == "0" because
     //  QVariant(qulonglong, 0).toString == "0" not a null string
     if (var.toBool()) {
-        d->deviceId = result[QLatin1String("device")].toString();
+        d->storeId = result[QLatin1String("device")].toString();
     } else {
-        d->deviceId = QString();
+        d->storeId = QString();
     }
-    emit deviceIdChanged(d->deviceId);
+    emit storeIdChanged(d->storeId);
     emit pointsChanged(d->points);
     emit authSuccessChanged(d->authSuccess);
 
@@ -238,9 +238,9 @@ bool NetworkJob::authSuccess() const
     return d->authSuccess;
 }
 
-QString NetworkJob::deviceId() const
+QString NetworkJob::storeId() const
 {
-    return d->deviceId;
+    return d->storeId;
 }
 
 int NetworkJob::points() const

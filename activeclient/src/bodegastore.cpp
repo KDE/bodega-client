@@ -300,7 +300,7 @@ BodegaStore::BodegaStore()
     m_session = new Session(this);
     KConfigGroup config(KGlobal::config(), "AddOns");
     m_session->setBaseUrl(config.readEntry("URL", "http://addons.makeplaylive.com:3000"));
-    m_session->setDeviceId(config.readEntry("Device", "VIVALDI-1"));
+    m_session->setStoreId(config.readEntry("Store", "VIVALDI-1"));
 
 
     m_channelsModel = new Bodega::Model(this);

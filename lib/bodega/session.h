@@ -57,7 +57,7 @@ namespace Bodega {
         Q_PROPERTY(bool authenticated READ isAuthenticated NOTIFY authenticated)
         Q_PROPERTY(QString userName READ userName WRITE setUserName NOTIFY userNameChanged)
         Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
-        Q_PROPERTY(QString deviceId READ deviceId WRITE setDeviceId NOTIFY deviceChanged)
+        Q_PROPERTY(QString storeId READ storeId WRITE setStoreId NOTIFY storeIdChanged)
 
         /**
          * Model containing all the install jobs for each asset done during this session
@@ -82,8 +82,8 @@ namespace Bodega {
         QString password() const;
         void setPassword(const QString &password);
 
-        QString deviceId() const;
-        void setDeviceId(const QString &device);
+        QString storeId() const;
+        void setStoreId(const QString &id);
 
         QMap<ImageUrl, QUrl> imageUrls() const;
         QMap<ImageUrl, QUrl> urlsForImage(const QString &name) const;
@@ -160,7 +160,7 @@ namespace Bodega {
         void pointsChanged(int points);
         void userNameChanged();
         void passwordChanged();
-        void deviceChanged();
+        void storeIdChanged();
 
     private:
         class Private;
