@@ -110,7 +110,7 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
     if (!plugin.isEmpty()) {
         QList<QByteArray> paths = qgetenv("QT_PLUGIN_PATH").split(':');
         paths.removeAll(QByteArray());
-        paths.append(QLibraryInfo::location(QLibraryInfo::PluginsPath));
+        paths.append(QLibraryInfo::location(QLibraryInfo::PluginsPath).toLocal8Bit());
 
         foreach (const QByteArray& path, paths) {
             QDir pluginsDir(QString::fromLatin1(path + "/bodegaassethandlers/"));
