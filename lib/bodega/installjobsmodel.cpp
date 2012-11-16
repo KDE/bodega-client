@@ -160,41 +160,6 @@ Qt::ItemFlags InstallJobsModel::flags(const QModelIndex &index) const
     }
 }
 
-bool InstallJobsModel::hasChildren(const QModelIndex &parent) const
-{
-    Q_UNUSED(parent)
-    return false;
-}
-
-QVariant InstallJobsModel::headerData(int section, Qt::Orientation orientation,
-                           int role) const
-{
-    return QVariant();
-}
-
-QModelIndex InstallJobsModel::index(int row, int column, const QModelIndex &parent) const
-{
-    if (column > 0) {
-        return QModelIndex();
-    }
-
-    if (row < 0 || row >= d->items.count()) {
-        return QModelIndex();
-    }
-
-    return createIndex(row, column);
-}
-
-QMap<int, QVariant> InstallJobsModel::itemData(const QModelIndex &index) const
-{
-    return QMap<int, QVariant>();
-}
-
-QModelIndex InstallJobsModel::parent(const QModelIndex &index) const
-{
-    return QModelIndex();
-}
-
 int InstallJobsModel::rowCount(const QModelIndex &parent) const
 {
     return d->items.size();
