@@ -108,21 +108,29 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
     AssetHandler * handler = 0;
 
     if (!plugin.isEmpty()) {
-        QDir pluginsDir(QLibraryInfo::location(QLibraryInfo::PluginsPath) + QLatin1String("/bodegaassethandlers/"));
-        //FIXME: the .so is non-portable. need some ifdef's here if this is to work on non-UNIX.
-        //remind me why QPluginLoader doesn't do this when QLibrary does?
-        const QString path = pluginsDir.absoluteFilePath(QLatin1String("lib") + plugin + QLatin1String("handlerplugin.so"));
-        QPluginLoader pluginLoader(path);
+        QList<QByteArray> paths = qgetenv("QT_PLUGIN_PATH").split(':');
+        paths.removeAll(QByteArray());
+        paths.append(QLibraryInfo::location(QLibraryInfo::PluginsPath));
 
-        QObject *plugin = pluginLoader.instance();
-        if (plugin) {
-            handler = qobject_cast<Bodega::AssetHandler *>(plugin);
-        } else {
-            qWarning() << "Plugin load failed" << pluginLoader.errorString() << path;
-        }
+        foreach (const QByteArray& path, paths) {
+            QDir pluginsDir(QString::fromLatin1(path + "/bodegaassethandlers/"));
+            //FIXME: the .so is non-portable. need some ifdef's here if this is to work on non-UNIX.
+            //remind me why QPluginLoader doesn't do this when QLibrary does?
+            const QString candidatePath = pluginsDir.absoluteFilePath(QLatin1String("lib") + plugin + QLatin1String("handlerplugin.so"));
+            QPluginLoader pluginLoader(candidatePath);
 
-        if (!handler) {
-            delete plugin;
+            QObject *plugin = pluginLoader.instance();
+            if (plugin) {
+                handler = qobject_cast<Bodega::AssetHandler *>(plugin);
+            } else {
+                qWarning() << "Plugin load failed" << pluginLoader.errorString() << candidatePath;
+            }
+
+            if (handler) {
+                break;
+            } else {
+                delete plugin;
+            }
         }
     }
 
