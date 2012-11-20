@@ -34,16 +34,17 @@ namespace Bodega
         Q_PROPERTY(bool ready READ isReady NOTIFY ready)
 
         public:
-            AssetHandler(QObject *parent = 0);
+            static AssetHandler *create(const QString &type,
+                                        AssetOperations *parent);
+
             ~AssetHandler();
 
             bool isReady() const;
             void setReady(bool ready);
 
-            void setOperations(AssetOperations *operations);
             AssetOperations *operations() const;
 
-            //anyhting accessing operations() will have to be here
+            //anything accessing operations() will have to be here
             //operations() doesn't exist yet in the constructor
             virtual void init();
 
@@ -56,12 +57,12 @@ namespace Bodega
 
             virtual void launch();
 
-            static AssetHandler *create(const QString &type,
-                                        AssetOperations *parent);
-
         Q_SIGNALS:
             void ready();
             void installedChanged();
+
+        protected:
+            AssetHandler(QObject *parent = 0);
 
         private:
             class Private;

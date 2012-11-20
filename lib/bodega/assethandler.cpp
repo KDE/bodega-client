@@ -59,11 +59,6 @@ void AssetHandler::init()
     //Base implementation does nothing
 }
 
-void AssetHandler::setOperations(AssetOperations *operations)
-{
-    d->ops = operations;
-}
-
 AssetOperations *AssetHandler::operations() const
 {
     return d->ops;
@@ -139,7 +134,7 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
     }
 
     handler->setParent(parent);
-    handler->setOperations(parent);
+    handler->d->ops = parent;
     handler->init();
     return handler;
 }
