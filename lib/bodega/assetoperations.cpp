@@ -69,16 +69,11 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
         handler = 0;
 
         //FIXME: may ever have more than one mimetype?
-
         QHash<QString, QString> tags = assetJob->tags();
-        QHashIterator<QString, QString> it(tags);
-        while (it.hasNext()) {
-            it.next();
-            if (it.key() == QLatin1String("mimetype")) {
-                mimetype = it.value();
-                handler = AssetHandler::create(mimetype, q);
-                break;
-            }
+        const QString mimeTag(QLatin1String("mimetype"));
+        mimetype = tags.value(mimeTag);
+        if (!mimetype.isEmpty()) {
+            handler = AssetHandler::create(mimetype, q);
         }
     }
 
