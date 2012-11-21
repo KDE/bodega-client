@@ -30,6 +30,7 @@ set (bodega_HEADERS
 set (bodega_SRCS
      assetjob.cpp
      assethandler.cpp
+     assethandlerfactory.cpp
      assetoperations.cpp
      ballotaddassetjob.cpp
      ballotlistassetsjob.cpp

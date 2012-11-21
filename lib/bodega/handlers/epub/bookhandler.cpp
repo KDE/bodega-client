@@ -27,6 +27,7 @@
 #include <QtGui/QDesktopServices>
 
 #include "bookinstalljob.h"
+#include <assethandlerfactory.h>
 
 using namespace Bodega;
 
@@ -88,6 +89,12 @@ void BookHandler::launch()
     QDesktopServices::openUrl(QUrl(QLatin1String("file://") + filePath(), QUrl::TolerantMode));
 }
 
+class BookHandlerFactory : public Bodega::AssetHandlerFactory
+{
+public:
+    virtual AssetHandler* createHandler() { return new BookHandler; }
+};
+
 #include "bookhandler.moc"
-Q_EXPORT_PLUGIN2(epubhandler, Bodega::BookHandler);
+Q_EXPORT_PLUGIN2(epubhandler, BookHandlerFactory);
 

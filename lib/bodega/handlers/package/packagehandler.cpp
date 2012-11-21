@@ -20,6 +20,7 @@
 
 #include "packagehandler.h"
 #include "packageinstalljob.h"
+#include <assethandlerfactory.h>
 
 #include <QDebug>
 #include <QDir>
@@ -184,5 +185,11 @@ void PackageHandler::launch()
     //This plugin doesn't support launch
 }
 
+class PackageHandlerFactory : public Bodega::AssetHandlerFactory
+{
+public:
+    virtual AssetHandler* createHandler() { return new PackageHandler; }
+};
+
 #include "packagehandler.moc"
-Q_EXPORT_PLUGIN2(packagehandler, Bodega::PackageHandler);
+Q_EXPORT_PLUGIN2(packagehandler, PackageHandlerFactory);

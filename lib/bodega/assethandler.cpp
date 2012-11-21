@@ -26,6 +26,7 @@
 #include <QPluginLoader>
 
 #include "installjob.h"
+#include "assethandlerfactory.h"
 
 namespace Bodega
 {
@@ -112,19 +113,22 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
             //FIXME: the .so is non-portable. need some ifdef's here if this is to work on non-UNIX.
             //remind me why QPluginLoader doesn't do this when QLibrary does?
             const QString candidatePath = pluginsDir.absoluteFilePath(QLatin1String("lib") + plugin + QLatin1String("handlerplugin.so"));
-            QPluginLoader pluginLoader(candidatePath);
+            if(QFile::exists(candidatePath)) {
+                QPluginLoader pluginLoader(candidatePath);
 
-            QObject *plugin = pluginLoader.instance();
-            if (plugin) {
-                handler = qobject_cast<Bodega::AssetHandler *>(plugin);
-            } else {
-                qWarning() << "Plugin load failed" << pluginLoader.errorString() << candidatePath;
-            }
-
-            if (handler) {
-                break;
-            } else {
-                delete plugin;
+                QObject *plugin = pluginLoader.instance();
+                if (plugin) {
+                    Bodega::AssetHandlerFactory *factory = qobject_cast<Bodega::AssetHandlerFactory *>(plugin);
+                    if (factory) {
+                        handler = factory->createHandler();
+                        Q_ASSERT(handler);
+                    } else {
+                        qWarning() << "Could not instanciate the handler using" << candidatePath;
+                    }
+                    break;
+                } else {
+                    qWarning() << "Plugin load failed" << pluginLoader.errorString() << candidatePath;
+                }
             }
         }
     }

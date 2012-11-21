@@ -20,6 +20,7 @@
 
 #include "wallpaperhandler.h"
 #include "wallpaperinstalljob.h"
+#include <assethandlerfactory.h>
 
 #include <QDebug>
 #include <QDir>
@@ -91,5 +92,11 @@ void WallpaperHandler::launch()
     //This plugin doesn't support launch
 }
 
+class WallpaperHandlerFactory : public Bodega::AssetHandlerFactory
+{
+public:
+    virtual AssetHandler* createHandler() { return new WallpaperHandler; }
+};
+
 #include "wallpaperhandler.moc"
-Q_EXPORT_PLUGIN2(wallpaperhandler, Bodega::WallpaperHandler);
+Q_EXPORT_PLUGIN2(wallpaperhandler, WallpaperHandlerFactory);

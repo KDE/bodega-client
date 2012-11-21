@@ -71,10 +71,5 @@ namespace Bodega
 
 } // namespace Bodega
 
-QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(Bodega::AssetHandler,
-                    "com.ct.AssetHandler/1.0");
-QT_END_NAMESPACE
-
 #endif
 

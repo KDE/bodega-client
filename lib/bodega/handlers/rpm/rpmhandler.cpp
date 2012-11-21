@@ -30,6 +30,7 @@
 
 #include "rpminstalljob.h"
 #include "packageidinstalljob.h"
+#include <assethandlerfactory.h>
 
 using namespace Bodega;
 
@@ -170,6 +171,12 @@ void RpmHandler::gotFiles(const PackageKit::Package &package, const QStringList 
     }
 }
 
+class RpmHandlerFactory : public Bodega::AssetHandlerFactory
+{
+public:
+    virtual AssetHandler* createHandler() { return new RpmHandler; }
+};
+
 #include "rpmhandler.moc"
-Q_EXPORT_PLUGIN2(rpmhandler, Bodega::RpmHandler);
+Q_EXPORT_PLUGIN2(rpmhandler, RpmHandlerFactory);
 
