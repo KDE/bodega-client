@@ -33,6 +33,12 @@ namespace Bodega {
     public:
         WallpaperUninstallJob(Session *parent, WallpaperHandler *handler);
         ~WallpaperUninstallJob();
+
+    public slots:
+        void commit();
+
+    private:
+        WallpaperHandler* m_handler;
     };
 }
 

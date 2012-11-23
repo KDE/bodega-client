@@ -32,8 +32,18 @@ using namespace Bodega;
 
 WallpaperUninstallJob::WallpaperUninstallJob(Session *parent, WallpaperHandler *handler)
     : UninstallJob(parent)
+    , m_handler(handler)
 {
-    QString packageName = handler->assetLocation(false);
+    QMetaObject::invokeMethod(this, "commit", Qt::QueuedConnection);
+}
+
+WallpaperUninstallJob::~WallpaperUninstallJob()
+{
+}
+
+void WallpaperUninstallJob::commit()
+{
+    QString packageName = m_handler->assetLocation(false);
     Plasma::PackageStructure installer(0, QLatin1String("Plasma/Wallpaper"));
     const bool success = installer.uninstallPackage(packageName, KGlobal::dirs()->findDirs("wallpaper", QString()).first());
 
@@ -44,10 +54,6 @@ WallpaperUninstallJob::WallpaperUninstallJob(Session *parent, WallpaperHandler *
                        tr("Impossible to uninstall the wallpaper package.")));
     }
     setFinished();
-}
-
-WallpaperUninstallJob::~WallpaperUninstallJob()
-{
 }
 
 #include "wallpaperuninstalljob.moc"
