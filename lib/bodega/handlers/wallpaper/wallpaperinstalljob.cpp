@@ -45,14 +45,18 @@ void WallpaperInstallJob::downloadFinished(const QString &localFile)
     package.setPath(localFile);
     const QString serviceType = package.metadata().serviceType();
     const QString root = KStandardDirs::locateLocal("wallpaper", QString());
+    bool ret=false;
     if (package.metadata().serviceType() == QLatin1String("Plasma/Wallpaper")) {
         Plasma::PackageStructure::Ptr installer = Plasma::Wallpaper::packageStructure();
-        installer->installPackage(localFile, root);
+        ret = installer->installPackage(localFile, root);
     } else {
         Plasma::PackageStructure installer;
-        installer.installPackage(localFile, root);
+        ret = installer.installPackage(localFile, root);
     }
 
+    if(!ret) {
+        qWarning() << "couldn't install the wallpaper" << localFile;
+    }
     setFinished();
 }
 
