@@ -118,7 +118,7 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
 
                 QObject *plugin = pluginLoader.instance();
                 if (plugin) {
-                    Bodega::AssetHandlerFactory *factory = qobject_cast<Bodega::AssetHandlerFactory *>(plugin);
+                    Bodega::AssetHandlerFactory *factory = dynamic_cast<Bodega::AssetHandlerFactory *>(plugin);
                     if (factory) {
                         handler = factory->createHandler();
                         Q_ASSERT(handler);
