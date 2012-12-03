@@ -326,9 +326,15 @@ QMap<ImageUrl, QUrl> Session::urlsForImage(const QString &name) const
     QMap<ImageUrl, QUrl> ret;
     for (itr = d->imageUrls.constBegin(); itr != d->imageUrls.constEnd();
          ++itr) {
-        QString path = QString::fromLatin1("%1/%2")
-                       .arg(itr.value().toString())
-                       .arg(name);
+        if (itr.key() == ImagePreviews) {
+            // we don't care about the previews images, as there may be
+            // multiple of them; they are fetched via AssetJob's previews()
+            continue;
+        }
+
+        const QString path = QString::fromLatin1("%1/%2")
+                             .arg(itr.value().toString())
+                             .arg(name);
 
         ret.insert(itr.key(), QUrl(path));
     }
