@@ -18,6 +18,7 @@ Name[sk]=primavera
 Name[sv]=primavera
 Name[uk]=primavera
 Name[x-test]=xxprimaveraxx
+Name[zh_TW]=primavera
 Icon=preferences-desktop-default-applications
 Exec=primavera -graphicssystem raster %u
 Terminal=false
