@@ -398,7 +398,7 @@ QVariantHash BodegaStore::retrieveCredentials() const
             hash["password"] = map["password"];
             return hash;
         } else {
-            kWarning() << "Unable to write credentials to wallet";
+            kWarning() << "Unable to read credentials from wallet";
         }
     } else {
         kWarning() << "Unable to open wallet";
