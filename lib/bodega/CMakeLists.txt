@@ -1,6 +1,4 @@
 
-find_package(QJSON)
-
 set (bodega_HEADERS
      assetjob.h
      assetoperations.h
