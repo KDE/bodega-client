@@ -35,7 +35,7 @@ if (NepomukCore_FOUND)
 
 
     target_link_libraries(epubhandlerplugin ${NEPOMUK_CORE_LIBRARY})
-endif (NEPOMUKCORE_FOUND)
+endif (NepomukCore_FOUND)
 
 INSTALL(TARGETS epubhandlerplugin
    DESTINATION ${QT_PLUGINS_DIR}/bodegaassethandlers/
