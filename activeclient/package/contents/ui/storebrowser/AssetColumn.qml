@@ -65,8 +65,8 @@ BrowserColumn {
 
         Flickable {
             id: mainFlickable
-            interactive: height < contentHeight
             anchors.fill: parent
+            flickableDirection: Flickable.VerticalFlick
 
             contentWidth: width
             contentHeight: mainColumn.height
