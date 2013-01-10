@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Add Ons
+Name[bs]=Dodaci
 Name[cs]=Doplňky
 Name[da]=Tilføjelser
 Name[el]=Συστατικά
@@ -18,6 +19,7 @@ Name[uk]=Додатки
 Name[x-test]=xxAdd Onsxx
 Name[zh_TW]=擴充功能
 GenericName=Add Ons
+GenericName[bs]=Dodaci
 GenericName[cs]=Doplňky
 GenericName[da]=Tilføjelser
 GenericName[el]=Συστατικά
@@ -39,6 +41,7 @@ GenericName[uk]=Додатки
 GenericName[x-test]=xxAdd Onsxx
 GenericName[zh_TW]=擴充功能
 Comment=Content store for Plasma Active
+Comment[bs]=Smještaj za Plasma Active
 Comment[da]=Indholdsbutik til Plasma Active
 Comment[el]=Αποθήκη περιεχομένου για το Plasma Active
 Comment[es]=Tienda de contenidos para Plasma Active
