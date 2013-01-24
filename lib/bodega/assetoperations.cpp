@@ -50,6 +50,7 @@ public:
     AssetOperations *q;
     AssetHandler *handler;
     AssetInfo assetInfo;
+    ChangeLog changeLog;
     Tags assetTags;
     QString mimetype;
     bool wasInstalled;
@@ -64,6 +65,7 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
     if (!job->failed()) {
         assetInfo = assetJob->info();
         assetTags = assetJob->tags();
+        changeLog = assetJob->changeLog();
 
         delete handler;
         handler = 0;
@@ -113,13 +115,18 @@ AssetOperations::AssetOperations(const QString &assetId, Session *session)
     : QObject(session),
       d(new AssetOperations::Private(this))
 {
-    AssetJob *aj = session->asset(assetId);
+    AssetJob *aj = session->asset(assetId, AssetJob::ShowChangeLog);
     QObject::connect(aj, SIGNAL(jobFinished(Bodega::NetworkJob*)),
                      this, SLOT(assetDownloadComplete(Bodega::NetworkJob*)));
 }
 
 AssetOperations::~AssetOperations()
 {
+}
+
+const ChangeLog &AssetOperations::changeLog() const
+{
+    return d->changeLog;
 }
 
 const AssetInfo &AssetOperations::assetInfo() const
