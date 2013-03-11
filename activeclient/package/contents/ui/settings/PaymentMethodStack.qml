@@ -54,10 +54,14 @@ PlasmaComponents.PageStack {
 
     function jobFinished()
     {
+        busyIndicator.running = false;
+        busyIndicator.visible = false;
+
         if (job.failed) {
-            paymentMethodStack.push(Qt.createComponent("PaymentMethodEdit.qml"))
-        } else {
+            paymentMethodStack.push(Qt.createComponent("PaymentMethodEdit.qml"));
+        } else if (job.parsedJson.card) {
             var card = job.parsedJson.card;
+            if (card.name) name = card.name;
             if (card.type) cardType = card.type;
             if (card.last4) last4 = card.last4;
             if (card.address_country) country = card.address_country;
@@ -65,11 +69,27 @@ PlasmaComponents.PageStack {
             if (card.address_line2) address2 = card.address_line2;
             if (card.address_state) state = card.address_state;
             if (card.address_zip) zip = card.address_zip;
-            paymentMethodStack.push(Qt.createComponent("PaymentMethodView.qml"))
+            paymentMethodStack.push(Qt.createComponent("PaymentMethodView.qml"));
+        } else {
+            name = '';
+            cardType = '';
+            last4 = '';
+            country = '';
+            address1 = '';
+            address2 = '';
+            state = '';
+            zip = '';
+            paymentMethodStack.push(Qt.createComponent("PaymentMethodEdit.qml"));
         }
+    }
 
-        busyIndicator.running = false;
-        busyIndicator.visible = false;
+    function deletePaymentMethod()
+    {
+        paymentMethodStack.pop();
+        busyIndicator.running = true;
+        busyIndicator.visible = true;
+        job = bodegaClient.session.deletePaymentMethod();
+        job.jobFinished.connect(jobFinished);
     }
 
     Component.onCompleted: loadData()
