@@ -120,6 +120,7 @@ namespace Bodega {
         Bodega::NetworkJob *purchaseAsset(const QString &assetId);
 
         Bodega::NetworkJob *paymentMethod();
+        Bodega::NetworkJob *deletePaymentMethod();
         Bodega::NetworkJob *setPaymentMethod(const QString &number, const QString &expiryMonth,
                                              const QString &expiryYear, const QString &cvc, const QString &name,
                                              const QString &address1 = QString(), const QString &address2 = QString(),
