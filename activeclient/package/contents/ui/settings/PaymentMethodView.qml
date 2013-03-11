@@ -28,16 +28,16 @@ PlasmaComponents.Page {
     id: root
 
     property variant job
-    
+
     Column {
         id: mainColumn
         anchors.centerIn: parent
-      
+
         Grid {
             id: mainGrid
             spacing: 4
             columns: 2
-            rows: 12
+            rows: 13
 
             PlasmaComponents.Label {
                 text: i18n("Card type:")
@@ -51,8 +51,19 @@ PlasmaComponents.Page {
                 width: Math.max(paintedWidth, 1)
                 text: paymentMethodStack.cardType
             }
-            
-            
+
+            PlasmaComponents.Label {
+                text: i18n("Name:")
+                anchors {
+                    right: nameLabel.left
+                    rightMargin: theme.defaultFont.mSize.width
+                }
+            }
+            PlasmaComponents.Label {
+                id: nameLabel
+                text: paymentMethodStack.name
+            }
+
             PlasmaComponents.Label {
                 text: i18n("Number:")
                 anchors {
@@ -65,7 +76,6 @@ PlasmaComponents.Page {
                 text: "**** **** **** " + paymentMethodStack.last4
             }
 
-            
             PlasmaComponents.Label {
                 text: i18n("Billing address:")
                 anchors {
