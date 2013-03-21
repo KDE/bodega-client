@@ -76,7 +76,46 @@ PlasmaComponents.Page {
         PlasmaComponents.TextField {
             id: emailField
             width: nameField.width
+            Keys.onTabPressed: email2Field.forceActiveFocus()
+        }
+        PlasmaComponents.Label {
+            text: i18n("Confirm email:")
+            anchors {
+                right: email2Field.left
+                rightMargin: root.spacing
+            }
+        }
+        PlasmaComponents.TextField {
+            id: email2Field
+            width: nameField.width
             Keys.onTabPressed: creation ? passwordField.forceActiveFocus() : saveInfoButton.forceActiveFocus()
+            Row {
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.right
+                    leftMargin: 4
+                }
+                spacing: 4
+                property bool check: emailField.text == email2Field.text && emailField.text.indexOf("@") !== -1 && emailField.text.indexOf("@") !== emailField.text.length-1
+                    visible: emailField.text != ""
+
+                PlasmaCore.IconItem {
+                    width: theme.smallMediumIconSize
+                    height: width
+                    source: parent.check ? "dialog-ok" : "dialog-cancel"
+                }
+                PlasmaComponents.Label {
+                    text: {
+                        if (parent.check) {
+                            return ""
+                        } else if (emailField.text != email2Field.text) {
+                            return i18n("Email mismatch")
+                        } else {
+                            return i18n("Invalid email address")
+                        }
+                    }
+                }
+            }
         }
 
         //just a placeholder
@@ -166,13 +205,17 @@ PlasmaComponents.Page {
             width: nameField.width
             Keys.onTabPressed: savePasswordButton.forceActiveFocus()
             Row {
-                anchors.left: parent.right
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.right
+                    leftMargin: 4
+                }
                 spacing: root.spacing
                 opacity: passwordField.text.length > 0 ? 1 : 0
-                QIconItem {
+                PlasmaCore.IconItem {
                     width: theme.smallMediumIconSize
                     height: width
-                    icon: passwordCheck.opacity == 1 ? "dialog-cancel" : "dialog-ok"
+                    source: passwordCheck.opacity == 1 ? "dialog-cancel" : "dialog-ok"
                 }
                 PlasmaComponents.Label {
                     opacity: passwordField.text.length > 0 && (passwordField.text.length < 8 || passwordField.text != password2Field.text) ? 1 : 0
