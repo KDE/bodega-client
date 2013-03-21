@@ -33,8 +33,6 @@ PlasmaComponents.Page {
 
     Image {
         id: logo
-        width: 556
-        height: 50
         visible: titleShown
         source: viewerPackage.filePath("images", "makeplaylive.png")
         anchors {
