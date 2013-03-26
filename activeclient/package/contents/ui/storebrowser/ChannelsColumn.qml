@@ -31,12 +31,15 @@ BrowserColumn {
     property variant rootIndex
     property string channelId
 
+    anchors.leftMargin: 3
+
     VisualDataModel {
         id: channelsModel
         model: bodegaClient.channelsModel
         rootIndex: root.rootIndex
         delegate: delegateComponent
     }
+
     VisualDataModel {
         id: searchModel
         model: bodegaClient.searchModel
@@ -66,7 +69,7 @@ BrowserColumn {
 
     PlasmaExtras.ScrollArea {
         anchors.fill: parent
-        
+
         ListView {
             id: categoriesView
             currentIndex: -1

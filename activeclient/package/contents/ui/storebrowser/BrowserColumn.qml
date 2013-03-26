@@ -25,7 +25,6 @@ import org.kde.qtextracomponents 0.1
 
 
 PlasmaComponents.Page {
-    
     Image {
         id: root
         source: "image://appbackgrounds/standard"

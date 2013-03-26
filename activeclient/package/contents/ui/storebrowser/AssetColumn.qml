@@ -27,6 +27,8 @@ import "../components"
 BrowserColumn {
     id: root
 
+    anchors.leftMargin: 3
+
     property variant assetOperations
     property int assetId: 0
 
