@@ -35,7 +35,7 @@ PlasmaComponents.Page {
         id: grid
         anchors.centerIn: parent
 
-        rows: 8
+        rows: 9
         columns: 2
         spacing: root.spacing
 
