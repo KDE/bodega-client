@@ -288,7 +288,7 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::InstallJob>();
     qmlRegisterType<Bodega::InstallJobsModel>();
     qmlRegisterType<Bodega::UninstallJob>();
-    qmlRegisterUncreatableType<ErrorCode>("com.coherenttheory.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
+    qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
 
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ChannelInfo>(declarativeView()->scriptEngine(), qScriptValueFromChannelInfo, channelInfoFromQScriptValue, QScriptValue());

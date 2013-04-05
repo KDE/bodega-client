@@ -128,7 +128,7 @@ Image {
 
     MobileComponents.Package {
         id: viewerPackage
-        name: "com.coherenttheory.addonsapp"
+        name: "com.makeplaylive.addonsapp"
     }
 
     PlasmaComponents.BusyIndicator {
