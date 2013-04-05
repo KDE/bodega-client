@@ -273,7 +273,7 @@ BodegaStore::BodegaStore()
     if (!declarativeView()->engine()->imageProvider("appbackgrounds")) {
         declarativeView()->engine()->addImageProvider(QLatin1String("appbackgrounds"), new AppBackgroundProvider);
     }
-    declarativeView()->setPackageName("com.coherenttheory.addonsapp");
+    declarativeView()->setPackageName("com.makeplaylive.addonsapp");
 
     qmlRegisterType<Bodega::ParticipantInfoJob>();
     qmlRegisterType<Bodega::AssetJob>();
