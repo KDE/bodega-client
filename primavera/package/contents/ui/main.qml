@@ -36,7 +36,7 @@ Image {
 
     MobileComponents.Package {
         id: files
-        name: "com.coherenttheory.primavera"
+        name: "com.makeplaylive.primavera"
     }
 
     transitions: [
