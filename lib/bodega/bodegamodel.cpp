@@ -205,7 +205,7 @@ void Model::Private::channelsJobFinished(Bodega::NetworkJob *job)
         q->beginInsertRows(idx, node->childCount(),
                            node->childCount() + channelsJob->channels().count()-1);
         AssetInfo dummyAssetInfo;
-        foreach (ChannelInfo info, channelsJob->channels()) {
+        foreach (const ChannelInfo &info, channelsJob->channels()) {
             node->appendChild(new Node(info, dummyAssetInfo, node));
         }
         q->endInsertRows();
@@ -215,7 +215,7 @@ void Model::Private::channelsJobFinished(Bodega::NetworkJob *job)
         q->beginInsertRows(idx, node->childCount(),
                            node->childCount() + channelsJob->assets().count()-1);
         ChannelInfo dummyChannelInfo;
-        foreach (AssetInfo info, channelsJob->assets()) {
+        foreach (const AssetInfo &info, channelsJob->assets()) {
             node->appendChild(new Node(dummyChannelInfo, info, node));
         }
         q->endInsertRows();
@@ -229,7 +229,7 @@ void Model::Private::reloadFromNetwork()
     }
 
     //FIXME: not safe, at this point most of jobs will be deleted by session
-    foreach (QList<ChannelsJob *> list, jobsForIndex) {
+    foreach (const QList<ChannelsJob *> &list, jobsForIndex) {
         foreach (ChannelsJob *job, list) {
             disconnect(job, 0, q, 0);
         }

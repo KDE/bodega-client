@@ -99,7 +99,7 @@ void AssetJob::Private::parsePreviews(const QVariantMap &result)
 {
     QVariantList vPreviews = result[QLatin1String("previews")].toList();
 
-    foreach(QVariant preview, vPreviews) {
+    foreach (const QVariant &preview, vPreviews) {
         previews.append(preview.toString());
     }
 }
@@ -108,7 +108,7 @@ void AssetJob::Private::parseTags(const QVariantMap &result)
 {
     QVariantList vTags = result[QLatin1String("asset")].toMap()[QLatin1String("tags")].toList();
 
-    foreach(QVariant t, vTags) {
+    foreach(const QVariant &t, vTags) {
         QVariantMap vTag = t.toMap();
         tags.insert(vTag.keys().first(), vTag.values().first().toString());
     }
