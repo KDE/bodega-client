@@ -31,7 +31,7 @@ static const char version[] = "0.1";
 
 int main(int argc, char **argv)
 {
-    KAboutData about("bodega-store", 0, ki18n("Add Ons App"), version, ki18n(""),
+    KAboutData about("bodega-store", 0, ki18n("Add Ons App"), version, "",
                      KAboutData::License_GPL, ki18n("Copyright 2012 Coherent Theory LLC"),
                      KLocalizedString(), 0, "vivaldi@makeplaylive.com");
     about.addAuthor( ki18n("Aaron Seigo"), KLocalizedString(), "aseigo@makeplaylive.com" ),
