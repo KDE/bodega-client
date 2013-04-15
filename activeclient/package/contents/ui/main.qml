@@ -91,12 +91,12 @@ Image {
             mainStack.pop(0, true)
         }
 
-        if (!mainStack.currentPage.objectName != "passwordPage") {
+        if (mainStack.currentPage.objectName != "passwordPage") {
             mainStack.push(Qt.createComponent("PasswordPage.qml"))
         }
 
         mainStack.currentPage.email = bodegaClient.session.userName
-        mainStack.currentPage.showMessage(error.title, error.description)
+        showMessage(error.title, error.description)
     }
 
 
