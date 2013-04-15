@@ -60,6 +60,7 @@ Image {
     //Signon functions
     function authenticate(username, password)
     {
+        hideMessage()
         if (username == '' || password == '') {
             if (!connectPageTimer.authing) {
                 connectPageTimer.restart()
@@ -76,6 +77,7 @@ Image {
 
     function signedOn(job)
     {
+        hideMessage()
         //save credentials only if login worked
         bodegaClient.saveCredentials()
 
