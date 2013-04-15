@@ -137,7 +137,7 @@ void Error::Private::setServerCode(ServerCode c)
             description = QObject::tr("Required information was missing from the request.");
         break;
         case NoMatch:
-            description = QObject::tr("No matching records found.");
+            description = QObject::tr("Wrong user name or password.");
         break;
         case AccountInactive:
             description = QObject::tr("This account is not active.");
