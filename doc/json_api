@@ -115,48 +115,81 @@ Purpose: records an asset download from an external URL
 Parameters: number asset id, in URL
 Response: none
 
-Path: /upload
+Asset management
+----------------
+Path: /asset/create
 Authentication: yes
-Purpose: 
+Purpose: Uploads a new asset along with descriptive information
+Parameters:
+    * PartnerID (otherwise, uses default partner for the user)
+    * Multipart uploads of files: asset (the file itself), info (a json file with metadata about the file)
+Response:
+    * 
+
+Path: /asset/update
+
+Path: /asset/delete
 
 
 Collections
 -----------
 Path: /collections/list
 Authentication: yes
-Purpose:
+Purpose: Lists all collections available to the user
 Parameters:
+    * integer pageSize, how many items to show (default 10)
+    * integer offset, offset response from the start (default 0)
 Response:
+    * List<Collections> where Collection is { integer id, string name, bool public, bool wishlist }
 
 Path: /collections/create
 Authentication: yes
-Purpose:
+Purpose: To create a new collection
 Parameters:
+    + string name
+    * bool public
+    * bool wishlist
 Response:
+    * integer id
+    * string name
+    * bool public
+    * bool wishlist
 
 Path: /collections/delete
 Authentication: yes
-Purpose:
+Purpose: To remove a collection
 Parameters:
+    * integer collectionId
 Response:
+    Returns standard auth information on success, error on failure
 
 Path: /collections/listAssets
 Authentication: yes
-Purpose:
+Purpose: To list all the assets in a given collection
 Parameters:
+    +  integer collectionId
+    * integer pageSize, how many items to show (default 10)
+    * integer offset, offset response from the start (default 0)
 Response:
+    List<Asset>
 
 Path: /collections/addAsset
 Authentication: yes
-Purpose:
+Purpose: To add an asset to a collection
 Parameters:
+    + integer assetId
+    + integer collectionId
 Response:
+    * Collection collection (tuple of: integer id, string name, bool public, bool wishlist)
 
 Path: /collections/removeAsset
 Authentication: yes
-Purpose:
+Purpose: Remove an asset from a collection
 Parameters:
+    + integer assetId
+    + integer collectionId
 Response:
+    * Collection collection (tuple of: integer id, string name, bool public, bool wishlist)
 
 
 Account Registration
@@ -177,12 +210,28 @@ Parameters:
 
 Account Management
 ------------------
-Path: /participant/resetPassword
+Path: /participant/resetRequest
 Authentication: no
 Purpose: sends a password reset email to a given email
-Response:
 Parameters:
     + string email
+Response:
+
+Path: /participant/resetPassword
+Authentication: no
+Method: get
+Purpose: Renders an html form that allows the user to verify a password reset
+
+Path: /participant/resetPassword
+Authentication: no
+Method: post
+Purpose: Confirms a password reset and does the actual reset on success
+Parameters:
+Response:
+
+Path: /participant/resetPassword
+Authentication: no
+Purpose: Renders an html form that allows the user to verify a password reset
 
 Path: /participant/changePassword
 Authentication: yes
@@ -207,6 +256,19 @@ Eample:
     https://sample.com/bodega/v1/json/changePassword?firstName=Sally
     https://sample.com/bodega/v1/json/changePassword?firstName=Sally&lastName=Fally
     https://sample.com/bodega/v1/json/changePassword?email=sally@foo.com
+
+Path: /participant/paymentMethod
+Authentication: yes
+Purpose: set a payment method (e.g. a credit card) on the account
+Parameters:
+Response:
+
+Path: /participant/deletePaymentMethod
+Authentication: yes
+Purpose: delete a payment method (e.g. a credit card) on the account
+Parameters:
+Response:
+
 
 Account Information
 -------------------
