@@ -47,6 +47,9 @@
 #include <bodega/installjob.h>
 #include <bodega/installjobsmodel.h>
 #include <bodega/uninstalljob.h>
+#include <bodega/listballotsjob.h>
+#include <bodega/listballotsjobmodel.h>
+#include <bodega/ballotlistassetsjobmodel.h>
 
 using namespace Bodega;
 
@@ -128,7 +131,6 @@ void channelInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Channe
         }
     }
 }
-
 
 QScriptValue qScriptValueFromAssetInfo(QScriptEngine *engine, const Bodega::AssetInfo &info)
 {
@@ -263,9 +265,11 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     info.email = scriptValue.property("email").toString();
 }
 
-BodegaStore::BodegaStore()
+    BodegaStore::BodegaStore()
     : KDeclarativeMainWindow(),
-      m_historyModel(0)
+      m_historyModel(0),
+      m_listBallotsJobModel(0),
+      m_ballotListAssetsJobModel(0)
 {
     // For kde-runtime 4.8 compabitility, the appbackgrounds image provider is only
     // in PlasmaExtras 4.9 (master currently)
@@ -288,6 +292,9 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::InstallJob>();
     qmlRegisterType<Bodega::InstallJobsModel>();
     qmlRegisterType<Bodega::UninstallJob>();
+    qmlRegisterType<Bodega::ListBallotsJob>();
+    qmlRegisterType<Bodega::ListBallotsJobModel>();
+    qmlRegisterType<Bodega::BallotListAssetsJobModel>();
     qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
 
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());
@@ -296,20 +303,19 @@ BodegaStore::BodegaStore()
     qScriptRegisterMetaType<Bodega::Tags>(declarativeView()->scriptEngine(), qScriptValueFromTags, tagsFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ParticipantInfo>(declarativeView()->scriptEngine(), qScriptValueFromParticipantInfo, participantInfoFromQScriptValue, QScriptValue());
 
-
     m_session = new Session(this);
     KConfigGroup config(KGlobal::config(), "AddOns");
-    m_session->setBaseUrl(config.readEntry("URL", "http://addons.makeplaylive.com:3000"));
+    m_session->setBaseUrl(config.readEntry("URL", "http://localhost:3000"));
     m_session->setStoreId(config.readEntry("Store", "VIVALDI-1"));
-
-
+    m_listBallotsJobModel = new Bodega::ListBallotsJobModel(this);
+    m_listBallotsJobModel->setSession(m_session);
+    m_ballotListAssetsJobModel = new Bodega::BallotListAssetsJobModel(this);
+    m_ballotListAssetsJobModel->setSession(m_session);
     m_channelsModel = new Bodega::Model(this);
     m_channelsModel->setSession(m_session);
     m_searchModel = new Bodega::Model(this);
     m_searchModel->setSession(m_session);
-
     declarativeView()->rootContext()->setContextProperty("bodegaClient", this);
-
 }
 
 BodegaStore::~BodegaStore()
@@ -340,6 +346,16 @@ HistoryModel *BodegaStore::historyModel()
     }
 
     return m_historyModel;
+}
+
+ListBallotsJobModel *BodegaStore::listBallotsJobModel() const
+{
+    return m_listBallotsJobModel;
+}
+
+BallotListAssetsJobModel *BodegaStore::ballotListAssetsJobModel() const
+{
+    return m_ballotListAssetsJobModel;
 }
 
 void BodegaStore::historyInUse(bool used)

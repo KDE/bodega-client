@@ -4,6 +4,7 @@ set (bodega_HEADERS
      assetoperations.h
      ballotaddassetjob.h
      ballotlistassetsjob.h
+     ballotlistassetsjobmodel.h
      ballotremoveassetjob.h
      bodegamodel.h
      changelanguagejob.h
@@ -16,6 +17,7 @@ set (bodega_HEADERS
      imagelocator.h
      installjob.h
      listballotsjob.h
+     listballotsjobmodel.h
      networkjob.h
      participantinfojob.h
      registerjob.h
@@ -32,6 +34,7 @@ set (bodega_SRCS
      assetoperations.cpp
      ballotaddassetjob.cpp
      ballotlistassetsjob.cpp
+     ballotlistassetsjobmodel.cpp
      ballotremoveassetjob.cpp
      bodegamodel.cpp
      changelanguagejob.cpp
@@ -44,6 +47,7 @@ set (bodega_SRCS
      installjob.cpp
      installjobsmodel.cpp
      listballotsjob.cpp
+     listballotsjobmodel.cpp
      networkjob.cpp
      participantinfojob.cpp
      registerjob.cpp

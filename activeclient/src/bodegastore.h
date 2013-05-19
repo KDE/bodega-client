@@ -28,6 +28,8 @@ namespace Bodega {
     class HistoryModel;
     class Model;
     class Session;
+    class ListBallotsJobModel;
+    class BallotListAssetsJobModel;
 }
 
 Q_DECLARE_METATYPE(Bodega::Session*)
@@ -92,7 +94,8 @@ class BodegaStore : public KDeclarativeMainWindow
     Q_PROPERTY(Bodega::Model *channelsModel READ channelsModel CONSTANT)
     Q_PROPERTY(Bodega::Model *searchModel READ searchModel CONSTANT)
     Q_PROPERTY(Bodega::HistoryModel *historyModel READ historyModel CONSTANT)
-
+    Q_PROPERTY(Bodega::ListBallotsJobModel *listBallotsJobModel READ listBallotsJobModel CONSTANT)
+    Q_PROPERTY(Bodega::BallotListAssetsJobModel *ballotListAssetsJobModel READ ballotListAssetsJobModel CONSTANT)
 public:
     BodegaStore();
     virtual ~BodegaStore();
@@ -102,6 +105,8 @@ public:
     Bodega::Model* channelsModel() const;
     Bodega::Model* searchModel() const;
     Bodega::HistoryModel *historyModel();
+    Bodega::ListBallotsJobModel *listBallotsJobModel() const;
+    Bodega::BallotListAssetsJobModel *ballotListAssetsJobModel() const;
 
     Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE void forgetCredentials() const;
@@ -113,6 +118,8 @@ private:
     Bodega::Model *m_channelsModel;
     Bodega::Model *m_searchModel;
     Bodega::HistoryModel *m_historyModel;
+    Bodega::ListBallotsJobModel *m_listBallotsJobModel;
+    Bodega::BallotListAssetsJobModel *m_ballotListAssetsJobModel;
     int m_historyUsers;
 };
 
