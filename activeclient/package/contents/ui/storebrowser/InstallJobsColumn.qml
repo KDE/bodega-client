@@ -24,134 +24,69 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
 
-BrowserColumn {
+BrowserListView {
     id: root
     clip: true
 
-    property variant rootIndex
     property string channelId
 
-    VisualDataModel {
-        id: channelsModel
-        model: bodegaClient.session.installJobsModel
-        rootIndex: root.rootIndex
-        delegate: delegateComponent
-    }
-
-
-    PlasmaExtras.ScrollArea {
-        anchors.fill:parent
-        ListView {
-            id: categoriesView
-            currentIndex: -1
-            clip: true
-            anchors.fill:parent
-
-            model: channelsModel
-
-            delegate: Component {
-                id: delegateComponent
-                PlasmaComponents.ListItem {
-                    id: listItem
-                    enabled: true
-                    checked: categoriesView.currentIndex == index
-                    Row {
-                        id: delegateRow
-                        spacing: theme.defaultFont.mSize.width
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                        }
-                        Image {
-                            id: iconImage
-                            source: model.ImageMediumRole
-                            width: theme.mediumIconSize
-                            height: width
-                        }
-                        Column {
-                            PlasmaComponents.Label {
-                                text: model.DisplayRole
-                                width: delegateRow.width - iconImage.width - theme.defaultFont.mSize.width
-                                elide: Text.ElideRight
-                            }
-                            PlasmaComponents.ProgressBar {
-                                id: downloadProgress
-                                visible: value < maximumValue
-                                minimumValue: 0
-                                maximumValue: 100
-                                value: model.ProgressRole*100
-                                height: doneLabel.height
-                                anchors {
-                                    left: parent.left
-                                    right: parent.right
-                                }
-                            }
-                            PlasmaComponents.Label {
-                                id: doneLabel
-                                text: i18n("Download finished")
-                                height: paintedHeight
-                                visible: !downloadProgress.visible
-                                font.pointSize: theme.smallestFont.pointSize
-                            }
-                        }
+    abstractItemModel: bodegaClient.session.installJobsModel
+    customDelegate: Component {
+        id: delegateComponent
+        PlasmaComponents.ListItem {
+            id: listItem
+            enabled: true
+            checked: view.currentIndex == index
+            Row {
+                 id: delegateRow
+                 spacing: theme.defaultFont.mSize.width
+                    Image {
+                        id: iconImage
+                        source: model.ImageMediumRole
+                        width: theme.mediumIconSize
+                        height: width
                     }
-                    onClicked: {
-                        if (categoriesView.currentIndex == index) {
-                            return
+                    Column {
+                        PlasmaComponents.Label {
+                            text: model.DisplayRole
+                            width: delegateRow.width - iconImage.width - theme.defaultFont.mSize.width
+                            elide: Text.ElideRight
                         }
-                        categoriesView.currentIndex = index
-                        itemBrowser.pop(root)
+                        PlasmaComponents.ProgressBar {
+                            id: downloadProgress
+                            visible: value < maximumValue
+                            minimumValue: 0
+                            maximumValue: 100
+                            value: model.ProgressRole*100
+                            height: doneLabel.height
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                            }
+                        }
+                        PlasmaComponents.Label {
+                            id: doneLabel
+                            text: i18n("Download finished")
+                            height: paintedHeight
+                            visible: !downloadProgress.visible
+                            font.pointSize: theme.smallestFont.pointSize
 
-                        if (model.AssetIdRole) {
-                            var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
-                            assetPage.assetId = model.AssetIdRole
                         }
                     }
                 }
-            }
+                onClicked: {
+                    console.log(typeof visualDataModel)
+                    if (view.currentIndex == index) {
+                        return
+                    }
+                    view.currentIndex = index
+                    itemBrowser.pop(browserColumn)
 
-            footer: PlasmaComponents.ListItem {
-                id: loaderFooter
-                Connections {
-                    target: categoriesView
-                    onAtYEndChanged: {
-                        if (categoriesView.atYEnd) {
-                            loaderFooter.visible = bodegaClient.channelsModel.canFetchMore(rootIndex)
-                        } else {
-                            loaderFooter.visible = false
-                        }
+                    if (model.AssetIdRole) {
+                        var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
+                        assetPage.assetId = model.AssetIdRole
                     }
                 }
-                PlasmaComponents.BusyIndicator {
-                    running: parent.visible
-                    anchors.centerIn: parent
-                }
-            }
-        }
-    }
-
-    PlasmaComponents.ToolButton {
-        iconSource: "go-top"
-        z: 100
-        width: theme.largeIconSize
-        height: width
-        anchors {
-            top: parent.top
-            right: parent.right
-            margins: 16
-        }
-        opacity: categoriesView.flicking && categoriesView.moving ? 1 : 0
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 250
-                easing.type: Easing.InOutQuad
-            }
-        }
-        onClicked: PropertyAnimation {
-            target: categoriesView
-            properties: "contentY"
-            to: 0
-            duration: 250
         }
     }
 }

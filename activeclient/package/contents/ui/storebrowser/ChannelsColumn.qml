@@ -24,9 +24,9 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
 
-BrowserColumn {
+BrowserListView {
     id: root
-    clip: true
+    abstractItemModel: bodegaClient.channelsModel
 
     property variant rootIndex
     property string channelId
@@ -48,106 +48,46 @@ BrowserColumn {
 
     PlasmaComponents.ToolBar {
         id: toolBar
-        y: -categoriesView.contentY
+        y: -view.contentY
         z: 1
         tools: MobileComponents.ViewSearch {
             id: searchField
             onSearchQueryChanged: {
                 //var job = bodegaClient.session.search(searchQuery, -1, -1)
                 if (searchQuery.length > 3) {
-                    categoriesView.model = searchModel
+                    listView.model = searchModel
                     bodegaClient.searchModel.topChannel = root.channelId
                     bodegaClient.searchModel.searchQuery = searchQuery
                 } else {
-                    categoriesView.model = channelsModel
+                    listView.model = visualDataModel
                     bodegaClient.searchModel.searchQuery = ""
                 }
-                categoriesView.currentIndex = -1
+                listView.currentIndex = -1
             }
         }
     }
 
-    PlasmaExtras.ScrollArea {
-        anchors.fill: parent
+    customDelegate: Component {
+        id: delegateComponent
+        StoreListItem {
+            checked: view.currentIndex == index
+            onClicked: {
+                console.log("hereeeeeeeeee")
+                if (view.currentIndex == index) {
+                    return
+                }
+                view.currentIndex = index
+                itemBrowser.pop(root)
 
-        ListView {
-            id: categoriesView
-            currentIndex: -1
-            clip: true
-            anchors.fill: parent
-
-            model: channelsModel
-
-            Component {
-                id: delegateComponent
-                StoreListItem {
-                    checked: categoriesView.currentIndex == index
-                    onClicked: {
-                        if (categoriesView.currentIndex == index) {
-                            return
-                        }
-                        categoriesView.currentIndex = index
-                        itemBrowser.pop(root)
-
-                        if (model.ChannelIdRole) {
-                            var channelsPage = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
-                            channelsPage.rootIndex = categoriesView.model.modelIndex(index)
-                            channelsPage.channelId = model.ChannelIdRole
-                        } else if (model.AssetIdRole) {
-                            var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
-                            assetPage.assetId = model.AssetIdRole
-                        }
-                    }
+                if (model.ChannelIdRole) {
+                    var channelsPage = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
+                    channelsPage.rootIndex = view.model.modelIndex(index)
+                    channelsPage.channelId = model.ChannelIdRole
+                } else if (model.AssetIdRole) {
+                    var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
+                    assetPage.assetId = model.AssetIdRole
                 }
             }
-
-            header: Item {
-                width: parent.width
-                height: toolBar.height
-            }
-
-            footer: PlasmaComponents.ListItem {
-                id: loaderFooter
-                Connections {
-                    target: categoriesView
-                    onAtYEndChanged: {
-                        if (categoriesView.atYEnd) {
-                            loaderFooter.visible = categoriesView.model.canFetchMore(rootIndex)
-                        } else {
-                            loaderFooter.visible = false
-                        }
-                    }
-                }
-                PlasmaComponents.BusyIndicator {
-                    running: parent.visible
-                    anchors.centerIn: parent
-                }
-            }
-        }
-    }
-
-    PlasmaComponents.ToolButton {
-        iconSource: "go-top"
-        z: 100
-        width: theme.largeIconSize
-        height: width
-        anchors {
-            top: parent.top
-            right: parent.right
-            margins: 16
-        }
-        opacity: categoriesView.flicking && categoriesView.moving ? 1 : 0
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 250
-                easing.type: Easing.InOutQuad
-            }
-        }
-        onClicked: PropertyAnimation {
-            target: categoriesView
-            properties: "contentY"
-            to: 0
-            duration: 250
         }
     }
 }
