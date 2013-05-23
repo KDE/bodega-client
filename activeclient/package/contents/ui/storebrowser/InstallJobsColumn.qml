@@ -25,10 +25,7 @@ import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
 
 BrowserListView {
-    id: root
     clip: true
-
-    property string channelId
 
     abstractItemModel: bodegaClient.session.installJobsModel
     customDelegate: Component {

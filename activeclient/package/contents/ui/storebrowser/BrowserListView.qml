@@ -25,15 +25,11 @@ import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
 
 BrowserColumn {
-    id: root
     clip: true
     property alias abstractItemModel: visualDataModel.model
     property alias customDelegate: listView.delegate
     property alias view: listView
     property alias customHeader: listView.header
-    property alias browserColumn: root
-
-    property variant rootIndex
 
     VisualDataModel {
         id: visualDataModel
@@ -108,3 +104,4 @@ BrowserColumn {
         }
     }
 }
+
