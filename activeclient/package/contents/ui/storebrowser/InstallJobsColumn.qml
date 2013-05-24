@@ -72,7 +72,6 @@ BrowserListView {
                     }
                 }
                 onClicked: {
-                    console.log(typeof visualDataModel)
                     if (view.currentIndex == index) {
                         return
                     }

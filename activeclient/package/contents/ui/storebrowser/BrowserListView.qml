@@ -52,12 +52,6 @@ BrowserColumn {
                 Connections {
                     target: listView
                     onAtYEndChanged: {
-                        console.log(typeof visualDataModemodel)
-                        console.log(typeof bodegaClient.session.installJobsModel)
-                        console.log(typeof visualDataModel.model)
-                        console.log(visualDataModel.model)
-                        console.log(listView.model)
-                        console.log(bodegaClient.session.installJobsModel)
                         if (visualDataModel.model.canFetchMore == undefined) {
                             return;
                         }

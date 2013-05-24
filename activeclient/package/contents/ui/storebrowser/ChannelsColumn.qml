@@ -72,7 +72,6 @@ BrowserListView {
         StoreListItem {
             checked: view.currentIndex == index
             onClicked: {
-                console.log("hereeeeeeeeee")
                 if (view.currentIndex == index) {
                     return
                 }
