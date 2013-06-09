@@ -436,7 +436,7 @@ Image {
                     showBusy.running = true;
                     resultDisplay.text = '';
                     var text = l1.text + l2.text + l3.text + l4.text + l5.text + l6.text + l7.text;
-                    doc.open("GET", "http://addons.makeplaylive.com:3000/bodega/v1/json/hunt?device=VIVALDI-1&code=" + text);
+                    doc.open("GET", "http://addons.makeplaylive.com:3000/bodega/v1/json/hunt/VIVALDI-1/" + text);
                     doc.send();
                 }
 
