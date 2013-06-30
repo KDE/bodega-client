@@ -45,7 +45,7 @@ namespace Bodega {
         ~BallotListAssetsJobModel();
 
         QString collectionId() const;
-         void setCollectionId(const QString& collectionId);
+        void setCollectionId(const QString& collectionId);
 
         //Invokable to make the view show a spinner when loading more
         Q_INVOKABLE bool canFetchMore(const QModelIndex &parent) const;

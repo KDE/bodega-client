@@ -106,7 +106,7 @@ ListBallotsJobModel::ListBallotsJobModel(QObject *parent)
     roles.insert(CollectionId, "CollectionId");
 
     setRoleNames(roles);
-
+qDebug() << "ctorrrrrrrrrrrrrr";
     connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SIGNAL(countChanged()));
     connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
@@ -133,8 +133,7 @@ int ListBallotsJobModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }
-#include <QDebug>
-#include <QVariantMap>
+
 QVariant ListBallotsJobModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= d->ballots.count()) {
@@ -218,7 +217,9 @@ int ListBallotsJobModel::rowCount(const QModelIndex &parent) const
 
 void ListBallotsJobModel::setSession(Session *session)
 {
+    qDebug() << "sto setSession";
     if (session == d->session) {
+        qDebug() << "why?";
         return;
     }
 

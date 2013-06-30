@@ -600,8 +600,7 @@ Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, cons
 Bodega::ListBallotsJob *Session::listBallots(int offset, int pageSize)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/collections/list");
-
+    const QString path = QString::fromLatin1("/collection/list");
 
     url.setEncodedPath(d->jsonPath(path));
     d->addPaging(url, offset, pageSize);
@@ -697,9 +696,8 @@ Bodega::BallotListAssetsJob * Session::collectionListAssets(const QString &colle
                                                         int pageSize)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/collections/listAssets");
-
-    url.setEncodedPath(d->jsonPath(path));
+    const QString path = QString::fromLatin1("/collection/list/");
+    url.setEncodedPath(d->jsonPath(path + collectionId));
     d->addPaging(url, offset, pageSize);
 
     //qDebug()<<"url is " <<url;

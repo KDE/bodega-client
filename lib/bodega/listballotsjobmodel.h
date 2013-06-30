@@ -33,7 +33,6 @@ namespace Bodega {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
         Q_PROPERTY(int count READ count NOTIFY countChanged)
-
     public:
         enum DisplayRoles {
             CollectionName = Qt::UserRole + 1,
@@ -73,7 +72,6 @@ namespace Bodega {
         Q_PRIVATE_SLOT(d, void ballotsJobFinished(Bodega::NetworkJob *))
         Q_PRIVATE_SLOT(d, void fetchInitialCollections())
     };
-
 }
 
 #endif

@@ -65,7 +65,7 @@ BrowserColumn {
                     }
                     onClicked: {
                         if (ballotView.currentIndex == index) {
-                            return
+                            return;
                         }
                         ballotView.currentIndex = index
                         itemBrowser.pop(root)

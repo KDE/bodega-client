@@ -127,7 +127,6 @@ QString BallotListAssetsJobModel::collectionId() const
 void BallotListAssetsJobModel::setCollectionId(const QString& collectionId)
 {
     d->collectionId = collectionId;
-
     emit collectionIdChanged();
 }
 
@@ -153,7 +152,6 @@ QVariant BallotListAssetsJobModel::data(const QModelIndex &index, int role) cons
 
     switch (role) {
         case AssetIdRole: {
-            qDebug() << d->assets.at(index.row()).id;
             return d->assets.at(index.row()).id;
         }
         case AssetNameRole: {

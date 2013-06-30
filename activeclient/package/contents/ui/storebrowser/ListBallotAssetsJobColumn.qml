@@ -68,11 +68,10 @@ BrowserColumn {
                             return
                         }
                         assetListView.currentIndex = index
-                        itemBrowser.pop(root)
-
+                        itemBrowser.pop(root);
                         if (model.AssetIdRole) {
-                            var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
-                            assetPage.assetId = model.AssetIdRole
+                            var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"));
+                            assetPage.assetId = model.AssetIdRole;
                         }
                     }
                 }
