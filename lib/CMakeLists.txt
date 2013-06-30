@@ -60,7 +60,7 @@ ENDIF (NOT WIN32)
 INCLUDE( ${QT_USE_FILE} )
 
 # Subdirs
-ADD_SUBDIRECTORY(bodega)
+add_subdirectory(bodega)
 IF (KDE4_BUILD_TESTS OR BODEGA_BUILD_TESTS)
   enable_testing()
   ADD_SUBDIRECTORY(tests)
