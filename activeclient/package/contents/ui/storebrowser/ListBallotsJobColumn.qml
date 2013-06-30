@@ -24,10 +24,11 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
 
-BrowserColumn {
+BrowserListView {
     id: root
-    clip: true
     property variant rootIndex
+
+    abstractItemModel: bodegaClient.listBallotsJobModel
 
     VisualDataModel {
         id: listBallotsJobModel
@@ -36,90 +37,38 @@ BrowserColumn {
         delegate: listBallotsJobModelDelegate
     }
 
-    PlasmaExtras.ScrollArea {
-        anchors.fill:parent
-        ListView {
-            id: ballotView
-            currentIndex: -1
-            clip: true
-            anchors.fill:parent
+    customDelegate: Component {
+        id: listBallotsJobModelDelegate
+        PlasmaComponents.ListItem {
+            id: listItem
+            enabled: true
+            checked: view.currentIndex == index
+            Row {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
 
-            model: listBallotsJobModel
-
-            delegate: Component {
-                id: listBallotsJobModelDelegate
-                PlasmaComponents.ListItem {
-                    id: listItem
-                    enabled: true
-                    checked: ballotView.currentIndex == index
-                    Row {
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                        }
-                        id: delegateRow
-                        spacing: theme.defaultFont.mSize.width
-                        PlasmaComponents.Label {
-                            text: model.CollectionName
-                        }
-                    }
-                    onClicked: {
-                        if (ballotView.currentIndex == index) {
-                            return;
-                        }
-                        ballotView.currentIndex = index
-                        itemBrowser.pop(root)
-
-                        if (model.CollectionId) {
-                            bodegaClient.ballotListAssetsJobModel.collectionId = model.CollectionId;
-                            var assets = itemBrowser.push(Qt.createComponent("ListBallotAssetsJobColumn.qml"));
-                        }
-                    }
+                id: delegateRow
+                spacing: theme.defaultFont.mSize.width
+                PlasmaComponents.Label {
+                    text: model.CollectionName
                 }
             }
 
-            footer: PlasmaComponents.ListItem {
-                id: loaderFooter
-                Connections {
-                    target: ballotView
-                    onAtYEndChanged: {
-                        if (ballotView.atYEnd) {
-                            loaderFooter.visible = bodegaClient.listBallotsJobModel.canFetchMore(rootIndex)
-                        } else {
-                            loaderFooter.visible = false
-                        }
-                    }
+            onClicked: {
+                if (view.currentIndex == index) {
+                    return;
                 }
-                PlasmaComponents.BusyIndicator {
-                    running: parent.visible
-                    anchors.centerIn: parent
-                }
-            }
-        }
-    }
+                view.currentIndex = index
+                itemBrowser.pop(root)
 
-    PlasmaComponents.ToolButton {
-        iconSource: "go-top"
-        z: 100
-        width: theme.largeIconSize
-        height: width
-        anchors {
-            top: parent.top
-            right: parent.right
-            margins: 16
-        }
-        opacity: ballotView.flicking && ballotView.moving ? 1 : 0
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 250
-                easing.type: Easing.InOutQuad
+                if (model.CollectionId) {
+                    bodegaClient.ballotListAssetsJobModel.collectionId = model.CollectionId;
+                    var assets = itemBrowser.push(Qt.createComponent("ListBallotAssetsJobColumn.qml"));
+                }
             }
-        }
-        onClicked: PropertyAnimation {
-            target: ballotView
-            properties: "contentY"
-            to: 0
-            duration: 250
         }
     }
 }
+

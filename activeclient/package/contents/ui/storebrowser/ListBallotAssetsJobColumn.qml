@@ -24,10 +24,10 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
 
-BrowserColumn {
+BrowserListView {
     id: root
-    clip: true
     property variant rootIndex
+    abstractItemModel: bodegaClient.ballotListAssetsJobModel
 
     VisualDataModel {
         id: ballotListAssetsJobModel
@@ -36,89 +36,36 @@ BrowserColumn {
         delegate: ballotListAssetsJobModelDelegate
     }
 
-    PlasmaExtras.ScrollArea {
-        anchors.fill:parent
-        ListView {
-            id: assetListView
-            currentIndex: -1
-            clip: true
-            anchors.fill:parent
-
-            model: ballotListAssetsJobModel
-
-            delegate: Component {
-                id: ballotListAssetsJobModelDelegate
-                PlasmaComponents.ListItem {
-                    id: listItem
-                    enabled: true
-                    checked: assetListView.currentIndex == index
-                    Row {
-                        /*anchors {
-                            left: parent.left
-                            right: parent.right
-                        }*/
-                        id: delegateRow
-                        spacing: theme.defaultFont.mSize.width
-                        PlasmaComponents.Label {
-                            text: model.AssetNameRole
-                        }
-                    }
-                    onClicked: {
-                        if (assetListView.currentIndex == index) {
-                            return
-                        }
-                        assetListView.currentIndex = index
-                        itemBrowser.pop(root);
-                        if (model.AssetIdRole) {
-                            var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"));
-                            assetPage.assetId = model.AssetIdRole;
-                        }
-                    }
+    customDelegate: Component {
+        id: ballotListAssetsJobModelDelegate
+        PlasmaComponents.ListItem {
+            id: listItem
+            enabled: true
+            checked: view.currentIndex == index
+            Row {
+                /*anchors {
+                    left: parent.left
+                    right: parent.right
+                }*/
+                id: delegateRow
+                spacing: theme.defaultFont.mSize.width
+                PlasmaComponents.Label {
+                    text: model.AssetNameRole
                 }
             }
 
-            footer: PlasmaComponents.ListItem {
-                id: loaderFooter
-                Connections {
-                    target: assetListView
-                    onAtYEndChanged: {
-                        if (assetListView.atYEnd) {
-                            loaderFooter.visible = bodegaClient.ballotListAssetsJobModel.canFetchMore(rootIndex)
-                        } else {
-                            loaderFooter.visible = false
-                        }
-                    }
+            onClicked: {
+                if (view.currentIndex == index) {
+                    return
                 }
-                PlasmaComponents.BusyIndicator {
-                    running: parent.visible
-                    anchors.centerIn: parent
+                view.currentIndex = index
+                itemBrowser.pop(root)
+                if (model.AssetIdRole) {
+                    var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"));
+                    assetPage.assetId = model.AssetIdRole;
                 }
             }
-        }
-    }
-
-    PlasmaComponents.ToolButton {
-        iconSource: "go-top"
-        z: 100
-        width: theme.largeIconSize
-        height: width
-        anchors {
-            top: parent.top
-            right: parent.right
-            margins: 16
-        }
-        opacity: assetListView.flicking && assetListView.moving ? 1 : 0
-        Behavior on opacity {
-            NumberAnimation {
-                duration: 250
-                easing.type: Easing.InOutQuad
-            }
-        }
-        onClicked: PropertyAnimation {
-            target: assetListView
-            properties: "contentY"
-            to: 0
-            duration: 250
         }
     }
 }
+
