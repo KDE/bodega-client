@@ -64,7 +64,7 @@ void BallotListAssetsJob::Private::init(BallotListAssetsJob *parent,
 
 void BallotListAssetsJob::Private::parseBallot(const QVariantMap &result)
 {
-    QVariantMap ballot = result[QLatin1String("ballot")].toMap();
+    QVariantMap ballot = result[QLatin1String("collection")].toMap();
     BallotInfo info;
     info.id = ballot[QLatin1String("id")].toString();
     info.name = ballot[QLatin1String("name")].toString();
@@ -75,8 +75,8 @@ void BallotListAssetsJob::Private::parseBallot(const QVariantMap &result)
     if (ballot[QLatin1String("wishlist")].toBool()) {
         info.flags |= BallotInfo::Wishlist;
     }
-    parseAssets(ballot);
 
+    parseAssets(ballot);
     this->ballot = info;
 }
 

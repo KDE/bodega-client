@@ -59,12 +59,12 @@ void ListBallotsJob::Private::init(ListBallotsJob *parent,
 
 void ListBallotsJob::Private::parseBallots(const QVariantMap &result)
 {
-    QVariantList ballotsLst = result[QLatin1String("ballots")].toList();
+    QVariantList ballotsLst = result[QLatin1String("collections")].toList();
     QVariantList::const_iterator itr;
     for (itr = ballotsLst.constBegin(); itr != ballotsLst.constEnd(); ++itr) {
         BallotInfo info;
         QVariantMap ballot = itr->toMap();
-        info.id = ballot[QLatin1String("id")].toInt();
+        info.id = ballot[QLatin1String("id")].toString();
         info.name = ballot[QLatin1String("name")].toString();
         info.flags = BallotInfo::None;
         if (ballot[QLatin1String("public")].toBool()) {
