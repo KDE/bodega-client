@@ -18,7 +18,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include "appbackgroundprovider_p.h"
 #include "bodegastore.h"
 #include "kdeclarativeview.h"
 
@@ -267,12 +266,6 @@ BodegaStore::BodegaStore()
     : KDeclarativeMainWindow(),
       m_historyModel(0)
 {
-    // For kde-runtime 4.8 compabitility, the appbackgrounds image provider is only
-    // in PlasmaExtras 4.9 (master currently)
-    // FIXME: Remove this call and the class from commmon/ once we can depend on 4.9
-    if (!declarativeView()->engine()->imageProvider("appbackgrounds")) {
-        declarativeView()->engine()->addImageProvider(QLatin1String("appbackgrounds"), new AppBackgroundProvider);
-    }
     declarativeView()->setPackageName("com.makeplaylive.addonsapp");
 
     qmlRegisterType<Bodega::ParticipantInfoJob>();
