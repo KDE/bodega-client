@@ -2,22 +2,22 @@
 set (bodega_HEADERS
      assetjob.h
      assetoperations.h
-     ballotaddassetjob.h
-     ballotlistassetsjob.h
-     ballotlistassetsjobmodel.h
-     ballotremoveassetjob.h
+     collectionaddassetjob.h
+     collectionlistassetsjob.h
+     collectionlistassetsjobmodel.h
+     collectionremoveassetjob.h
      bodegamodel.h
      changelanguagejob.h
      channelsjob.h
-     createballotjob.h
-     deleteballotjob.h
+     createcollectionjob.h
+     deletecollectionjob.h
      error.h
      globals.h
      historymodel.h
      imagelocator.h
      installjob.h
-     listballotsjob.h
-     listballotsjobmodel.h
+     listcollectionsjob.h
+     listcollectionsjobmodel.h
      networkjob.h
      participantinfojob.h
      registerjob.h
@@ -32,22 +32,22 @@ set (bodega_SRCS
      assethandler.cpp
      assethandlerfactory.cpp
      assetoperations.cpp
-     ballotaddassetjob.cpp
-     ballotlistassetsjob.cpp
-     ballotlistassetsjobmodel.cpp
-     ballotremoveassetjob.cpp
+     collectionaddassetjob.cpp
+     collectionlistassetsjob.cpp
+     collectionlistassetsjobmodel.cpp
+     collectionremoveassetjob.cpp
      bodegamodel.cpp
      changelanguagejob.cpp
      channelsjob.cpp
-     createballotjob.cpp
-     deleteballotjob.cpp
+     createcollectionjob.cpp
+     deletecollectionjob.cpp
      error.cpp
      historymodel.cpp
      imagelocator.cpp
      installjob.cpp
      installjobsmodel.cpp
-     listballotsjob.cpp
-     listballotsjobmodel.cpp
+     listcollectionsjob.cpp
+     listcollectionsjobmodel.cpp
      networkjob.cpp
      participantinfojob.cpp
      registerjob.cpp
