@@ -17,46 +17,46 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "ballotremoveassetjob.h"
+#include "collectionremoveassetjob.h"
 
 using namespace Bodega;
 
-class BallotRemoveAssetJob::Private
+class collectionRemoveAssetJob::Private
 {
 public:
     Private()
     {}
 
-    void init(BallotRemoveAssetJob *q, const QUrl &url);
-    void parseBallot(const QVariantMap &result);
-    BallotRemoveAssetJob *q;
-    BallotInfo ballot;
+    void init(collectionRemoveAssetJob *q, const QUrl &url);
+    void parsecollection(const QVariantMap &result);
+    collectionRemoveAssetJob *q;
+    collectionInfo collection;
 };
 
-void BallotRemoveAssetJob::Private::init(BallotRemoveAssetJob *parent,
+void collectionRemoveAssetJob::Private::init(collectionRemoveAssetJob *parent,
                                       const QUrl &url)
 {
     q = parent;
 }
 
-void BallotRemoveAssetJob::Private::parseBallot(const QVariantMap &result)
+void collectionRemoveAssetJob::Private::parsecollection(const QVariantMap &result)
 {
-    QVariantMap ballot = result[QLatin1String("ballot")].toMap();
-    BallotInfo info;
-    info.id = ballot[QLatin1String("id")].toString();
-    info.name = ballot[QLatin1String("name")].toString();
-    info.flags = BallotInfo::None;
-    if (ballot[QLatin1String("public")].toBool()) {
-        info.flags |= BallotInfo::Public;
+    QVariantMap collection = result[QLatin1String("collection")].toMap();
+    collectionInfo info;
+    info.id = collection[QLatin1String("id")].toString();
+    info.name = collection[QLatin1String("name")].toString();
+    info.flags = collectionInfo::None;
+    if (collection[QLatin1String("public")].toBool()) {
+        info.flags |= collectionInfo::Public;
     }
-    if (ballot[QLatin1String("wishlist")].toBool()) {
-        info.flags |= BallotInfo::Wishlist;
+    if (collection[QLatin1String("wishlist")].toBool()) {
+        info.flags |= collectionInfo::Wishlist;
     }
 
-    this->ballot = info;
+    this->collection = info;
 }
 
-BallotRemoveAssetJob::BallotRemoveAssetJob(QNetworkReply *reply,
+collectionRemoveAssetJob::collectionRemoveAssetJob(QNetworkReply *reply,
                                  Session *parent)
     : NetworkJob(reply, parent),
       d(new Private)
@@ -64,23 +64,23 @@ BallotRemoveAssetJob::BallotRemoveAssetJob(QNetworkReply *reply,
     d->init(this, url());
 }
 
-BallotRemoveAssetJob::~BallotRemoveAssetJob()
+collectionRemoveAssetJob::~collectionRemoveAssetJob()
 {
     delete d;
 }
 
-BallotInfo BallotRemoveAssetJob::ballot() const
+collectionInfo collectionRemoveAssetJob::collection() const
 {
-    return d->ballot;
+    return d->collection;
 }
 
-void BallotRemoveAssetJob::netFinished(const QVariantMap &result)
+void collectionRemoveAssetJob::netFinished(const QVariantMap &result)
 {
     parseCommon(result);
 
     if (authSuccess() && !failed()) {
-        d->parseBallot(result);
+        d->parsecollection(result);
     }
 }
 
-#include "ballotremoveassetjob.moc"
+#include "collectionremoveassetjob.moc"

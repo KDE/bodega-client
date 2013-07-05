@@ -17,9 +17,9 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "ballotlistassetsjobmodel.h"
+#include "collectionlistassetsjobmodel.h"
 
-#include "ballotlistassetsjob.h"
+#include "collectionlistassetsjob.h"
 #include "session.h"
 #include "networkjob.h"
 
@@ -32,11 +32,11 @@ namespace Bodega
 
 static const int DEFAULT_PAGE_SIZE = 50;
 
-class BallotListAssetsJobModel::Private {
+class collectionListAssetsJobModel::Private {
 public:
-    Private(BallotListAssetsJobModel *parent);
+    Private(collectionListAssetsJobModel *parent);
 
-    BallotListAssetsJobModel *q;
+    collectionListAssetsJobModel *q;
     Session *session;
     bool hasMore;
     int fetchedAssets;
@@ -46,19 +46,19 @@ public:
     QList<AssetInfo> assets;
 };
 
-BallotListAssetsJobModel::Private::Private(BallotListAssetsJobModel *parent)
+collectionListAssetsJobModel::Private::Private(collectionListAssetsJobModel *parent)
     : q(parent),
       session(0),
       hasMore(false)
 {
 }
 
-void BallotListAssetsJobModel::Private::fetchAssets()
+void collectionListAssetsJobModel::Private::fetchAssets()
 {
     //this method will be called when the collectionId has changed inside from QML,
     //so we will use the 0(zero) as our offset, because we don't do any incremental stuff
     //here. For incremental retrieve of out data we have the fetchMore
-    BallotListAssetsJob *job = session->collectionListAssets(collectionId, 0, DEFAULT_PAGE_SIZE);
+    collectionListAssetsJob *job = session->collectionListAssets(collectionId, 0, DEFAULT_PAGE_SIZE);
 
     q->beginResetModel();
     assets.clear();
@@ -69,31 +69,31 @@ void BallotListAssetsJobModel::Private::fetchAssets()
             q, SLOT(assetsJobFinished(Bodega::NetworkJob *)));
 }
 
-void BallotListAssetsJobModel::Private::assetsJobFinished(Bodega::NetworkJob *job)
+void collectionListAssetsJobModel::Private::assetsJobFinished(Bodega::NetworkJob *job)
 {
-    BallotListAssetsJob *ballotJob = qobject_cast<BallotListAssetsJob*>(job);
+    collectionListAssetsJob *collectionJob = qobject_cast<collectionListAssetsJob*>(job);
 
-    if (!ballotJob) {
+    if (!collectionJob) {
         return;
     }
 
-    ballotJob->deleteLater();
+    collectionJob->deleteLater();
 
-    if (ballotJob->failed()) {
+    if (collectionJob->failed()) {
         return;
     }
 
-    hasMore = ballotJob->hasMoreAssets();
-    fetchedAssets += ballotJob->assets().count();
+    hasMore = collectionJob->hasMoreAssets();
+    fetchedAssets += collectionJob->assets().count();
 
-    const int begin = ballotJob->offset();
+    const int begin = collectionJob->offset();
     const int end = qMax(begin, assets.count() + begin -1);
     q->beginInsertRows(QModelIndex(), begin, end);
-    assets = ballotJob->assets();
+    assets = collectionJob->assets();
     q->endInsertRows();
 }
 
-BallotListAssetsJobModel::BallotListAssetsJobModel(QObject *parent)
+collectionListAssetsJobModel::collectionListAssetsJobModel(QObject *parent)
     : QAbstractItemModel(parent),
       d(new Private(this))
 {
@@ -114,23 +114,23 @@ BallotListAssetsJobModel::BallotListAssetsJobModel(QObject *parent)
             this, SLOT(fetchAssets()));
 }
 
-BallotListAssetsJobModel::~BallotListAssetsJobModel()
+collectionListAssetsJobModel::~collectionListAssetsJobModel()
 {
     delete d;
 }
 
-QString BallotListAssetsJobModel::collectionId() const
+QString collectionListAssetsJobModel::collectionId() const
 {
     return d->collectionId;
 }
 
-void BallotListAssetsJobModel::setCollectionId(const QString& collectionId)
+void collectionListAssetsJobModel::setCollectionId(const QString& collectionId)
 {
     d->collectionId = collectionId;
     emit collectionIdChanged();
 }
 
-bool BallotListAssetsJobModel::canFetchMore(const QModelIndex &parent) const
+bool collectionListAssetsJobModel::canFetchMore(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         return false;
@@ -139,12 +139,12 @@ bool BallotListAssetsJobModel::canFetchMore(const QModelIndex &parent) const
     return d->hasMore;
 }
 
-int BallotListAssetsJobModel::columnCount(const QModelIndex &parent) const
+int collectionListAssetsJobModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }
 
-QVariant BallotListAssetsJobModel::data(const QModelIndex &index, int role) const
+QVariant collectionListAssetsJobModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= d->assets.count()) {
         return QVariant();
@@ -164,20 +164,20 @@ QVariant BallotListAssetsJobModel::data(const QModelIndex &index, int role) cons
     }
 }
 
-void BallotListAssetsJobModel::fetchMore(const QModelIndex &parent)
+void collectionListAssetsJobModel::fetchMore(const QModelIndex &parent)
 {
     if (!parent.isValid() || !d->session || !canFetchMore(parent) ||
         !d->session->isAuthenticated()) {
         return;
     }
 
-    BallotListAssetsJob *job = d->session->collectionListAssets(d->collectionId, d->assets.count(), DEFAULT_PAGE_SIZE);
+    collectionListAssetsJob *job = d->session->collectionListAssets(d->collectionId, d->assets.count(), DEFAULT_PAGE_SIZE);
 
     connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
             this, SLOT(assetsJobFinished(Bodega::NetworkJob *)));
 }
 
-Qt::ItemFlags BallotListAssetsJobModel::flags(const QModelIndex &index) const
+Qt::ItemFlags collectionListAssetsJobModel::flags(const QModelIndex &index) const
 {
     if (index.isValid()) {
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -186,19 +186,19 @@ Qt::ItemFlags BallotListAssetsJobModel::flags(const QModelIndex &index) const
     }
 }
 
-bool BallotListAssetsJobModel::hasChildren(const QModelIndex &parent) const
+bool collectionListAssetsJobModel::hasChildren(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return false;
 }
 
-QVariant BallotListAssetsJobModel::headerData(int section, Qt::Orientation orientation,
+QVariant collectionListAssetsJobModel::headerData(int section, Qt::Orientation orientation,
                            int role) const
 {
     return QVariant();
 }
 
-QModelIndex BallotListAssetsJobModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex collectionListAssetsJobModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (column > 0) {
         return QModelIndex();
@@ -211,22 +211,22 @@ QModelIndex BallotListAssetsJobModel::index(int row, int column, const QModelInd
     return createIndex(row, column);
 }
 
-QMap<int, QVariant> BallotListAssetsJobModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> collectionListAssetsJobModel::itemData(const QModelIndex &index) const
 {
     return QMap<int, QVariant>();
 }
 
-QModelIndex BallotListAssetsJobModel::parent(const QModelIndex &index) const
+QModelIndex collectionListAssetsJobModel::parent(const QModelIndex &index) const
 {
     return QModelIndex();
 }
 
-int BallotListAssetsJobModel::rowCount(const QModelIndex &parent) const
+int collectionListAssetsJobModel::rowCount(const QModelIndex &parent) const
 {
     return d->assets.size();
 }
 
-void BallotListAssetsJobModel::setSession(Session *session)
+void collectionListAssetsJobModel::setSession(Session *session)
 {
     if (session == d->session) {
         return;
@@ -243,11 +243,11 @@ void BallotListAssetsJobModel::setSession(Session *session)
     }
 }
 
-Session *BallotListAssetsJobModel::session() const
+Session *collectionListAssetsJobModel::session() const
 {
     return d->session;
 }
 
 }
 
-#include "ballotlistassetsjobmodel.moc"
+#include "collectionlistassetsjobmodel.moc"

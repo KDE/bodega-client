@@ -17,31 +17,31 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "ballotlistassetsjob.h"
+#include "collectionlistassetsjob.h"
 
 #include "session.h"
 
 using namespace Bodega;
 
-class BallotListAssetsJob::Private
+class collectionListAssetsJob::Private
 {
 public:
     Private()
         : hasMoreAssets(false)
     {}
 
-    void init(BallotListAssetsJob *q, const QUrl &url);
-    void parseBallot(const QVariantMap &result);
+    void init(collectionListAssetsJob *q, const QUrl &url);
+    void parsecollection(const QVariantMap &result);
     void parseAssets(const QVariantMap &result);
-    BallotListAssetsJob *q;
-    BallotInfo ballot;
+    collectionListAssetsJob *q;
+    collectionInfo collection;
     QList<AssetInfo> assets;
     bool hasMoreAssets;
     int offset;
     int pageSize;
 };
 
-void BallotListAssetsJob::Private::init(BallotListAssetsJob *parent,
+void collectionListAssetsJob::Private::init(collectionListAssetsJob *parent,
                                         const QUrl &url)
 {
     q = parent;
@@ -62,25 +62,25 @@ void BallotListAssetsJob::Private::init(BallotListAssetsJob *parent,
         pageSize = pageSizeStr.toInt();
 }
 
-void BallotListAssetsJob::Private::parseBallot(const QVariantMap &result)
+void collectionListAssetsJob::Private::parsecollection(const QVariantMap &result)
 {
-    QVariantMap ballot = result[QLatin1String("collection")].toMap();
-    BallotInfo info;
-    info.id = ballot[QLatin1String("id")].toString();
-    info.name = ballot[QLatin1String("name")].toString();
-    info.flags = BallotInfo::None;
-    if (ballot[QLatin1String("public")].toBool()) {
-        info.flags |= BallotInfo::Public;
+    QVariantMap collection = result[QLatin1String("collection")].toMap();
+    collectionInfo info;
+    info.id = collection[QLatin1String("id")].toString();
+    info.name = collection[QLatin1String("name")].toString();
+    info.flags = collectionInfo::None;
+    if (collection[QLatin1String("public")].toBool()) {
+        info.flags |= collectionInfo::Public;
     }
-    if (ballot[QLatin1String("wishlist")].toBool()) {
-        info.flags |= BallotInfo::Wishlist;
+    if (collection[QLatin1String("wishlist")].toBool()) {
+        info.flags |= collectionInfo::Wishlist;
     }
 
-    parseAssets(ballot);
-    this->ballot = info;
+    parseAssets(collection);
+    this->collection = info;
 }
 
-void BallotListAssetsJob::Private::parseAssets(const QVariantMap &result)
+void collectionListAssetsJob::Private::parseAssets(const QVariantMap &result)
 {
     QVariantList assetsLst = result[QLatin1String("assets")].toList();
     QVariantList::const_iterator itr;
@@ -102,7 +102,7 @@ void BallotListAssetsJob::Private::parseAssets(const QVariantMap &result)
 }
 
 
-BallotListAssetsJob::BallotListAssetsJob(QNetworkReply *reply,
+collectionListAssetsJob::collectionListAssetsJob(QNetworkReply *reply,
                                  Session *parent)
     : NetworkJob(reply, parent),
       d(new Private)
@@ -110,45 +110,45 @@ BallotListAssetsJob::BallotListAssetsJob(QNetworkReply *reply,
     d->init(this, url());
 }
 
-BallotListAssetsJob::~BallotListAssetsJob()
+collectionListAssetsJob::~collectionListAssetsJob()
 {
     delete d;
 }
 
-bool BallotListAssetsJob::hasMoreAssets() const
+bool collectionListAssetsJob::hasMoreAssets() const
 {
     return d->hasMoreAssets;
 }
 
-QList<AssetInfo> BallotListAssetsJob::assets() const
+QList<AssetInfo> collectionListAssetsJob::assets() const
 {
     return d->assets;
 }
 
-BallotInfo BallotListAssetsJob::ballot() const
+collectionInfo collectionListAssetsJob::collection() const
 {
-    return d->ballot;
+    return d->collection;
 }
 
-int BallotListAssetsJob::offset() const
+int collectionListAssetsJob::offset() const
 {
     return d->offset;
 }
 
-int BallotListAssetsJob::pageSize() const
+int collectionListAssetsJob::pageSize() const
 {
     return d->pageSize;
 }
 
-void BallotListAssetsJob::netFinished(const QVariantMap &result)
+void collectionListAssetsJob::netFinished(const QVariantMap &result)
 {
     parseCommon(result);
 
     if (authSuccess() && !failed()) {
-        d->parseBallot(result);
+        d->parsecollection(result);
         d->hasMoreAssets = result[QLatin1String("hasMoreAssets")].toBool();
     }
 }
 
 
-#include "ballotlistassetsjob.moc"
+#include "collectionlistassetsjob.moc"

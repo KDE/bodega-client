@@ -17,27 +17,27 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "deleteballotjob.h"
+#include "deletecollectionjob.h"
 
 using namespace Bodega;
 
-class DeleteBallotJob::Private
+class DeletecollectionJob::Private
 {
 public:
     Private()
     {}
 
-    void init(DeleteBallotJob *q, const QUrl &url);
-    DeleteBallotJob *q;
+    void init(DeletecollectionJob *q, const QUrl &url);
+    DeletecollectionJob *q;
 };
 
-void DeleteBallotJob::Private::init(DeleteBallotJob *parent,
+void DeletecollectionJob::Private::init(DeletecollectionJob *parent,
                                    const QUrl &url)
 {
     q = parent;
 }
 
-DeleteBallotJob::DeleteBallotJob(QNetworkReply *reply,
+DeletecollectionJob::DeletecollectionJob(QNetworkReply *reply,
                                  Session *parent)
     : NetworkJob(reply, parent),
       d(new Private)
@@ -45,14 +45,14 @@ DeleteBallotJob::DeleteBallotJob(QNetworkReply *reply,
     d->init(this, url());
 }
 
-DeleteBallotJob::~DeleteBallotJob()
+DeletecollectionJob::~DeletecollectionJob()
 {
     delete d;
 }
 
-void DeleteBallotJob::netFinished(const QVariantMap &result)
+void DeletecollectionJob::netFinished(const QVariantMap &result)
 {
     parseCommon(result);
 }
 
-#include "deleteballotjob.moc"
+#include "deletecollectionjob.moc"

@@ -17,27 +17,27 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "listballotsjob.h"
+#include "listcollectionsjob.h"
 
 using namespace Bodega;
 
-class ListBallotsJob::Private
+class ListcollectionsJob::Private
 {
 public:
     Private()
-        : hasMoreBallots(false)
+        : hasMorecollections(false)
     {}
 
-    void init(ListBallotsJob *q, const QUrl &url);
-    void parseBallots(const QVariantMap &result);
-    ListBallotsJob *q;
-    QList<BallotInfo> ballots;
-    bool hasMoreBallots;
+    void init(ListcollectionsJob *q, const QUrl &url);
+    void parsecollections(const QVariantMap &result);
+    ListcollectionsJob *q;
+    QList<collectionInfo> collections;
+    bool hasMorecollections;
     int offset;
     int pageSize;
 };
 
-void ListBallotsJob::Private::init(ListBallotsJob *parent,
+void ListcollectionsJob::Private::init(ListcollectionsJob *parent,
                                    const QUrl &url)
 {
     q = parent;
@@ -57,27 +57,27 @@ void ListBallotsJob::Private::init(ListBallotsJob *parent,
         pageSize = pageSizeStr.toInt();
 }
 
-void ListBallotsJob::Private::parseBallots(const QVariantMap &result)
+void ListcollectionsJob::Private::parsecollections(const QVariantMap &result)
 {
-    QVariantList ballotsLst = result[QLatin1String("collections")].toList();
+    QVariantList collectionsLst = result[QLatin1String("collections")].toList();
     QVariantList::const_iterator itr;
-    for (itr = ballotsLst.constBegin(); itr != ballotsLst.constEnd(); ++itr) {
-        BallotInfo info;
-        QVariantMap ballot = itr->toMap();
-        info.id = ballot[QLatin1String("id")].toString();
-        info.name = ballot[QLatin1String("name")].toString();
-        info.flags = BallotInfo::None;
-        if (ballot[QLatin1String("public")].toBool()) {
-            info.flags |= BallotInfo::Public;
+    for (itr = collectionsLst.constBegin(); itr != collectionsLst.constEnd(); ++itr) {
+        collectionInfo info;
+        QVariantMap collection = itr->toMap();
+        info.id = collection[QLatin1String("id")].toString();
+        info.name = collection[QLatin1String("name")].toString();
+        info.flags = collectionInfo::None;
+        if (collection[QLatin1String("public")].toBool()) {
+            info.flags |= collectionInfo::Public;
         }
-        if (ballot[QLatin1String("wishlist")].toBool()) {
-            info.flags |= BallotInfo::Wishlist;
+        if (collection[QLatin1String("wishlist")].toBool()) {
+            info.flags |= collectionInfo::Wishlist;
         }
-        ballots.append(info);
+        collections.append(info);
     }
 }
 
-ListBallotsJob::ListBallotsJob(QNetworkReply *reply,
+ListcollectionsJob::ListcollectionsJob(QNetworkReply *reply,
                                Session *parent)
     : NetworkJob(reply, parent),
       d(new Private)
@@ -85,39 +85,39 @@ ListBallotsJob::ListBallotsJob(QNetworkReply *reply,
     d->init(this, url());
 }
 
-ListBallotsJob::~ListBallotsJob()
+ListcollectionsJob::~ListcollectionsJob()
 {
     delete d;
 }
 
-QList<BallotInfo> ListBallotsJob::ballots() const
+QList<collectionInfo> ListcollectionsJob::collections() const
 {
-    return d->ballots;
+    return d->collections;
 }
 
-bool ListBallotsJob::hasMoreBallots() const
+bool ListcollectionsJob::hasMorecollections() const
 {
-    return d->hasMoreBallots;
+    return d->hasMorecollections;
 }
 
-int ListBallotsJob::offset() const
+int ListcollectionsJob::offset() const
 {
     return d->offset;
 }
 
-int ListBallotsJob::pageSize() const
+int ListcollectionsJob::pageSize() const
 {
     return d->pageSize;
 }
 
-void ListBallotsJob::netFinished(const QVariantMap &result)
+void ListcollectionsJob::netFinished(const QVariantMap &result)
 {
     parseCommon(result);
 
     if (authSuccess() && !failed()) {
-        d->parseBallots(result);
-        d->hasMoreBallots = result[QLatin1String("hasMoreBallots")].toBool();
+        d->parsecollections(result);
+        d->hasMorecollections = result[QLatin1String("hasMorecollections")].toBool();
     }
 }
 
-#include "listballotsjob.moc"
+#include "listcollectionsjob.moc"

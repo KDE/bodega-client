@@ -17,10 +17,10 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "listballotsjobmodel.h"
+#include "listcollectionsjobmodel.h"
 
-#include "listballotsjob.h"
-#include "ballotlistassetsjob.h"
+#include "listcollectionsjob.h"
+#include "collectionlistassetsjob.h"
 #include "session.h"
 #include "networkjob.h"
 
@@ -33,69 +33,69 @@ namespace Bodega
 
 static const int DEFAULT_PAGE_SIZE = 50;
 
-class ListBallotsJobModel::Private {
+class ListcollectionsJobModel::Private {
 public:
-    Private(ListBallotsJobModel *parent);
+    Private(ListcollectionsJobModel *parent);
 
-    ListBallotsJobModel *q;
+    ListcollectionsJobModel *q;
     Session *session;
-    QList<BallotInfo> ballots;
+    QList<collectionInfo> collections;
     bool hasMore;
-    int fetchedBallots;
+    int fetchedcollections;
     void fetchInitialCollections();
-    void ballotsJobFinished(Bodega::NetworkJob *job);
+    void collectionsJobFinished(Bodega::NetworkJob *job);
 };
 
-ListBallotsJobModel::Private::Private(ListBallotsJobModel *parent)
+ListcollectionsJobModel::Private::Private(ListcollectionsJobModel *parent)
     : q(parent),
       session(0),
       hasMore(false)
 {
 }
 
-void ListBallotsJobModel::Private::fetchInitialCollections()
+void ListcollectionsJobModel::Private::fetchInitialCollections()
 {
-    ListBallotsJob *job = session->listBallots(0, DEFAULT_PAGE_SIZE);
+    ListcollectionsJob *job = session->listcollections(0, DEFAULT_PAGE_SIZE);
 
     connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
-            q, SLOT(ballotsJobFinished(Bodega::NetworkJob *)));
+            q, SLOT(collectionsJobFinished(Bodega::NetworkJob *)));
 }
 
-void ListBallotsJobModel::Private::ballotsJobFinished(Bodega::NetworkJob *job)
+void ListcollectionsJobModel::Private::collectionsJobFinished(Bodega::NetworkJob *job)
 {
-    ListBallotsJob *ballotJob = qobject_cast<ListBallotsJob*>(job);
+    ListcollectionsJob *collectionJob = qobject_cast<ListcollectionsJob*>(job);
 
-    if (!ballotJob) {
+    if (!collectionJob) {
         return;
     }
 
-    ballotJob->deleteLater();
+    collectionJob->deleteLater();
 
-    if (ballotJob->failed()) {
+    if (collectionJob->failed()) {
         return;
     }
 
-    hasMore = ballotJob->hasMoreBallots();
+    hasMore = collectionJob->hasMorecollections();
 
-    if (ballotJob->ballots().isEmpty()) {
+    if (collectionJob->collections().isEmpty()) {
         return;
     }
 
-    fetchedBallots += ballotJob->ballots().size();
+    fetchedcollections += collectionJob->collections().size();
 
     //clear the model and our data
     q->beginResetModel();
-    ballots.clear();
+    collections.clear();
     q->endResetModel();
 
-    const int begin = ballotJob->offset();
-    const int end = qMax(begin, ballotJob->ballots().count() + begin - 1);
+    const int begin = collectionJob->offset();
+    const int end = qMax(begin, collectionJob->collections().count() + begin - 1);
     q->beginInsertRows(QModelIndex(), begin, end);
-    ballots = ballotJob->ballots();
+    collections = collectionJob->collections();
     q->endInsertRows();
 }
 
-ListBallotsJobModel::ListBallotsJobModel(QObject *parent)
+ListcollectionsJobModel::ListcollectionsJobModel(QObject *parent)
     : QAbstractItemModel(parent),
       d(new Private(this))
 {
@@ -115,12 +115,12 @@ qDebug() << "ctorrrrrrrrrrrrrr";
             this, SIGNAL(countChanged()));
 }
 
-ListBallotsJobModel::~ListBallotsJobModel()
+ListcollectionsJobModel::~ListcollectionsJobModel()
 {
     delete d;
 }
 
-bool ListBallotsJobModel::canFetchMore(const QModelIndex &parent) const
+bool ListcollectionsJobModel::canFetchMore(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         return false;
@@ -129,23 +129,23 @@ bool ListBallotsJobModel::canFetchMore(const QModelIndex &parent) const
     return d->hasMore;
 }
 
-int ListBallotsJobModel::columnCount(const QModelIndex &parent) const
+int ListcollectionsJobModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }
 
-QVariant ListBallotsJobModel::data(const QModelIndex &index, int role) const
+QVariant ListcollectionsJobModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() >= d->ballots.count()) {
+    if (!index.isValid() || index.row() >= d->collections.count()) {
         return QVariant();
     }
 
     switch (role) {
         case CollectionName: {
-            return d->ballots.at(index.row()).name;
+            return d->collections.at(index.row()).name;
         }
         case CollectionId: {
-            return d->ballots.at(index.row()).id;
+            return d->collections.at(index.row()).id;
         }
         default: {
             return QVariant();
@@ -153,20 +153,20 @@ QVariant ListBallotsJobModel::data(const QModelIndex &index, int role) const
     }
 }
 
-void ListBallotsJobModel::fetchMore(const QModelIndex &parent)
+void ListcollectionsJobModel::fetchMore(const QModelIndex &parent)
 {
     if (!parent.isValid() || !d->session || !canFetchMore(parent) ||
         !d->session->isAuthenticated()) {
         return;
     }
 
-    ListBallotsJob *job = d->session->listBallots(d->ballots.count(), DEFAULT_PAGE_SIZE);
+    ListcollectionsJob *job = d->session->listcollections(d->collections.count(), DEFAULT_PAGE_SIZE);
 
     connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
-            this, SLOT(ballotsJobFinished(Bodega::NetworkJob *)));
+            this, SLOT(collectionsJobFinished(Bodega::NetworkJob *)));
 }
 
-Qt::ItemFlags ListBallotsJobModel::flags(const QModelIndex &index) const
+Qt::ItemFlags ListcollectionsJobModel::flags(const QModelIndex &index) const
 {
     if (index.isValid()) {
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -175,47 +175,47 @@ Qt::ItemFlags ListBallotsJobModel::flags(const QModelIndex &index) const
     }
 }
 
-bool ListBallotsJobModel::hasChildren(const QModelIndex &parent) const
+bool ListcollectionsJobModel::hasChildren(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return false;
 }
 
-QVariant ListBallotsJobModel::headerData(int section, Qt::Orientation orientation,
+QVariant ListcollectionsJobModel::headerData(int section, Qt::Orientation orientation,
                            int role) const
 {
     return QVariant();
 }
 
-QModelIndex ListBallotsJobModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex ListcollectionsJobModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (column > 0) {
         return QModelIndex();
     }
 
-    if (row < 0 || row >= d->ballots.count()) {
+    if (row < 0 || row >= d->collections.count()) {
         return QModelIndex();
     }
 
     return createIndex(row, column);
 }
 
-QMap<int, QVariant> ListBallotsJobModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> ListcollectionsJobModel::itemData(const QModelIndex &index) const
 {
     return QMap<int, QVariant>();
 }
 
-QModelIndex ListBallotsJobModel::parent(const QModelIndex &index) const
+QModelIndex ListcollectionsJobModel::parent(const QModelIndex &index) const
 {
     return QModelIndex();
 }
 
-int ListBallotsJobModel::rowCount(const QModelIndex &parent) const
+int ListcollectionsJobModel::rowCount(const QModelIndex &parent) const
 {
-    return d->ballots.size();
+    return d->collections.size();
 }
 
-void ListBallotsJobModel::setSession(Session *session)
+void ListcollectionsJobModel::setSession(Session *session)
 {
     qDebug() << "sto setSession";
     if (session == d->session) {
@@ -237,11 +237,11 @@ void ListBallotsJobModel::setSession(Session *session)
             this, SLOT(fetchInitialCollections()));
 }
 
-Session *ListBallotsJobModel::session() const
+Session *ListcollectionsJobModel::session() const
 {
     return d->session;
 }
 
 }
 
-#include "listballotsjobmodel.moc"
+#include "listcollectionsjobmodel.moc"

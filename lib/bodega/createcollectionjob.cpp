@@ -17,50 +17,50 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "createballotjob.h"
+#include "createcollectionjob.h"
 
 using namespace Bodega;
 
-class CreateBallotJob::Private
+class CreatecollectionJob::Private
 {
 public:
     Private()
     {}
 
-    void init(CreateBallotJob *q, const QUrl &url);
-    void parseBallots(const QVariantMap &result);
-    CreateBallotJob *q;
-    BallotInfo ballot;
+    void init(CreatecollectionJob *q, const QUrl &url);
+    void parsecollections(const QVariantMap &result);
+    CreatecollectionJob *q;
+    collectionInfo collection;
 };
 
-void CreateBallotJob::Private::init(CreateBallotJob *parent,
+void CreatecollectionJob::Private::init(CreatecollectionJob *parent,
                                    const QUrl &url)
 {
     q = parent;
 }
 
-void CreateBallotJob::Private::parseBallots(const QVariantMap &result)
+void CreatecollectionJob::Private::parsecollections(const QVariantMap &result)
 {
-    QVariantList ballotsLst = result[QLatin1String("ballots")].toList();
+    QVariantList collectionsLst = result[QLatin1String("collections")].toList();
 
-    Q_ASSERT(ballotsLst.count() == 1);
+    Q_ASSERT(collectionsLst.count() == 1);
 
-    QVariantMap ballot = ballotsLst[0].toMap();
-    BallotInfo info;
-    info.id = ballot[QLatin1String("id")].toString();
-    info.name = ballot[QLatin1String("name")].toString();
-    info.flags = BallotInfo::None;
-    if (ballot[QLatin1String("public")].toBool()) {
-        info.flags |= BallotInfo::Public;
+    QVariantMap collection = collectionsLst[0].toMap();
+    collectionInfo info;
+    info.id = collection[QLatin1String("id")].toString();
+    info.name = collection[QLatin1String("name")].toString();
+    info.flags = collectionInfo::None;
+    if (collection[QLatin1String("public")].toBool()) {
+        info.flags |= collectionInfo::Public;
     }
-    if (ballot[QLatin1String("wishlist")].toBool()) {
-        info.flags |= BallotInfo::Wishlist;
+    if (collection[QLatin1String("wishlist")].toBool()) {
+        info.flags |= collectionInfo::Wishlist;
     }
 
-    this->ballot = info;
+    this->collection = info;
 }
 
-CreateBallotJob::CreateBallotJob(QNetworkReply *reply,
+CreatecollectionJob::CreatecollectionJob(QNetworkReply *reply,
                                  Session *parent)
     : NetworkJob(reply, parent),
       d(new Private)
@@ -68,23 +68,23 @@ CreateBallotJob::CreateBallotJob(QNetworkReply *reply,
     d->init(this, url());
 }
 
-CreateBallotJob::~CreateBallotJob()
+CreatecollectionJob::~CreatecollectionJob()
 {
     delete d;
 }
 
-BallotInfo CreateBallotJob::ballot() const
+collectionInfo CreatecollectionJob::collection() const
 {
-    return d->ballot;
+    return d->collection;
 }
 
-void CreateBallotJob::netFinished(const QVariantMap &result)
+void CreatecollectionJob::netFinished(const QVariantMap &result)
 {
     parseCommon(result);
 
     if (authSuccess() && !failed()) {
-        d->parseBallots(result);
+        d->parsecollections(result);
     }
 }
 
-#include "createballotjob.moc"
+#include "createcollectionjob.moc"

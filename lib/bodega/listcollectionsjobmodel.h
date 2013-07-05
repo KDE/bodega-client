@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef BODEGA_LISTBALLOTSJOB_MODEL_H
-#define BODEGA_LISTBALLOTSJOB_MODEL_H
+#ifndef BODEGA_LISTCOLLECTIONSJOB_MODEL_H
+#define BODEGA_LISTCOLLECTIONSJOB_MODEL_H
 
 #include <bodega/globals.h>
 
@@ -28,7 +28,7 @@ namespace Bodega {
 
     class Session;
 
-    class BODEGA_EXPORT ListBallotsJobModel : public QAbstractItemModel
+    class BODEGA_EXPORT ListcollectionsJobModel : public QAbstractItemModel
     {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
@@ -39,8 +39,8 @@ namespace Bodega {
             CollectionId = Qt::UserRole + 2,
         };
 
-        ListBallotsJobModel(QObject *parent = 0);
-        ~ListBallotsJobModel();
+        ListcollectionsJobModel(QObject *parent = 0);
+        ~ListcollectionsJobModel();
 
         //Invokable to make the view show a spinner when loading more
         Q_INVOKABLE bool canFetchMore(const QModelIndex &parent) const;
@@ -69,7 +69,7 @@ namespace Bodega {
         class Private;
         friend class Private;
         Private * const d;
-        Q_PRIVATE_SLOT(d, void ballotsJobFinished(Bodega::NetworkJob *))
+        Q_PRIVATE_SLOT(d, void collectionsJobFinished(Bodega::NetworkJob *))
         Q_PRIVATE_SLOT(d, void fetchInitialCollections())
     };
 }

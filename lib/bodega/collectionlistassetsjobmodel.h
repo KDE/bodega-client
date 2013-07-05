@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef BODEGA_BALLOTLISTASSETSJOB_MODEL_H
-#define BODEGA_BALLOTLISTASSETSJOB_MODEL_H
+#ifndef BODEGA_COLLECTIONLISTASSETSJOB_MODEL_H
+#define BODEGA_COLLECTIONLISTASSETSJOB_MODEL_H
 
 #include <bodega/globals.h>
 
@@ -28,7 +28,7 @@ namespace Bodega {
 
     class Session;
 
-    class BODEGA_EXPORT BallotListAssetsJobModel : public QAbstractItemModel
+    class BODEGA_EXPORT collectionListAssetsJobModel : public QAbstractItemModel
     {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
@@ -41,8 +41,8 @@ namespace Bodega {
             AssetNameRole = Qt::UserRole + 101
         };
 
-        BallotListAssetsJobModel(QObject *parent = 0);
-        ~BallotListAssetsJobModel();
+        collectionListAssetsJobModel(QObject *parent = 0);
+        ~collectionListAssetsJobModel();
 
         QString collectionId() const;
         void setCollectionId(const QString& collectionId);

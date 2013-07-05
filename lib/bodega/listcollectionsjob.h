@@ -17,29 +17,29 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef BODEGA_LISTBALLOTSJOB_H
-#define BODEGA_LISTBALLOTSJOB_H
+#ifndef BODEGA_LISTCOLLECTIONSJOB_H
+#define BODEGA_LISTCOLLECTIONSJOB_H
 
 #include <bodega/networkjob.h>
 #include <bodega/globals.h>
 
 namespace Bodega {
 
-    class BODEGA_EXPORT ListBallotsJob : public NetworkJob
+    class BODEGA_EXPORT ListcollectionsJob : public NetworkJob
     {
         Q_OBJECT
         Q_PROPERTY(int pageSize READ pageSize)
         Q_PROPERTY(int offset READ offset)
-        Q_PROPERTY(bool hasMoreBallots READ hasMoreBallots)
-        Q_PROPERTY(QList<Bodega::BallotInfo> ballots READ ballots)
+        Q_PROPERTY(bool hasMorecollections READ hasMorecollections)
+        Q_PROPERTY(QList<Bodega::collectionInfo> collections READ collections)
     public:
-        ListBallotsJob(QNetworkReply *reply,
+        ListcollectionsJob(QNetworkReply *reply,
                        Session *parent);
-        ~ListBallotsJob();
+        ~ListcollectionsJob();
 
-        QList<Bodega::BallotInfo> ballots() const;
+        QList<Bodega::collectionInfo> collections() const;
 
-        bool hasMoreBallots() const;
+        bool hasMorecollections() const;
         int offset() const;
         int pageSize() const;
 

@@ -17,21 +17,21 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef BODEGA_DELETEBALLOTJOB_H
-#define BODEGA_DELETEBALLOTJOB_H
+#ifndef BODEGA_DELETECOLLECTIONJOB_H
+#define BODEGA_DELETECOLLECTIONJOB_H
 
 #include <bodega/networkjob.h>
 #include <bodega/globals.h>
 
 namespace Bodega {
 
-    class BODEGA_EXPORT DeleteBallotJob : public NetworkJob
+    class BODEGA_EXPORT DeletecollectionJob : public NetworkJob
     {
         Q_OBJECT
     public:
-        DeleteBallotJob(QNetworkReply *reply,
+        DeletecollectionJob(QNetworkReply *reply,
                        Session *parent);
-        ~DeleteBallotJob();
+        ~DeletecollectionJob();
 
     protected:
         virtual void netFinished(const QVariantMap &result);
