@@ -28,13 +28,13 @@ namespace Bodega {
     class BODEGA_EXPORT CreatecollectionJob : public NetworkJob
     {
         Q_OBJECT
-        Q_PROPERTY(Bodega::collectionInfo collection READ collection)
+        Q_PROPERTY(Bodega::CollectionInfo collection READ collection)
     public:
         CreatecollectionJob(QNetworkReply *reply,
                        Session *parent);
         ~CreatecollectionJob();
 
-        Bodega::collectionInfo collection() const;
+        Bodega::CollectionInfo collection() const;
 
     protected:
         virtual void netFinished(const QVariantMap &result);

@@ -21,23 +21,23 @@
 
 using namespace Bodega;
 
-class ListcollectionsJob::Private
+class ListCollectionsJob::Private
 {
 public:
     Private()
         : hasMorecollections(false)
     {}
 
-    void init(ListcollectionsJob *q, const QUrl &url);
+    void init(ListCollectionsJob *q, const QUrl &url);
     void parsecollections(const QVariantMap &result);
-    ListcollectionsJob *q;
-    QList<collectionInfo> collections;
+    ListCollectionsJob *q;
+    QList<CollectionInfo> collections;
     bool hasMorecollections;
     int offset;
     int pageSize;
 };
 
-void ListcollectionsJob::Private::init(ListcollectionsJob *parent,
+void ListCollectionsJob::Private::init(ListCollectionsJob *parent,
                                    const QUrl &url)
 {
     q = parent;
@@ -57,27 +57,27 @@ void ListcollectionsJob::Private::init(ListcollectionsJob *parent,
         pageSize = pageSizeStr.toInt();
 }
 
-void ListcollectionsJob::Private::parsecollections(const QVariantMap &result)
+void ListCollectionsJob::Private::parsecollections(const QVariantMap &result)
 {
     QVariantList collectionsLst = result[QLatin1String("collections")].toList();
     QVariantList::const_iterator itr;
     for (itr = collectionsLst.constBegin(); itr != collectionsLst.constEnd(); ++itr) {
-        collectionInfo info;
+        CollectionInfo info;
         QVariantMap collection = itr->toMap();
         info.id = collection[QLatin1String("id")].toString();
         info.name = collection[QLatin1String("name")].toString();
-        info.flags = collectionInfo::None;
+        info.flags = CollectionInfo::None;
         if (collection[QLatin1String("public")].toBool()) {
-            info.flags |= collectionInfo::Public;
+            info.flags |= CollectionInfo::Public;
         }
         if (collection[QLatin1String("wishlist")].toBool()) {
-            info.flags |= collectionInfo::Wishlist;
+            info.flags |= CollectionInfo::Wishlist;
         }
         collections.append(info);
     }
 }
 
-ListcollectionsJob::ListcollectionsJob(QNetworkReply *reply,
+ListCollectionsJob::ListCollectionsJob(QNetworkReply *reply,
                                Session *parent)
     : NetworkJob(reply, parent),
       d(new Private)
@@ -85,32 +85,32 @@ ListcollectionsJob::ListcollectionsJob(QNetworkReply *reply,
     d->init(this, url());
 }
 
-ListcollectionsJob::~ListcollectionsJob()
+ListCollectionsJob::~ListCollectionsJob()
 {
     delete d;
 }
 
-QList<collectionInfo> ListcollectionsJob::collections() const
+QList<CollectionInfo> ListCollectionsJob::collections() const
 {
     return d->collections;
 }
 
-bool ListcollectionsJob::hasMorecollections() const
+bool ListCollectionsJob::hasMorecollections() const
 {
     return d->hasMorecollections;
 }
 
-int ListcollectionsJob::offset() const
+int ListCollectionsJob::offset() const
 {
     return d->offset;
 }
 
-int ListcollectionsJob::pageSize() const
+int ListCollectionsJob::pageSize() const
 {
     return d->pageSize;
 }
 
-void ListcollectionsJob::netFinished(const QVariantMap &result)
+void ListCollectionsJob::netFinished(const QVariantMap &result)
 {
     parseCommon(result);
 

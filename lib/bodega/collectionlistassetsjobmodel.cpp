@@ -32,11 +32,11 @@ namespace Bodega
 
 static const int DEFAULT_PAGE_SIZE = 50;
 
-class collectionListAssetsJobModel::Private {
+class CollectionListAssetsJobModel::Private {
 public:
-    Private(collectionListAssetsJobModel *parent);
+    Private(CollectionListAssetsJobModel *parent);
 
-    collectionListAssetsJobModel *q;
+    CollectionListAssetsJobModel *q;
     Session *session;
     bool hasMore;
     int fetchedAssets;
@@ -46,14 +46,14 @@ public:
     QList<AssetInfo> assets;
 };
 
-collectionListAssetsJobModel::Private::Private(collectionListAssetsJobModel *parent)
+CollectionListAssetsJobModel::Private::Private(CollectionListAssetsJobModel *parent)
     : q(parent),
       session(0),
       hasMore(false)
 {
 }
 
-void collectionListAssetsJobModel::Private::fetchAssets()
+void CollectionListAssetsJobModel::Private::fetchAssets()
 {
     //this method will be called when the collectionId has changed inside from QML,
     //so we will use the 0(zero) as our offset, because we don't do any incremental stuff
@@ -69,7 +69,7 @@ void collectionListAssetsJobModel::Private::fetchAssets()
             q, SLOT(assetsJobFinished(Bodega::NetworkJob *)));
 }
 
-void collectionListAssetsJobModel::Private::assetsJobFinished(Bodega::NetworkJob *job)
+void CollectionListAssetsJobModel::Private::assetsJobFinished(Bodega::NetworkJob *job)
 {
     collectionListAssetsJob *collectionJob = qobject_cast<collectionListAssetsJob*>(job);
 
@@ -93,7 +93,7 @@ void collectionListAssetsJobModel::Private::assetsJobFinished(Bodega::NetworkJob
     q->endInsertRows();
 }
 
-collectionListAssetsJobModel::collectionListAssetsJobModel(QObject *parent)
+CollectionListAssetsJobModel::CollectionListAssetsJobModel(QObject *parent)
     : QAbstractItemModel(parent),
       d(new Private(this))
 {
@@ -114,23 +114,23 @@ collectionListAssetsJobModel::collectionListAssetsJobModel(QObject *parent)
             this, SLOT(fetchAssets()));
 }
 
-collectionListAssetsJobModel::~collectionListAssetsJobModel()
+CollectionListAssetsJobModel::~CollectionListAssetsJobModel()
 {
     delete d;
 }
 
-QString collectionListAssetsJobModel::collectionId() const
+QString CollectionListAssetsJobModel::collectionId() const
 {
     return d->collectionId;
 }
 
-void collectionListAssetsJobModel::setCollectionId(const QString& collectionId)
+void CollectionListAssetsJobModel::setCollectionId(const QString& collectionId)
 {
     d->collectionId = collectionId;
     emit collectionIdChanged();
 }
 
-bool collectionListAssetsJobModel::canFetchMore(const QModelIndex &parent) const
+bool CollectionListAssetsJobModel::canFetchMore(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         return false;
@@ -139,12 +139,12 @@ bool collectionListAssetsJobModel::canFetchMore(const QModelIndex &parent) const
     return d->hasMore;
 }
 
-int collectionListAssetsJobModel::columnCount(const QModelIndex &parent) const
+int CollectionListAssetsJobModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }
 
-QVariant collectionListAssetsJobModel::data(const QModelIndex &index, int role) const
+QVariant CollectionListAssetsJobModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= d->assets.count()) {
         return QVariant();
@@ -164,7 +164,7 @@ QVariant collectionListAssetsJobModel::data(const QModelIndex &index, int role) 
     }
 }
 
-void collectionListAssetsJobModel::fetchMore(const QModelIndex &parent)
+void CollectionListAssetsJobModel::fetchMore(const QModelIndex &parent)
 {
     if (!parent.isValid() || !d->session || !canFetchMore(parent) ||
         !d->session->isAuthenticated()) {
@@ -177,7 +177,7 @@ void collectionListAssetsJobModel::fetchMore(const QModelIndex &parent)
             this, SLOT(assetsJobFinished(Bodega::NetworkJob *)));
 }
 
-Qt::ItemFlags collectionListAssetsJobModel::flags(const QModelIndex &index) const
+Qt::ItemFlags CollectionListAssetsJobModel::flags(const QModelIndex &index) const
 {
     if (index.isValid()) {
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -186,19 +186,19 @@ Qt::ItemFlags collectionListAssetsJobModel::flags(const QModelIndex &index) cons
     }
 }
 
-bool collectionListAssetsJobModel::hasChildren(const QModelIndex &parent) const
+bool CollectionListAssetsJobModel::hasChildren(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return false;
 }
 
-QVariant collectionListAssetsJobModel::headerData(int section, Qt::Orientation orientation,
+QVariant CollectionListAssetsJobModel::headerData(int section, Qt::Orientation orientation,
                            int role) const
 {
     return QVariant();
 }
 
-QModelIndex collectionListAssetsJobModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex CollectionListAssetsJobModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (column > 0) {
         return QModelIndex();
@@ -211,22 +211,22 @@ QModelIndex collectionListAssetsJobModel::index(int row, int column, const QMode
     return createIndex(row, column);
 }
 
-QMap<int, QVariant> collectionListAssetsJobModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> CollectionListAssetsJobModel::itemData(const QModelIndex &index) const
 {
     return QMap<int, QVariant>();
 }
 
-QModelIndex collectionListAssetsJobModel::parent(const QModelIndex &index) const
+QModelIndex CollectionListAssetsJobModel::parent(const QModelIndex &index) const
 {
     return QModelIndex();
 }
 
-int collectionListAssetsJobModel::rowCount(const QModelIndex &parent) const
+int CollectionListAssetsJobModel::rowCount(const QModelIndex &parent) const
 {
     return d->assets.size();
 }
 
-void collectionListAssetsJobModel::setSession(Session *session)
+void CollectionListAssetsJobModel::setSession(Session *session)
 {
     if (session == d->session) {
         return;
@@ -243,7 +243,7 @@ void collectionListAssetsJobModel::setSession(Session *session)
     }
 }
 
-Session *collectionListAssetsJobModel::session() const
+Session *CollectionListAssetsJobModel::session() const
 {
     return d->session;
 }

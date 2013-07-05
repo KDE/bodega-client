@@ -34,7 +34,7 @@ public:
     void parsecollection(const QVariantMap &result);
     void parseAssets(const QVariantMap &result);
     collectionListAssetsJob *q;
-    collectionInfo collection;
+    CollectionInfo collection;
     QList<AssetInfo> assets;
     bool hasMoreAssets;
     int offset;
@@ -65,15 +65,15 @@ void collectionListAssetsJob::Private::init(collectionListAssetsJob *parent,
 void collectionListAssetsJob::Private::parsecollection(const QVariantMap &result)
 {
     QVariantMap collection = result[QLatin1String("collection")].toMap();
-    collectionInfo info;
+    CollectionInfo info;
     info.id = collection[QLatin1String("id")].toString();
     info.name = collection[QLatin1String("name")].toString();
-    info.flags = collectionInfo::None;
+    info.flags = CollectionInfo::None;
     if (collection[QLatin1String("public")].toBool()) {
-        info.flags |= collectionInfo::Public;
+        info.flags |= CollectionInfo::Public;
     }
     if (collection[QLatin1String("wishlist")].toBool()) {
-        info.flags |= collectionInfo::Wishlist;
+        info.flags |= CollectionInfo::Wishlist;
     }
 
     parseAssets(collection);
@@ -125,7 +125,7 @@ QList<AssetInfo> collectionListAssetsJob::assets() const
     return d->assets;
 }
 
-collectionInfo collectionListAssetsJob::collection() const
+CollectionInfo collectionListAssetsJob::collection() const
 {
     return d->collection;
 }

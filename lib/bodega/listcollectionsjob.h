@@ -25,19 +25,19 @@
 
 namespace Bodega {
 
-    class BODEGA_EXPORT ListcollectionsJob : public NetworkJob
+    class BODEGA_EXPORT ListCollectionsJob : public NetworkJob
     {
         Q_OBJECT
         Q_PROPERTY(int pageSize READ pageSize)
         Q_PROPERTY(int offset READ offset)
         Q_PROPERTY(bool hasMorecollections READ hasMorecollections)
-        Q_PROPERTY(QList<Bodega::collectionInfo> collections READ collections)
+        Q_PROPERTY(QList<Bodega::CollectionInfo> collections READ collections)
     public:
-        ListcollectionsJob(QNetworkReply *reply,
+        ListCollectionsJob(QNetworkReply *reply,
                        Session *parent);
-        ~ListcollectionsJob();
+        ~ListCollectionsJob();
 
-        QList<Bodega::collectionInfo> collections() const;
+        QList<Bodega::CollectionInfo> collections() const;
 
         bool hasMorecollections() const;
         int offset() const;

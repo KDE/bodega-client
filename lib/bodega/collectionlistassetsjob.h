@@ -28,7 +28,7 @@ namespace Bodega {
     class BODEGA_EXPORT collectionListAssetsJob : public NetworkJob
     {
         Q_OBJECT
-        Q_PROPERTY(Bodega::collectionInfo collection READ collection)
+        Q_PROPERTY(Bodega::CollectionInfo collection READ collection)
         Q_PROPERTY(QList<Bodega::AssetInfo> assets READ assets)
         Q_PROPERTY(int pageSize READ pageSize)
         Q_PROPERTY(int offset READ offset)
@@ -40,7 +40,7 @@ namespace Bodega {
         bool hasMoreAssets() const;
 
         QList<Bodega::AssetInfo> assets() const;
-        Bodega::collectionInfo collection() const;
+        Bodega::CollectionInfo collection() const;
 
         int offset() const;
         int pageSize() const;

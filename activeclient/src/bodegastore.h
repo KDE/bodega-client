@@ -28,8 +28,8 @@ namespace Bodega {
     class HistoryModel;
     class Model;
     class Session;
-    class ListBallotsJobModel;
-    class BallotListAssetsJobModel;
+    class ListCollectionsJobModel;
+    class CollectionListAssetsJobModel;
 }
 
 Q_DECLARE_METATYPE(Bodega::Session*)
@@ -94,8 +94,8 @@ class BodegaStore : public KDeclarativeMainWindow
     Q_PROPERTY(Bodega::Model *channelsModel READ channelsModel CONSTANT)
     Q_PROPERTY(Bodega::Model *searchModel READ searchModel CONSTANT)
     Q_PROPERTY(Bodega::HistoryModel *historyModel READ historyModel CONSTANT)
-    Q_PROPERTY(Bodega::ListBallotsJobModel *listBallotsJobModel READ listBallotsJobModel CONSTANT)
-    Q_PROPERTY(Bodega::BallotListAssetsJobModel *ballotListAssetsJobModel READ ballotListAssetsJobModel CONSTANT)
+    Q_PROPERTY(Bodega::ListCollectionsJobModel *listCollectionsJobModel READ listCollectionsJobModel CONSTANT)
+    Q_PROPERTY(Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel READ collectionListAssetsJobModel CONSTANT)
 public:
     BodegaStore();
     virtual ~BodegaStore();
@@ -105,8 +105,8 @@ public:
     Bodega::Model* channelsModel() const;
     Bodega::Model* searchModel() const;
     Bodega::HistoryModel *historyModel();
-    Bodega::ListBallotsJobModel *listBallotsJobModel() const;
-    Bodega::BallotListAssetsJobModel *ballotListAssetsJobModel() const;
+    Bodega::ListCollectionsJobModel *listCollectionsJobModel() const;
+    Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel() const;
 
     Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE void forgetCredentials() const;
@@ -118,8 +118,8 @@ private:
     Bodega::Model *m_channelsModel;
     Bodega::Model *m_searchModel;
     Bodega::HistoryModel *m_historyModel;
-    Bodega::ListBallotsJobModel *m_listBallotsJobModel;
-    Bodega::BallotListAssetsJobModel *m_ballotListAssetsJobModel;
+    Bodega::ListCollectionsJobModel *m_listCollectionsJobModel;
+    Bodega::CollectionListAssetsJobModel *m_collectionListAssetsJobModel;
     int m_historyUsers;
 };
 

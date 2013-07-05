@@ -28,7 +28,7 @@ namespace Bodega {
 
     class Session;
 
-    class BODEGA_EXPORT collectionListAssetsJobModel : public QAbstractItemModel
+    class BODEGA_EXPORT CollectionListAssetsJobModel : public QAbstractItemModel
     {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
@@ -41,8 +41,8 @@ namespace Bodega {
             AssetNameRole = Qt::UserRole + 101
         };
 
-        collectionListAssetsJobModel(QObject *parent = 0);
-        ~collectionListAssetsJobModel();
+        CollectionListAssetsJobModel(QObject *parent = 0);
+        ~CollectionListAssetsJobModel();
 
         QString collectionId() const;
         void setCollectionId(const QString& collectionId);

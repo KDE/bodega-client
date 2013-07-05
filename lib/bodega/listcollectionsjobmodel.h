@@ -28,7 +28,7 @@ namespace Bodega {
 
     class Session;
 
-    class BODEGA_EXPORT ListcollectionsJobModel : public QAbstractItemModel
+    class BODEGA_EXPORT ListCollectionsJobModel : public QAbstractItemModel
     {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
@@ -39,8 +39,8 @@ namespace Bodega {
             CollectionId = Qt::UserRole + 2,
         };
 
-        ListcollectionsJobModel(QObject *parent = 0);
-        ~ListcollectionsJobModel();
+        ListCollectionsJobModel(QObject *parent = 0);
+        ~ListCollectionsJobModel();
 
         //Invokable to make the view show a spinner when loading more
         Q_INVOKABLE bool canFetchMore(const QModelIndex &parent) const;

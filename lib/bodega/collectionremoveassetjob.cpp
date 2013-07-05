@@ -30,7 +30,7 @@ public:
     void init(collectionRemoveAssetJob *q, const QUrl &url);
     void parsecollection(const QVariantMap &result);
     collectionRemoveAssetJob *q;
-    collectionInfo collection;
+    CollectionInfo collection;
 };
 
 void collectionRemoveAssetJob::Private::init(collectionRemoveAssetJob *parent,
@@ -42,15 +42,15 @@ void collectionRemoveAssetJob::Private::init(collectionRemoveAssetJob *parent,
 void collectionRemoveAssetJob::Private::parsecollection(const QVariantMap &result)
 {
     QVariantMap collection = result[QLatin1String("collection")].toMap();
-    collectionInfo info;
+    CollectionInfo info;
     info.id = collection[QLatin1String("id")].toString();
     info.name = collection[QLatin1String("name")].toString();
-    info.flags = collectionInfo::None;
+    info.flags = CollectionInfo::None;
     if (collection[QLatin1String("public")].toBool()) {
-        info.flags |= collectionInfo::Public;
+        info.flags |= CollectionInfo::Public;
     }
     if (collection[QLatin1String("wishlist")].toBool()) {
-        info.flags |= collectionInfo::Wishlist;
+        info.flags |= CollectionInfo::Wishlist;
     }
 
     this->collection = info;
@@ -69,7 +69,7 @@ collectionRemoveAssetJob::~collectionRemoveAssetJob()
     delete d;
 }
 
-collectionInfo collectionRemoveAssetJob::collection() const
+CollectionInfo collectionRemoveAssetJob::collection() const
 {
     return d->collection;
 }

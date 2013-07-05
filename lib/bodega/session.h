@@ -34,16 +34,16 @@ namespace Bodega {
 
     class AssetJob;
     class AssetOperations;
-    class BallotAddAssetJob;
-    class BallotListAssetsJob;
-    class BallotRemoveAssetJob;
+    class collectionAddAssetJob;
+    class collectionListAssetsJob;
+    class collectionRemoveAssetJob;
     class ChannelsJob;
     class ChangeLanguageJob;
-    class CreateBallotJob;
-    class DeleteBallotJob;
+    class CreatecollectionJob;
+    class DeletecollectionJob;
     class InstallJob;
     class InstallJobsModel;
-    class ListBallotsJob;
+    class ListCollectionsJob;
     class ParticipantInfoJob;
     class RegisterJob;
     class ResetPasswordJob;
@@ -127,16 +127,16 @@ namespace Bodega {
                                              const QString &addressZip = QString(), const QString &addressState = QString(),
                                              const QString &addressCountry = QString());
 
-        Bodega::ListBallotsJob *listBallots(int offset=-1, int pageSize=-1);
-        Bodega::CreateBallotJob *createCollection(
+        Bodega::ListCollectionsJob *listcollections(int offset=-1, int pageSize=-1);
+        Bodega::CreatecollectionJob *createCollection(
             const QString &name,
-            Bodega::BallotInfo::BallotFlags flags = Bodega::BallotInfo::None);
-        Bodega::DeleteBallotJob *deleteCollection(const QString &collectionId);
-        Bodega::BallotAddAssetJob *collectionAddAsset(const QString &collectionId,
+            Bodega::CollectionInfo::CollectionFlags flags = Bodega::CollectionInfo::None);
+        Bodega::DeletecollectionJob *deleteCollection(const QString &collectionId);
+        Bodega::collectionAddAssetJob *collectionAddAsset(const QString &collectionId,
                                                   const QString &assetId);
-        Bodega::BallotRemoveAssetJob *collectionRemoveAsset(const QString &collectionId,
+        Bodega::collectionRemoveAssetJob *collectionRemoveAsset(const QString &collectionId,
                                                         const QString &assetId);
-        Bodega::BallotListAssetsJob *collectionListAssets(const QString &collectionId,
+        Bodega::collectionListAssetsJob *collectionListAssets(const QString &collectionId,
                                                       int offset=-1,
                                                       int pageSize=-1);
 

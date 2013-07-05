@@ -23,16 +23,16 @@
 
 #include "assetjob.h"
 #include "assetoperations.h"
-#include "ballotaddassetjob.h"
-#include "ballotlistassetsjob.h"
-#include "ballotremoveassetjob.h"
+#include "collectionaddassetjob.h"
+#include "collectionlistassetsjob.h"
+#include "collectionremoveassetjob.h"
 #include "channelsjob.h"
 #include "changelanguagejob.h"
-#include "createballotjob.h"
-#include "deleteballotjob.h"
+#include "createcollectionjob.h"
+#include "deletecollectionjob.h"
 #include "installjob.h"
 #include "installjobsmodel.h"
-#include "listballotsjob.h"
+#include "listcollectionsjob.h"
 #include "participantinfojob.h"
 #include "registerjob.h"
 #include "signonjob.h"
@@ -597,7 +597,7 @@ Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, cons
     return job;
 }
 
-Bodega::ListBallotsJob *Session::listBallots(int offset, int pageSize)
+Bodega::ListCollectionsJob *Session::listcollections(int offset, int pageSize)
 {
     QUrl url = d->baseUrl;
     const QString path = QString::fromLatin1("/collection/list");
@@ -607,13 +607,13 @@ Bodega::ListBallotsJob *Session::listBallots(int offset, int pageSize)
 
     //qDebug()<<"url is " <<url;
 
-    ListBallotsJob *job = new ListBallotsJob(d->get(url), this);
+    ListCollectionsJob *job = new ListCollectionsJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }
 
-Bodega::CreateBallotJob * Session::createCollection(const QString &name,
-                                                BallotInfo::BallotFlags flags)
+Bodega::CreatecollectionJob * Session::createCollection(const QString &name,
+                                                CollectionInfo::CollectionFlags flags)
 {
     QUrl url = d->baseUrl;
     const QString path = QString::fromLatin1("/collections/create");
@@ -621,12 +621,12 @@ Bodega::CreateBallotJob * Session::createCollection(const QString &name,
     url.setEncodedPath(d->jsonPath(path));
 
     url.addQueryItem(QLatin1String("name"), name);
-    if (flags.testFlag(BallotInfo::Public)) {
+    if (flags.testFlag(CollectionInfo::Public)) {
         url.addQueryItem(QLatin1String("public"), QLatin1String("true"));
     } else {
         url.addQueryItem(QLatin1String("public"), QLatin1String("false"));
     }
-    if (flags.testFlag(BallotInfo::Wishlist)) {
+    if (flags.testFlag(CollectionInfo::Wishlist)) {
         url.addQueryItem(QLatin1String("wishlist"), QLatin1String("true"));
     } else {
         url.addQueryItem(QLatin1String("wishlist"), QLatin1String("false"));
@@ -634,12 +634,12 @@ Bodega::CreateBallotJob * Session::createCollection(const QString &name,
 
     //qDebug()<<"url is " <<url;
 
-    CreateBallotJob *job = new CreateBallotJob(d->get(url), this);
+    CreatecollectionJob *job = new CreatecollectionJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }
 
-Bodega::DeleteBallotJob * Session::deleteCollection(const QString &collectionId)
+Bodega::DeletecollectionJob * Session::deleteCollection(const QString &collectionId)
 {
     QUrl url = d->baseUrl;
     const QString path = QString::fromLatin1("/collections/delete");
@@ -650,12 +650,12 @@ Bodega::DeleteBallotJob * Session::deleteCollection(const QString &collectionId)
 
     //qDebug()<<"url is " <<url;
 
-    DeleteBallotJob *job = new DeleteBallotJob(d->get(url), this);
+    DeletecollectionJob *job = new DeletecollectionJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }
 
-Bodega::BallotAddAssetJob * Session::collectionAddAsset(const QString &collectionId,
+Bodega::collectionAddAssetJob * Session::collectionAddAsset(const QString &collectionId,
                                                     const QString &assetId)
 {
     QUrl url = d->baseUrl;
@@ -668,12 +668,12 @@ Bodega::BallotAddAssetJob * Session::collectionAddAsset(const QString &collectio
 
     //qDebug()<<"url is " <<url;
 
-    BallotAddAssetJob *job = new BallotAddAssetJob(d->get(url), this);
+    collectionAddAssetJob *job = new collectionAddAssetJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }
 
-Bodega::BallotRemoveAssetJob * Session::collectionRemoveAsset(const QString &collectionId,
+Bodega::collectionRemoveAssetJob * Session::collectionRemoveAsset(const QString &collectionId,
                                                           const QString &assetId)
 {
     QUrl url = d->baseUrl;
@@ -686,12 +686,12 @@ Bodega::BallotRemoveAssetJob * Session::collectionRemoveAsset(const QString &col
 
     //qDebug()<<"url is " <<url;
 
-    BallotRemoveAssetJob *job = new BallotRemoveAssetJob(d->get(url), this);
+    collectionRemoveAssetJob *job = new collectionRemoveAssetJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }
 
-Bodega::BallotListAssetsJob * Session::collectionListAssets(const QString &collectionId,
+Bodega::collectionListAssetsJob * Session::collectionListAssets(const QString &collectionId,
                                                         int offset,
                                                         int pageSize)
 {
@@ -702,7 +702,7 @@ Bodega::BallotListAssetsJob * Session::collectionListAssets(const QString &colle
 
     //qDebug()<<"url is " <<url;
 
-    BallotListAssetsJob *job = new BallotListAssetsJob(d->get(url), this);
+    collectionListAssetsJob *job = new collectionListAssetsJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }

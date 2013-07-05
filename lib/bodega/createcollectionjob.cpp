@@ -30,7 +30,7 @@ public:
     void init(CreatecollectionJob *q, const QUrl &url);
     void parsecollections(const QVariantMap &result);
     CreatecollectionJob *q;
-    collectionInfo collection;
+    CollectionInfo collection;
 };
 
 void CreatecollectionJob::Private::init(CreatecollectionJob *parent,
@@ -46,15 +46,15 @@ void CreatecollectionJob::Private::parsecollections(const QVariantMap &result)
     Q_ASSERT(collectionsLst.count() == 1);
 
     QVariantMap collection = collectionsLst[0].toMap();
-    collectionInfo info;
+    CollectionInfo info;
     info.id = collection[QLatin1String("id")].toString();
     info.name = collection[QLatin1String("name")].toString();
-    info.flags = collectionInfo::None;
+    info.flags = CollectionInfo::None;
     if (collection[QLatin1String("public")].toBool()) {
-        info.flags |= collectionInfo::Public;
+        info.flags |= CollectionInfo::Public;
     }
     if (collection[QLatin1String("wishlist")].toBool()) {
-        info.flags |= collectionInfo::Wishlist;
+        info.flags |= CollectionInfo::Wishlist;
     }
 
     this->collection = info;
@@ -73,7 +73,7 @@ CreatecollectionJob::~CreatecollectionJob()
     delete d;
 }
 
-collectionInfo CreatecollectionJob::collection() const
+CollectionInfo CreatecollectionJob::collection() const
 {
     return d->collection;
 }
