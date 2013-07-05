@@ -305,7 +305,7 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
 
     m_session = new Session(this);
     KConfigGroup config(KGlobal::config(), "AddOns");
-    m_session->setBaseUrl(config.readEntry("URL", "http://localhost:3000"));
+    m_session->setBaseUrl(config.readEntry("URL", "http://addons.makeplaylive:3000"));
     m_session->setStoreId(config.readEntry("Store", "VIVALDI-1"));
     m_listCollectionsJobModel = new Bodega::ListCollectionsJobModel(this);
     m_listCollectionsJobModel->setSession(m_session);
