@@ -88,7 +88,7 @@ BrowserColumn {
                     visible: count > 0
                     label: i18n("Collections")
                     property int index: downloadsItem.index + 1
-                    count: bodegaClient.listBallotsJobModel.count
+                    count: bodegaClient.listCollectionsJobModel.count
                     checked: categoriesColumn.currentIndex == index
                     onClicked: {
                         if (categoriesColumn.currentIndex == index) {
@@ -96,7 +96,7 @@ BrowserColumn {
                         }
                         categoriesColumn.currentIndex = index
                         itemBrowser.pop(root);
-                        var collections = itemBrowser.push(Qt.createComponent("ListBallotsJobColumn.qml"))
+                        var collections = itemBrowser.push(Qt.createComponent("ListCollectionsJobColumn.qml"))
                     }
                 }
             }
