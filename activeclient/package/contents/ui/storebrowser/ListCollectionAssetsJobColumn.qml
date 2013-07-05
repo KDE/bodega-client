@@ -27,17 +27,17 @@ import "../components"
 BrowserListView {
     id: root
     property variant rootIndex
-    abstractItemModel: bodegaClient.ballotListAssetsJobModel
+    abstractItemModel: bodegaClient.collectionListAssetsJobModel
 
     VisualDataModel {
-        id: ballotListAssetsJobModel
-        model: bodegaClient.ballotListAssetsJobModel
+        id: collectionListAssetsJobModel
+        model: bodegaClient.collectionListAssetsJobModel
         rootIndex: root.rootIndex
-        delegate: ballotListAssetsJobModelDelegate
+        delegate: collectionListAssetsJobModelDelegate
     }
 
     customDelegate: Component {
-        id: ballotListAssetsJobModelDelegate
+        id: collectionListAssetsJobModelDelegate
         PlasmaComponents.ListItem {
             id: listItem
             enabled: true

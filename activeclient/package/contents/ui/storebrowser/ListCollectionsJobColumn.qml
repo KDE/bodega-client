@@ -28,17 +28,17 @@ BrowserListView {
     id: root
     property variant rootIndex
 
-    abstractItemModel: bodegaClient.listBallotsJobModel
+    abstractItemModel: bodegaClient.listCollectionsJobModel
 
     VisualDataModel {
-        id: listBallotsJobModel
-        model: bodegaClient.listBallotsJobModel
+        id: listCollectionsJobModel
+        model: bodegaClient.listCollectionsJobModel
         rootIndex: root.rootIndex
-        delegate: listBallotsJobModelDelegate
+        delegate: listCollectionsJobModelDelegate
     }
 
     customDelegate: Component {
-        id: listBallotsJobModelDelegate
+        id: listCollectionsJobModelDelegate
         PlasmaComponents.ListItem {
             id: listItem
             enabled: true
@@ -64,8 +64,8 @@ BrowserListView {
                 itemBrowser.pop(root)
 
                 if (model.CollectionId) {
-                    bodegaClient.ballotListAssetsJobModel.collectionId = model.CollectionId;
-                    var assets = itemBrowser.push(Qt.createComponent("ListBallotAssetsJobColumn.qml"));
+                    bodegaClient.collectionListAssetsJobModel.collectionId = model.CollectionId;
+                    var assets = itemBrowser.push(Qt.createComponent("ListCollectionAssetsJobColumn.qml"));
                 }
             }
         }
