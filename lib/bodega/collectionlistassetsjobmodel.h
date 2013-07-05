@@ -38,7 +38,14 @@ namespace Bodega {
     public:
         enum DisplayRoles {
             AssetIdRole = Qt::UserRole + 100,
-            AssetNameRole = Qt::UserRole + 101
+            AssetLicenseRole = Qt::UserRole + 101,
+            AssetPartnerIdRole = Qt::UserRole + 102,
+            AssetPartnerNameRole = Qt::UserRole + 103,
+            AssetNameRole = Qt::UserRole + 104,
+            AssetVersionRole = Qt::UserRole + 105,
+            AssetFilenameRole = Qt::UserRole + 106,
+            AssetDescriptionRole = Qt::UserRole + 107,
+            AssetPointsRole = Qt::UserRole + 108
         };
 
         CollectionListAssetsJobModel(QObject *parent = 0);
