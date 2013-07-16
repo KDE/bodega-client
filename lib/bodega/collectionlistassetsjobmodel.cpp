@@ -158,8 +158,28 @@ QVariant CollectionListAssetsJobModel::data(const QModelIndex &index, int role) 
             return d->assets.at(index.row()).id;
         }
         case AssetNameRole: {
-                                qDebug() << d->assets.at(index.row()).name;
             return d->assets.at(index.row()).name;
+        }
+        case AssetLicenseRole: {
+            return d->assets.at(index.row()).license;
+        }
+        case AssetPartnerIdRole: {
+            return d->assets.at(index.row()).partnerId;
+        }
+        case AssetPartnerNameRole: {
+            return d->assets.at(index.row()).partnerName;
+        }
+        case AssetVersionRole: {
+            return d->assets.at(index.row()).version;
+        }
+        case AssetFilenameRole: {
+            return d->assets.at(index.row()).filename;
+        }
+        case AssetDescriptionRole: {
+            return d->assets.at(index.row()).description;
+        }
+        case AssetPointsRole: {
+            return d->assets.at(index.row()).points;
         }
         default: {
             return QVariant();
