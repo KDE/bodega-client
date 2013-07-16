@@ -106,7 +106,7 @@ ListCollectionsJobModel::ListCollectionsJobModel(QObject *parent)
     roles.insert(CollectionId, "CollectionId");
 
     setRoleNames(roles);
-qDebug() << "ctorrrrrrrrrrrrrr";
+
     connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
             this, SIGNAL(countChanged()));
     connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
