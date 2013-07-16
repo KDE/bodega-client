@@ -68,6 +68,7 @@ BrowserColumn {
                     }
                 }
                 StoreListItem {
+                    id: downloadsItem
                     visible: count > 0
                     icon: "folder-downloads"
                     label: i18n("Downloads")
@@ -81,6 +82,21 @@ BrowserColumn {
                         categoriesColumn.currentIndex = index
                         itemBrowser.pop(root)
                         var channels = itemBrowser.push(Qt.createComponent("InstallJobsColumn.qml"))
+                    }
+                }
+                StoreListItem {
+                    visible: count > 0
+                    label: i18n("Collections")
+                    property int index: downloadsItem.index + 1
+                    count: bodegaClient.listCollectionsJobModel.count
+                    checked: categoriesColumn.currentIndex == index
+                    onClicked: {
+                        if (categoriesColumn.currentIndex == index) {
+                            return
+                        }
+                        categoriesColumn.currentIndex = index
+                        itemBrowser.pop(root);
+                        var collections = itemBrowser.push(Qt.createComponent("ListCollectionsJobColumn.qml"))
                     }
                 }
             }

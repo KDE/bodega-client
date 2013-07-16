@@ -101,19 +101,19 @@ namespace Bodega {
         QMap<QString, Entry> entries;
     };
 
-    struct BallotInfo
+    struct CollectionInfo
     {
     public:
-        enum BallotFlag {
+        enum CollectionFlag {
             None     = 0,
             Public   = 1 << 0,
             Wishlist = 1 << 1
         };
-        Q_DECLARE_FLAGS(BallotFlags, BallotFlag);
+        Q_DECLARE_FLAGS(CollectionFlags, CollectionFlag);
 
         QString id;
         QString name;
-        BallotFlags flags;
+        CollectionFlags flags;
     };
 
     class BODEGA_EXPORT ParticipantInfo
@@ -133,10 +133,10 @@ namespace Bodega {
 }
 
 Q_DECLARE_METATYPE(Bodega::AssetInfo)
-Q_DECLARE_METATYPE(Bodega::BallotInfo)
+Q_DECLARE_METATYPE(Bodega::CollectionInfo)
 Q_DECLARE_METATYPE(Bodega::ChannelInfo)
 Q_DECLARE_METATYPE(Bodega::ChangeLog)
-Q_DECLARE_METATYPE(QList<Bodega::BallotInfo>)
+Q_DECLARE_METATYPE(QList<Bodega::CollectionInfo>)
 Q_DECLARE_METATYPE(QList<Bodega::AssetInfo>)
 Q_DECLARE_METATYPE(Bodega::Tags)
 Q_DECLARE_METATYPE(Bodega::ParticipantInfo)

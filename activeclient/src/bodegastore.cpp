@@ -46,6 +46,9 @@
 #include <bodega/installjob.h>
 #include <bodega/installjobsmodel.h>
 #include <bodega/uninstalljob.h>
+#include <bodega/listcollectionsjob.h>
+#include <bodega/listcollectionsjobmodel.h>
+#include <bodega/collectionlistassetsjobmodel.h>
 
 using namespace Bodega;
 
@@ -127,7 +130,6 @@ void channelInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Channe
         }
     }
 }
-
 
 QScriptValue qScriptValueFromAssetInfo(QScriptEngine *engine, const Bodega::AssetInfo &info)
 {
@@ -262,9 +264,11 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     info.email = scriptValue.property("email").toString();
 }
 
-BodegaStore::BodegaStore()
+    BodegaStore::BodegaStore()
     : KDeclarativeMainWindow(),
-      m_historyModel(0)
+      m_historyModel(0),
+      m_listCollectionsJobModel(0),
+      m_collectionListAssetsJobModel(0)
 {
     declarativeView()->setPackageName("com.makeplaylive.addonsapp");
 
@@ -281,6 +285,9 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::InstallJob>();
     qmlRegisterType<Bodega::InstallJobsModel>();
     qmlRegisterType<Bodega::UninstallJob>();
+    qmlRegisterType<Bodega::ListCollectionsJob>();
+    qmlRegisterType<Bodega::ListCollectionsJobModel>();
+    qmlRegisterType<Bodega::CollectionListAssetsJobModel>();
     qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
 
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());
@@ -289,20 +296,21 @@ BodegaStore::BodegaStore()
     qScriptRegisterMetaType<Bodega::Tags>(declarativeView()->scriptEngine(), qScriptValueFromTags, tagsFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ParticipantInfo>(declarativeView()->scriptEngine(), qScriptValueFromParticipantInfo, participantInfoFromQScriptValue, QScriptValue());
 
-
     m_session = new Session(this);
     KConfigGroup config(KGlobal::config(), "AddOns");
+
     m_session->setBaseUrl(config.readEntry("URL", "https://addons.makeplaylive.com:3443"));
     m_session->setStoreId(config.readEntry("Store", "VIVALDI-1"));
 
-
+    m_listCollectionsJobModel = new Bodega::ListCollectionsJobModel(this);
+    m_listCollectionsJobModel->setSession(m_session);
+    m_collectionListAssetsJobModel = new Bodega::CollectionListAssetsJobModel(this);
+    m_collectionListAssetsJobModel->setSession(m_session);
     m_channelsModel = new Bodega::Model(this);
     m_channelsModel->setSession(m_session);
     m_searchModel = new Bodega::Model(this);
     m_searchModel->setSession(m_session);
-
     declarativeView()->rootContext()->setContextProperty("bodegaClient", this);
-
 }
 
 BodegaStore::~BodegaStore()
@@ -333,6 +341,16 @@ HistoryModel *BodegaStore::historyModel()
     }
 
     return m_historyModel;
+}
+
+ListCollectionsJobModel *BodegaStore::listCollectionsJobModel() const
+{
+    return m_listCollectionsJobModel;
+}
+
+CollectionListAssetsJobModel *BodegaStore::collectionListAssetsJobModel() const
+{
+    return m_collectionListAssetsJobModel;
 }
 
 void BodegaStore::historyInUse(bool used)
