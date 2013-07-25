@@ -48,7 +48,7 @@ BrowserListView {
 
     PlasmaComponents.ToolBar {
         id: toolBar
-        y: -view.contentY
+        anchors.bottom: parent.bottom
         z: 1
         tools: MobileComponents.ViewSearch {
             id: searchField
