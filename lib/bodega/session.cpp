@@ -20,7 +20,6 @@
 #include "session.h"
 #include "session_p.h"
 
-
 #include "assetjob.h"
 #include "assetoperations.h"
 #include "collectionaddassetjob.h"
@@ -36,6 +35,7 @@
 #include "participantinfojob.h"
 #include "registerjob.h"
 #include "signonjob.h"
+#include "ratingattributesjob.h"
 
 #include <QNetworkAccessManager>
 #include <QDebug>
@@ -703,6 +703,18 @@ Bodega::collectionListAssetsJob * Session::collectionListAssets(const QString &c
     //qDebug()<<"url is " <<url;
 
     collectionListAssetsJob *job = new collectionListAssetsJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::RatingAttributesJob * Session::listRatingAttributes(const QString &assetId)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/ratings/attributes/%1").arg(assetId);
+
+    url.setEncodedPath(d->jsonPath(path));
+
+    RatingAttributesJob *job = new RatingAttributesJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }
