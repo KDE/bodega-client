@@ -129,6 +129,14 @@ namespace Bodega {
         QString email;
     };
 
+    struct RatingAttributes
+    {
+        QString name;
+        QString lowDesc;
+        QString highDesc;
+        QString assetType;
+    };
+
     typedef QMultiHash<QString, QString> Tags;
 }
 

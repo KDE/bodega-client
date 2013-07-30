@@ -25,6 +25,7 @@ set (bodega_HEADERS
      session.h
      signonjob.h
      uninstalljob.h
+     ratingattributesjob.h
     )
 
 set (bodega_SRCS
@@ -54,6 +55,7 @@ set (bodega_SRCS
      session.cpp
      signonjob.cpp
      uninstalljob.cpp
+     ratingattributesjob.cpp
      )
 
 include("CMakeQtUsage")
