@@ -42,15 +42,15 @@ void AssetRatingsJob::Private::init(AssetRatingsJob *parent,
 
 void AssetRatingsJob::Private::parseRatings(const QVariantMap &result)
 {
-    QVariantList attributesList = result[QLatin1String("ratingAttributes")].toList();
+    QVariantList ratingsList = result[QLatin1String("ratings")].toList();
     QVariantList::const_iterator itr;
-    for (itr = attributesList.constBegin(); itr != attributesList.constEnd(); ++itr) {
-        RatingAttributes info;
+    for (itr = ratingsList.constBegin(); itr != ratingsList.constEnd(); ++itr) {
+        Ratings info;
         QVariantMap attribute = itr->toMap();
-        info.name = attribute[QLatin1String("name")].toString();
-        info.lowDesc = attribute[QLatin1String("lowdesc")].toString();
-        info.highDesc = attribute[QLatin1String("highdesc")].toString();
-        info.assetType = attribute[QLatin1String("assetType")].toString();
+        info.attributeId = attribute[QLatin1String("attribute")].toString();
+        info.rating = attribute[QLatin1String("rating")].toString();
+        info.personId = attribute[QLatin1String("person")].toString();
+        info.date = attribute[QLatin1String("date_part")].toString();
         ratings.append(info);
     }
 }
