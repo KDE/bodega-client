@@ -142,6 +142,7 @@ namespace Bodega {
                                                       int pageSize=-1);
 
         Bodega::RatingAttributesJob *listRatingAttributes(const QString &assetId);
+        Bodega::NetworkJob *deleteAssetRatings(const QString &assetId);
 
         /*
          * These two are special because they don't require a session, as

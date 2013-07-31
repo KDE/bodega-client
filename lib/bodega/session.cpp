@@ -90,6 +90,7 @@ void Session::Private::jobFinished(NetworkJob *job)
 
 QNetworkReply *Session::Private::get(const QUrl &url)
 {
+    qDebug() << url;
     QNetworkRequest request;
     request.setRawHeader("User-Agent", "Bodega 0.1");
     request.setUrl(url);
@@ -718,5 +719,17 @@ Bodega::RatingAttributesJob * Session::listRatingAttributes(const QString &asset
     d->jobConnect(job);
     return job;
 }
+
+Bodega::NetworkJob * Session::deleteAssetRatings(const QString &assetId)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/ratings/delete/%1").arg(assetId);
+    url.setEncodedPath(d->jsonPath(path));
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
 
 #include "session.moc"
