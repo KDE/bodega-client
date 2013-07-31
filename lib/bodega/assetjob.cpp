@@ -37,6 +37,8 @@ public:
     void parseChangeLog(const QVariantMap &result);
     void parsePreviews(const QVariantMap &result);
     void parseTags(const QVariantMap &result);
+    void parseRatings(const QVariantMap &result);
+
     AssetJob *q;
     QString id;
     AssetInfo info;
@@ -104,6 +106,21 @@ void AssetJob::Private::parsePreviews(const QVariantMap &result)
     }
 }
 
+void AssetJob::Private::parseRatings(const QVariantMap &result)
+{
+    QVariantList ratingsList = result[QLatin1String("ratings")].toList();
+    QVariantList::const_iterator itr;
+    for (itr = ratingsList.constBegin(); itr != ratingsList.constEnd(); ++itr) {
+        AssetInfo::AssetInfoRatings assetInfoRating;
+        QVariantMap ratingInfo = itr->toMap();
+        assetInfoRating.averageRating = ratingInfo[QLatin1String("average")].toString();
+        assetInfoRating.ratingsCount = ratingInfo[QLatin1String("ratingscount")].toString();
+        assetInfoRating.attributeId = ratingInfo[QLatin1String("attribute")].toString();
+
+        info.ratings.append(assetInfoRating);
+    }
+}
+
 void AssetJob::Private::parseTags(const QVariantMap &result)
 {
     QVariantList vTags = result[QLatin1String("asset")].toMap()[QLatin1String("tags")].toList();
@@ -136,6 +153,7 @@ void AssetJob::netFinished(const QVariantMap &result)
         d->parseAsset(result);
         d->parseChangeLog(result);
         d->parsePreviews(result);
+        d->parseRatings(result);
     }
 }
 

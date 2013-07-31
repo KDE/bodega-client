@@ -60,6 +60,14 @@ namespace Bodega {
 
     struct AssetInfo
     {
+        struct AssetInfoRatings
+        {
+            QString averageRating;
+            QString ratingsCount;
+            QString attributeId;
+        };
+
+        QList<AssetInfoRatings> ratings;
         QString id;
         QString license;
         QString licenseText;

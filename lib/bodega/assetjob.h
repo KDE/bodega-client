@@ -37,7 +37,8 @@ namespace Bodega {
         enum AssetFlag {
             None          = 0,
             ShowChangeLog = 1 << 0,
-            ShowPreviews  = 1 << 1
+            ShowPreviews  = 1 << 1,
+            Ratings = 1 << 2
         };
         Q_DECLARE_FLAGS(AssetFlags, AssetFlag);
     public:

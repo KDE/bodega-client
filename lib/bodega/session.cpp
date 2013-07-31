@@ -295,14 +295,20 @@ AssetJob * Session::asset(const QString &assetId,
 
     url.setEncodedPath(d->jsonPath(path));
 
-    if (flags & AssetJob::ShowPreviews)
+    if (flags & AssetJob::ShowPreviews) {
         url.addQueryItem(QLatin1String("previews"),
                          QLatin1String("1"));
+    }
 
-    if (flags & AssetJob::ShowChangeLog)
+    if (flags & AssetJob::ShowChangeLog) {
         url.addQueryItem(QLatin1String("changelog"),
                          QLatin1String("1"));
+    }
 
+    if (flags & AssetJob::Ratings) {
+        url.addQueryItem(QLatin1String("ratings"),
+                         QLatin1String("1"));
+    }
     //qDebug()<<"url is " <<url;
 
     AssetJob *job = new AssetJob(assetId, d->get(url), this);
