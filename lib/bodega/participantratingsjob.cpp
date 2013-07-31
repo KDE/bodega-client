@@ -31,7 +31,7 @@ public:
     void init(ParticipantRatingsJob *q, const QUrl &url);
     void parseRatings(const QVariantMap &result);
     ParticipantRatingsJob *q;
-    QList<Ratings> ratings;
+    QList<ParticipantRatings> ratings;
 };
 
 void ParticipantRatingsJob::Private::init(ParticipantRatingsJob *parent,
@@ -45,11 +45,11 @@ void ParticipantRatingsJob::Private::parseRatings(const QVariantMap &result)
     QVariantList ratingsList = result[QLatin1String("ratings")].toList();
     QVariantList::const_iterator itr;
     for (itr = ratingsList.constBegin(); itr != ratingsList.constEnd(); ++itr) {
-        Ratings info;
+        ParticipantRatings info;
         QVariantMap attribute = itr->toMap();
         info.attributeId = attribute[QLatin1String("attribute")].toString();
         info.rating = attribute[QLatin1String("rating")].toString();
-        info.personId = attribute[QLatin1String("person")].toString();
+        info.assetId = attribute[QLatin1String("asset")].toString();
         info.date = attribute[QLatin1String("date_part")].toString();
         ratings.append(info);
     }
@@ -68,7 +68,7 @@ ParticipantRatingsJob::~ParticipantRatingsJob()
     delete d;
 }
 
-QList<Ratings> ParticipantRatingsJob::ratings() const
+QList<ParticipantRatings> ParticipantRatingsJob::ratings() const
 {
     return d->ratings;
 }
