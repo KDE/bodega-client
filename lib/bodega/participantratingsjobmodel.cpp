@@ -36,7 +36,7 @@ public:
 
     ParticipantRatingsJobModel *q;
     Session *session;
-    void fetchRatings();
+    void fetchParticipantRatings();
     void participantRatingsJobFinished(Bodega::NetworkJob *job);
     QList<ParticipantRatings> participantRatings;
 };
@@ -44,6 +44,10 @@ public:
 ParticipantRatingsJobModel::Private::Private(ParticipantRatingsJobModel *parent)
     : q(parent),
       session(0)
+{
+}
+
+void ParticipantRatingsJobModel::Private::fetchParticipantRatings()
 {
     ParticipantRatingsJob *job = session->participantRatings();
 
@@ -194,6 +198,8 @@ void ParticipantRatingsJobModel::setSession(Session *session)
     if (!d->session) {
         return;
     }
+
+    d->fetchParticipantRatings();
 }
 
 Session *ParticipantRatingsJobModel::session() const
