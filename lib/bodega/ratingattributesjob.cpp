@@ -47,6 +47,7 @@ void RatingAttributesJob::Private::parseAttributes(const QVariantMap &result)
     for (itr = attributesList.constBegin(); itr != attributesList.constEnd(); ++itr) {
         RatingAttributes info;
         QVariantMap attribute = itr->toMap();
+        info.id = attribute[QLatin1String("id")].toString();
         info.name = attribute[QLatin1String("name")].toString();
         info.lowDesc = attribute[QLatin1String("lowdesc")].toString();
         info.highDesc = attribute[QLatin1String("highdesc")].toString();

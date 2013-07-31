@@ -139,6 +139,7 @@ namespace Bodega {
 
     struct RatingAttributes
     {
+        QString id;
         QString name;
         QString lowDesc;
         QString highDesc;
