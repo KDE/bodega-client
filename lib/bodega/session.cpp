@@ -99,6 +99,15 @@ QNetworkReply *Session::Private::get(const QUrl &url)
     return netManager->get(request);
 }
 
+QNetworkReply *Session::Private::post(const QUrl &url, const QByteArray &data)
+{
+    qDebug() << url;
+    QNetworkRequest request;
+    request.setRawHeader("User-Agent", "Bodega 0.1");
+    request.setUrl(url);
+    return netManager->post(request, data);
+}
+
 void Session::Private::addPaging(QUrl &url, int offset, int pageSize)
 {
     if (offset >= 0) {
@@ -755,4 +764,17 @@ Bodega::ParticipantRatingsJob * Session::participantRatings(int offset, int page
     d->jobConnect(job);
     return job;
 }
+
+Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, QList<Ratings> ratings)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/ratings/create/%1").arg(assetId);
+    url.setEncodedPath(d->jsonPath(path));
+
+    QByteArray data;
+    NetworkJob *job = new NetworkJob(d->post(url, data), this);
+    d->jobConnect(job);
+    return job;
+}
+
 #include "session.moc"

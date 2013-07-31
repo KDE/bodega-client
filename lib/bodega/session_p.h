@@ -59,6 +59,7 @@ public:
     void signOnFinished(Bodega::SignOnJob *job);
     void jobFinished(Bodega::NetworkJob *job);
     QNetworkReply *get(const QUrl &url);
+    QNetworkReply *post(const QUrl &url, const QByteArray &data);
     void addPaging(QUrl &url, int offset, int pageSize);
     QAbstractItemModel *historyModel();
 
