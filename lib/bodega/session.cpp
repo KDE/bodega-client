@@ -756,7 +756,7 @@ Bodega::AssetRatingsJob * Session::assetRatings(const QString &assetId)
 Bodega::ParticipantRatingsJob * Session::participantRatings(int offset, int pageSize)
 {
     QUrl url = d->baseUrl;
-    const QString path = QString::fromLatin1("/particiapnt/ratings/");
+    const QString path = QString::fromLatin1("/participant/ratings/");
     url.setEncodedPath(d->jsonPath(path));
     d->addPaging(url, offset, pageSize);
 
