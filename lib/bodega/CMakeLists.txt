@@ -30,6 +30,7 @@ set (bodega_HEADERS
      participantratingsjob.h
      assetratingsjobmodel.h
      ratingattributesjobmodel.h
+     participantratingsjobmodel.h
     )
 
 set (bodega_SRCS
@@ -64,6 +65,7 @@ set (bodega_SRCS
      participantratingsjob.cpp
      assetratingsjobmodel.cpp
      ratingattributesjobmodel.cpp
+     participantratingsjobmodel.cpp
      )
 
 include("CMakeQtUsage")
