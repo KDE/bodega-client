@@ -198,8 +198,8 @@ void ParticipantRatingsJobModel::setSession(Session *session)
     if (!d->session) {
         return;
     }
-
-    d->fetchParticipantRatings();
+    connect(d->session, SIGNAL(authenticated(bool)),
+            this, SLOT(fetchParticipantRatings()));
 }
 
 Session *ParticipantRatingsJobModel::session() const

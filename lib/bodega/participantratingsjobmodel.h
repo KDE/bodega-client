@@ -68,6 +68,7 @@ namespace Bodega {
         friend class Private;
         Private * const d;
         Q_PRIVATE_SLOT(d, void participantRatingsJobFinished(Bodega::NetworkJob *))
+        Q_PRIVATE_SLOT(d, void fetchParticipantRatings())
     };
 
 }
