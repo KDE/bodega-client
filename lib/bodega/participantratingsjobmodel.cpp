@@ -20,6 +20,8 @@
 #include "participantratingsjobmodel.h"
 
 #include "participantratingsjob.h"
+#include "assetjob.h"
+#include "ratingattributesjob.h"
 #include "session.h"
 #include "networkjob.h"
 
@@ -38,7 +40,12 @@ public:
     Session *session;
     void fetchParticipantRatings();
     void participantRatingsJobFinished(Bodega::NetworkJob *job);
+    void assetJobFinished(Bodega::NetworkJob *job);
+    void ratingAttributesJobFinished(Bodega::NetworkJob *job);
+
     QList<ParticipantRatings> participantRatings;
+    QList <AssetInfo> assetInfo;
+    QList<RatingAttributes> ratingAttributes;
 };
 
 ParticipantRatingsJobModel::Private::Private(ParticipantRatingsJobModel *parent)
@@ -53,6 +60,8 @@ void ParticipantRatingsJobModel::Private::fetchParticipantRatings()
 
     q->beginResetModel();
     participantRatings.clear();
+    assetInfo.clear();
+    ratingAttributes.clear();
     q->endResetModel();
 
     connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
@@ -77,7 +86,48 @@ void ParticipantRatingsJobModel::Private::participantRatingsJobFinished(Bodega::
     const int end = qMax(begin, participantRatings.count() + begin -1);
     q->beginInsertRows(QModelIndex(), begin, end);
     participantRatings= participantRatingsJob->ratings();
+    foreach(const ParticipantRatings r, participantRatings) {
+        AssetJob *assetJob = session->asset(r.assetId, AssetJob::Ratings);
+        connect(assetJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
+            q, SLOT(assetJobFinished(Bodega::NetworkJob *)));
+
+        RatingAttributesJob *ratingAttributesJob = session->listRatingAttributes(r.assetId);
+        connect(ratingAttributesJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
+            q, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
+    }
     q->endInsertRows();
+}
+
+void ParticipantRatingsJobModel::Private::assetJobFinished(Bodega::NetworkJob *job)
+{
+    AssetJob *assetJob = qobject_cast<AssetJob*>(job);
+
+    if (!assetJob) {
+        return;
+    }
+
+    assetJob->deleteLater();
+
+    if (assetJob->failed()) {
+        return;
+    }
+    assetInfo.append(assetJob->info());
+}
+
+void ParticipantRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::NetworkJob *job)
+{
+    RatingAttributesJob *ratingAttributesJob = qobject_cast<RatingAttributesJob*>(job);
+
+    if (!ratingAttributesJob) {
+        return;
+    }
+
+    ratingAttributesJob->deleteLater();
+
+    if (ratingAttributesJob->failed()) {
+        return;
+    }
+    ratingAttributes.append(ratingAttributesJob->ratingAttributes());
 }
 
 ParticipantRatingsJobModel::ParticipantRatingsJobModel(QObject *parent)
