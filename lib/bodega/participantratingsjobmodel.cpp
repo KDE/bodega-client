@@ -43,6 +43,9 @@ public:
     void assetJobFinished(Bodega::NetworkJob *job);
     void ratingAttributesJobFinished(Bodega::NetworkJob *job);
 
+    QString findAssetName(const QString &assetId) const;
+    QString findAttributeName(const QString &attributeId) const;
+
     QList<ParticipantRatings> participantRatings;
     QList <AssetInfo> assetInfo;
     QList<RatingAttributes> ratingAttributes;
@@ -128,6 +131,23 @@ void ParticipantRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::Ne
         return;
     }
     ratingAttributes.append(ratingAttributesJob->ratingAttributes());
+}
+QString ParticipantRatingsJobModel::Private::findAssetName(const QString &assetId) const
+{
+    foreach(const AssetInfo &asset, assetInfo) {
+        if (asset.id == assetId) {
+            return asset.name;
+        }
+    }
+}
+
+QString ParticipantRatingsJobModel::Private::findAttributeName(const QString &attributeId) const
+{
+    foreach(const RatingAttributes &attribute, ratingAttributes) {
+        if (attribute.id == attributeId) {
+            return attribute.name;
+        }
+    }
 }
 
 ParticipantRatingsJobModel::ParticipantRatingsJobModel(QObject *parent)
