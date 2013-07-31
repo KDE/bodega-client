@@ -145,6 +145,14 @@ namespace Bodega {
         QString date;
     };
 
+    struct ParticipantRatings
+    {
+        QString attributeId;
+        QString assetId;
+        QString rating;
+        QString date;
+    };
+
     typedef QMultiHash<QString, QString> Tags;
 }
 
@@ -154,10 +162,12 @@ Q_DECLARE_METATYPE(Bodega::ChannelInfo)
 Q_DECLARE_METATYPE(Bodega::ChangeLog)
 Q_DECLARE_METATYPE(Bodega::RatingAttributes)
 Q_DECLARE_METATYPE(Bodega::Ratings)
+Q_DECLARE_METATYPE(Bodega::ParticipantRatings)
 Q_DECLARE_METATYPE(QList<Bodega::CollectionInfo>)
 Q_DECLARE_METATYPE(QList<Bodega::AssetInfo>)
 Q_DECLARE_METATYPE(QList<Bodega::RatingAttributes>)
 Q_DECLARE_METATYPE(QList<Bodega::Ratings>)
+Q_DECLARE_METATYPE(QList<Bodega::ParticipantRatings>)
 Q_DECLARE_METATYPE(Bodega::Tags)
 Q_DECLARE_METATYPE(Bodega::ParticipantInfo)
 
