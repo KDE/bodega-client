@@ -18,6 +18,7 @@
  */
 
 #include "ratingattributesjob.h"
+#include <QDebug>
 
 using namespace Bodega;
 
@@ -41,8 +42,17 @@ void RatingAttributesJob::Private::init(RatingAttributesJob *parent,
 
 void RatingAttributesJob::Private::parseAttributes(const QVariantMap &result)
 {
-    QVariantList collectionsLst = result[QLatin1String("collections")].toList();
-
+    QVariantList attributesList = result[QLatin1String("ratingAttributes")].toList();
+    QVariantList::const_iterator itr;
+    for (itr = attributesList.constBegin(); itr != attributesList.constEnd(); ++itr) {
+        RatingAttributes info;
+        QVariantMap attribute = itr->toMap();
+        info.name = attribute[QLatin1String("name")].toString();
+        info.lowDesc = attribute[QLatin1String("lowdesc")].toString();
+        info.highDesc = attribute[QLatin1String("highdesc")].toString();
+        info.assetType = attribute[QLatin1String("assetType")].toString();
+        ratingAttributes.append(info);
+    }
 }
 
 RatingAttributesJob::RatingAttributesJob(QNetworkReply *reply,
