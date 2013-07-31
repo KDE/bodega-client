@@ -36,6 +36,7 @@
 #include "registerjob.h"
 #include "signonjob.h"
 #include "ratingattributesjob.h"
+#include "assetratingsjob.h"
 
 #include <QNetworkAccessManager>
 #include <QDebug>
@@ -731,5 +732,15 @@ Bodega::NetworkJob * Session::deleteAssetRatings(const QString &assetId)
     return job;
 }
 
+Bodega::AssetRatingsJob * Session::assetRatings(const QString &assetId)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/ratings/list/%1").arg(assetId);
+    url.setEncodedPath(d->jsonPath(path));
+
+    AssetRatingsJob *job = new AssetRatingsJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
 
 #include "session.moc"

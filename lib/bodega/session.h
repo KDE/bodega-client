@@ -50,6 +50,7 @@ namespace Bodega {
     class SignOnJob;
     class UninstallJob;
     class RatingAttributesJob;
+    class AssetRatingsJob;
 
     class BODEGA_EXPORT Session : public QObject
     {
@@ -143,6 +144,7 @@ namespace Bodega {
 
         Bodega::RatingAttributesJob *listRatingAttributes(const QString &assetId);
         Bodega::NetworkJob *deleteAssetRatings(const QString &assetId);
+        Bodega::AssetRatingsJob *assetRatings(const QString &assetId);
 
         /*
          * These two are special because they don't require a session, as
