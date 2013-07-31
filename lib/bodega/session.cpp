@@ -37,6 +37,7 @@
 #include "signonjob.h"
 #include "ratingattributesjob.h"
 #include "assetratingsjob.h"
+#include "participantratingsjob.h"
 
 #include <QNetworkAccessManager>
 #include <QDebug>
@@ -743,4 +744,15 @@ Bodega::AssetRatingsJob * Session::assetRatings(const QString &assetId)
     return job;
 }
 
+Bodega::ParticipantRatingsJob * Session::participantRatings(int offset, int pageSize)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/particiapnt/ratings/");
+    url.setEncodedPath(d->jsonPath(path));
+    d->addPaging(url, offset, pageSize);
+
+    ParticipantRatingsJob *job = new ParticipantRatingsJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
 #include "session.moc"
