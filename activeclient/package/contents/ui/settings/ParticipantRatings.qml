@@ -29,7 +29,7 @@ PlasmaComponents.Page {
     id: root
 
     PlasmaComponents.Label {
-        text: i18n("Loading history...")
+        text: i18n("Loading ratings...")
         anchors.centerIn: parent
         visible: listView.count == 0
         PlasmaComponents.BusyIndicator {
@@ -44,42 +44,34 @@ PlasmaComponents.Page {
         anchors.fill: parent
         ListView {
             id: listView
+
             anchors.fill: parent
 
-            model: bodegaClient.historyModel
+            model: bodegaClient.participantRatingsJobModel
 
             delegate: PlasmaComponents.ListItem {
                 Column {
                     spacing: 0
                     PlasmaComponents.Label {
-                        text: model.DisplayRole
+                        text: model.AssetId
                         wrapMode: Text.Wrap
                         width: root.width
                         visible: text.length > 0
                     }
 
                     PlasmaComponents.Label {
-                        text: model.DescriptionRole
+                        text: model.AttributeId
                         wrapMode: Text.Wrap
                         width: root.width
                         visible: text.length > 0
                     }
 
                     PlasmaComponents.Label {
-                        text: model.DateRole
+                        text: model.Rating
                         visible: text.length > 0
                     }
                 }
             }
         }
-    }
-
-
-    Component.onCompleted: {
-        bodegaClient.historyInUse(true);
-    }
-
-    Component.onDestruction: {
-        bodegaClient.historyInUse(false);
     }
 }
