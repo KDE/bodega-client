@@ -27,6 +27,7 @@ set (bodega_HEADERS
      uninstalljob.h
      ratingattributesjob.h
      assetratingsjob.h
+     participantratingsjob.h
     )
 
 set (bodega_SRCS
@@ -58,6 +59,7 @@ set (bodega_SRCS
      uninstalljob.cpp
      ratingattributesjob.cpp
      assetratingsjob.cpp
+     participantratingsjob.cpp
      )
 
 include("CMakeQtUsage")
