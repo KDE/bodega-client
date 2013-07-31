@@ -49,6 +49,8 @@
 #include <bodega/listcollectionsjob.h>
 #include <bodega/listcollectionsjobmodel.h>
 #include <bodega/collectionlistassetsjobmodel.h>
+#include <bodega/participantratingsjobmodel.h>
+#include <bodega/participantratingsjob.h>
 
 using namespace Bodega;
 
@@ -268,7 +270,8 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     : KDeclarativeMainWindow(),
       m_historyModel(0),
       m_listCollectionsJobModel(0),
-      m_collectionListAssetsJobModel(0)
+      m_collectionListAssetsJobModel(0),
+      m_participantRatingsJobModel(0)
 {
     declarativeView()->setPackageName("com.makeplaylive.addonsapp");
 
@@ -288,6 +291,8 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     qmlRegisterType<Bodega::ListCollectionsJob>();
     qmlRegisterType<Bodega::ListCollectionsJobModel>();
     qmlRegisterType<Bodega::CollectionListAssetsJobModel>();
+    qmlRegisterType<Bodega::ParticipantRatingsJob>();
+    qmlRegisterType<Bodega::ParticipantRatingsJobModel>();
     qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
 
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());
@@ -310,6 +315,9 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     m_channelsModel->setSession(m_session);
     m_searchModel = new Bodega::Model(this);
     m_searchModel->setSession(m_session);
+    m_participantRatingsJobModel = new Bodega::ParticipantRatingsJobModel(this);
+    m_participantRatingsJobModel->setSession(m_session);
+
     declarativeView()->rootContext()->setContextProperty("bodegaClient", this);
 }
 
@@ -351,6 +359,11 @@ ListCollectionsJobModel *BodegaStore::listCollectionsJobModel() const
 CollectionListAssetsJobModel *BodegaStore::collectionListAssetsJobModel() const
 {
     return m_collectionListAssetsJobModel;
+}
+
+ParticipantRatingsJobModel *BodegaStore::participantRatingsJobModel() const
+{
+    return m_participantRatingsJobModel;
 }
 
 void BodegaStore::historyInUse(bool used)
