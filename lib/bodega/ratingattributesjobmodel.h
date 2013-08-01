@@ -40,7 +40,9 @@ namespace Bodega {
             Name = Qt::UserRole + 100,
             LowDesc = Qt::UserRole + 101,
             HighDesc = Qt::UserRole + 102,
-            AssetType = Qt::UserRole + 103
+            AssetType = Qt::UserRole + 103,
+            RatingsCount = Qt::UserRole + 104,
+            AverageRating = Qt::UserRole + 105
         };
 
         RatingAttributesJobModel(QObject *parent = 0);
@@ -75,6 +77,7 @@ namespace Bodega {
         Private * const d;
         Q_PRIVATE_SLOT(d, void ratingAttributesJobFinished(Bodega::NetworkJob *))
         Q_PRIVATE_SLOT(d, void fetchRatingAttributes())
+        Q_PRIVATE_SLOT(d, void assetJobFinished(Bodega::NetworkJob *))
     };
 
 }
