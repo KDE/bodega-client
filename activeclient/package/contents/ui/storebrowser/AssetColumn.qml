@@ -48,6 +48,7 @@ BrowserColumn {
 
     onAssetIdChanged: {
         if (assetId > 0) {
+            bodegaClient.ratingAttributesJobModel.assetId = assetId;
             assetOperations = bodegaClient.session.assetOperations(assetId);
 
             root.installJob = bodegaClient.session.installJobsModel.jobForAsset(root.assetId)
@@ -195,6 +196,17 @@ BrowserColumn {
                                                                    : i18n("Free")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
+                    Repeater {
+                        id: repeater
+                        clip: true
+                        model: bodegaClient.ratingAttributesJobModel
+                        delegate: PlasmaComponents.Label {
+                            anchors.rightMargin: theme.defaultFont.mSize.width
+                            text: i18n("%1: %2", model.Name, model.AverageRating)
+                        }
+
+                    }
+
                     Item {
                         anchors {
                             left: parent.left
