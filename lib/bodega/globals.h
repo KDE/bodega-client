@@ -95,6 +95,7 @@ namespace Bodega {
             filename.clear();
             points = 0;
             canDownload = false;
+            ratings.clear();
         }
     };
 
