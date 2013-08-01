@@ -192,6 +192,12 @@ QVariant ParticipantRatingsJobModel::data(const QModelIndex &index, int role) co
         case AttributeId: {
             return d->participantRatings.at(index.row()).attributeId;
         }
+        case AttributeName: {
+            return d->findAttributeName(d->participantRatings.at(index.row()).attributeId);
+        }
+        case AssetName: {
+            return d->findAssetName(d->participantRatings.at(index.row()).assetId);
+        }
         case AssetId: {
             return d->participantRatings.at(index.row()).assetId;
         }
