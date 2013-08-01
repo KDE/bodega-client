@@ -31,6 +31,7 @@ namespace Bodega {
     class ListCollectionsJobModel;
     class CollectionListAssetsJobModel;
     class ParticipantRatingsJobModel;
+    class RatingAttributesJobModel;
 }
 
 Q_DECLARE_METATYPE(Bodega::Session*)
@@ -110,6 +111,7 @@ public:
     Bodega::ListCollectionsJobModel *listCollectionsJobModel() const;
     Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel() const;
     Bodega::ParticipantRatingsJobModel *participantRatingsJobModel() const;
+    Bodega::RatingAttributesJobModel *RatingAttributesJobModel() const;
 
     Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE void forgetCredentials() const;
@@ -124,6 +126,7 @@ private:
     Bodega::ListCollectionsJobModel *m_listCollectionsJobModel;
     Bodega::CollectionListAssetsJobModel *m_collectionListAssetsJobModel;
     Bodega::ParticipantRatingsJobModel *m_participantRatingsJobModel;
+    Bodega::RatingAttributesJobModel *m_ratingAttributesJobModel;
     int m_historyUsers;
 };
 
