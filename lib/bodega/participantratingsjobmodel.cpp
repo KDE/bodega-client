@@ -139,6 +139,7 @@ QString ParticipantRatingsJobModel::Private::findAssetName(const QString &assetI
             return asset.name;
         }
     }
+    return QString();
 }
 
 QString ParticipantRatingsJobModel::Private::findAttributeName(const QString &attributeId) const
@@ -148,6 +149,7 @@ QString ParticipantRatingsJobModel::Private::findAttributeName(const QString &at
             return attribute.name;
         }
     }
+    return QString();
 }
 
 ParticipantRatingsJobModel::ParticipantRatingsJobModel(QObject *parent)

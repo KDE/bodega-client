@@ -55,14 +55,14 @@ PlasmaComponents.Page {
                 Column {
                     spacing: 0
                     PlasmaComponents.Label {
-                        text: model.AssetId//model.AssetName
+                        text: model.AssetName
                         wrapMode: Text.Wrap
                         width: root.width
                         visible: text.length > 0
                     }
 
                     PlasmaComponents.Label {
-                        text: model.AttributeId//model.AttributeName
+                        text: model.AttributeName
                         wrapMode: Text.Wrap
                         width: root.width
                         visible: text.length > 0
