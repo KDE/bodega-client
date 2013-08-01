@@ -44,23 +44,25 @@ PlasmaComponents.Page {
         anchors.fill: parent
         ListView {
             id: listView
-
+            currentIndex: -1
             anchors.fill: parent
 
             model: bodegaClient.participantRatingsJobModel
 
             delegate: PlasmaComponents.ListItem {
+                enabled: true
+                checked: listView.currentIndex == index
                 Column {
                     spacing: 0
                     PlasmaComponents.Label {
-                        text: model.AssetId
+                        text: model.AssetId//model.AssetName
                         wrapMode: Text.Wrap
                         width: root.width
                         visible: text.length > 0
                     }
 
                     PlasmaComponents.Label {
-                        text: model.AttributeId
+                        text: model.AttributeId//model.AttributeName
                         wrapMode: Text.Wrap
                         width: root.width
                         visible: text.length > 0
@@ -69,6 +71,18 @@ PlasmaComponents.Page {
                     PlasmaComponents.Label {
                         text: model.Rating
                         visible: text.length > 0
+                    }
+                }
+
+                onClicked: {
+                    if (listView.currentIndex == index) {
+                        return;
+                    }
+                    listView.currentIndex = index
+                    settingsStack.pop(root)
+                    if (model.AssetId) {
+                        var assets = settingsStack.push(Qt.createComponent("../storebrowser/AssetColumn.qml"));
+                        assets.assetId = model.AssetId;
                     }
                 }
             }
