@@ -79,9 +79,9 @@ PlasmaComponents.Page {
                         return;
                     }
                     listView.currentIndex = index
-                    settingsStack.pop(root)
+                    participantItemBrowser.pop(root)
                     if (model.AssetId) {
-                        var assets = settingsStack.push(Qt.createComponent("../storebrowser/AssetColumn.qml"));
+                        var assets = participantItemBrowser.push(Qt.createComponent("../storebrowser/AssetColumn.qml"));
                         assets.assetId = model.AssetId;
                     }
                 }

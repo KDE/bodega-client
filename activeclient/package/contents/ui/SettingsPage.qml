@@ -92,7 +92,7 @@ PlasmaComponents.Page {
                                 model.append({DisplayRole: i18n("Add Points"), component: "AddPoints" })
                                 model.append({DisplayRole: i18n("Payment Method"), component: "PaymentMethodStack" })
                                 model.append({DisplayRole: i18n("Account History"), component: "AccountHistory" })
-                                model.append({DisplayRole: i18n("Ratings"), component: "ParticipantRatings" })
+                                model.append({DisplayRole: i18n("Ratings"), component: "ParticipantPages" })
                             }
                         }
                     }
