@@ -308,7 +308,6 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
 
     m_session = new Session(this);
     KConfigGroup config(KGlobal::config(), "AddOns");
-
     m_session->setBaseUrl(config.readEntry("URL", "https://addons.makeplaylive.com:3443"));
     m_session->setStoreId(config.readEntry("Store", "VIVALDI-1"));
 
@@ -373,7 +372,7 @@ ParticipantRatingsJobModel *BodegaStore::participantRatingsJobModel() const
     return m_participantRatingsJobModel;
 }
 
-RatingAttributesJobModel *BodegaStore::RatingAttributesJobModel() const
+RatingAttributesJobModel *BodegaStore::ratingAttributesJobModel() const
 {
     return m_ratingAttributesJobModel;
 }

@@ -99,6 +99,8 @@ class BodegaStore : public KDeclarativeMainWindow
     Q_PROPERTY(Bodega::ListCollectionsJobModel *listCollectionsJobModel READ listCollectionsJobModel CONSTANT)
     Q_PROPERTY(Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel READ collectionListAssetsJobModel CONSTANT)
     Q_PROPERTY(Bodega::ParticipantRatingsJobModel *participantRatingsJobModel READ participantRatingsJobModel CONSTANT)
+    Q_PROPERTY(Bodega::RatingAttributesJobModel *ratingAttributesJobModel READ ratingAttributesJobModel CONSTANT)
+
 public:
     BodegaStore();
     virtual ~BodegaStore();
@@ -111,7 +113,7 @@ public:
     Bodega::ListCollectionsJobModel *listCollectionsJobModel() const;
     Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel() const;
     Bodega::ParticipantRatingsJobModel *participantRatingsJobModel() const;
-    Bodega::RatingAttributesJobModel *RatingAttributesJobModel() const;
+    Bodega::RatingAttributesJobModel *ratingAttributesJobModel() const;
 
     Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE void forgetCredentials() const;
