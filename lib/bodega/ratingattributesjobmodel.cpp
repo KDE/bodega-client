@@ -38,8 +38,14 @@ public:
     Session *session;
     void fetchRatingAttributes();
     void ratingAttributesJobFinished(Bodega::NetworkJob *job);
+    void assetJobFinished(Bodega::NetworkJob *job);
+
+    QString findAverageRating(const QString ratingAttributeId) const;
+    QString findRatingsCount(const QString ratingAttributeId) const;
+
     QString assetId;
     QList<RatingAttributes> ratingAttributes;
+    AssetInfo assetInfo;
 };
 
 RatingAttributesJobModel::Private::Private(RatingAttributesJobModel *parent)
@@ -54,6 +60,7 @@ void RatingAttributesJobModel::Private::fetchRatingAttributes()
 
     q->beginResetModel();
     ratingAttributes.clear();
+    assetInfo.clear();
     q->endResetModel();
 
     connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
@@ -77,8 +84,49 @@ void RatingAttributesJobModel::Private::ratingAttributesJobFinished(Bodega::Netw
     const int begin = 0;
     const int end = qMax(begin, ratingAttributes.count() + begin -1);
     q->beginInsertRows(QModelIndex(), begin, end);
-    ratingAttributes= ratingAttributesJob->ratingAttributes();
+    ratingAttributes = ratingAttributesJob->ratingAttributes();
+
+    AssetJob *assetJob = session->asset(assetId, AssetJob::Ratings);
+    connect(assetJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
+            q, SLOT(assetJobFinished(Bodega::NetworkJob *)));
+}
+
+void RatingAttributesJobModel::Private::assetJobFinished(Bodega::NetworkJob *job)
+{
+    AssetJob *assetJob = qobject_cast<AssetJob*>(job);
+
+    if (!assetJob) {
+        return;
+    }
+
+    assetJob->deleteLater();
+
+    if (assetJob->failed()) {
+        q->endInsertRows();
+        return;
+    }
+    assetInfo = assetJob->info();
     q->endInsertRows();
+}
+
+QString RatingAttributesJobModel::Private::findAverageRating(const QString ratingAttributeId) const
+{
+    foreach(const AssetInfo::AssetInfoRatings &info, assetInfo.ratings) {
+        if (ratingAttributeId == info.attributeId) {
+            return info.averageRating;
+        }
+    }
+    return QString();
+}
+
+QString RatingAttributesJobModel::Private::findRatingsCount(const QString ratingAttributeId) const
+{
+    foreach(const AssetInfo::AssetInfoRatings &info, assetInfo.ratings) {
+        if (ratingAttributeId == info.attributeId) {
+            return info.ratingsCount;
+        }
+    }
+    return QString();
 }
 
 RatingAttributesJobModel::RatingAttributesJobModel(QObject *parent)
@@ -102,7 +150,7 @@ RatingAttributesJobModel::RatingAttributesJobModel(QObject *parent)
     connect(this, SIGNAL(modelReset()),
             this, SIGNAL(countChanged()));
     connect(this, SIGNAL(assetIdChanged()),
-            this, SLOT(fetchRatings()));
+            this, SLOT(fetchRatingAttributes()));
 }
 
 RatingAttributesJobModel::~RatingAttributesJobModel()
@@ -145,6 +193,13 @@ QVariant RatingAttributesJobModel::data(const QModelIndex &index, int role) cons
         case AssetType: {
             return d->ratingAttributes.at(index.row()).assetType;
         }
+        case RatingsCount: {
+            return d->findRatingsCount(d->ratingAttributes.at(index.row()).id);
+        }
+        case AverageRating: {
+            return d->findAverageRating(d->ratingAttributes.at(index.row()).id);
+        }
+
         default: {
             return QVariant();
         }
