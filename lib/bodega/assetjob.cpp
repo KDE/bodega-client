@@ -108,12 +108,12 @@ void AssetJob::Private::parsePreviews(const QVariantMap &result)
 
 void AssetJob::Private::parseRatings(const QVariantMap &result)
 {
-    QVariantList ratingsList = result[QLatin1String("ratings")].toList();
+    QVariantList ratingsList = result[QLatin1String("asset")].toMap()[QLatin1String("ratings")].toList();
     QVariantList::const_iterator itr;
     for (itr = ratingsList.constBegin(); itr != ratingsList.constEnd(); ++itr) {
         AssetInfo::AssetInfoRatings assetInfoRating;
         QVariantMap ratingInfo = itr->toMap();
-        assetInfoRating.averageRating = ratingInfo[QLatin1String("average")].toString();
+        assetInfoRating.averageRating = ratingInfo[QLatin1String("averagerating")].toString();
         assetInfoRating.ratingsCount = ratingInfo[QLatin1String("ratingscount")].toString();
         assetInfoRating.attributeId = ratingInfo[QLatin1String("attribute")].toString();
 
