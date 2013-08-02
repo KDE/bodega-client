@@ -75,7 +75,8 @@ void AssetRatingsJobModel::Private::ratingsJobFinished(Bodega::NetworkJob *job)
     }
 
     const int begin = 0;
-    const int end = qMax(begin, ratings.count() + begin -1);
+    const int end =  qMax(begin, assetRatingsJob->ratings().size() - 1);
+
     q->beginInsertRows(QModelIndex(), begin, end);
     ratings= assetRatingsJob->ratings();
     q->endInsertRows();
