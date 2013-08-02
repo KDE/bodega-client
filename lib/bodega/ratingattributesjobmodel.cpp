@@ -81,10 +81,10 @@ void RatingAttributesJobModel::Private::ratingAttributesJobFinished(Bodega::Netw
         return;
     }
 
-    const int begin = 0;
-    const int end = qMax(begin, ratingAttributes.count() + begin -1);
-    q->beginInsertRows(QModelIndex(), begin, end);
     ratingAttributes = ratingAttributesJob->ratingAttributes();
+    const int begin = 0;
+    const int end = qMax(begin, ratingAttributes.count() -1);
+    q->beginInsertRows(QModelIndex(), begin, end);
 
     AssetJob *assetJob = session->asset(assetId, AssetJob::Ratings);
     connect(assetJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
