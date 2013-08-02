@@ -220,6 +220,15 @@ BrowserColumn {
                             }
                         }
                     }
+                    PlasmaComponents.Button {
+                        text: i18n("See all %1 ratings.!", bodegaClient.ratingAttributesJobModel.allRatings())
+                        enabled: bodegaClient.ratingAttributesJobModel.allRatings() > 0
+                        onClicked: {
+                            itemBrowser.pop(root)
+                            bodegaClient.assetRatingsJobModel.assetId = assetId;
+                            itemBrowser.push(Qt.createComponent("RatingsColumn.qml"))
+                        }
+                    }
 
                     Item {
                         anchors {
