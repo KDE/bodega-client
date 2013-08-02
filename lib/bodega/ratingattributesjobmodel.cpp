@@ -46,6 +46,7 @@ public:
     QString assetId;
     QList<RatingAttributes> ratingAttributes;
     AssetInfo assetInfo;
+    int allRatings;
 };
 
 RatingAttributesJobModel::Private::Private(RatingAttributesJobModel *parent)
@@ -61,6 +62,7 @@ void RatingAttributesJobModel::Private::fetchRatingAttributes()
     q->beginResetModel();
     ratingAttributes.clear();
     assetInfo.clear();
+    allRatings = 0;
     q->endResetModel();
 
     connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
@@ -106,6 +108,9 @@ void RatingAttributesJobModel::Private::assetJobFinished(Bodega::NetworkJob *job
         return;
     }
     assetInfo = assetJob->info();
+    foreach(const AssetInfo::AssetInfoRatings rating, assetInfo.ratings) {
+        allRatings += rating.ratingsCount.toInt();
+    }
     q->endInsertRows();
 }
 
@@ -277,6 +282,10 @@ Session *RatingAttributesJobModel::session() const
     return d->session;
 }
 
+int RatingAttributesJobModel::allRatings() const
+{
+    return d->allRatings;
 }
 
+}
 #include "ratingattributesjobmodel.moc"

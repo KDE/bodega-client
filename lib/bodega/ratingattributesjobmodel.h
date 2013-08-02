@@ -48,6 +48,8 @@ namespace Bodega {
         RatingAttributesJobModel(QObject *parent = 0);
         ~RatingAttributesJobModel();
 
+        Q_INVOKABLE int allRatings() const;
+
         QString assetId() const;
         void setAssetId(const QString& collectionId);
 
