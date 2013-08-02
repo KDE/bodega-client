@@ -53,6 +53,8 @@
 #include <bodega/participantratingsjob.h>
 #include <bodega/ratingattributesjob.h>
 #include <bodega/ratingattributesjobmodel.h>
+#include <bodega/assetratingsjob.h>
+#include <bodega/assetratingsjobmodel.h>
 
 using namespace Bodega;
 
@@ -298,6 +300,8 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     qmlRegisterType<Bodega::ParticipantRatingsJobModel>();
     qmlRegisterType<Bodega::RatingAttributesJob>();
     qmlRegisterType<Bodega::RatingAttributesJobModel>();
+    qmlRegisterType<Bodega::AssetRatingsJob>();
+    qmlRegisterType<Bodega::AssetRatingsJobModel>();
     qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
 
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());
@@ -323,6 +327,8 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     m_participantRatingsJobModel->setSession(m_session);
     m_ratingAttributesJobModel = new Bodega::RatingAttributesJobModel(this);
     m_ratingAttributesJobModel->setSession(m_session);
+    m_assetRatingsJobModel = new Bodega::AssetRatingsJobModel(this);
+    m_assetRatingsJobModel->setSession(m_session);
 
     declarativeView()->rootContext()->setContextProperty("bodegaClient", this);
 }
@@ -375,6 +381,11 @@ ParticipantRatingsJobModel *BodegaStore::participantRatingsJobModel() const
 RatingAttributesJobModel *BodegaStore::ratingAttributesJobModel() const
 {
     return m_ratingAttributesJobModel;
+}
+
+AssetRatingsJobModel *BodegaStore::assetRatingsJobModel() const
+{
+    return m_assetRatingsJobModel;
 }
 
 void BodegaStore::historyInUse(bool used)
