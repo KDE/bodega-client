@@ -196,7 +196,7 @@ BrowserColumn {
                                                                    : i18n("Free")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
-                    PlasmaComponents.Label {
+                    PlasmaExtras.Title {
                         text: i18n("Ratings")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
@@ -220,7 +220,7 @@ BrowserColumn {
                             }
                             Component.onCompleted: {
                                 ratingsButton.visible = model.AllRatings > 0
-                                ratingsButton.text = i18n("See all %1 ratings.!", AllRatings)
+                                ratingsButton.text = i18n("See all %1 ratings", AllRatings)
                             }
                         }
                     }
