@@ -224,9 +224,13 @@ BrowserColumn {
                         text: i18n("See all %1 ratings.!", bodegaClient.ratingAttributesJobModel.allRatings())
                         enabled: bodegaClient.ratingAttributesJobModel.allRatings() > 0
                         onClicked: {
+                           //HACK!!!!
                             itemBrowser.pop(root)
                             bodegaClient.assetRatingsJobModel.assetId = assetId;
                             itemBrowser.push(Qt.createComponent("RatingsColumn.qml"))
+                            participantItemBrowser.push(Qt.createComponent("RatingsColumn.qml"))
+                            browser.pop(root)
+                            browser.push(Qt.createComponent(newComponentPath))
                         }
                     }
 
