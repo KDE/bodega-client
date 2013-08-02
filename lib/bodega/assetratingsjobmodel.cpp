@@ -83,12 +83,9 @@ void AssetRatingsJobModel::Private::ratingsJobFinished(Bodega::NetworkJob *job)
 
     q->beginInsertRows(QModelIndex(), begin, end);
     ratings= assetRatingsJob->ratings();
-//    foreach(const Ratings &Rating, ratings) {
-        RatingAttributesJob *ratingAttributesJob = session->listRatingAttributes(assetId);
-        connect(ratingAttributesJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
-            q, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
-  // }
-   // q->endInsertRows();
+    RatingAttributesJob *ratingAttributesJob = session->listRatingAttributes(assetId);
+    connect(ratingAttributesJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
+        q, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
 }
 
 void AssetRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::NetworkJob *job)
