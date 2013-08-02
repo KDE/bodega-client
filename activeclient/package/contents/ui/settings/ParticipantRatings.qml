@@ -50,8 +50,6 @@ PlasmaComponents.Page {
             model: bodegaClient.participantRatingsJobModel
 
             delegate: PlasmaComponents.ListItem {
-                enabled: true
-                checked: listView.currentIndex == index
                 Column {
                     spacing: 0
                     PlasmaComponents.Label {
@@ -71,18 +69,6 @@ PlasmaComponents.Page {
                     PlasmaComponents.Label {
                         text: model.Rating
                         visible: text.length > 0
-                    }
-                }
-
-                onClicked: {
-                    if (listView.currentIndex == index) {
-                        return;
-                    }
-                    listView.currentIndex = index
-                    participantItemBrowser.pop(root)
-                    if (model.AssetId) {
-                        var assets = participantItemBrowser.push(Qt.createComponent("../storebrowser/AssetColumn.qml"));
-                        assets.assetId = model.AssetId;
                     }
                 }
             }
