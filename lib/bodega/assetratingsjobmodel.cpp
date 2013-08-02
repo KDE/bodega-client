@@ -20,6 +20,7 @@
 #include "assetratingsjobmodel.h"
 
 #include "assetratingsjob.h"
+#include "ratingattributesjob.h"
 #include "session.h"
 #include "networkjob.h"
 
@@ -38,8 +39,11 @@ public:
     Session *session;
     void fetchRatings();
     void ratingsJobFinished(Bodega::NetworkJob *job);
+    void ratingAttributesJobFinished(Bodega::NetworkJob *job);
     QString assetId;
     QList<Ratings> ratings;
+    QList<RatingAttributes> ratingAttributes;
+    QString findAttributeName(const QString &attributeId) const;
 };
 
 AssetRatingsJobModel::Private::Private(AssetRatingsJobModel *parent)
@@ -79,7 +83,39 @@ void AssetRatingsJobModel::Private::ratingsJobFinished(Bodega::NetworkJob *job)
 
     q->beginInsertRows(QModelIndex(), begin, end);
     ratings= assetRatingsJob->ratings();
+//    foreach(const Ratings &Rating, ratings) {
+        RatingAttributesJob *ratingAttributesJob = session->listRatingAttributes(assetId);
+        connect(ratingAttributesJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
+            q, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
+  // }
+   // q->endInsertRows();
+}
+
+void AssetRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::NetworkJob *job)
+{
+    RatingAttributesJob *ratingAttributesJob = qobject_cast<RatingAttributesJob*>(job);
+
+    if (!ratingAttributesJob) {
+        return;
+    }
+
+    ratingAttributesJob->deleteLater();
+
+    if (ratingAttributesJob->failed()) {
+        return;
+    }
+    ratingAttributes.append(ratingAttributesJob->ratingAttributes());
     q->endInsertRows();
+}
+
+QString AssetRatingsJobModel::Private::findAttributeName(const QString &attributeId) const
+{
+    foreach(const RatingAttributes &attribute, ratingAttributes) {
+        if (attribute.id == attributeId) {
+            return attribute.name;
+        }
+    }
+    return QString();
 }
 
 AssetRatingsJobModel::AssetRatingsJobModel(QObject *parent)
@@ -136,6 +172,9 @@ QVariant AssetRatingsJobModel::data(const QModelIndex &index, int role) const
     switch (role) {
         case AttributeId: {
             return d->ratings.at(index.row()).attributeId;
+        }
+        case AttributeName: {
+            return d->findAttributeName(d->ratings.at(index.row()).attributeId);
         }
         case PersonId: {
             return d->ratings.at(index.row()).personId;

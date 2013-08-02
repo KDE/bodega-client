@@ -132,6 +132,7 @@ void ParticipantRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::Ne
     }
     ratingAttributes.append(ratingAttributesJob->ratingAttributes());
 }
+
 QString ParticipantRatingsJobModel::Private::findAssetName(const QString &assetId) const
 {
     foreach(const AssetInfo &asset, assetInfo) {

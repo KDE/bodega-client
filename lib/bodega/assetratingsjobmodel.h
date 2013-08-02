@@ -38,8 +38,9 @@ namespace Bodega {
     public:
         enum DisplayRoles {
             AttributeId = Qt::UserRole + 100,
-            PersonId = Qt::UserRole + 101,
-            Rating = Qt::UserRole + 102
+            AttributeName = Qt::UserRole + 101,
+            PersonId = Qt::UserRole + 102,
+            Rating = Qt::UserRole + 103
         };
 
         AssetRatingsJobModel(QObject *parent = 0);
@@ -72,6 +73,7 @@ namespace Bodega {
         class Private;
         friend class Private;
         Private * const d;
+        Q_PRIVATE_SLOT(d, void ratingAttributesJobFinished(Bodega::NetworkJob *))
         Q_PRIVATE_SLOT(d, void ratingsJobFinished(Bodega::NetworkJob *))
         Q_PRIVATE_SLOT(d, void fetchRatings())
     };
