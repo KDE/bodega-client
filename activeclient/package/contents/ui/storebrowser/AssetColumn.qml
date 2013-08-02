@@ -228,13 +228,9 @@ BrowserColumn {
                         id: ratingsButton
                         anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: {
-                           //HACK!!!!
                             itemBrowser.pop(root)
                             bodegaClient.assetRatingsJobModel.assetId = assetId;
                             itemBrowser.push(Qt.createComponent("RatingsColumn.qml"))
-                            participantItemBrowser.push(Qt.createComponent("RatingsColumn.qml"))
-                            browser.pop(root)
-                            browser.push(Qt.createComponent(newComponentPath))
                         }
                     }
 
