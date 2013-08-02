@@ -39,7 +39,7 @@ BrowserListView {
                 id: delegateRow
                 spacing: theme.defaultFont.mSize.width
                 PlasmaComponents.Label {
-                    text: model.AttributeId + ": "
+                    text: model.AttributeName + ": "
                 }
                 PlasmaComponents.Label {
                     text: model.Rating
