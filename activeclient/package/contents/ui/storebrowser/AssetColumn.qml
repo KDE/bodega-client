@@ -218,11 +218,15 @@ BrowserColumn {
                                 verticalAlignment: Text.AlignTop
                                 text: model.AverageRating ? i18n("%1", model.AverageRating) : i18n("No Ratings yet!")
                             }
+                            Component.onCompleted: {
+                                ratingsButton.visible = model.AllRatings > 0
+                                ratingsButton.text = i18n("See all %1 ratings.!", AllRatings)
+                            }
                         }
                     }
                     PlasmaComponents.Button {
-                        text: i18n("See all %1 ratings.!", bodegaClient.ratingAttributesJobModel.allRatings())
-                        enabled: bodegaClient.ratingAttributesJobModel.allRatings() > 0
+                        id: ratingsButton
+                        anchors.horizontalCenter: parent.horizontalCenter
                         onClicked: {
                            //HACK!!!!
                             itemBrowser.pop(root)

@@ -204,7 +204,9 @@ QVariant RatingAttributesJobModel::data(const QModelIndex &index, int role) cons
         case AverageRating: {
             return d->findAverageRating(d->ratingAttributes.at(index.row()).id);
         }
-
+        case AllRatings: {
+            return d->allRatings;
+        }
         default: {
             return QVariant();
         }
@@ -280,11 +282,6 @@ void RatingAttributesJobModel::setSession(Session *session)
 Session *RatingAttributesJobModel::session() const
 {
     return d->session;
-}
-
-int RatingAttributesJobModel::allRatings() const
-{
-    return d->allRatings;
 }
 
 }

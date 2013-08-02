@@ -42,13 +42,12 @@ namespace Bodega {
             HighDesc = Qt::UserRole + 102,
             AssetType = Qt::UserRole + 103,
             RatingsCount = Qt::UserRole + 104,
-            AverageRating = Qt::UserRole + 105
+            AverageRating = Qt::UserRole + 105,
+            AllRatings = Qt::UserRole + 106
         };
 
         RatingAttributesJobModel(QObject *parent = 0);
         ~RatingAttributesJobModel();
-
-        Q_INVOKABLE int allRatings() const;
 
         QString assetId() const;
         void setAssetId(const QString& collectionId);
