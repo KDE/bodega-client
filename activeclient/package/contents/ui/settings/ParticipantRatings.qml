@@ -58,16 +58,28 @@ PlasmaComponents.Page {
                         width: root.width
                         visible: text.length > 0
                     }
-
                     PlasmaComponents.Label {
-                        text: model.AttributeName
+                        text: i18n("Description: %1", model.AssetDesciption)
+                        wrapMode: Text.Wrap
+                        width: root.width
+                        visible: text.length > 0
+                    }
+                    PlasmaComponents.Label {
+                        text: i18n("Version: %1", model.AssetVersion)
                         wrapMode: Text.Wrap
                         width: root.width
                         visible: text.length > 0
                     }
 
                     PlasmaComponents.Label {
-                        text: model.Rating
+                        text: i18n("Rating: %1", model.AttributeName)
+                        wrapMode: Text.Wrap
+                        width: root.width
+                        visible: text.length > 0
+                    }
+
+                    PlasmaComponents.Label {
+                        text: i18n("Rating Average: %1", model.Rating)
                         visible: text.length > 0
                     }
                 }

@@ -43,11 +43,11 @@ public:
     void assetJobFinished(Bodega::NetworkJob *job);
     void ratingAttributesJobFinished(Bodega::NetworkJob *job);
 
-    QString findAssetName(const QString &assetId) const;
+    QHash<QString, QString> findAsset(const QString &assetId) const;
     QString findAttributeName(const QString &attributeId) const;
 
     QList<ParticipantRatings> participantRatings;
-    QList <AssetInfo> assetInfo;
+    QList<AssetInfo> assetInfo;
     QList<RatingAttributes> ratingAttributes;
 };
 
@@ -133,14 +133,18 @@ void ParticipantRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::Ne
     ratingAttributes.append(ratingAttributesJob->ratingAttributes());
 }
 
-QString ParticipantRatingsJobModel::Private::findAssetName(const QString &assetId) const
+QHash<QString, QString> ParticipantRatingsJobModel::Private::findAsset(const QString &assetId) const
 {
+    QHash<QString, QString> hash;
     foreach(const AssetInfo &asset, assetInfo) {
         if (asset.id == assetId) {
-            return asset.name;
+            hash[QLatin1String("name")] = asset.name;
+            hash[QLatin1String("version")] = asset.version;
+            hash[QLatin1String("description")] = asset.description;
+            return hash;
         }
     }
-    return QString();
+    return QHash<QString, QString>();
 }
 
 QString ParticipantRatingsJobModel::Private::findAttributeName(const QString &attributeId) const
@@ -190,6 +194,7 @@ QVariant ParticipantRatingsJobModel::data(const QModelIndex &index, int role) co
     if (!index.isValid() || index.row() >= d->participantRatings.count()) {
         return QVariant();
     }
+    QHash<QString, QString> asset = d->findAsset(d->participantRatings.at(index.row()).assetId);
 
     switch (role) {
         case AttributeId: {
@@ -199,7 +204,13 @@ QVariant ParticipantRatingsJobModel::data(const QModelIndex &index, int role) co
             return d->findAttributeName(d->participantRatings.at(index.row()).attributeId);
         }
         case AssetName: {
-            return d->findAssetName(d->participantRatings.at(index.row()).assetId);
+            return asset[QLatin1String("name")];
+        }
+        case AssetVersion: {
+            return asset[QLatin1String("version")];
+        }
+        case AssetDesciption: {
+            return asset[QLatin1String("description")];
         }
         case AssetId: {
             return d->participantRatings.at(index.row()).assetId;
