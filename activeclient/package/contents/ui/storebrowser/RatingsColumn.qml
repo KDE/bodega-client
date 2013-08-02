@@ -33,8 +33,6 @@ BrowserListView {
         id: assetRatingsJobModelDelegate
         PlasmaComponents.ListItem {
             id: listItem
-            enabled: true
-            //checked: view.currentIndex == index
             Row {
                 id: delegateRow
                 spacing: theme.defaultFont.mSize.width
