@@ -196,15 +196,29 @@ BrowserColumn {
                                                                    : i18n("Free")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
+                    PlasmaComponents.Label {
+                        text: i18n("Ratings")
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
                     Repeater {
                         id: repeater
                         clip: true
                         model: bodegaClient.ratingAttributesJobModel
-                        delegate: PlasmaComponents.Label {
-                            anchors.rightMargin: theme.defaultFont.mSize.width
-                            text: i18n("%1: %2", model.Name, model.AverageRating)
+                        delegate: Row {
+                            PlasmaComponents.Label {
+                                id: attributeNameLabel
+                                verticalAlignment: Text.AlignTop
+                                anchors {
+                                    right: attributeAverageRatingLabel.left
+                                }
+                                text: i18n("%1: ", model.Name)
+                            }
+                            PlasmaComponents.Label {
+                                id: attributeAverageRatingLabel
+                                verticalAlignment: Text.AlignTop
+                                text: model.AverageRating ? i18n("%1", model.AverageRating) : i18n("No Ratings yet!")
+                            }
                         }
-
                     }
 
                     Item {
