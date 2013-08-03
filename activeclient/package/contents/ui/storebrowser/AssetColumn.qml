@@ -237,6 +237,48 @@ BrowserColumn {
                             }
                         }
                     }
+                    PlasmaComponents.Button {
+                        id: ratingsButton
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: i18n("Rate this asset")
+                        onClicked: ratingsBaloon.open()
+                    }
+
+                    Baloon {
+                        id: ratingsBaloon
+                        visualParent: ratingsButton
+                        Column {
+                            spacing: 5
+                            Repeater {
+                                clip: true
+                                model: bodegaClient.ratingAttributesJobModel
+                                delegate: Column {
+                                    spacing: 5
+                                    PlasmaComponents.Label {
+                                        verticalAlignment: Text.AlignTop
+                                        text: i18n("%1: ", model.Name)
+                                    }
+                                    PlasmaComponents.Slider {
+                                        valueIndicatorVisible: true
+                                        stepSize: 1
+                                        minimumValue: 1
+                                        maximumValue: 5
+                                    }
+                                }
+                            }
+                            Row {
+                                PlasmaComponents.Button {
+                                    text: i18n("Ok")
+                                    onClicked: ratingsBaloon.close()
+                                }
+                                PlasmaComponents.Button {
+                                    text: i18n("Cancel")
+                                    onClicked: ratingsBaloon.close()
+                                }
+                            }
+                        }
+                    }
+
                     Item {
                         anchors {
                             left: parent.left
