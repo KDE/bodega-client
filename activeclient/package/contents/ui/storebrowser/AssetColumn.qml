@@ -219,21 +219,24 @@ BrowserColumn {
                                 text: model.AverageRating ? i18n("%1", model.AverageRating) : i18n("No Ratings yet!")
                             }
                             Component.onCompleted: {
-                                ratingsButton.visible = model.AllRatings > 0
-                                ratingsButton.text = i18n("See all %1 ratings", AllRatings)
+                                ratingsLabel.visible = model.AllRatings > 0
+                                ratingsLabel.text = i18n("See all %1 ratings", AllRatings)
                             }
                         }
                     }
-                    PlasmaComponents.Button {
-                        id: ratingsButton
+                    PlasmaComponents.Label {
+                        id: ratingsLabel
                         anchors.horizontalCenter: parent.horizontalCenter
-                        onClicked: {
-                            itemBrowser.pop(root)
-                            bodegaClient.assetRatingsJobModel.assetId = assetId;
-                            itemBrowser.push(Qt.createComponent("RatingsColumn.qml"))
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                itemBrowser.pop(root)
+                                bodegaClient.assetRatingsJobModel.assetId = assetId;
+                                itemBrowser.push(Qt.createComponent("RatingsColumn.qml"))
+                            }
                         }
                     }
-
                     Item {
                         anchors {
                             left: parent.left
