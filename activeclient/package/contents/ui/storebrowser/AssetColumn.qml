@@ -23,6 +23,7 @@ import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 import "../components"
+import "Ratings.js" as Ratings
 
 BrowserColumn {
     id: root
@@ -263,13 +264,19 @@ BrowserColumn {
                                         stepSize: 1
                                         minimumValue: 1
                                         maximumValue: 5
+                                        onValueChanged: {
+                                            Ratings.addAttribute(model.Name, value)
+                                        }
                                     }
                                 }
                             }
                             Row {
                                 PlasmaComponents.Button {
                                     text: i18n("Ok")
-                                    onClicked: ratingsBaloon.close()
+                                    onClicked: {
+                                        ratingsBaloon.close()
+                                        bodegaClient.session.assetCreateRatings(assetId, Ratings.ratingAttributes)
+                                    }
                                 }
                                 PlasmaComponents.Button {
                                     text: i18n("Cancel")
