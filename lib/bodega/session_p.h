@@ -23,6 +23,8 @@
 
 #include "session.h"
 
+#include "qjson/serializer.h"
+
 namespace Bodega {
 
 class InstallJobsModel;
@@ -53,6 +55,19 @@ public:
     {
         connect(job, SIGNAL(jobFinished(Bodega::NetworkJob*)),
                 q, SLOT(jobFinished(Bodega::NetworkJob*)));
+    }
+
+    QByteArray qvariantListToJson(const QVariantList &list)
+    {
+        QJson::Serializer serializer;
+        bool ok;
+        QByteArray json = serializer.serialize(list, &ok);
+
+        if (!ok) {
+            return QByteArray();
+        }
+
+        return json;
     }
 
     void setPoints(int p);
