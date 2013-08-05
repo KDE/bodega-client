@@ -771,38 +771,13 @@ Bodega::ParticipantRatingsJob * Session::participantRatings(int offset, int page
     return job;
 }
 
-#include "qjson/serializer.h"
-#include <QVariant>
-Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QList<Ratings> &ratings)
+Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QVariantList &ratings)
 {
-    QUrl url = d->baseUrl;
+   QUrl url = d->baseUrl;
     const QString path = QString::fromLatin1("/asset/ratings/create/%1").arg(assetId);
     url.setEncodedPath(d->jsonPath(path));
 
-    //TODO where should I move this code????
-
-    QVariantList ratingsList;
-    QVariantMap rating;
-    foreach(const Ratings &r,ratings) {
-    //for (int i = 0; i <= ratings.size(); i++) {
-      //  Ratings r = ratings.at(i);
-        QVariantMap rating;
-        //rating.insert("attribute", r.attributeId);
-        //rating.insert("rating", r.rating);
-        ratingsList.append(rating);
-    }
-
-    QJson::Serializer serializer;
-    bool ok;
-    QByteArray json = serializer.serialize(ratingsList, &ok);
-
-    if (ok) {
-        qDebug() << json;
-    } else {
-        qDebug() << "Something went wrong:" << serializer.errorMessage();
-    }
-
-    NetworkJob *job = new NetworkJob(d->post(url, json), this);
+    NetworkJob *job = new NetworkJob(d->post(url, d->qvariantListToJson(ratings)), this);
     d->jobConnect(job);
     return job;
 }

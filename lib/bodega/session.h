@@ -147,7 +147,7 @@ namespace Bodega {
         Bodega::NetworkJob *deleteAssetRatings(const QString &assetId);
         Bodega::AssetRatingsJob *assetRatings(const QString &assetId);
         Bodega::ParticipantRatingsJob *participantRatings(int offset = -1, int pageSize = -1);
-        Bodega::NetworkJob *assetCreateRatings(const QString &assetId, const QList<Ratings> &ratings);
+        Bodega::NetworkJob *assetCreateRatings(const QString &assetId, const QVariantList &ratings);
 
         /*
          * These two are special because they don't require a session, as
