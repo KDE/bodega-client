@@ -262,10 +262,10 @@ BrowserColumn {
                                     PlasmaComponents.Slider {
                                         valueIndicatorVisible: true
                                         stepSize: 1
-                                        minimumValue: 1
+                                        minimumValue: 0
                                         maximumValue: 5
                                         onValueChanged: {
-                                            Ratings.addAttribute(model.Name, value)
+                                            Ratings.addAttribute(model.AttributeId, value)
                                         }
                                     }
                                 }
