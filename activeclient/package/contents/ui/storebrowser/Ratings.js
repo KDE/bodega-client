@@ -29,6 +29,16 @@ function addAttribute(attributeId, attributeValue) {
     var attribute = {};
     attribute["attribute"] = attributeId;
     attribute["rating"] = attributeValue;
+
+    //make sure that our array has unique attributes
+    for (var i in ratingAttributes.ratings) {
+        var rating = ratingAttributes.ratings[i];
+        if (attributeId === rating["attribute"]) {
+            ratingAttributes.ratings[i] = attribute;
+            return;
+        }
+    }
+
     ratingAttributes.ratings.push(attribute);
 }
 
