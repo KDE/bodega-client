@@ -104,6 +104,7 @@ QNetworkReply *Session::Private::post(const QUrl &url, const QByteArray &data)
     qDebug() << url;
     QNetworkRequest request;
     request.setRawHeader("User-Agent", "Bodega 0.1");
+    request.setRawHeader("content-type", "application/json");
     request.setUrl(url);
     return netManager->post(request, data);
 }
