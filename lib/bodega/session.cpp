@@ -772,13 +772,13 @@ Bodega::ParticipantRatingsJob * Session::participantRatings(int offset, int page
     return job;
 }
 
-Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QVariantList &ratings)
+Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QVariant &ratings)
 {
    QUrl url = d->baseUrl;
     const QString path = QString::fromLatin1("/asset/ratings/create/%1").arg(assetId);
     url.setEncodedPath(d->jsonPath(path));
 
-    NetworkJob *job = new NetworkJob(d->post(url, d->qvariantListToJson(ratings)), this);
+    NetworkJob *job = new NetworkJob(d->post(url, d->qvariantToJson(ratings)), this);
     d->jobConnect(job);
     return job;
 }

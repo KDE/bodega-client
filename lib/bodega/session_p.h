@@ -57,11 +57,11 @@ public:
                 q, SLOT(jobFinished(Bodega::NetworkJob*)));
     }
 
-    QByteArray qvariantListToJson(const QVariantList &list)
+    QByteArray qvariantToJson(const QVariant &data)
     {
         QJson::Serializer serializer;
         bool ok;
-        QByteArray json = serializer.serialize(list, &ok);
+        QByteArray json = serializer.serialize(data, &ok);
 
         if (!ok) {
             return QByteArray();
