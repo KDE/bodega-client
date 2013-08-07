@@ -43,7 +43,8 @@ namespace Bodega {
             AssetType = Qt::UserRole + 103,
             RatingsCount = Qt::UserRole + 104,
             AverageRating = Qt::UserRole + 105,
-            AllRatings = Qt::UserRole + 106
+            AllRatings = Qt::UserRole + 106,
+            AttributeId = Qt::UserRole + 107
         };
 
         RatingAttributesJobModel(QObject *parent = 0);

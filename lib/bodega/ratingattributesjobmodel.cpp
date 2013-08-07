@@ -189,6 +189,9 @@ QVariant RatingAttributesJobModel::data(const QModelIndex &index, int role) cons
         case Name: {
             return d->ratingAttributes.at(index.row()).name;
         }
+        case AttributeId: {
+            return d->ratingAttributes.at(index.row()).id;
+        }
         case LowDesc: {
             return d->ratingAttributes.at(index.row()).lowDesc;
         }
