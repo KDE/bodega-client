@@ -123,7 +123,7 @@ AssetOperations::AssetOperations(const QString &assetId, Session *session)
 {
     d->ratingsModel->setSession(session);
 
-    AssetJob *aj = session->asset(assetId, AssetJob::ShowChangeLog);
+    AssetJob *aj = session->asset(assetId, AssetJob::ShowRatings | AssetJob::ShowChangeLog);
     QObject::connect(aj, SIGNAL(jobFinished(Bodega::NetworkJob*)),
                      this, SLOT(assetDownloadComplete(Bodega::NetworkJob*)));
 }
