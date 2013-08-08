@@ -2,7 +2,6 @@
 set (bodega_HEADERS
      assetjob.h
      assetoperations.h
-     assetoperations_p.h
      collectionaddassetjob.h
      collectionlistassetsjob.h
      collectionlistassetsjobmodel.h
@@ -22,7 +21,6 @@ set (bodega_HEADERS
      networkjob.h
      participantinfojob.h
      registerjob.h
-     session_p.h
      session.h
      signonjob.h
      uninstalljob.h
@@ -30,7 +28,6 @@ set (bodega_HEADERS
      assetratingsjob.h
      participantratingsjob.h
      assetratingsjobmodel.h
-     ratingattributesjobmodel.h
      participantratingsjobmodel.h
     )
 
@@ -39,7 +36,6 @@ set (bodega_SRCS
      assethandler.cpp
      assethandlerfactory.cpp
      assetoperations.cpp
-     assetoperations_p.cpp
      collectionaddassetjob.cpp
      collectionlistassetsjob.cpp
      collectionlistassetsjobmodel.cpp
@@ -58,6 +54,7 @@ set (bodega_SRCS
      listcollectionsjobmodel.cpp
      networkjob.cpp
      participantinfojob.cpp
+     ratingsmodel_p.cpp
      registerjob.cpp
      session.cpp
      signonjob.cpp
@@ -66,7 +63,6 @@ set (bodega_SRCS
      assetratingsjob.cpp
      participantratingsjob.cpp
      assetratingsjobmodel.cpp
-     ratingattributesjobmodel.cpp
      participantratingsjobmodel.cpp
      )
 

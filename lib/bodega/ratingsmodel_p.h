@@ -17,23 +17,25 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef BODEGA_RATINGATTRIBUTESJOB_MODEL_H
-#define BODEGA_RATINGATTRIBUTESJOB_MODEL_H
+
+#ifndef ASSETOPERATIONINTERFACEPRIVATE_H
+#define ASSETOPERATIONINTERFACEPRIVATE_H
+
+#include <QObject>
 
 #include <bodega/globals.h>
-
-#include <QtCore/QAbstractItemModel>
+//#include <bodega/assetoperations.h>
+#include "assetoperations.h"
+#include <QAbstractItemModel>
 
 namespace Bodega {
 
-    class Session;
+    class AssetJob;
 
-    class BODEGA_EXPORT RatingAttributesJobModel : public QAbstractItemModel
-    {
-        Q_OBJECT
-        Q_ENUMS(DisplayRoles)
-        Q_PROPERTY(int count READ count NOTIFY countChanged)
-        Q_PROPERTY(QString assetId READ assetId WRITE setAssetId NOTIFY assetIdChanged)
+class RatingsModel : public QAbstractItemModel
+{
+    Q_OBJECT
+    Q_ENUMS(DisplayRoles)
 
     public:
         enum DisplayRoles {
@@ -47,11 +49,11 @@ namespace Bodega {
             AttributeId = Qt::UserRole + 107
         };
 
-        RatingAttributesJobModel(QObject *parent = 0);
-        ~RatingAttributesJobModel();
+        RatingsModel(QObject *parent = 0);
+        ~RatingsModel();
 
-        QString assetId() const;
-        void setAssetId(const QString& collectionId);
+        AssetJob *assetJob() const;
+        void setAssetJob(AssetJob *assetJob);
 
         int columnCount(const QModelIndex &parent = QModelIndex()) const;
         QVariant data(const QModelIndex &index, int role) const;
@@ -71,16 +73,24 @@ namespace Bodega {
 
     Q_SIGNALS:
         void countChanged();
-        void assetIdChanged();
-
+        void assetJobChanged();
+    private Q_SLOTS:
+        void fetchRatingAttributes();
+        void ratingAttributesJobFinished(Bodega::NetworkJob *);
     private:
-        class Private;
-        friend class Private;
-        Private * const d;
-        Q_PRIVATE_SLOT(d, void ratingAttributesJobFinished(Bodega::NetworkJob *))
-        Q_PRIVATE_SLOT(d, void fetchRatingAttributes())
-        Q_PRIVATE_SLOT(d, void assetJobFinished(Bodega::NetworkJob *))
-    };
+        AssetJob *m_assetJob;
+        Session *m_session;
+
+        QList<RatingAttributes> m_ratingAttributes;
+        int m_allRatings;
+        QString findRatingsCount(const QString &foo) const;
+        QString findAverageRating(const QString &foo) const;
+        int allRatings();
+        QString m_contentType;
+        AssetInfo m_assetInfo;
+
+        static QHash<QString, QList<RatingAttributes> > s_ratingAttributesByAssetType;
+};
 
 }
 

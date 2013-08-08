@@ -19,12 +19,12 @@
 
 
 #include "assetoperations.h"
-#include "assetoperations_p.h"
 #include <QDebug>
 
 #include "assethandler.h"
 #include "installjob.h"
 #include "installjobsmodel.h"
+#include "ratingsmodel_p.h"
 #include "uninstalljob.h"
 
 namespace Bodega
