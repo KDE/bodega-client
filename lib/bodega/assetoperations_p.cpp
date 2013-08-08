@@ -201,11 +201,20 @@ QString AssetOperations::RatingsModel::findRatingsCount(const QString &ratingAtt
 void AssetOperations::RatingsModel::fetchRatingAttributes()
 {
     beginResetModel();
+    m_allRatings = 0;
+    m_ratingAttributes.clear();
+    endResetModel();
+
     const QString contentType = m_assetJob->contentType();
 
     if (!contentType.isEmpty()) {
         if (RatingsModel::s_ratingAttributesByAssetType.contains(contentType)) {
             m_ratingAttributes = RatingsModel::s_ratingAttributesByAssetType[contentType];
+
+            const int begin = 0;
+            const int end = qMax(begin, m_ratingAttributes.count() -1);
+            beginInsertRows(QModelIndex(), begin, end);
+            endInsertRows();
         } else {
             m_ratingAttributes.clear();
             RatingAttributesJob *job = m_session->listRatingAttributes(m_assetJob->assetId());
@@ -213,13 +222,29 @@ void AssetOperations::RatingsModel::fetchRatingAttributes()
                 this, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
         }
     }
-
-    endResetModel();
 }
 
-void AssetOperations::RatingsModel::ratingAttributesJobFinished(Bodega::NetworkJob *)
+void AssetOperations::RatingsModel::ratingAttributesJobFinished(Bodega::NetworkJob *job)
 {
+    RatingAttributesJob *ratingAttributesJob = qobject_cast<RatingAttributesJob*>(job);
 
+    if (!ratingAttributesJob) {
+        return;
+    }
+
+    ratingAttributesJob->deleteLater();
+
+    if (ratingAttributesJob->failed()) {
+        return;
+    }
+
+    const int begin = 0;
+    const int end = qMax(begin, ratingAttributesJob->ratingAttributes().count() -1);
+
+    beginInsertRows(QModelIndex(), begin, end);
+    m_ratingAttributes = ratingAttributesJob->ratingAttributes();
+    RatingsModel::s_ratingAttributesByAssetType.insert(m_assetJob->contentType(), m_ratingAttributes);
+    endInsertRows();
 }
 
 }
