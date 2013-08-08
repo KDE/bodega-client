@@ -180,7 +180,7 @@ Session *AssetOperations::RatingsModel::session() const
 
 QString AssetOperations::RatingsModel::findAverageRating(const QString &ratingAttributeId) const
 {
-    foreach(const AssetInfo::AssetInfoRatings &info, m_assetJob->info().ratings) {
+    foreach(const AssetInfo::AssetInfoRatings &info, m_assetInfo.ratings) {
         if (ratingAttributeId == info.attributeId) {
             return info.averageRating;
         }
@@ -190,7 +190,7 @@ QString AssetOperations::RatingsModel::findAverageRating(const QString &ratingAt
 
 QString AssetOperations::RatingsModel::findRatingsCount(const QString &ratingAttributeId) const
 {
-    foreach(const AssetInfo::AssetInfoRatings &info, m_assetJob->info().ratings) {
+    foreach(const AssetInfo::AssetInfoRatings &info, m_assetInfo.ratings) {
         if (ratingAttributeId == info.attributeId) {
             return info.ratingsCount;
         }
@@ -200,7 +200,7 @@ QString AssetOperations::RatingsModel::findRatingsCount(const QString &ratingAtt
 
 int AssetOperations::RatingsModel::allRatings()
 {
-    foreach(const AssetInfo::AssetInfoRatings &info, m_assetJob->info().ratings) {
+    foreach(const AssetInfo::AssetInfoRatings &info, m_assetInfo.ratings) {
         m_allRatings += info.ratingsCount.toInt();
     }
     return m_allRatings;
@@ -211,13 +211,17 @@ void AssetOperations::RatingsModel::fetchRatingAttributes()
     beginResetModel();
     m_allRatings = 0;
     m_ratingAttributes.clear();
+    m_contentType.clear();
+    m_assetInfo.clear();
     endResetModel();
 
-    const QString contentType = m_assetJob->contentType();
+    m_contentType = m_assetJob->contentType();
+    m_assetInfo = m_assetJob->info();
 
-    if (!contentType.isEmpty()) {
-        if (RatingsModel::s_ratingAttributesByAssetType.contains(contentType)) {
-            m_ratingAttributes = RatingsModel::s_ratingAttributesByAssetType[contentType];
+
+    if (!m_contentType.isEmpty()) {
+        if (RatingsModel::s_ratingAttributesByAssetType.contains(m_contentType)) {
+            m_ratingAttributes = RatingsModel::s_ratingAttributesByAssetType[m_contentType];
 
             const int begin = 0;
             const int end = qMax(begin, m_ratingAttributes.count() -1);
@@ -251,7 +255,7 @@ void AssetOperations::RatingsModel::ratingAttributesJobFinished(Bodega::NetworkJ
 
     beginInsertRows(QModelIndex(), begin, end);
     m_ratingAttributes = ratingAttributesJob->ratingAttributes();
-    RatingsModel::s_ratingAttributesByAssetType.insert(m_assetJob->contentType(), m_ratingAttributes);
+    RatingsModel::s_ratingAttributesByAssetType.insert(m_contentType, m_ratingAttributes);
     allRatings();
     endInsertRows();
 }
