@@ -218,7 +218,7 @@ void AssetOperations::launch()
 
 QAbstractItemModel *AssetOperations::ratingsModel()
 {
-    return qobject_cast<QAbstractItemModel*>(d->ratingsModel);
+    return d->ratingsModel;
 }
 
 }
