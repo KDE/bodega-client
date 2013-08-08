@@ -35,6 +35,7 @@ namespace Bodega {
 class RatingsModel : public QAbstractItemModel
 {
     Q_OBJECT
+    Q_PROPERTY(int ratingsCount READ ratingsCount NOTIFY ratingsCountChanged)
     Q_ENUMS(DisplayRoles)
 
     public:
@@ -45,7 +46,6 @@ class RatingsModel : public QAbstractItemModel
             AssetType = Qt::UserRole + 103,
             RatingsCount = Qt::UserRole + 104,
             AverageRating = Qt::UserRole + 105,
-            AllRatings = Qt::UserRole + 106,
             AttributeId = Qt::UserRole + 107
         };
 
@@ -54,6 +54,8 @@ class RatingsModel : public QAbstractItemModel
 
         AssetJob *assetJob() const;
         void setAssetJob(AssetJob *assetJob);
+
+        int ratingsCount() const;
 
         int columnCount(const QModelIndex &parent = QModelIndex()) const;
         QVariant data(const QModelIndex &index, int role) const;
@@ -72,7 +74,7 @@ class RatingsModel : public QAbstractItemModel
         Session *session() const;
 
     Q_SIGNALS:
-        void countChanged();
+        void ratingsCountChanged();
 
     private Q_SLOTS:
         void ratingAttributesJobFinished(Bodega::NetworkJob *);
@@ -81,10 +83,9 @@ class RatingsModel : public QAbstractItemModel
         Session *m_session;
 
         QList<RatingAttributes> m_ratingAttributes;
-        int m_allRatings;
+        int m_ratingsCount;
         QString findRatingsCount(const QString &foo) const;
         QString findAverageRating(const QString &foo) const;
-        int allRatings();
         QString m_contentType;
         AssetInfo m_assetInfo;
 

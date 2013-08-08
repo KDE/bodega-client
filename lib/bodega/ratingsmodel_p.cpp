@@ -29,7 +29,8 @@ QHash<QString, QList<RatingAttributes> > RatingsModel::s_ratingAttributesByAsset
 
 RatingsModel::RatingsModel(QObject *parent)
     : QAbstractItemModel(parent),
-    m_session(0)
+      m_session(0),
+      m_ratingsCount(0)
 {
     // set the role names based on the values of the DisplayRoles enum for
     //  the sake of QML
@@ -40,13 +41,6 @@ RatingsModel::RatingsModel(QObject *parent)
         roles.insert(e.value(i), e.key(i));
     }
     setRoleNames(roles);
-
-    connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            this, SIGNAL(countChanged()));
-    connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            this, SIGNAL(countChanged()));
-    connect(this, SIGNAL(modelReset()),
-            this, SIGNAL(countChanged()));
 }
 
 RatingsModel::~RatingsModel()
@@ -69,7 +63,6 @@ void RatingsModel::setAssetJob(AssetJob *assetJob)
     m_assetJob = assetJob;
     m_contentType = m_assetJob->contentType();
     m_assetInfo = m_assetJob->info();
-    allRatings();
 
     if (!m_contentType.isEmpty()) {
         if (s_ratingAttributesByAssetType.contains(m_contentType)) {
@@ -86,6 +79,21 @@ void RatingsModel::setAssetJob(AssetJob *assetJob)
     }
 
     endResetModel();
+
+    int ratingsCount = m_ratingsCount;
+    m_ratingsCount = 0;
+    foreach (const AssetInfo::AssetInfoRatings &info, m_assetInfo.ratings) {
+        m_ratingsCount = qMax(m_ratingsCount, info.ratingsCount.toInt());
+    }
+
+    if (ratingsCount != m_ratingsCount) {
+        emit ratingsCountChanged();
+    }
+}
+
+int RatingsModel::ratingsCount() const
+{
+    return m_ratingsCount;
 }
 
 int RatingsModel::columnCount(const QModelIndex &parent) const
@@ -120,9 +128,6 @@ QVariant RatingsModel::data(const QModelIndex &index, int role) const
         }
         case AverageRating: {
             return findAverageRating(m_ratingAttributes.at(index.row()).id);
-        }
-        case AllRatings: {
-            return m_allRatings;
         }
         default: {
             return QVariant();
@@ -214,14 +219,6 @@ QString RatingsModel::findRatingsCount(const QString &ratingAttributeId) const
         }
     }
     return QString();
-}
-
-int RatingsModel::allRatings()
-{
-    foreach (const AssetInfo::AssetInfoRatings &info, m_assetInfo.ratings) {
-        m_allRatings += info.ratingsCount.toInt();
-    }
-    return m_allRatings;
 }
 
 void RatingsModel::ratingAttributesJobFinished(Bodega::NetworkJob *job)

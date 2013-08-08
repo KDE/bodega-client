@@ -196,13 +196,14 @@ BrowserColumn {
                                                                    : i18n("Free")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
-                    PlasmaExtras.Title {
-                        visible: model.AllRatings > 0
-                        text: i18n("Ratings")
+                    PlasmaExtras.Heading {
                         anchors.horizontalCenter: parent.horizontalCenter
+                        visible: ratingsRepeater.model.ratingsCount > 0
+                        level: 3
+                        text: i18n("Ratings")
                     }
                     Repeater {
-                        id: repeater
+                        id: ratingsRepeater
                         clip: true
                         model: assetOperations.ratingsModel
                         delegate: Row {
@@ -226,8 +227,8 @@ BrowserColumn {
                     PlasmaComponents.Label {
                         id: ratingsLabel
                         anchors.horizontalCenter: parent.horizontalCenter
-                        visible: model.AllRatings > 0
-                        text: i18n("See all %1 ratings", AllRatings)
+                        visible: ratingsRepeater.model.ratingsCount > 0
+                        text: i18n("See all %1 ratings", ratingsRepeater.model.ratingsCount)
                         MouseArea {
                             anchors.fill: parent
 
