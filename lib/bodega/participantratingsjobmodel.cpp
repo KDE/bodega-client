@@ -89,8 +89,8 @@ void ParticipantRatingsJobModel::Private::participantRatingsJobFinished(Bodega::
     const int end = qMax(begin, participantRatings.count() + begin -1);
     q->beginInsertRows(QModelIndex(), begin, end);
     participantRatings= participantRatingsJob->ratings();
-    foreach(const ParticipantRatings r, participantRatings) {
-        AssetJob *assetJob = session->asset(r.assetId, AssetJob::Ratings);
+    foreach (const ParticipantRatings r, participantRatings) {
+        AssetJob *assetJob = session->asset(r.assetId, AssetJob::ShowRatings);
         connect(assetJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
             q, SLOT(assetJobFinished(Bodega::NetworkJob *)));
 

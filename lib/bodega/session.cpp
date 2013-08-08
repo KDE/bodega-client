@@ -306,7 +306,7 @@ AssetJob * Session::asset(const QString &assetId,
                          QLatin1String("1"));
     }
 
-    if (flags & AssetJob::Ratings) {
+    if (flags & AssetJob::ShowRatings) {
         url.addQueryItem(QLatin1String("ratings"),
                          QLatin1String("1"));
     }
