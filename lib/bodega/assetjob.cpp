@@ -46,6 +46,7 @@ public:
     QStringList previews;
     Bodega::Tags tags;
     AssetFlags flags;
+    QString contentType;
 };
 
 void AssetJob::Private::init(AssetJob *parent,
@@ -127,7 +128,12 @@ void AssetJob::Private::parseTags(const QVariantMap &result)
 
     foreach(const QVariant &t, vTags) {
         QVariantMap vTag = t.toMap();
-        tags.insert(vTag.keys().first(), vTag.values().first().toString());
+        QString key = vTag.keys().first();
+        QString value = vTag.values().first().toString();
+        if (key == QLatin1String("assettype")) {
+            contentType = value;
+        }
+        tags.insert(key, value);
     }
 }
 
@@ -185,6 +191,11 @@ Bodega::Tags AssetJob::tags() const
 AssetJob::AssetFlags AssetJob::flags() const
 {
     return d->flags;
+}
+
+QString AssetJob::contentType() const
+{
+    return d->contentType;;
 }
 
 }

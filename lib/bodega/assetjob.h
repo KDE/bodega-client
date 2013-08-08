@@ -53,6 +53,7 @@ namespace Bodega {
         ChangeLog changeLog() const;
         QStringList previews() const;
         Tags tags() const;
+        QString contentType() const;
 
     protected:
         virtual void netFinished(const QVariantMap &jsonMap);
