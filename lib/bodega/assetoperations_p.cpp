@@ -61,6 +61,10 @@ AssetJob *AssetOperations::RatingsModel::assetJob() const
 
 void AssetOperations::RatingsModel::setAssetJob(AssetJob *assetJob)
 {
+    if (!assetJob) {
+        return;
+    }
+
     m_assetJob = assetJob;
     emit assetJobChanged();
 }
@@ -180,22 +184,30 @@ Session *AssetOperations::RatingsModel::session() const
 
 QString AssetOperations::RatingsModel::findAverageRating(const QString &ratingAttributeId) const
 {
-    /*foreach(const AssetInfo::AssetInfoRatings &info, assetInfo.ratings) {
+    foreach(const AssetInfo::AssetInfoRatings &info, m_assetJob->info().ratings) {
         if (ratingAttributeId == info.attributeId) {
             return info.averageRating;
         }
-    }*/
+    }
     return QString();
 }
 
 QString AssetOperations::RatingsModel::findRatingsCount(const QString &ratingAttributeId) const
 {
-    /*foreach(const AssetInfo::AssetInfoRatings &info, assetInfo.ratings) {
+    foreach(const AssetInfo::AssetInfoRatings &info, m_assetJob->info().ratings) {
         if (ratingAttributeId == info.attributeId) {
             return info.ratingsCount;
         }
-    }*/
+    }
     return QString();
+}
+
+int AssetOperations::RatingsModel::allRatings()
+{
+    foreach(const AssetInfo::AssetInfoRatings &info, m_assetJob->info().ratings) {
+        m_allRatings += info.ratingsCount.toInt();
+    }
+    return m_allRatings;
 }
 
 void AssetOperations::RatingsModel::fetchRatingAttributes()
@@ -214,6 +226,7 @@ void AssetOperations::RatingsModel::fetchRatingAttributes()
             const int begin = 0;
             const int end = qMax(begin, m_ratingAttributes.count() -1);
             beginInsertRows(QModelIndex(), begin, end);
+            allRatings();
             endInsertRows();
         } else {
             m_ratingAttributes.clear();
@@ -244,6 +257,7 @@ void AssetOperations::RatingsModel::ratingAttributesJobFinished(Bodega::NetworkJ
     beginInsertRows(QModelIndex(), begin, end);
     m_ratingAttributes = ratingAttributesJob->ratingAttributes();
     RatingsModel::s_ratingAttributesByAssetType.insert(m_assetJob->contentType(), m_ratingAttributes);
+    allRatings();
     endInsertRows();
 }
 

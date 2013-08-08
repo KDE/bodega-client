@@ -84,6 +84,7 @@ class AssetOperations::RatingsModel : public QAbstractItemModel
         int m_allRatings;
         QString findRatingsCount(const QString &foo) const;
         QString findAverageRating(const QString &foo) const;
+        int allRatings();
 
         static QHash<QString, QList<RatingAttributes> > s_ratingAttributesByAssetType;
 };
