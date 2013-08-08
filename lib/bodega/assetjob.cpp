@@ -130,7 +130,7 @@ void AssetJob::Private::parseTags(const QVariantMap &result)
         QVariantMap vTag = t.toMap();
         QString key = vTag.keys().first();
         QString value = vTag.values().first().toString();
-        if (key == QLatin1String("assettype")) {
+        if (key == QLatin1String("assetType")) {
             contentType = value;
         }
         tags.insert(key, value);
