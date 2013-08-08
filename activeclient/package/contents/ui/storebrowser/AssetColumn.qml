@@ -204,7 +204,7 @@ BrowserColumn {
                     Repeater {
                         id: repeater
                         clip: true
-                        model: bodegaClient.ratingAttributesJobModel
+                        model: assetOperations.ratingsModel
                         delegate: Row {
                             PlasmaComponents.Label {
                                 id: attributeNameLabel
@@ -252,7 +252,7 @@ BrowserColumn {
                             spacing: 5
                             Repeater {
                                 clip: true
-                                model: bodegaClient.ratingAttributesJobModel
+                                model: assetOperations.ratingsModel
                                 delegate: Column {
                                     spacing: 5
                                     PlasmaComponents.Label {
