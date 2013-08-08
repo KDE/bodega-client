@@ -31,7 +31,6 @@ namespace Bodega {
     class ListCollectionsJobModel;
     class CollectionListAssetsJobModel;
     class ParticipantRatingsJobModel;
-    class RatingAttributesJobModel;
     class AssetRatingsJobModel;
 }
 
@@ -100,7 +99,6 @@ class BodegaStore : public KDeclarativeMainWindow
     Q_PROPERTY(Bodega::ListCollectionsJobModel *listCollectionsJobModel READ listCollectionsJobModel CONSTANT)
     Q_PROPERTY(Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel READ collectionListAssetsJobModel CONSTANT)
     Q_PROPERTY(Bodega::ParticipantRatingsJobModel *participantRatingsJobModel READ participantRatingsJobModel CONSTANT)
-    Q_PROPERTY(Bodega::RatingAttributesJobModel *ratingAttributesJobModel READ ratingAttributesJobModel CONSTANT)
     Q_PROPERTY(Bodega::AssetRatingsJobModel *assetRatingsJobModel READ assetRatingsJobModel CONSTANT)
 
 public:
@@ -115,7 +113,6 @@ public:
     Bodega::ListCollectionsJobModel *listCollectionsJobModel() const;
     Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel() const;
     Bodega::ParticipantRatingsJobModel *participantRatingsJobModel() const;
-    Bodega::RatingAttributesJobModel *ratingAttributesJobModel() const;
     Bodega::AssetRatingsJobModel *assetRatingsJobModel() const;
 
     Q_INVOKABLE void saveCredentials() const;
@@ -131,7 +128,6 @@ private:
     Bodega::ListCollectionsJobModel *m_listCollectionsJobModel;
     Bodega::CollectionListAssetsJobModel *m_collectionListAssetsJobModel;
     Bodega::ParticipantRatingsJobModel *m_participantRatingsJobModel;
-    Bodega::RatingAttributesJobModel *m_ratingAttributesJobModel;
     Bodega::AssetRatingsJobModel *m_assetRatingsJobModel;
     int m_historyUsers;
 };

@@ -49,7 +49,6 @@ BrowserColumn {
 
     onAssetIdChanged: {
         if (assetId > 0) {
-            bodegaClient.ratingAttributesJobModel.assetId = assetId;
             assetOperations = bodegaClient.session.assetOperations(assetId);
 
             root.installJob = bodegaClient.session.installJobsModel.jobForAsset(root.assetId)

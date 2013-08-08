@@ -275,8 +275,7 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
       m_historyModel(0),
       m_listCollectionsJobModel(0),
       m_collectionListAssetsJobModel(0),
-      m_participantRatingsJobModel(0),
-      m_ratingAttributesJobModel(0)
+      m_participantRatingsJobModel(0)
 {
     declarativeView()->setPackageName("com.makeplaylive.addonsapp");
 
@@ -299,7 +298,6 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     qmlRegisterType<Bodega::ParticipantRatingsJob>();
     qmlRegisterType<Bodega::ParticipantRatingsJobModel>();
     qmlRegisterType<Bodega::RatingAttributesJob>();
-    qmlRegisterType<Bodega::RatingAttributesJobModel>();
     qmlRegisterType<Bodega::AssetRatingsJob>();
     qmlRegisterType<Bodega::AssetRatingsJobModel>();
     qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
@@ -325,8 +323,6 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     m_searchModel->setSession(m_session);
     m_participantRatingsJobModel = new Bodega::ParticipantRatingsJobModel(this);
     m_participantRatingsJobModel->setSession(m_session);
-    m_ratingAttributesJobModel = new Bodega::RatingAttributesJobModel(this);
-    m_ratingAttributesJobModel->setSession(m_session);
     m_assetRatingsJobModel = new Bodega::AssetRatingsJobModel(this);
     m_assetRatingsJobModel->setSession(m_session);
 
@@ -376,11 +372,6 @@ CollectionListAssetsJobModel *BodegaStore::collectionListAssetsJobModel() const
 ParticipantRatingsJobModel *BodegaStore::participantRatingsJobModel() const
 {
     return m_participantRatingsJobModel;
-}
-
-RatingAttributesJobModel *BodegaStore::ratingAttributesJobModel() const
-{
-    return m_ratingAttributesJobModel;
 }
 
 AssetRatingsJobModel *BodegaStore::assetRatingsJobModel() const
