@@ -36,7 +36,8 @@ public:
         : q(operations),
           handler(0),
           wasInstalled(false),
-          progress(0)
+          progress(0),
+          ratingsModel(new RatingsModel(q))
     {}
 
     ~Private()
@@ -62,6 +63,8 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
 {
     AssetJob *assetJob = qobject_cast<AssetJob *>(job);
     Q_ASSERT(assetJob);
+
+    ratingsModel->setAssetJob(assetJob);
 
     if (!job->failed()) {
         assetInfo = assetJob->info();
