@@ -197,6 +197,7 @@ BrowserColumn {
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
                     PlasmaExtras.Title {
+                        visible: model.AllRatings > 0
                         text: i18n("Ratings")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
@@ -205,6 +206,8 @@ BrowserColumn {
                         clip: true
                         model: assetOperations.ratingsModel
                         delegate: Row {
+                            visible: model.RatingsCount > 0
+
                             PlasmaComponents.Label {
                                 id: attributeNameLabel
                                 verticalAlignment: Text.AlignTop
@@ -218,15 +221,13 @@ BrowserColumn {
                                 verticalAlignment: Text.AlignTop
                                 text: model.AverageRating ? i18n("%1", model.AverageRating) : i18n("No Ratings yet!")
                             }
-                            Component.onCompleted: {
-                                ratingsLabel.visible = model.AllRatings > 0
-                                ratingsLabel.text = i18n("See all %1 ratings", AllRatings)
-                            }
                         }
                     }
                     PlasmaComponents.Label {
                         id: ratingsLabel
                         anchors.horizontalCenter: parent.horizontalCenter
+                        visible: model.AllRatings > 0
+                        text: i18n("See all %1 ratings", AllRatings)
                         MouseArea {
                             anchors.fill: parent
 
@@ -240,7 +241,7 @@ BrowserColumn {
                     PlasmaComponents.Button {
                         id: ratingsButton
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: i18n("Rate this asset")
+                        text: i18n("Rate and review")
                         onClicked: ratingsBaloon.open()
                     }
 
