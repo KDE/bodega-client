@@ -47,8 +47,6 @@ RatingsModel::RatingsModel(QObject *parent)
             this, SIGNAL(countChanged()));
     connect(this, SIGNAL(modelReset()),
             this, SIGNAL(countChanged()));
-    connect(this, SIGNAL(assetJobChanged()),
-            this, SLOT(fetchRatingAttributes()));
 }
 
 RatingsModel::~RatingsModel()
@@ -66,8 +64,28 @@ void RatingsModel::setAssetJob(AssetJob *assetJob)
         return;
     }
 
+    beginResetModel();
+
     m_assetJob = assetJob;
-    emit assetJobChanged();
+    m_contentType = m_assetJob->contentType();
+    m_assetInfo = m_assetJob->info();
+    allRatings();
+
+    if (!m_contentType.isEmpty()) {
+        if (s_ratingAttributesByAssetType.contains(m_contentType)) {
+            m_ratingAttributes = RatingsModel::s_ratingAttributesByAssetType[m_contentType];
+
+            const int begin = 0;
+            const int end = qMax(begin, m_ratingAttributes.count() -1);
+        } else {
+            m_ratingAttributes.clear();
+            RatingAttributesJob *job = m_session->listRatingAttributes(m_assetJob->assetId());
+            connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
+                    this, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
+        }
+    }
+
+    endResetModel();
 }
 
 int RatingsModel::columnCount(const QModelIndex &parent) const
@@ -127,8 +145,7 @@ bool RatingsModel::hasChildren(const QModelIndex &parent) const
     return false;
 }
 
-QVariant RatingsModel::headerData(int section, Qt::Orientation orientation,
-                           int role) const
+QVariant RatingsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     return QVariant();
 }
@@ -201,40 +218,10 @@ QString RatingsModel::findRatingsCount(const QString &ratingAttributeId) const
 
 int RatingsModel::allRatings()
 {
-    foreach(const AssetInfo::AssetInfoRatings &info, m_assetInfo.ratings) {
+    foreach (const AssetInfo::AssetInfoRatings &info, m_assetInfo.ratings) {
         m_allRatings += info.ratingsCount.toInt();
     }
     return m_allRatings;
-}
-
-void RatingsModel::fetchRatingAttributes()
-{
-    beginResetModel();
-    m_allRatings = 0;
-    m_ratingAttributes.clear();
-    m_contentType.clear();
-    m_assetInfo.clear();
-    endResetModel();
-
-    m_contentType = m_assetJob->contentType();
-    m_assetInfo = m_assetJob->info();
-
-
-    if (!m_contentType.isEmpty()) {
-        if (RatingsModel::s_ratingAttributesByAssetType.contains(m_contentType)) {
-            m_ratingAttributes = RatingsModel::s_ratingAttributesByAssetType[m_contentType];
-
-            const int begin = 0;
-            const int end = qMax(begin, m_ratingAttributes.count() -1);
-            beginInsertRows(QModelIndex(), begin, end);
-            allRatings();
-            endInsertRows();
-        } else {
-            RatingAttributesJob *job = m_session->listRatingAttributes(m_assetJob->assetId());
-            connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
-                this, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
-        }
-    }
 }
 
 void RatingsModel::ratingAttributesJobFinished(Bodega::NetworkJob *job)
@@ -256,8 +243,7 @@ void RatingsModel::ratingAttributesJobFinished(Bodega::NetworkJob *job)
 
     beginInsertRows(QModelIndex(), begin, end);
     m_ratingAttributes = ratingAttributesJob->ratingAttributes();
-    RatingsModel::s_ratingAttributesByAssetType.insert(m_contentType, m_ratingAttributes);
-    allRatings();
+    s_ratingAttributesByAssetType.insert(m_contentType, m_ratingAttributes);
     endInsertRows();
 }
 

@@ -73,9 +73,8 @@ class RatingsModel : public QAbstractItemModel
 
     Q_SIGNALS:
         void countChanged();
-        void assetJobChanged();
+
     private Q_SLOTS:
-        void fetchRatingAttributes();
         void ratingAttributesJobFinished(Bodega::NetworkJob *);
     private:
         AssetJob *m_assetJob;
