@@ -68,9 +68,6 @@ void RatingsModel::setAssetJob(AssetJob *assetJob)
     if (!m_contentType.isEmpty()) {
         if (s_ratingAttributesByAssetType.contains(m_contentType)) {
             m_ratingAttributes = RatingsModel::s_ratingAttributesByAssetType[m_contentType];
-
-            const int begin = 0;
-            const int end = qMax(begin, m_ratingAttributes.count() -1);
         } else {
             m_ratingAttributes.clear();
             RatingAttributesJob *job = m_session->listRatingAttributes(m_assetJob->assetId());
