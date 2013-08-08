@@ -30,7 +30,8 @@ QHash<QString, QList<RatingAttributes> > RatingsModel::s_ratingAttributesByAsset
 RatingsModel::RatingsModel(QObject *parent)
     : QAbstractItemModel(parent),
       m_session(0),
-      m_ratingsCount(0)
+      m_ratingsCount(0),
+      m_assetJob(0)
 {
     // set the role names based on the values of the DisplayRoles enum for
     //  the sake of QML
