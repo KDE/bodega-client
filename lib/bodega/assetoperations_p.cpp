@@ -201,14 +201,14 @@ QString AssetOperations::RatingsModel::findRatingsCount(const QString &ratingAtt
 void AssetOperations::RatingsModel::fetchRatingAttributes()
 {
     beginResetModel();
-    const QString contentType = QString();//m_assetJob->contentType();
-    QString assetId;
+    const QString contentType = m_assetJob->contentType();
+
     if (!contentType.isEmpty()) {
         if (RatingsModel::s_ratingAttributesByAssetType.contains(contentType)) {
             m_ratingAttributes = RatingsModel::s_ratingAttributesByAssetType[contentType];
         } else {
             m_ratingAttributes.clear();
-            RatingAttributesJob *job = m_session->listRatingAttributes(assetId);
+            RatingAttributesJob *job = m_session->listRatingAttributes(m_assetJob->assetId());
             connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
                 this, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
         }
