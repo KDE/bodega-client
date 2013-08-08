@@ -45,7 +45,6 @@ public:
     ChangeLog changeLog;
     QStringList previews;
     Bodega::Tags tags;
-    AssetFlags flags;
     QString contentType;
 };
 
@@ -55,15 +54,6 @@ void AssetJob::Private::init(AssetJob *parent,
 {
     q = parent;
     id = i;
-    flags = AssetJob::None;
-    QString previewsStr = url.queryItemValue(
-        QLatin1String("previews"));
-    QString changeLogStr = url.queryItemValue(
-        QLatin1String("changelog"));
-    if (previewsStr.toInt())
-        flags |= AssetJob::ShowPreviews;
-    if (changeLogStr.toInt())
-        flags |= AssetJob::ShowChangeLog;
 }
 
 void AssetJob::Private::parseAsset(const QVariantMap &result)
@@ -186,11 +176,6 @@ QStringList AssetJob::previews() const
 Bodega::Tags AssetJob::tags() const
 {
     return d->tags;
-}
-
-AssetJob::AssetFlags AssetJob::flags() const
-{
-    return d->flags;
 }
 
 QString AssetJob::contentType() const

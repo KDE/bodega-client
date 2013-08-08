@@ -38,15 +38,13 @@ namespace Bodega {
             None          = 0,
             ShowChangeLog = 1 << 0,
             ShowPreviews  = 1 << 1,
-            Ratings = 1 << 2
+            ShowRatings   = 1 << 2
         };
         Q_DECLARE_FLAGS(AssetFlags, AssetFlag);
-    public:
+
         AssetJob(const QString &assetId, QNetworkReply *reply,
                  Session *parent);
         ~AssetJob();
-
-        AssetFlags flags() const;
 
         QString assetId() const;
         AssetInfo info() const;
@@ -64,5 +62,6 @@ namespace Bodega {
     };
 }
 
+Q_DECLARE_OPERATORS_FOR_FLAGS(Bodega::AssetJob::AssetFlags);
 
 #endif
