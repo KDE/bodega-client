@@ -18,11 +18,13 @@
  */
 
 #include "assetoperations_p.h"
-#include "assetoperations.h"
+#include "ratingattributesjob.h"
 
 #include <QtCore/QMetaEnum>
 
 namespace Bodega {
+
+QHash<QString, QList<RatingAttributes> > AssetOperations::RatingsModel::s_ratingAttributesByAssetType;
 
 AssetOperations::RatingsModel::RatingsModel(QObject *parent)
     : QAbstractItemModel(parent),
@@ -44,7 +46,7 @@ AssetOperations::RatingsModel::RatingsModel(QObject *parent)
             this, SIGNAL(countChanged()));
     connect(this, SIGNAL(modelReset()),
             this, SIGNAL(countChanged()));
-    connect(this, SIGNAL(assetInfoChanged()),
+    connect(this, SIGNAL(assetJobChanged()),
             this, SLOT(fetchRatingAttributes()));
 }
 
@@ -52,15 +54,15 @@ AssetOperations::RatingsModel::~RatingsModel()
 {
 }
 
-AssetInfo AssetOperations::RatingsModel::assetInfo() const
+AssetJob *AssetOperations::RatingsModel::assetJob() const
 {
-    return m_assetInfo;;
+    return m_assetJob;
 }
 
-void AssetOperations::RatingsModel::setAssetInfo(const AssetInfo& assetInfo)
+void AssetOperations::RatingsModel::setAssetJob(AssetJob *assetJob)
 {
-    m_assetInfo = assetInfo;
-    emit assetInfoChanged();
+    m_assetJob = assetJob;
+    emit assetJobChanged();
 }
 
 int AssetOperations::RatingsModel::columnCount(const QModelIndex &parent) const
@@ -194,6 +196,30 @@ QString AssetOperations::RatingsModel::findRatingsCount(const QString &ratingAtt
         }
     }*/
     return QString();
+}
+
+void AssetOperations::RatingsModel::fetchRatingAttributes()
+{
+    beginResetModel();
+    const QString contentType = QString();//m_assetJob->contentType();
+    QString assetId;
+    if (!contentType.isEmpty()) {
+        if (RatingsModel::s_ratingAttributesByAssetType.contains(contentType)) {
+            m_ratingAttributes = RatingsModel::s_ratingAttributesByAssetType[contentType];
+        } else {
+            m_ratingAttributes.clear();
+            RatingAttributesJob *job = m_session->listRatingAttributes(assetId);
+            connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
+                this, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
+        }
+    }
+
+    endResetModel();
+}
+
+void AssetOperations::RatingsModel::ratingAttributesJobFinished(Bodega::NetworkJob *)
+{
+
 }
 
 }

@@ -30,6 +30,8 @@
 
 namespace Bodega {
 
+    class AssetJob;
+
 class AssetOperations::RatingsModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -49,8 +51,8 @@ class AssetOperations::RatingsModel : public QAbstractItemModel
         RatingsModel(QObject *parent = 0);
         ~RatingsModel();
 
-        AssetInfo assetInfo() const;
-        void setAssetInfo(const AssetInfo& assetInfo);
+        AssetJob *assetJob() const;
+        void setAssetJob(AssetJob *assetJob);
 
         int columnCount(const QModelIndex &parent = QModelIndex()) const;
         QVariant data(const QModelIndex &index, int role) const;
@@ -70,14 +72,20 @@ class AssetOperations::RatingsModel : public QAbstractItemModel
 
     Q_SIGNALS:
         void countChanged();
-        void assetInfoChanged();
+        void assetJobChanged();
+    private Q_SLOTS:
+        void fetchRatingAttributes();
+        void ratingAttributesJobFinished(Bodega::NetworkJob *);
     private:
-        AssetInfo m_assetInfo;
+        AssetJob *m_assetJob;
         Session *m_session;
+
         QList<RatingAttributes> m_ratingAttributes;
         int m_allRatings;
         QString findRatingsCount(const QString &foo) const;
         QString findAverageRating(const QString &foo) const;
+
+        static QHash<QString, QList<RatingAttributes> > s_ratingAttributesByAssetType;
 };
 
 }
