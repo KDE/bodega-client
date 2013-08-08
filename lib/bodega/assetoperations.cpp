@@ -19,7 +19,7 @@
 
 
 #include "assetoperations.h"
-
+#include "assetoperations_p.h"
 #include <QDebug>
 
 #include "assethandler.h"
@@ -55,6 +55,7 @@ public:
     QString mimetype;
     bool wasInstalled;
     qreal progress;
+    RatingsModel *ratingsModel;
 };
 
 void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
@@ -115,6 +116,8 @@ AssetOperations::AssetOperations(const QString &assetId, Session *session)
     : QObject(session),
       d(new AssetOperations::Private(this))
 {
+    d->ratingsModel->setSession(session);
+
     AssetJob *aj = session->asset(assetId, AssetJob::ShowChangeLog);
     QObject::connect(aj, SIGNAL(jobFinished(Bodega::NetworkJob*)),
                      this, SLOT(assetDownloadComplete(Bodega::NetworkJob*)));

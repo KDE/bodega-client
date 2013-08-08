@@ -2,6 +2,7 @@
 set (bodega_HEADERS
      assetjob.h
      assetoperations.h
+     assetoperations_p.h
      collectionaddassetjob.h
      collectionlistassetsjob.h
      collectionlistassetsjobmodel.h
@@ -38,6 +39,7 @@ set (bodega_SRCS
      assethandler.cpp
      assethandlerfactory.cpp
      assetoperations.cpp
+     assetoperations_p.cpp
      collectionaddassetjob.cpp
      collectionlistassetsjob.cpp
      collectionlistassetsjobmodel.cpp

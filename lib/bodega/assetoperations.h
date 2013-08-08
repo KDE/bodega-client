@@ -74,6 +74,8 @@ namespace Bodega {
         class Private;
         Private * const d;
 
+        class RatingsModel;
+
         Q_PRIVATE_SLOT(d, void assetDownloadComplete(Bodega::NetworkJob*));
         Q_PRIVATE_SLOT(d, void checkInstalled());
         Q_PRIVATE_SLOT(d, void progressHasChanged(qreal progress));
