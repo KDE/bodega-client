@@ -211,6 +211,11 @@ void AssetOperations::launch()
     }
 }
 
+QAbstractItemModel *AssetOperations::ratingsModel()
+{
+    return qobject_cast<QAbstractItemModel*>(d->ratingsModel);
+}
+
 }
 
 #include "assetoperations.moc"

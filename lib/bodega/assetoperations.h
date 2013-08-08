@@ -26,6 +26,8 @@
 #include <bodega/globals.h>
 #include <bodega/session.h>
 
+class QAbstractItemModel;
+
 namespace Bodega {
     class InstallJob;
     class UninstallJob;
@@ -41,6 +43,7 @@ namespace Bodega {
         Q_PROPERTY(Bodega::Tags assetTags READ assetTags NOTIFY ready)
         Q_PROPERTY(QString mimetype READ mimetype)
         Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
+        Q_PROPERTY(QAbstractItemModel *ratingsModel READ ratingsModel CONSTANT)
 
     public:
         AssetOperations(const QString &assetId, Session *parent);
@@ -58,6 +61,8 @@ namespace Bodega {
         QString mimetype() const;
 
         qreal progress() const;
+
+        QAbstractItemModel *ratingsModel();
 
     public Q_SLOTS:
         Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
