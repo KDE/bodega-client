@@ -41,7 +41,9 @@ public:
     {}
 
     ~Private()
-    {}
+    {
+        delete ratingsModel;
+    }
 
     void assetDownloadComplete(NetworkJob *job);
     bool ready();
@@ -64,12 +66,12 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
     AssetJob *assetJob = qobject_cast<AssetJob *>(job);
     Q_ASSERT(assetJob);
 
-    ratingsModel->setAssetJob(assetJob);
-
     if (!job->failed()) {
         assetInfo = assetJob->info();
         assetTags = assetJob->tags();
         changeLog = assetJob->changeLog();
+
+        ratingsModel->setAssetJob(assetJob);
 
         delete handler;
         handler = 0;

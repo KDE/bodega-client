@@ -171,10 +171,6 @@ void AssetOperations::RatingsModel::setSession(Session *session)
         m_session->disconnect(this);
     }
     m_session = session;
-
-    if (!m_session) {
-        return;
-    }
 }
 
 Session *AssetOperations::RatingsModel::session() const
@@ -229,7 +225,6 @@ void AssetOperations::RatingsModel::fetchRatingAttributes()
             allRatings();
             endInsertRows();
         } else {
-            m_ratingAttributes.clear();
             RatingAttributesJob *job = m_session->listRatingAttributes(m_assetJob->assetId());
             connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
                 this, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
