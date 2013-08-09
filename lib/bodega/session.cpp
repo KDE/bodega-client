@@ -783,4 +783,15 @@ Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QV
     return job;
 }
 
+Bodega::NetworkJob *Session::assetDeleteRatings(const QString &assetId)
+{
+   QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/ratings/delete/%1").arg(assetId);
+    url.setEncodedPath(d->jsonPath(path));
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
 #include "session.moc"
