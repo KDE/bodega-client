@@ -47,6 +47,11 @@ BrowserColumn {
         root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
     }
 
+    function reloadPage() {
+        var page = itemBrowser.replace(Qt.createComponent("AssetColumn.qml"))
+        page.assetId = assetId
+    }
+
     onAssetIdChanged: {
         if (assetId > 0) {
             assetOperations = bodegaClient.session.assetOperations(assetId);
@@ -276,7 +281,8 @@ BrowserColumn {
                                     text: i18n("Ok")
                                     onClicked: {
                                         ratingsBaloon.close()
-                                        bodegaClient.session.assetCreateRatings(assetId, Ratings.ratingAttributes)
+                                        var job = bodegaClient.session.assetCreateRatings(assetId, Ratings.ratingAttributes)
+                                        job.jobFinished.connect(root.reloadPage)
                                     }
                                 }
                                 PlasmaComponents.Button {
@@ -298,7 +304,10 @@ BrowserColumn {
                         id: ratingsDeleteConfirmation
                         visualParent: ratingsDeleteButton
                         message: i18n("Are you sure you want to remove all your ratings from the asset")
-                        onAccepted: bodegaClient.session.assetDeleteRatings(assetId)
+                        onAccepted: {
+                            var job = bodegaClient.session.assetDeleteRatings(assetId)
+                            job.jobFinished.connect(root.reloadPage)
+                        }
                     }
 
                     Item {
