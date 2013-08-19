@@ -215,6 +215,10 @@ void NetworkJob::parseErrors(const QVariantMap &jsonMap)
 
 void NetworkJob::parseCommon(const QVariantMap &result)
 {
+    const bool authSuccess = d->authSuccess;
+    const int points = d->points;
+    const QString storeId = storeId;
+
     d->authSuccess = result[QLatin1String("authStatus")].toBool();
     d->points = result[QLatin1String("points")].toInt();
 
@@ -226,9 +230,18 @@ void NetworkJob::parseCommon(const QVariantMap &result)
     } else {
         d->storeId = QString();
     }
-    emit storeIdChanged(d->storeId);
-    emit pointsChanged(d->points);
-    emit authSuccessChanged(d->authSuccess);
+
+    if (storeId != d->storeId) {
+        emit storeIdChanged(d->storeId);
+    }
+
+    if (points != d->points) {
+        emit pointsChanged(d->points);
+    }
+
+    if (authSuccess != d->authSuccess) {
+        emit authSuccessChanged(d->authSuccess);
+    }
 
     parseErrors(result);
 }
