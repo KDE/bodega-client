@@ -54,7 +54,7 @@ Session::Private::Private(Session *parent)
 
 void Session::Private::setPoints(int p)
 {
-    if (p > -1) {
+    if (p > -1 && p != points) {
         points = p;
         emit q->pointsChanged(points);
     }
@@ -73,19 +73,16 @@ void Session::Private::jobFinished(NetworkJob *job)
         return;
     }
 
-    if (authenticated && !job->authSuccess()) {
-        setPoints(0);
-        emit q->disconnected();
-    }
+    setPoints(job->points());
 
     if (authenticated != job->authSuccess()) {
-        authenticated = !authenticated;
+        authenticated = job->authSuccess();
+        if (!authenticated) {
+            emit q->disconnected();
+        }
         emit q->authenticated(authenticated);
     }
 
-    if (job->authSuccess()) {
-        setPoints(job->points());
-    }
 }
 
 QNetworkReply *Session::Private::get(const QUrl &url)
