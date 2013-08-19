@@ -55,6 +55,10 @@ ListCollectionsJobModel::Private::Private(ListCollectionsJobModel *parent)
 
 void ListCollectionsJobModel::Private::fetchInitialCollections()
 {
+    if (!session->isAuthenticated()) {
+        return;
+    }
+
     ListCollectionsJob *job = session->listcollections(0, DEFAULT_PAGE_SIZE);
 
     connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),

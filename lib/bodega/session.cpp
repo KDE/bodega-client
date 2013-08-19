@@ -69,7 +69,7 @@ void Session::Private::jobFinished(NetworkJob *job)
 {
     job->deleteLater();
 
-    if (!job->isJsonResponse()) {
+    if (!job->isJsonResponse() || job->failed()) {
         return;
     }
 
