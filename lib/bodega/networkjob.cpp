@@ -217,7 +217,7 @@ void NetworkJob::parseCommon(const QVariantMap &result)
 {
     const bool authSuccess = d->authSuccess;
     const int points = d->points;
-    const QString storeId = storeId;
+    const QString storeId = d->storeId;
 
     d->authSuccess = result[QLatin1String("authStatus")].toBool();
     d->points = qMax(0, d->authSuccess ? result[QLatin1String("points")].toInt() : 0);
