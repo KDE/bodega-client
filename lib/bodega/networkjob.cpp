@@ -220,7 +220,7 @@ void NetworkJob::parseCommon(const QVariantMap &result)
     const QString storeId = storeId;
 
     d->authSuccess = result[QLatin1String("authStatus")].toBool();
-    d->points = result[QLatin1String("points")].toInt();
+    d->points = qMax(0, d->authSuccess ? result[QLatin1String("points")].toInt() : 0);
 
     QVariant var = result[QLatin1String("device")];
     // Otherwise we'll make d->storeId == "0" because
