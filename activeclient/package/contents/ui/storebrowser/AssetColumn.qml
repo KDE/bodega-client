@@ -48,6 +48,7 @@ BrowserColumn {
     }
 
     function reloadPage() {
+        itemBrowser.pop(root)
         var page = itemBrowser.replace(Qt.createComponent("AssetColumn.qml"))
         page.assetId = assetId
     }
