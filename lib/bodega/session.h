@@ -147,6 +147,7 @@ namespace Bodega {
         Bodega::NetworkJob *deleteAssetRatings(const QString &assetId);
         Bodega::AssetRatingsJob *assetRatings(const QString &assetId);
         Bodega::ParticipantRatingsJob *participantRatings(int offset = -1, int pageSize = -1);
+        Bodega::ParticipantRatingsJob *participantRatings(const QString &assetId);
         Bodega::NetworkJob *assetCreateRatings(const QString &assetId, const QVariant &ratings);
         Bodega::NetworkJob *assetDeleteRatings(const QString &assetId);
         /*

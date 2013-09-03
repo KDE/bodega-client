@@ -772,6 +772,17 @@ Bodega::ParticipantRatingsJob * Session::participantRatings(int offset, int page
     return job;
 }
 
+Bodega::ParticipantRatingsJob * Session::participantRatings(const QString &assetId)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/participant/ratings/%1").arg(assetId);
+    url.setEncodedPath(d->jsonPath(path));
+
+    ParticipantRatingsJob *job = new ParticipantRatingsJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
 Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QVariant &ratings)
 {
    QUrl url = d->baseUrl;
