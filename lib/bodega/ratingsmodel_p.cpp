@@ -19,6 +19,7 @@
 
 #include "ratingsmodel_p.h"
 #include "ratingattributesjob.h"
+#include "participantratingsjob.h"
 
 #include <QtCore/QMetaEnum>
 #include <QDebug>
@@ -76,7 +77,9 @@ void RatingsModel::setAssetJob(AssetJob *assetJob)
         }
     }
 
-    endResetModel();
+    ParticipantRatingsJob *job = m_session->participantRatings(m_assetInfo.id);
+    connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
+            this, SLOT(participantRatingsJobFinished(Bodega::NetworkJob *)));
 
     int ratingsCount = m_ratingsCount;
     m_ratingsCount = 0;
@@ -126,6 +129,9 @@ QVariant RatingsModel::data(const QModelIndex &index, int role) const
         }
         case AverageRating: {
             return findAverageRating(m_ratingAttributes.at(index.row()).id);
+        }
+        case RatingValue: {
+            return findRatingValue(m_ratingAttributes.at(index.row()).id);
         }
         default: {
             return QVariant();
@@ -219,6 +225,17 @@ QString RatingsModel::findRatingsCount(const QString &ratingAttributeId) const
     return QString();
 }
 
+QString RatingsModel::findRatingValue(const QString &ratingAttributeId) const
+{
+    foreach(const ParticipantRatings &info, m_participantRatings) {
+        qDebug() << info.attributeId;
+        if (ratingAttributeId == info.attributeId) {
+            return info.rating;
+        }
+    }
+    return QString();
+}
+
 void RatingsModel::ratingAttributesJobFinished(Bodega::NetworkJob *job)
 {
     RatingAttributesJob *ratingAttributesJob = qobject_cast<RatingAttributesJob*>(job);
@@ -240,6 +257,20 @@ void RatingsModel::ratingAttributesJobFinished(Bodega::NetworkJob *job)
     m_ratingAttributes = ratingAttributesJob->ratingAttributes();
     s_ratingAttributesByAssetType.insert(m_contentType, m_ratingAttributes);
     endInsertRows();
+}
+
+void RatingsModel::participantRatingsJobFinished(Bodega::NetworkJob *job)
+{
+    ParticipantRatingsJob *participantRatingsJob = qobject_cast<ParticipantRatingsJob*>(job);
+
+    if (participantRatingsJob) {
+        participantRatingsJob->deleteLater();
+        if (!participantRatingsJob->failed()) {
+            m_participantRatings = participantRatingsJob->ratings();
+        }
+    }
+
+    endResetModel();
 }
 
 }

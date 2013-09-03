@@ -46,7 +46,8 @@ class RatingsModel : public QAbstractItemModel
             AssetType = Qt::UserRole + 103,
             RatingsCount = Qt::UserRole + 104,
             AverageRating = Qt::UserRole + 105,
-            AttributeId = Qt::UserRole + 107
+            AttributeId = Qt::UserRole + 107,
+            RatingValue = Qt::UserRole + 108
         };
 
         RatingsModel(QObject *parent = 0);
@@ -78,14 +79,17 @@ class RatingsModel : public QAbstractItemModel
 
     private Q_SLOTS:
         void ratingAttributesJobFinished(Bodega::NetworkJob *);
+        void participantRatingsJobFinished(Bodega::NetworkJob *);
     private:
         AssetJob *m_assetJob;
         Session *m_session;
 
         QList<RatingAttributes> m_ratingAttributes;
+        QList<ParticipantRatings> m_participantRatings;
         int m_ratingsCount;
-        QString findRatingsCount(const QString &foo) const;
-        QString findAverageRating(const QString &foo) const;
+        QString findRatingsCount(const QString &ratingAttributeId) const;
+        QString findAverageRating(const QString &ratingAttributeId) const;
+        QString findRatingValue(const QString &ratingAttributeId) const;
         QString m_contentType;
         AssetInfo m_assetInfo;
 

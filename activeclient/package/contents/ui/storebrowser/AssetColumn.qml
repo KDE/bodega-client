@@ -271,6 +271,7 @@ BrowserColumn {
                                         stepSize: 1
                                         minimumValue: 0
                                         maximumValue: 5
+                                        value: model.RatingValue
                                         onValueChanged: {
                                             Ratings.addAttribute(model.AttributeId, value)
                                         }
