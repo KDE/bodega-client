@@ -235,6 +235,7 @@ BrowserColumn {
                         anchors.horizontalCenter: parent.horizontalCenter
                         visible: ratingsRepeater.model.ratingsCount > 0
                         text: i18n("See all %1 ratings", ratingsRepeater.model.ratingsCount)
+                        color: theme.linkColor
                         MouseArea {
                             anchors.fill: parent
 
