@@ -163,6 +163,26 @@ void AssetHandler::registerForUpdates(Bodega::NetworkJob *job)
     }
 
     //FIXME: store in sql db
+    d->initUpdatedb();
+}
+
+void AssetHandler::unregisterForUpdates(Bodega::NetworkJob *job)
+{
+    if (job && job->failed()) {
+        return;
+    }
+
+    if (!d->ops) {
+        return;
+    }
+
+    const QString id = d->ops->assetInfo().id;
+    if (id.isEmpty()) {
+        return;
+    }
+
+    //FIXME: delete from sql db
+    d->initUpdatedb();
 }
 
 void AssetHandler::setReady(bool isReady)

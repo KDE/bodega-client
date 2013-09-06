@@ -74,6 +74,15 @@ namespace Bodega
              */
             void registerForUpdates(Bodega::NetworkJob *job = 0);
 
+            /**
+             * Removes the asset from update checking 
+             * on successful uninstallation
+             * 
+             * @arg job if a job is passed in, then it is checked for
+             *          success before registration happens
+             */
+            void unregisterForUpdates(Bodega::NetworkJob *job = 0);
+
         private:
             class Private;
             Private * const d;
