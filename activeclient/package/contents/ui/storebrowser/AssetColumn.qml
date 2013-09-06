@@ -202,12 +202,6 @@ BrowserColumn {
                                                                    : i18n("Free")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
-                    PlasmaExtras.Heading {
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        visible: ratingsRepeater.model.ratingsCount > 0
-                        level: 3
-                        text: i18n("Ratings")
-                    }
                     Repeater {
                         id: ratingsRepeater
                         clip: true
