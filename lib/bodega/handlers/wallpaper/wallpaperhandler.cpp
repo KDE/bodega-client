@@ -67,6 +67,8 @@ Bodega::InstallJob *WallpaperHandler::install(QNetworkReply *reply, Session *ses
 {
     if (!m_installJob) {
         m_installJob = new WallpaperInstallJob(reply, session);
+        connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
+                this, SLOT(registerForUpdates(Bodega::NetworkJob*)));
     }
 
     return m_installJob.data();

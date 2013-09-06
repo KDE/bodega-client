@@ -160,6 +160,8 @@ Bodega::InstallJob *PackageHandler::install(QNetworkReply *reply, Session *sessi
 {
     if (!m_installJob) {
         m_installJob = new PackageInstallJob(reply, session, this);
+        connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
+                this, SLOT(registerForUpdates(Bodega::NetworkJob*)));
     }
 
     return m_installJob.data();

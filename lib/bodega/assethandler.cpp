@@ -147,6 +147,24 @@ void AssetHandler::launch()
 {
 }
 
+void AssetHandler::registerForUpdates(Bodega::NetworkJob *job)
+{
+    if (job && job->failed()) {
+        return;
+    }
+
+    if (!d->ops) {
+        return;
+    }
+
+    const QString id = d->ops->assetInfo().id;
+    if (id.isEmpty()) {
+        return;
+    }
+
+    //FIXME: store in sql db
+}
+
 void AssetHandler::setReady(bool isReady)
 {
     d->ready = isReady;

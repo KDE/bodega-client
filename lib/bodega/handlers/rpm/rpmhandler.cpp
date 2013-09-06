@@ -100,6 +100,8 @@ Bodega::InstallJob *RpmHandler::install(QNetworkReply *reply, Session *session)
             m_installJob = new PackageIdInstallJob(reply, session, this);
         } else {
             m_installJob = new RpmInstallJob(reply, session, this);
+            connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
+                    this, SLOT(registerForUpdates(Bodega::NetworkJob*)));
         }
         connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob *)),
                 this, SLOT(installJobFinished()));

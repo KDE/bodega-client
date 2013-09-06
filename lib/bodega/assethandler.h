@@ -64,6 +64,16 @@ namespace Bodega
         protected:
             AssetHandler(QObject *parent = 0);
 
+        protected Q_SLOTS:
+            /**
+             * If the asset should be checked for updates, this method
+             * should be called after installation is successful
+             * 
+             * @arg job if a job is passed in, then it is checked for
+             *          success before registration happens
+             */
+            void registerForUpdates(Bodega::NetworkJob *job = 0);
+
         private:
             class Private;
             Private * const d;

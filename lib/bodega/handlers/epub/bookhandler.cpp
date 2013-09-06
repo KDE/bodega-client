@@ -65,6 +65,8 @@ Bodega::InstallJob *BookHandler::install(QNetworkReply *reply, Session *session)
 {
     if (!m_installJob) {
         m_installJob = new BookInstallJob(reply, session, this);
+        connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
+                this, SLOT(registerForUpdates(Bodega::NetworkJob*)));
     }
 
     return m_installJob.data();
