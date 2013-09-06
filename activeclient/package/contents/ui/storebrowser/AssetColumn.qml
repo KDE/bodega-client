@@ -22,6 +22,7 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtras
+import org.kde.qtextracomponents 0.1
 import "../components"
 import "Ratings.js" as Ratings
 
@@ -208,7 +209,7 @@ BrowserColumn {
                         model: assetOperations.ratingsModel
                         delegate: Row {
                             visible: model.RatingsCount > 0
-
+                            property int starCount: model.AverageRating
                             PlasmaComponents.Label {
                                 id: attributeNameLabel
                                 verticalAlignment: Text.AlignTop
@@ -217,10 +218,13 @@ BrowserColumn {
                                 }
                                 text: i18n("%1: ", model.Name)
                             }
-                            PlasmaComponents.Label {
-                                id: attributeAverageRatingLabel
-                                verticalAlignment: Text.AlignTop
-                                text: model.AverageRating ? i18n("%1", model.AverageRating) : i18n("No Ratings yet!")
+                            Repeater {
+                                model: starCount
+                                delegate: Row {
+                                    PlasmaCore.IconItem {
+                                        source: "plasmagik"
+                                    }
+                                }
                             }
                         }
                     }
