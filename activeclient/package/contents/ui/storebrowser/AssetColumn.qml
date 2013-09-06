@@ -296,22 +296,6 @@ BrowserColumn {
                         }
                     }
 
-                    PlasmaComponents.Button {
-                        id: ratingsDeleteButton
-                        visible: assetOperations.ratingsModel.ratingsCount > 0
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: i18n("Delete ratings")
-                        onClicked: ratingsDeleteConfirmation.open()
-                    }
-                    InlineConfirmationDialog {
-                        id: ratingsDeleteConfirmation
-                        visualParent: ratingsDeleteButton
-                        message: i18n("Are you sure you want to remove all your ratings from the asset")
-                        onAccepted: {
-                            var job = bodegaClient.session.assetDeleteRatings(assetId)
-                            job.jobFinished.connect(root.reloadPage)
-                        }
-                    }
 
                     Item {
                         anchors {

@@ -82,6 +82,22 @@ PlasmaComponents.Page {
                         text: i18n("Rating Average: %1", model.Rating)
                         visible: text.length > 0
                     }
+                    PlasmaComponents.Button {
+                        id: ratingsDeleteButton
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: i18n("Delete ratings")
+                        onClicked: ratingsDeleteConfirmation.open()
+                    }
+
+                    InlineConfirmationDialog {
+                        id: ratingsDeleteConfirmation
+                        visualParent: ratingsDeleteButton
+                        message: i18n("Are you sure you want to remove all your ratings from the asset")
+                        onAccepted: {
+                            var job = bodegaClient.session.assetDeleteRatings(model.AssetId)
+                            job.jobFinished.connect(root.reloadPage)
+                        }
+                    }
                 }
             }
         }
