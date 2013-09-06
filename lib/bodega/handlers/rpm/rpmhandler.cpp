@@ -117,6 +117,8 @@ Bodega::UninstallJob *RpmHandler::uninstall(Session *session)
         //if not QueuedConnection resolve sudenly after the installation will fail
         connect(m_uninstallJob.data(), SIGNAL(jobFinished(Bodega::UninstallJob *)),
                 this, SLOT(installJobFinished()), Qt::QueuedConnection);
+        connect(m_uninstallJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
+                this, SLOT(unregisterForUpdates(Bodega::NetworkJob*)));
     }
 
     return m_uninstallJob.data();

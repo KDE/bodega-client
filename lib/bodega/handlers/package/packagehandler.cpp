@@ -172,6 +172,8 @@ Bodega::UninstallJob *PackageHandler::uninstall(Session *session)
     //qDebug()<<m_uninstallJob;
     if (!m_uninstallJob) {
         m_uninstallJob = new PackageUninstallJob(session, this);
+        connect(m_uninstallJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
+                this, SLOT(unregisterForUpdates(Bodega::NetworkJob*)));
     }
 
     return m_uninstallJob.data();
