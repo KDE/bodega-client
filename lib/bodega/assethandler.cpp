@@ -24,6 +24,8 @@
 #include <QDir>
 #include <QLibraryInfo>
 #include <QPluginLoader>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 #include "installjob.h"
 #include "assethandlerfactory.h"
@@ -40,8 +42,21 @@ public:
     {
     }
 
+    void initUpdatedb() {
+        if (updateDb.isOpen()) {
+            return;
+        }
+
+        //FIXME QT5: use QStandardDirs for this
+        const QString updateDbPath = QDir::homePath() + "/.local/share/data/bodega/";
+        QDir::mkPath(updateDbPath());
+        updateDb = QSqlDatabase::addDatabase("QSQLITE", updateDbPath + "assets.db");
+        updateDb.setHostName("localhost");
+    }
+
     AssetOperations *ops;
     bool ready;
+    QSqlDatabase updateDb;
 };
 
 AssetHandler::AssetHandler(QObject *parent)
@@ -52,6 +67,10 @@ AssetHandler::AssetHandler(QObject *parent)
 
 AssetHandler::~AssetHandler()
 {
+    if (d->updateDb.isOpen()) {
+        d->updateDb.close();
+    }
+
     delete d;
 }
 
