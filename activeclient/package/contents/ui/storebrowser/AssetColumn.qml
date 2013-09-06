@@ -49,12 +49,6 @@ BrowserColumn {
     }
 
     function reloadPage() {
-        itemBrowser.pop(root)
-        var page = itemBrowser.replace(Qt.resolvedUrl("AssetColumn.qml"))
-        page.assetId = assetId
-    }
-
-    onAssetIdChanged: {
         if (assetId > 0) {
             assetOperations = bodegaClient.session.assetOperations(assetId);
 
@@ -68,6 +62,8 @@ BrowserColumn {
             }
         }
     }
+
+    onAssetIdChanged: reloadPage()
 
     PlasmaExtras.ScrollArea {
         anchors.fill: parent
