@@ -279,6 +279,7 @@ BrowserColumn {
                                         ratingsBaloon.close()
                                         var job = bodegaClient.session.assetCreateRatings(assetId, Ratings.ratingAttributes)
                                         job.jobFinished.connect(root.reloadPage)
+                                        job.jobFinished.connect(bodegaClient.participantRatingsJobModel.reload)
                                     }
                                 }
                                 PlasmaComponents.Button {

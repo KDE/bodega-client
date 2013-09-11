@@ -113,7 +113,7 @@ PlasmaComponents.Page {
                         message: i18n("Are you sure you want to remove all your ratings from the asset")
                         onAccepted: {
                             var job = bodegaClient.session.assetDeleteRatings(model.AssetId)
-                            job.jobFinished.connect(root.reloadPage)
+                            job.jobFinished.connect(bodegaClient.participantRatingsJobModel.reload)
                         }
                     }
                 }
