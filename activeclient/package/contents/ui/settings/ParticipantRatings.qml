@@ -50,41 +50,60 @@ PlasmaComponents.Page {
             model: bodegaClient.participantRatingsJobModel
 
             delegate: PlasmaComponents.ListItem {
+                property variant ratings: model.Ratings
                 Column {
                     spacing: 0
+                    anchors.horizontalCenter: parent.horizontalCenter
                     PlasmaComponents.Label {
                         text: model.AssetName
                         wrapMode: Text.Wrap
-                        width: root.width
                         visible: text.length > 0
                     }
                     PlasmaComponents.Label {
                         text: i18n("Description: %1", model.AssetDesciption)
                         wrapMode: Text.Wrap
-                        width: root.width
                         visible: text.length > 0
                     }
                     PlasmaComponents.Label {
                         text: i18n("Version: %1", model.AssetVersion)
                         wrapMode: Text.Wrap
-                        width: root.width
                         visible: text.length > 0
                     }
 
-                    PlasmaComponents.Label {
-                        text: i18n("Rating: %1", model.AttributeName)
-                        wrapMode: Text.Wrap
-                        width: root.width
-                        visible: text.length > 0
-                    }
+                    Repeater {
+                        model: ratings.length
+                        delegate: Column {
+                            id: ratingsColumn
+                            Row {
+                                PlasmaComponents.Label {
+                                    text: i18n("%1 :", ratings[index]["AttributeName"])
+                                    wrapMode: Text.Wrap
+                                   // width: root.width
+                                   //visible: text.length > 0
+                                    /*anchors {
+                                        right: ratingsRepeater.left
+                                    }*/
+                                }
 
-                    PlasmaComponents.Label {
-                        text: i18n("Rating Average: %1", model.Rating)
-                        visible: text.length > 0
-                    }
+                                Repeater {
+                                    id: ratingsRepeater
+                                    model: ratings[index]["Rating"]
+                                    //anchors.right: ratingsColumn.right
+                                    width: root.width - 200
+                                    delegate: Row {
+                                        PlasmaCore.IconItem {
+                                            source: "rating"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } // end of Repeater
+
+
                     PlasmaComponents.Button {
                         id: ratingsDeleteButton
-                        anchors.horizontalCenter: parent.horizontalCenter
+                        //anchors.horizontalCenter: parent.horizontalCenter
                         text: i18n("Delete ratings")
                         onClicked: ratingsDeleteConfirmation.open()
                     }
