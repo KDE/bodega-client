@@ -64,6 +64,8 @@ namespace Bodega {
 
     Q_SIGNALS:
         void countChanged();
+        void reload();
+        void reloadFinished();
 
     private:
         class Private;

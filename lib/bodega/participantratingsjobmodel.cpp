@@ -54,18 +54,26 @@ public:
     void participantRatingsJobFinished(Bodega::NetworkJob *job);
     void assetJobFinished(Bodega::NetworkJob *job);
     void ratingAttributesJobFinished(Bodega::NetworkJob *job);
+    void finishReload();
 
     QString findAttributeName(const QString &attributeId) const;
     QVariantList dataToList(int index) const;
 
     QList<RatingAttributes> ratingAttributes;
     QList<AssetRatings> dataList;
+    int jobCounter;
 };
 
 ParticipantRatingsJobModel::Private::Private(ParticipantRatingsJobModel *parent)
     : q(parent),
-      session(0)
+      session(0),
+      jobCounter(-1)
 {
+}
+void ParticipantRatingsJobModel::Private::finishReload()
+{
+    q->endInsertRows();
+    emit q->reloadFinished();
 }
 
 void ParticipantRatingsJobModel::Private::fetchParticipantRatings()
@@ -75,6 +83,7 @@ void ParticipantRatingsJobModel::Private::fetchParticipantRatings()
     q->beginResetModel();
     ratingAttributes.clear();
     dataList.clear();
+    jobCounter = -1;
     q->endResetModel();
 
     connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
@@ -96,6 +105,8 @@ void ParticipantRatingsJobModel::Private::participantRatingsJobFinished(Bodega::
     }
 
     QList<ParticipantRatings> participantRatings = participantRatingsJob->ratings();
+    jobCounter = participantRatings.count() * 2;
+
     foreach (const ParticipantRatings &r, participantRatings) {
         AssetRatings tmp;
         tmp.assetId = r.assetId;
@@ -122,45 +133,46 @@ void ParticipantRatingsJobModel::Private::participantRatingsJobFinished(Bodega::
     const int end = qMax(begin, dataList.count() + begin -1);
 
     q->beginInsertRows(QModelIndex(), begin, end);
-    q->endInsertRows();
 }
 
 void ParticipantRatingsJobModel::Private::assetJobFinished(Bodega::NetworkJob *job)
 {
     AssetJob *assetJob = qobject_cast<AssetJob*>(job);
 
-    if (!assetJob) {
-        return;
+    if (assetJob) {
+        assetJob->deleteLater();
+        if (!assetJob->failed()) {
+            AssetRatings tmp;
+            tmp.assetId = assetJob->info().id;
+            const int index = dataList.indexOf(tmp);
+            tmp = dataList.takeAt(index);
+            tmp.assetInfo = assetJob->info();
+            dataList << tmp;
+        }
     }
 
-    assetJob->deleteLater();
-
-    if (assetJob->failed()) {
-        return;
+    jobCounter--;
+    if (jobCounter == 0) {
+        finishReload();
     }
-
-    AssetRatings tmp;
-    tmp.assetId = assetJob->info().id;
-    const int index = dataList.indexOf(tmp);
-    tmp = dataList.takeAt(index);
-    tmp.assetInfo = assetJob->info();
-    dataList << tmp;
 }
 
 void ParticipantRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::NetworkJob *job)
 {
     RatingAttributesJob *ratingAttributesJob = qobject_cast<RatingAttributesJob*>(job);
 
-    if (!ratingAttributesJob) {
-        return;
+    if (ratingAttributesJob) {
+        ratingAttributesJob->deleteLater();
+        if (!ratingAttributesJob->failed()) {
+            ratingAttributes.append(ratingAttributesJob->ratingAttributes());
+        }
     }
 
-    ratingAttributesJob->deleteLater();
-
-    if (ratingAttributesJob->failed()) {
-        return;
+    jobCounter--;
+    if (jobCounter == 0) {
+        finishReload();
     }
-    ratingAttributes.append(ratingAttributesJob->ratingAttributes());
+
 }
 
 QString ParticipantRatingsJobModel::Private::findAttributeName(const QString &attributeId) const
@@ -207,6 +219,8 @@ ParticipantRatingsJobModel::ParticipantRatingsJobModel(QObject *parent)
             this, SIGNAL(countChanged()));
     connect(this, SIGNAL(modelReset()),
             this, SIGNAL(countChanged()));
+    connect(this, SIGNAL(reload()),
+            this, SLOT(fetchParticipantRatings()));
 }
 
 ParticipantRatingsJobModel::~ParticipantRatingsJobModel()
