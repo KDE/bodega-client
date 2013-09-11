@@ -204,19 +204,20 @@ BrowserColumn {
                         clip: true
                         model: assetOperations.ratingsModel
                         delegate: Row {
-                            anchors.horizontalCenter: parent.horizontalCenter
                             visible: model.RatingsCount > 0
                             property int starCount: model.AverageRating
                             PlasmaComponents.Label {
                                 id: attributeNameLabel
-                                verticalAlignment: Text.AlignTop
                                 text: i18n("%1: ", model.Name)
+                                wrapMode: Text.Wrap
+                                width: theme.defaultFont.mSize.width*8
+                                horizontalAlignment: Text.AlignRight
                             }
                             Repeater {
                                 model: starCount
                                 delegate: Row {
                                     PlasmaCore.IconItem {
-                                        source: "plasmagik"
+                                        source: "rating"
                                     }
                                 }
                             }
