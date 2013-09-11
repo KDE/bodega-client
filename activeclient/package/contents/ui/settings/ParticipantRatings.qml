@@ -58,39 +58,38 @@ PlasmaComponents.Page {
                         text: model.AssetName
                         wrapMode: Text.Wrap
                         visible: text.length > 0
+                        anchors.horizontalCenter: parent.horizontalCenter
                     }
                     PlasmaComponents.Label {
                         text: i18n("Description: %1", model.AssetDesciption)
                         wrapMode: Text.Wrap
                         visible: text.length > 0
+                        anchors.horizontalCenter: parent.horizontalCenter
                     }
                     PlasmaComponents.Label {
                         text: i18n("Version: %1", model.AssetVersion)
                         wrapMode: Text.Wrap
                         visible: text.length > 0
+                        anchors.horizontalCenter: parent.horizontalCenter
                     }
 
                     Repeater {
                         model: ratings.length
                         delegate: Column {
-                            id: ratingsColumn
                             Row {
+                                id: ratingsRow
+                                width: root.width/12
                                 PlasmaComponents.Label {
+                                    id: ratingsLabel
                                     text: i18n("%1 :", ratings[index]["AttributeName"])
                                     wrapMode: Text.Wrap
-                                   // width: root.width
-                                   //visible: text.length > 0
-                                    /*anchors {
-                                        right: ratingsRepeater.left
-                                    }*/
+                                    width: theme.defaultFont.mSize.width*11
+                                    horizontalAlignment: Text.AlignRight
                                 }
 
                                 Repeater {
-                                    id: ratingsRepeater
                                     model: ratings[index]["Rating"]
-                                    //anchors.right: ratingsColumn.right
-                                    width: root.width - 200
-                                    delegate: Row {
+                                   delegate: Row {
                                         PlasmaCore.IconItem {
                                             source: "rating"
                                         }
@@ -103,7 +102,7 @@ PlasmaComponents.Page {
 
                     PlasmaComponents.Button {
                         id: ratingsDeleteButton
-                        //anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
                         text: i18n("Delete ratings")
                         onClicked: ratingsDeleteConfirmation.open()
                     }
