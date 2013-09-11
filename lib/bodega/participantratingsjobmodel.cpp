@@ -29,8 +29,20 @@
 #include <QtCore/QDebug>
 #include <QtCore/QMetaEnum>
 #include <QDebug>
+
 namespace Bodega
 {
+
+struct AssetRatings
+{
+    QString assetId;
+    AssetInfo assetInfo;
+    QList<ParticipantRatings> participantRatings;
+    inline bool operator==(const AssetRatings &asset)
+    {
+        return asset.assetId == this->assetId;
+    };
+};
 
 class ParticipantRatingsJobModel::Private {
 public:
@@ -43,12 +55,11 @@ public:
     void assetJobFinished(Bodega::NetworkJob *job);
     void ratingAttributesJobFinished(Bodega::NetworkJob *job);
 
-    QHash<QString, QString> findAsset(const QString &assetId) const;
     QString findAttributeName(const QString &attributeId) const;
+    QVariantList dataToList(int index) const;
 
-    QList<ParticipantRatings> participantRatings;
-    QList<AssetInfo> assetInfo;
     QList<RatingAttributes> ratingAttributes;
+    QList<AssetRatings> dataList;
 };
 
 ParticipantRatingsJobModel::Private::Private(ParticipantRatingsJobModel *parent)
@@ -62,9 +73,8 @@ void ParticipantRatingsJobModel::Private::fetchParticipantRatings()
     ParticipantRatingsJob *job = session->participantRatings();
 
     q->beginResetModel();
-    participantRatings.clear();
-    assetInfo.clear();
     ratingAttributes.clear();
+    dataList.clear();
     q->endResetModel();
 
     connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
@@ -85,11 +95,20 @@ void ParticipantRatingsJobModel::Private::participantRatingsJobFinished(Bodega::
         return;
     }
 
-    const int begin = 0;
-    const int end = qMax(begin, participantRatings.count() + begin -1);
-    q->beginInsertRows(QModelIndex(), begin, end);
-    participantRatings= participantRatingsJob->ratings();
-    foreach (const ParticipantRatings r, participantRatings) {
+    QList<ParticipantRatings> participantRatings = participantRatingsJob->ratings();
+    foreach (const ParticipantRatings &r, participantRatings) {
+        AssetRatings tmp;
+        tmp.assetId = r.assetId;
+
+        if (!dataList.contains(tmp)) {
+            dataList << tmp;
+        }
+
+        const int index = dataList.indexOf(tmp);
+        tmp = dataList.takeAt(index);
+        tmp.participantRatings.append(r);
+        dataList << tmp;
+
         AssetJob *assetJob = session->asset(r.assetId, AssetJob::ShowRatings);
         connect(assetJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
             q, SLOT(assetJobFinished(Bodega::NetworkJob *)));
@@ -98,6 +117,11 @@ void ParticipantRatingsJobModel::Private::participantRatingsJobFinished(Bodega::
         connect(ratingAttributesJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
             q, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
     }
+
+    const int begin = 0;
+    const int end = qMax(begin, dataList.count() + begin -1);
+
+    q->beginInsertRows(QModelIndex(), begin, end);
     q->endInsertRows();
 }
 
@@ -114,7 +138,13 @@ void ParticipantRatingsJobModel::Private::assetJobFinished(Bodega::NetworkJob *j
     if (assetJob->failed()) {
         return;
     }
-    assetInfo.append(assetJob->info());
+
+    AssetRatings tmp;
+    tmp.assetId = assetJob->info().id;
+    const int index = dataList.indexOf(tmp);
+    tmp = dataList.takeAt(index);
+    tmp.assetInfo = assetJob->info();
+    dataList << tmp;
 }
 
 void ParticipantRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::NetworkJob *job)
@@ -133,20 +163,6 @@ void ParticipantRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::Ne
     ratingAttributes.append(ratingAttributesJob->ratingAttributes());
 }
 
-QHash<QString, QString> ParticipantRatingsJobModel::Private::findAsset(const QString &assetId) const
-{
-    QHash<QString, QString> hash;
-    foreach(const AssetInfo &asset, assetInfo) {
-        if (asset.id == assetId) {
-            hash[QLatin1String("name")] = asset.name;
-            hash[QLatin1String("version")] = asset.version;
-            hash[QLatin1String("description")] = asset.description;
-            return hash;
-        }
-    }
-    return QHash<QString, QString>();
-}
-
 QString ParticipantRatingsJobModel::Private::findAttributeName(const QString &attributeId) const
 {
     foreach(const RatingAttributes &attribute, ratingAttributes) {
@@ -156,6 +172,20 @@ QString ParticipantRatingsJobModel::Private::findAttributeName(const QString &at
     }
     return QString();
 }
+
+QVariantList ParticipantRatingsJobModel::Private::dataToList(int index) const
+{
+    QVariantList l;
+    foreach(const ParticipantRatings &r, dataList.at(index).participantRatings) {
+        QVariantMap data;
+        data.insert(QLatin1String("AttributeName"), findAttributeName(r.attributeId));
+        data.insert(QLatin1String("Rating"), r.rating);
+        l.append(data);
+    }
+    return l;
+}
+
+
 
 ParticipantRatingsJobModel::ParticipantRatingsJobModel(QObject *parent)
     : QAbstractItemModel(parent),
@@ -191,32 +221,25 @@ int ParticipantRatingsJobModel::columnCount(const QModelIndex &parent) const
 
 QVariant ParticipantRatingsJobModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() >= d->participantRatings.count()) {
+    if (!index.isValid() || index.row() >= d->dataList.count()) {
         return QVariant();
     }
-    QHash<QString, QString> asset = d->findAsset(d->participantRatings.at(index.row()).assetId);
 
     switch (role) {
-        case AttributeId: {
-            return d->participantRatings.at(index.row()).attributeId;
-        }
-        case AttributeName: {
-            return d->findAttributeName(d->participantRatings.at(index.row()).attributeId);
-        }
         case AssetName: {
-            return asset[QLatin1String("name")];
+            return d->dataList.at(index.row()).assetInfo.name;
         }
         case AssetVersion: {
-            return asset[QLatin1String("version")];
+            return d->dataList.at(index.row()).assetInfo.version;
         }
         case AssetDesciption: {
-            return asset[QLatin1String("description")];
+            return d->dataList.at(index.row()).assetInfo.description;
         }
         case AssetId: {
-            return d->participantRatings.at(index.row()).assetId;
+            return d->dataList.at(index.row()).assetInfo.id;
         }
-        case Rating: {
-            return d->participantRatings.at(index.row()).rating;
+        case Ratings: {
+            return d->dataToList(index.row());
         }
         default: {
             return QVariant();
@@ -251,7 +274,7 @@ QModelIndex ParticipantRatingsJobModel::index(int row, int column, const QModelI
         return QModelIndex();
     }
 
-    if (row < 0 || row >= d->participantRatings.count()) {
+    if (row < 0 || row >= d->dataList.count()) {
         return QModelIndex();
     }
 
@@ -270,7 +293,7 @@ QModelIndex ParticipantRatingsJobModel::parent(const QModelIndex &index) const
 
 int ParticipantRatingsJobModel::rowCount(const QModelIndex &parent) const
 {
-    return d->participantRatings.size();
+    return d->dataList.count();
 }
 
 void ParticipantRatingsJobModel::setSession(Session *session)

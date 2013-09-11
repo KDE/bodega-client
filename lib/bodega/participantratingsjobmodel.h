@@ -36,13 +36,11 @@ namespace Bodega {
 
     public:
         enum DisplayRoles {
-            AttributeId = Qt::UserRole + 100,
-            AttributeName = Qt::UserRole + 101,
-            AssetId = Qt::UserRole + 102,
-            AssetName = Qt::UserRole + 103,
-            AssetDesciption = Qt::UserRole + 104,
-            AssetVersion = Qt::UserRole + 105,
-            Rating = Qt::UserRole + 106
+            AssetId = Qt::UserRole + 100,
+            AssetName = Qt::UserRole + 101,
+            AssetDesciption = Qt::UserRole + 102,
+            AssetVersion = Qt::UserRole + 103,
+            Ratings = Qt::UserRole + 104
         };
 
         ParticipantRatingsJobModel(QObject *parent = 0);
