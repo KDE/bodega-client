@@ -54,7 +54,6 @@ public:
     void participantRatingsJobFinished(Bodega::NetworkJob *job);
     void assetJobFinished(Bodega::NetworkJob *job);
     void ratingAttributesJobFinished(Bodega::NetworkJob *job);
-    void finishReload();
 
     QString findAttributeName(const QString &attributeId) const;
     QVariantList dataToList(int index) const;
@@ -69,11 +68,6 @@ ParticipantRatingsJobModel::Private::Private(ParticipantRatingsJobModel *parent)
       session(0),
       jobCounter(-1)
 {
-}
-void ParticipantRatingsJobModel::Private::finishReload()
-{
-    q->endInsertRows();
-    emit q->reloadFinished();
 }
 
 void ParticipantRatingsJobModel::Private::fetchParticipantRatings()
@@ -153,7 +147,7 @@ void ParticipantRatingsJobModel::Private::assetJobFinished(Bodega::NetworkJob *j
 
     jobCounter--;
     if (jobCounter == 0) {
-        finishReload();
+        q->endInsertRows();
     }
 }
 
@@ -170,7 +164,7 @@ void ParticipantRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::Ne
 
     jobCounter--;
     if (jobCounter == 0) {
-        finishReload();
+        q->endInsertRows();
     }
 
 }
