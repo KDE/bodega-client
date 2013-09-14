@@ -157,10 +157,19 @@ namespace Bodega {
 
     struct ParticipantRatings
     {
-        QString attributeId;
+        struct Ratings
+        {
+            QString attributeId;
+            QString attributeName;
+            QString rating;
+        };
+
         QString assetId;
-        QString rating;
-        QString date;
+        QString assetDescription;
+        QString assetName;
+        QString assetVersion;
+        QString rated;
+        QList<ParticipantRatings::Ratings> ratings;
     };
 
     typedef QMultiHash<QString, QString> Tags;

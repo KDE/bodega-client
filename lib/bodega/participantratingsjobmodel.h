@@ -70,9 +70,7 @@ namespace Bodega {
         class Private;
         friend class Private;
         Private * const d;
-        Q_PRIVATE_SLOT(d, void ratingAttributesJobFinished(Bodega::NetworkJob *))
         Q_PRIVATE_SLOT(d, void participantRatingsJobFinished(Bodega::NetworkJob *))
-        Q_PRIVATE_SLOT(d, void assetJobFinished(Bodega::NetworkJob *))
         Q_PRIVATE_SLOT(d, void fetchParticipantRatings())
     };
 

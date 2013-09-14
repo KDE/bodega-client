@@ -33,17 +33,6 @@
 namespace Bodega
 {
 
-struct AssetRatings
-{
-    QString assetId;
-    AssetInfo assetInfo;
-    QList<ParticipantRatings> participantRatings;
-    inline bool operator==(const AssetRatings &asset)
-    {
-        return asset.assetId == this->assetId;
-    };
-};
-
 class ParticipantRatingsJobModel::Private {
 public:
     Private(ParticipantRatingsJobModel *parent);
@@ -52,21 +41,14 @@ public:
     Session *session;
     void fetchParticipantRatings();
     void participantRatingsJobFinished(Bodega::NetworkJob *job);
-    void assetJobFinished(Bodega::NetworkJob *job);
-    void ratingAttributesJobFinished(Bodega::NetworkJob *job);
-
-    QString findAttributeName(const QString &attributeId) const;
     QVariantList dataToList(int index) const;
 
-    QList<RatingAttributes> ratingAttributes;
-    QList<AssetRatings> dataList;
-    int jobCounter;
+    QList<ParticipantRatings> participantRatings;
 };
 
 ParticipantRatingsJobModel::Private::Private(ParticipantRatingsJobModel *parent)
     : q(parent),
-      session(0),
-      jobCounter(-1)
+      session(0)
 {
 }
 
@@ -75,9 +57,7 @@ void ParticipantRatingsJobModel::Private::fetchParticipantRatings()
     ParticipantRatingsJob *job = session->participantRatings();
 
     q->beginResetModel();
-    ratingAttributes.clear();
-    dataList.clear();
-    jobCounter = -1;
+    participantRatings.clear();
     q->endResetModel();
 
     connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)),
@@ -98,100 +78,26 @@ void ParticipantRatingsJobModel::Private::participantRatingsJobFinished(Bodega::
         return;
     }
 
-    QList<ParticipantRatings> participantRatings = participantRatingsJob->ratings();
-    jobCounter = participantRatings.count() * 2;
-
-    foreach (const ParticipantRatings &r, participantRatings) {
-        AssetRatings tmp;
-        tmp.assetId = r.assetId;
-
-        if (!dataList.contains(tmp)) {
-            dataList << tmp;
-        }
-
-        const int index = dataList.indexOf(tmp);
-        tmp = dataList.takeAt(index);
-        tmp.participantRatings.append(r);
-        dataList << tmp;
-
-        AssetJob *assetJob = session->asset(r.assetId, AssetJob::ShowRatings);
-        connect(assetJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
-            q, SLOT(assetJobFinished(Bodega::NetworkJob *)));
-
-        RatingAttributesJob *ratingAttributesJob = session->listRatingAttributes(r.assetId);
-        connect(ratingAttributesJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
-            q, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
-    }
+    participantRatings = participantRatingsJob->ratings();
 
     const int begin = 0;
-    const int end = qMax(begin, dataList.count() + begin -1);
+    const int end = qMax(begin, participantRatings.count() + begin -1);
 
     q->beginInsertRows(QModelIndex(), begin, end);
-}
-
-void ParticipantRatingsJobModel::Private::assetJobFinished(Bodega::NetworkJob *job)
-{
-    AssetJob *assetJob = qobject_cast<AssetJob*>(job);
-
-    if (assetJob) {
-        assetJob->deleteLater();
-        if (!assetJob->failed()) {
-            AssetRatings tmp;
-            tmp.assetId = assetJob->info().id;
-            const int index = dataList.indexOf(tmp);
-            tmp = dataList.takeAt(index);
-            tmp.assetInfo = assetJob->info();
-            dataList << tmp;
-        }
-    }
-
-    jobCounter--;
-    if (jobCounter == 0) {
-        q->endInsertRows();
-    }
-}
-
-void ParticipantRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::NetworkJob *job)
-{
-    RatingAttributesJob *ratingAttributesJob = qobject_cast<RatingAttributesJob*>(job);
-
-    if (ratingAttributesJob) {
-        ratingAttributesJob->deleteLater();
-        if (!ratingAttributesJob->failed()) {
-            ratingAttributes.append(ratingAttributesJob->ratingAttributes());
-        }
-    }
-
-    jobCounter--;
-    if (jobCounter == 0) {
-        q->endInsertRows();
-    }
-
-}
-
-QString ParticipantRatingsJobModel::Private::findAttributeName(const QString &attributeId) const
-{
-    foreach(const RatingAttributes &attribute, ratingAttributes) {
-        if (attribute.id == attributeId) {
-            return attribute.name;
-        }
-    }
-    return QString();
+    q->endInsertRows();
 }
 
 QVariantList ParticipantRatingsJobModel::Private::dataToList(int index) const
 {
     QVariantList l;
-    foreach(const ParticipantRatings &r, dataList.at(index).participantRatings) {
+    foreach(const ParticipantRatings::Ratings &itr, participantRatings.at(index).ratings) {
         QVariantMap data;
-        data.insert(QLatin1String("AttributeName"), findAttributeName(r.attributeId));
-        data.insert(QLatin1String("Rating"), r.rating);
+        data.insert(QLatin1String("AttributeName"), itr.attributeName);
+        data.insert(QLatin1String("Rating"), itr.rating);
         l.append(data);
     }
     return l;
 }
-
-
 
 ParticipantRatingsJobModel::ParticipantRatingsJobModel(QObject *parent)
     : QAbstractItemModel(parent),
@@ -229,22 +135,22 @@ int ParticipantRatingsJobModel::columnCount(const QModelIndex &parent) const
 
 QVariant ParticipantRatingsJobModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() >= d->dataList.count()) {
+    if (!index.isValid() || index.row() >= d->participantRatings.count()) {
         return QVariant();
     }
 
     switch (role) {
         case AssetName: {
-            return d->dataList.at(index.row()).assetInfo.name;
+            return d->participantRatings.at(index.row()).assetName;
         }
         case AssetVersion: {
-            return d->dataList.at(index.row()).assetInfo.version;
+            return d->participantRatings.at(index.row()).assetVersion;
         }
         case AssetDesciption: {
-            return d->dataList.at(index.row()).assetInfo.description;
+            return d->participantRatings.at(index.row()).assetDescription;
         }
         case AssetId: {
-            return d->dataList.at(index.row()).assetInfo.id;
+            return d->participantRatings.at(index.row()).assetId;
         }
         case Ratings: {
             return d->dataToList(index.row());
@@ -282,7 +188,7 @@ QModelIndex ParticipantRatingsJobModel::index(int row, int column, const QModelI
         return QModelIndex();
     }
 
-    if (row < 0 || row >= d->dataList.count()) {
+    if (row < 0 || row >= d->participantRatings.count()) {
         return QModelIndex();
     }
 
@@ -301,7 +207,7 @@ QModelIndex ParticipantRatingsJobModel::parent(const QModelIndex &index) const
 
 int ParticipantRatingsJobModel::rowCount(const QModelIndex &parent) const
 {
-    return d->dataList.count();
+    return d->participantRatings.count();
 }
 
 void ParticipantRatingsJobModel::setSession(Session *session)

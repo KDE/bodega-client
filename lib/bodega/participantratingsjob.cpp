@@ -47,10 +47,21 @@ void ParticipantRatingsJob::Private::parseRatings(const QVariantMap &result)
     for (itr = ratingsList.constBegin(); itr != ratingsList.constEnd(); ++itr) {
         ParticipantRatings info;
         QVariantMap attribute = itr->toMap();
-        info.attributeId = attribute[QLatin1String("attribute")].toString();
-        info.rating = attribute[QLatin1String("rating")].toString();
+        info.rated = attribute[QLatin1String("rated")].toString();
         info.assetId = attribute[QLatin1String("asset")].toString();
-        info.date = attribute[QLatin1String("date_part")].toString();
+        info.assetName = attribute[QLatin1String("name")].toString();
+        info.assetVersion = attribute[QLatin1String("version")].toString();
+        info.assetDescription = attribute[QLatin1String("description")].toString();
+        QVariantList l = attribute[QLatin1String("ratings")].toList();
+        QVariantList::const_iterator it;
+        for (it = l.constBegin(); it != l.constEnd(); ++it) {
+            ParticipantRatings::Ratings r;
+            QVariantMap data = it->toMap();
+            r.attributeId = data[QLatin1String("attribute")].toString();
+            r.attributeName = data[QLatin1String("name")].toString();
+            r.rating = data[QLatin1String("rating")].toString();
+            info.ratings.append(r);
+        }
         ratings.append(info);
     }
 }

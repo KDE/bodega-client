@@ -228,9 +228,12 @@ QString RatingsModel::findRatingsCount(const QString &ratingAttributeId) const
 QString RatingsModel::findRatingValue(const QString &ratingAttributeId) const
 {
     foreach(const ParticipantRatings &info, m_participantRatings) {
-        qDebug() << info.attributeId;
-        if (ratingAttributeId == info.attributeId) {
-            return info.rating;
+        if (info.assetId == m_assetInfo.id) {
+            foreach(const ParticipantRatings::Ratings &r, info.ratings) {
+                if (ratingAttributeId == r.attributeId) {
+                    return r.rating;
+                }
+            }
         }
     }
     return QString();
