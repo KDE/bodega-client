@@ -295,10 +295,7 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     qmlRegisterType<Bodega::ListCollectionsJob>();
     qmlRegisterType<Bodega::ListCollectionsJobModel>();
     qmlRegisterType<Bodega::CollectionListAssetsJobModel>();
-    qmlRegisterType<Bodega::ParticipantRatingsJob>();
     qmlRegisterType<Bodega::ParticipantRatingsJobModel>();
-    qmlRegisterType<Bodega::RatingAttributesJob>();
-    qmlRegisterType<Bodega::AssetRatingsJob>();
     qmlRegisterType<Bodega::AssetRatingsJobModel>();
     qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
 
