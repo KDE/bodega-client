@@ -785,7 +785,7 @@ Bodega::ParticipantRatingsJob * Session::participantRatings(const QString &asset
 
 Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QVariant &ratings)
 {
-   QUrl url = d->baseUrl;
+    QUrl url = d->baseUrl;
     const QString path = QString::fromLatin1("/asset/ratings/create/%1").arg(assetId);
     url.setEncodedPath(d->jsonPath(path));
 
