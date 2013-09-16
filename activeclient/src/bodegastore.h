@@ -112,8 +112,8 @@ public:
     Bodega::HistoryModel *historyModel();
     Bodega::ListCollectionsJobModel *listCollectionsJobModel() const;
     Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel() const;
-    Bodega::ParticipantRatingsJobModel *participantRatingsJobModel() const;
-    Bodega::AssetRatingsJobModel *assetRatingsJobModel() const;
+    Bodega::ParticipantRatingsJobModel *participantRatingsJobModel();
+    Bodega::AssetRatingsJobModel *assetRatingsJobModel();
 
     Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE void forgetCredentials() const;

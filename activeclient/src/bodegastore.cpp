@@ -318,10 +318,6 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     m_channelsModel->setSession(m_session);
     m_searchModel = new Bodega::Model(this);
     m_searchModel->setSession(m_session);
-    m_participantRatingsJobModel = new Bodega::ParticipantRatingsJobModel(this);
-    m_participantRatingsJobModel->setSession(m_session);
-    m_assetRatingsJobModel = new Bodega::AssetRatingsJobModel(this);
-    m_assetRatingsJobModel->setSession(m_session);
 
     declarativeView()->rootContext()->setContextProperty("bodegaClient", this);
 }
@@ -366,13 +362,21 @@ CollectionListAssetsJobModel *BodegaStore::collectionListAssetsJobModel() const
     return m_collectionListAssetsJobModel;
 }
 
-ParticipantRatingsJobModel *BodegaStore::participantRatingsJobModel() const
+ParticipantRatingsJobModel *BodegaStore::participantRatingsJobModel()
 {
+    if (!m_participantRatingsJobModel) {
+        m_participantRatingsJobModel = new ParticipantRatingsJobModel(this);
+        m_participantRatingsJobModel->setSession(m_session);
+    }
     return m_participantRatingsJobModel;
 }
 
-AssetRatingsJobModel *BodegaStore::assetRatingsJobModel() const
+AssetRatingsJobModel *BodegaStore::assetRatingsJobModel()
 {
+    if (!m_assetRatingsJobModel) {
+        m_assetRatingsJobModel = new AssetRatingsJobModel(this);
+        m_assetRatingsJobModel->setSession(m_session);
+    }
     return m_assetRatingsJobModel;
 }
 
