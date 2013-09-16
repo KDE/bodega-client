@@ -76,7 +76,7 @@ BrowserColumn {
             Item {
                 width: mainFlickable.width
                 height: mainColumn.height
-                Baloon {Text{text: mainFlickable.height}
+                Baloon {
                     id: questionBaloon
                     visualParent: installButton
                     property bool canPurchase:(bodegaClient.session.points >= assetOperations.assetInfo.points)
