@@ -48,10 +48,20 @@ public:
         }
 
         //FIXME QT5: use QStandardDirs for this
-        const QString updateDbPath = QDir::homePath() + "/.local/share/data/bodega/";
-        QDir::mkPath(updateDbPath());
-        updateDb = QSqlDatabase::addDatabase("QSQLITE", updateDbPath + "assets.db");
-        updateDb.setHostName("localhost");
+        QString updateDbPath = QDir::homePath() + QLatin1String("/.local/share/data/bodega/");
+        if (!QFile::exists(updateDbPath)) {
+            QDir dir;
+            dir.mkpath(updateDbPath);
+        }
+        updateDbPath.append(QLatin1String("assets.db"));
+        const bool initTables = !QFile::exists(updateDbPath);
+        updateDb = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), updateDbPath);
+        updateDb.setHostName(QLatin1String("localhost"));
+
+        if (initTables) {
+            QSqlQuery query(updateDb);
+            query.exec(QLatin1String("CREATE TABLE assets (store text, warehouse text, asset text, version text, checked bool default false)"));
+        }
     }
 
     AssetOperations *ops;
@@ -168,7 +178,7 @@ void AssetHandler::launch()
 
 void AssetHandler::registerForUpdates(Bodega::NetworkJob *job)
 {
-    if (job && job->failed()) {
+    if (!job || job->failed()) {
         return;
     }
 
@@ -181,8 +191,15 @@ void AssetHandler::registerForUpdates(Bodega::NetworkJob *job)
         return;
     }
 
-    //FIXME: store in sql db
     d->initUpdatedb();
+
+    QSqlQuery query(d->updateDb);
+    query.prepare(QLatin1String("INSERT INTO assets (host, store, asset, version) VALUES (:id, :host, :store, :version)"));
+    query.bindValue(QLatin1String(":host"), job->session()->baseUrl());
+    query.bindValue(QLatin1String(":store"), job->session()->storeId());
+    query.bindValue(QLatin1String(":asset"), id);
+    query.bindValue(QLatin1String(":version"), d->ops->assetInfo().version);
+    query.exec();
 }
 
 void AssetHandler::unregisterForUpdates(Bodega::NetworkJob *job)
@@ -200,8 +217,14 @@ void AssetHandler::unregisterForUpdates(Bodega::NetworkJob *job)
         return;
     }
 
-    //FIXME: delete from sql db
     d->initUpdatedb();
+
+    QSqlQuery query(d->updateDb);
+    query.prepare(QLatin1String("DELETE FROM assets WHERE host = :host AND store = :store AND asset = :asset"));
+    query.bindValue(QLatin1String(":host"), job->session()->baseUrl());
+    query.bindValue(QLatin1String(":store"), job->session()->storeId());
+    query.bindValue(QLatin1String(":asset"), id);
+    query.exec();
 }
 
 void AssetHandler::setReady(bool isReady)
