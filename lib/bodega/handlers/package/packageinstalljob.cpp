@@ -25,6 +25,7 @@
 #include <QDBusInterface>
 #include <QDebug>
 #include <QFile>
+#include <QFileInfo>
 
 #include <KGlobal>
 #include <KService>
@@ -48,54 +49,32 @@ void PackageInstallJob::downloadFinished(const QString &packageFile)
 {
     QString packageRoot;
     QString servicePrefix;
-    Plasma::PackageStructure *installer = 0;
+    Plasma::PackageStructure *installer = m_handler->createPackageStructure();
 
-    if (!m_handler->operations()->assetTags().contains(QLatin1String("servicetype"))) {
-        setError(Error(Error::Session,
-                       QLatin1String("packageinstall/01"),
-                       tr("Install failed"),
-                       tr("Service type tag not specified.")));
-        setFinished();
-        return;
-    }
-
-
-    QString serviceType = m_handler->operations()->assetTags().value(QLatin1String("servicetype"));
-
-
-    installer = m_handler->createPackageStructure();
-
-    // install, remove or upgrade
     if (!installer) {
         setError(Error(Error::Session,
                        QLatin1String("packageinstall/04"),
                        tr("Install failed"),
-                       tr(QString::fromLatin1("Installation of %1 failed.").arg(packageFile).toLatin1())));
+                       tr(QString::fromLatin1("Could not create installer for %1.").arg(packageFile).toLatin1())));
         setFinished();
         return;
     }
 
     packageRoot = KStandardDirs::locateLocal("data", installer->defaultPackageRoot());
 
-
+    QFileInfo info(packageFile);
     if (installer->installPackage(packageFile, packageRoot)) {
         qDebug() << "Successfully installed" << packageFile;
+        QDBusInterface dbus(QLatin1String("org.kde.kded"), QLatin1String("/kbuildsycoca"), QLatin1String("org.kde.kbuildsycoca"));
+        dbus.call(QDBus::NoBlock, QLatin1String("recreate"));
     } else {
         setError(Error(Error::Session,
                        QLatin1String("packageinstall/04"),
                        tr("Install failed"),
                        tr(QString::fromLatin1("Installation of %1 failed.").arg(packageFile).toLatin1())));
-        setFinished();
-        delete installer;
-        return;
     }
 
-    QDBusInterface dbus(QLatin1String("org.kde.kded"), QLatin1String("/kbuildsycoca"), QLatin1String("org.kde.kbuildsycoca"));
-    dbus.call(QDBus::NoBlock, QLatin1String("recreate"));
-
-    //Delete the downloaded package
-    QFile f(packageFile);
-    f.remove();
+    delete installer;
     setFinished();
 }
 

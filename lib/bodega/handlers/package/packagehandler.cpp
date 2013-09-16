@@ -25,8 +25,6 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
-#include <QFileInfo>
-#include <QtGui/QDesktopServices>
 
 #include <KService>
 #include <KServiceTypeTrader>
@@ -65,11 +63,11 @@ void PackageHandler::init()
 
 Plasma::PackageStructure *PackageHandler::createPackageStructure() const
 {
-    if (!operations()->assetTags().contains(QLatin1String("servicetype"))) {
+    const QString serviceType = operations()->assetTags().value(QLatin1String("servicetype"));
+    if (serviceType.isEmpty()) {
         return 0;
     }
 
-    QString serviceType = operations()->assetTags().value(QLatin1String("servicetype"));
     QString servicePrefix;
     Plasma::PackageStructure *installer = 0;
 
@@ -77,32 +75,20 @@ Plasma::PackageStructure *PackageHandler::createPackageStructure() const
         serviceType.contains(QLatin1String("Plasma/PopupApplet")) ||
         serviceType.contains(QLatin1String("Plasma/Containment"))) {
         servicePrefix = QLatin1String("plasma-applet-");
-
-    //FIXME: themes are still broken
-    /*} else if (type == QLatin1String("theme")) {
-        packageRoot = QLatin1String("desktoptheme/");*/
-
     } else if (serviceType == QLatin1String("Plasma/DataEngine")) {
         servicePrefix = QLatin1String("plasma-dataengine-");
-
     } else if (serviceType == QLatin1String("Plasma/Runner")) {
         servicePrefix = QLatin1String("plasma-runner-");
-
     } else if (serviceType == QLatin1String("Plasma/Wallpaper")) {
         servicePrefix = QLatin1String("plasma-wallpaper-");
-
     } else if (serviceType == QLatin1String("Plasma/LayoutTemplate")) {
         servicePrefix = QLatin1String("plasma-layout-");
-
     } else if (serviceType == QLatin1String("KWin/Effect")) {
         servicePrefix = QLatin1String("kwin-effect-");
-
     } else if (serviceType == QLatin1String("KWin/WindowSwitcher")) {
         servicePrefix = QLatin1String("kwin-windowswitcher-");
-
     } else if (serviceType == QLatin1String("KWin/Script")) {
         servicePrefix = QLatin1String("kwin-script-");
-
     } else {
         const QString constraint = QString(QLatin1String("[X-KDE-ServiceType] == '%1'")).arg(serviceType);
         KService::List offers = KServiceTypeTrader::self()->query(QLatin1String("Plasma/PackageStructure"), constraint);
@@ -117,10 +103,8 @@ Plasma::PackageStructure *PackageHandler::createPackageStructure() const
         if (!installer) {
             return 0;
         }
-
     }
 
-    // install, remove or upgrade
     if (!installer) {
         installer = new Plasma::PackageStructure(0, serviceType);
         installer->setServicePrefix(servicePrefix);
