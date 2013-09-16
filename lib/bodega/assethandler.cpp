@@ -48,26 +48,7 @@ public:
             return;
         }
 
-        //FIXME QT5: use QStandardDirs for this
-        QString updateDbPath = QDir::homePath() + QLatin1String("/.local/share/bodega/");
-        if (!QFile::exists(updateDbPath)) {
-            QDir dir;
-            dir.mkpath(updateDbPath);
-        }
-        updateDbPath.append(QLatin1String("assets.db"));
-        const bool initTables = !QFile::exists(updateDbPath);
-        updateDb = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"));
-        updateDb.setDatabaseName(updateDbPath);
-
-        if (!updateDb.open()) {
-            qDebug() << "failed to open update db" << updateDb.lastError();
-            return;
-        }
-
-        if (initTables) {
-            QSqlQuery query(updateDb);
-            query.exec(QLatin1String("CREATE TABLE assets (store text, warehouse text, asset text, version text, checked bool default false)"));
-        }
+        updateDb = AssetHandler::updateDatabase();
     }
 
     AssetOperations *ops;
@@ -248,6 +229,41 @@ void AssetHandler::setReady(bool isReady)
 bool AssetHandler::isReady() const
 {
     return d->ready;
+}
+
+QSqlDatabase AssetHandler::updateDatabase()
+{
+    const QString dbConnectionName = QLatin1String("BODEGA_UPDATES");
+    bool initTables = false;
+
+    QSqlDatabase updateDb = QSqlDatabase::database(dbConnectionName);
+
+    if (!updateDb.isValid()) {
+        //FIXME QT5: use QStandardDirs for this
+        QString updateDbPath = QDir::homePath() + QLatin1String("/.local/share/bodega/");
+        if (!QFile::exists(updateDbPath)) {
+            QDir dir;
+            dir.mkpath(updateDbPath);
+        }
+
+        updateDbPath.append(QLatin1String("assets.db"));
+        initTables = !QFile::exists(updateDbPath);
+        updateDb = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"));
+        updateDb.setDatabaseName(updateDbPath);
+    }
+
+    if (!updateDb.isOpen()) {
+        if (!updateDb.open()) {
+            qDebug() << "failed to open update db" << updateDb.lastError();
+        }
+
+        if (initTables) {
+            QSqlQuery query(updateDb);
+            query.exec(QLatin1String("CREATE TABLE assets (store text, warehouse text, asset text, version text, checked bool default false)"));
+        }
+    }
+
+    return updateDb;
 }
 
 } // namespace Bodega

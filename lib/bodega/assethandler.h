@@ -23,6 +23,8 @@
 
 #include <bodega/assetoperations.h>
 
+#include <QSqlDatabase>
+
 namespace Bodega
 {
     class InstallJob;
@@ -56,6 +58,8 @@ namespace Bodega
             virtual Bodega::UninstallJob *uninstall(Session *session);
 
             virtual void launch();
+
+            static QSqlDatabase updateDatabase();
 
         Q_SIGNALS:
             void ready();
