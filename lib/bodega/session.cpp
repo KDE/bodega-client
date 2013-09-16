@@ -783,7 +783,7 @@ Bodega::ParticipantRatingsJob * Session::participantRatings(const QString &asset
     return job;
 }
 
-Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QVariant &ratings)
+Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QVariantMap &ratings)
 {
     QUrl url = d->baseUrl;
     const QString path = QString::fromLatin1("/asset/ratings/create/%1").arg(assetId);

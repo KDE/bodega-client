@@ -28,7 +28,6 @@
 namespace Bodega {
 
 class InstallJobsModel;
-
 class Session::Private {
 public:
     Private(Session *parent);
@@ -57,12 +56,11 @@ public:
                 q, SLOT(jobFinished(Bodega::NetworkJob*)));
     }
 
-    QByteArray qvariantToJson(const QVariant &data)
+    QByteArray qvariantToJson(const QVariantMap &data)
     {
         QJson::Serializer serializer;
         bool ok;
         QByteArray json = serializer.serialize(data, &ok);
-
         if (!ok) {
             return QByteArray();
         }
