@@ -92,7 +92,7 @@ void Session::Private::jobFinished(NetworkJob *job)
 
 QNetworkReply *Session::Private::get(const QUrl &url)
 {
-    qDebug() << url;
+    //qDebug() << url;
     QNetworkRequest request;
     request.setRawHeader("User-Agent", "Bodega 0.1");
     request.setUrl(url);
@@ -101,7 +101,7 @@ QNetworkReply *Session::Private::get(const QUrl &url)
 
 QNetworkReply *Session::Private::post(const QUrl &url, const QByteArray &data)
 {
-    qDebug() << url;
+    //qDebug() << url;
     QNetworkRequest request;
     request.setRawHeader("User-Agent", "Bodega 0.1");
     request.setRawHeader("content-type", "application/json");
