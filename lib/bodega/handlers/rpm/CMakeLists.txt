@@ -10,7 +10,7 @@ set (rpmhandlerplugin_SRCS
 
 include_directories(${CMAKE_SOURCE_DIR}/libs/bodega/ ${CMAKE_SOURCE_DIR}/libs/bodega/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/bodega ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES} ${PACKAGEKIT_QT2_INCLUDE_DIR})
 
-include("../../CMakeQtUsage")
+SET(QT_DONT_USE_QTCORE FALSE)
 
 qt4_automoc(${rpmhandlerplugin_SRCS})
 
