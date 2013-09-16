@@ -25,6 +25,7 @@
 #include <QLibraryInfo>
 #include <QPluginLoader>
 #include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
 
 #include "installjob.h"
@@ -42,21 +43,26 @@ public:
     {
     }
 
-    void initUpdatedb() {
+    void initUpdateDb() {
         if (updateDb.isOpen()) {
             return;
         }
 
         //FIXME QT5: use QStandardDirs for this
-        QString updateDbPath = QDir::homePath() + QLatin1String("/.local/share/data/bodega/");
+        QString updateDbPath = QDir::homePath() + QLatin1String("/.local/share/bodega/");
         if (!QFile::exists(updateDbPath)) {
             QDir dir;
             dir.mkpath(updateDbPath);
         }
         updateDbPath.append(QLatin1String("assets.db"));
         const bool initTables = !QFile::exists(updateDbPath);
-        updateDb = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"), updateDbPath);
-        updateDb.setHostName(QLatin1String("localhost"));
+        updateDb = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"));
+        updateDb.setDatabaseName(updateDbPath);
+
+        if (!updateDb.open()) {
+            qDebug() << "failed to open update db" << updateDb.lastError();
+            return;
+        }
 
         if (initTables) {
             QSqlQuery query(updateDb);
@@ -191,15 +197,17 @@ void AssetHandler::registerForUpdates(Bodega::NetworkJob *job)
         return;
     }
 
-    d->initUpdatedb();
+    d->initUpdateDb();
 
     QSqlQuery query(d->updateDb);
-    query.prepare(QLatin1String("INSERT INTO assets (host, store, asset, version) VALUES (:id, :host, :store, :version)"));
-    query.bindValue(QLatin1String(":host"), job->session()->baseUrl());
+    query.prepare(QLatin1String("INSERT INTO assets (warehouse, store, asset, version) VALUES (:warehouse, :store, :asset, :version)"));
+    query.bindValue(QLatin1String(":warehouse"), job->session()->baseUrl());
     query.bindValue(QLatin1String(":store"), job->session()->storeId());
     query.bindValue(QLatin1String(":asset"), id);
     query.bindValue(QLatin1String(":version"), d->ops->assetInfo().version);
-    query.exec();
+    if (!query.exec()) {
+        qDebug() << "Insertion of update failed:" << query.lastError();
+    }
 }
 
 void AssetHandler::unregisterForUpdates(Bodega::NetworkJob *job)
@@ -217,14 +225,16 @@ void AssetHandler::unregisterForUpdates(Bodega::NetworkJob *job)
         return;
     }
 
-    d->initUpdatedb();
+    d->initUpdateDb();
 
     QSqlQuery query(d->updateDb);
-    query.prepare(QLatin1String("DELETE FROM assets WHERE host = :host AND store = :store AND asset = :asset"));
-    query.bindValue(QLatin1String(":host"), job->session()->baseUrl());
+    query.prepare(QLatin1String("DELETE FROM assets WHERE warehouse = :warehouse AND store = :store AND asset = :asset"));
+    query.bindValue(QLatin1String(":warehouse"), job->session()->baseUrl());
     query.bindValue(QLatin1String(":store"), job->session()->storeId());
     query.bindValue(QLatin1String(":asset"), id);
-    query.exec();
+    if (!query.exec()) {
+        qDebug() << "Insertion of update failed:" << query.lastError();
+    }
 }
 
 void AssetHandler::setReady(bool isReady)
