@@ -789,7 +789,7 @@ Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QV
     const QString path = QString::fromLatin1("/asset/ratings/create/%1").arg(assetId);
     url.setEncodedPath(d->jsonPath(path));
 
-    NetworkJob *job = new NetworkJob(d->post(url, d->qvariantToJson(ratings)), this);
+    NetworkJob *job = new NetworkJob(d->post(url, d->qvariantToJson(ratings, QLatin1String("ratings"))), this);
     d->jobConnect(job);
     return job;
 }

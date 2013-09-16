@@ -56,11 +56,17 @@ public:
                 q, SLOT(jobFinished(Bodega::NetworkJob*)));
     }
 
-    QByteArray qvariantToJson(const QVariantMap &data)
+    QByteArray qvariantToJson(const QVariantMap &data, const QString &rootElement = QString())
     {
         QJson::Serializer serializer;
         bool ok;
-        QByteArray json = serializer.serialize(data, &ok);
+        QVariantMap tmp;
+        if (!rootElement.isEmpty()) {
+            tmp.insert(rootElement, data);
+        } else {
+            tmp = data;
+        }
+        QByteArray json = serializer.serialize(tmp, &ok);
         if (!ok) {
             return QByteArray();
         }
