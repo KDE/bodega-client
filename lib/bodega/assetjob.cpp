@@ -18,7 +18,6 @@
  */
 
 #include "assetjob.h"
-
 #include "session.h"
 
 #include <QDebug>
@@ -78,6 +77,7 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
     info.description = asset[QLatin1String("description")].toString();
     info.points = asset[QLatin1String("points")].toInt();
     info.canDownload = asset[QLatin1String("canDownload")].toBool();
+    info.forum = asset[QLatin1String("forum")].toString();
 }
 
 void AssetJob::Private::parseChangeLog(const QVariantMap &result)
