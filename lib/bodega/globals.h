@@ -73,6 +73,7 @@ namespace Bodega {
         QMap<ImageUrl, QUrl> images;
         int  points;
         bool canDownload;
+        QString forum;
 
         AssetInfo()
             : points(0),
@@ -87,6 +88,7 @@ namespace Bodega {
             filename.clear();
             points = 0;
             canDownload = false;
+            forum.clear();
         }
     };
 
@@ -127,6 +129,27 @@ namespace Bodega {
         QString firstName;
         QString lastName;
         QString email;
+    };
+
+    struct ForumCategory
+    {
+        struct ForumTopic
+        {
+            struct ForumPost
+            {
+                QString post;
+                QString topicId;
+            };
+
+            QString topicName;
+            QString topicId;
+            QString topicSlug;
+            ForumPost post;
+        };
+
+        QString categoryName;
+        QString categoryId;
+        QList<ForumTopic> topics;
     };
 
     typedef QMultiHash<QString, QString> Tags;
