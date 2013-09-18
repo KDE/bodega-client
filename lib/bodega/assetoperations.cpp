@@ -26,6 +26,7 @@
 #include "installjob.h"
 #include "installjobsmodel.h"
 #include "uninstalljob.h"
+#include "forumjob.h"
 
 namespace Bodega
 {
@@ -36,7 +37,8 @@ public:
         : q(operations),
           handler(0),
           wasInstalled(false),
-          progress(0)
+          progress(0),
+          session(0)
     {}
 
     ~Private()
@@ -47,6 +49,9 @@ public:
     void checkInstalled();
     void progressHasChanged(qreal progress);
 
+    //FIXME move it somewhere else
+    QNetworkReply* get(const QUrl &url);
+
     AssetOperations *q;
     AssetHandler *handler;
     AssetInfo assetInfo;
@@ -55,6 +60,7 @@ public:
     QString mimetype;
     bool wasInstalled;
     qreal progress;
+    Session *session; //FIXME remove it when we will have a model
 };
 
 void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
@@ -69,6 +75,10 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
 
         delete handler;
         handler = 0;
+        //FIXME remove those when we will have a model
+        QUrl forumLink = assetInfo.forum + QString::fromLatin1(".json");
+
+        ForumCategoryJob *forumJob = new ForumCategoryJob(get(forumLink), session);
 
         //FIXME: may ever have more than one mimetype?
         QHash<QString, QString> tags = assetJob->tags();
@@ -111,10 +121,20 @@ void AssetOperations::Private::progressHasChanged(qreal prog)
     emit q->progressChanged(progress);
 }
 
+QNetworkReply *AssetOperations::Private::get(const QUrl &url)
+{
+    QNetworkRequest request;
+    request.setRawHeader("User-Agent", "Bodega 0.1");
+    request.setUrl(url);
+    QNetworkAccessManager *netManager = new QNetworkAccessManager(session);
+    return netManager->get(request);
+}
+
 AssetOperations::AssetOperations(const QString &assetId, Session *session)
     : QObject(session),
       d(new AssetOperations::Private(this))
 {
+    d->session = session;
     AssetJob *aj = session->asset(assetId, AssetJob::ShowChangeLog);
     QObject::connect(aj, SIGNAL(jobFinished(Bodega::NetworkJob*)),
                      this, SLOT(assetDownloadComplete(Bodega::NetworkJob*)));
