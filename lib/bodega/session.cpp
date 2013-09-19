@@ -601,14 +601,15 @@ Bodega::UpdateCheckJob *Session::updateCheck(const QList<QPair<QString, QString>
     const QString path = QString::fromLatin1("/asset/list/updates");
     url.setEncodedPath(d->jsonPath(path));
 
-    QByteArray json = "assets: [";
-    const QString arrayTemplate(QLatin1String("['%1', '%2']"));
+    QByteArray json = "{ \"assets\": [";
+    const QString arrayTemplate(QLatin1String("[%1, \"%2\"]"));
+    QStringList arrays;
     typedef QPair<QString, QString> stringPair;
     foreach (const stringPair &pair, assets) {
         const QString tmp = arrayTemplate.arg(pair.first, pair.second);
-        json.append(tmp.toLatin1());
+        arrays.append(tmp);
     }
-    json.append(']');
+    json.append(arrays.join(QLatin1String(",")).toLatin1()).append("] }");
 
     QNetworkRequest request;
     request.setRawHeader("User-Agent", "Bodega 0.1");
