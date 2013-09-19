@@ -36,6 +36,7 @@
 #include "participantinfojob.h"
 #include "registerjob.h"
 #include "signonjob.h"
+#include "updatecheckjob.h"
 
 #include <QNetworkAccessManager>
 #include <QDebug>
@@ -590,6 +591,31 @@ Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, cons
     //qDebug()<<"url is " <<url;
 
     NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::UpdateCheckJob *Session::updateCheck(const QList<QPair<QString, QString> > &assets)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/list/updates");
+    url.setEncodedPath(d->jsonPath(path));
+
+    QByteArray json = "assets: [";
+    const QString arrayTemplate(QLatin1String("['%1', '%2']"));
+    typedef QPair<QString, QString> stringPair;
+    foreach (const stringPair &pair, assets) {
+        const QString tmp = arrayTemplate.arg(pair.first, pair.second);
+        json.append(tmp.toLatin1());
+    }
+    json.append(']');
+
+    QNetworkRequest request;
+    request.setRawHeader("User-Agent", "Bodega 0.1");
+    request.setRawHeader("content-type", "application/json");
+    request.setUrl(url);
+
+    UpdateCheckJob *job = new UpdateCheckJob(d->netManager->post(request, json), this);
     d->jobConnect(job);
     return job;
 }

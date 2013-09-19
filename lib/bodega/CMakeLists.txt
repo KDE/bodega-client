@@ -27,6 +27,7 @@ set (bodega_HEADERS
      session_p.h
      session.h
      signonjob.h
+     updatecheckjob.h
      uninstalljob.h
     )
 
@@ -56,6 +57,7 @@ set (bodega_SRCS
      registerjob.cpp
      session.cpp
      signonjob.cpp
+     updatecheckjob.cpp
      uninstalljob.cpp
      )
 

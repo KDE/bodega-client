@@ -49,6 +49,7 @@ namespace Bodega {
     class ResetPasswordJob;
     class SignOnJob;
     class UninstallJob;
+    class UpdateCheckJob;
 
     class BODEGA_EXPORT Session : public QObject
     {
@@ -141,7 +142,7 @@ namespace Bodega {
                                                       int pageSize=-1);
 
         /*
-         * These two are special because they don't require a session, as
+         * These methods are special because they don't require a session, as
          * such they're fire and forget jobs that don't require
          * authentication and don't set any state
          */
@@ -154,6 +155,13 @@ namespace Bodega {
         Bodega::NetworkJob *resetPassword(const QString &email);
         Bodega::NetworkJob *changePassword(const QString &newPassword);
         Bodega::NetworkJob *changeAccountDetails(const QString &firstName, const QString &lastName, const QString &email);
+
+        /**
+         * Creates an update check. Does not require authentication.
+         *
+         * @arg assets a list of pairs of asset names and version timestamps to use in the check
+         */
+        Bodega::UpdateCheckJob *updateCheck(const QList<QPair<QString, QString> > &assets);
 
     Q_SIGNALS:
         void disconnected();
