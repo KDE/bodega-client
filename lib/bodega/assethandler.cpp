@@ -181,11 +181,11 @@ void AssetHandler::registerForUpdates(Bodega::NetworkJob *job)
     d->initUpdateDb();
 
     QSqlQuery query(d->updateDb);
-    query.prepare(QLatin1String("INSERT INTO assets (warehouse, store, asset, version) VALUES (:warehouse, :store, :asset, :version)"));
+    query.prepare(QLatin1String("INSERT INTO assets (warehouse, store, asset, created) VALUES (:warehouse, :store, :asset, :created)"));
     query.bindValue(QLatin1String(":warehouse"), job->session()->baseUrl());
     query.bindValue(QLatin1String(":store"), job->session()->storeId());
     query.bindValue(QLatin1String(":asset"), id);
-    query.bindValue(QLatin1String(":version"), d->ops->assetInfo().version);
+    query.bindValue(QLatin1String(":created"), d->ops->assetInfo().created.toString(Qt::ISODate));
     if (!query.exec()) {
         qDebug() << "Insertion of update failed:" << query.lastError();
     }
@@ -259,7 +259,10 @@ QSqlDatabase AssetHandler::updateDatabase()
 
         if (initTables) {
             QSqlQuery query(updateDb);
-            query.exec(QLatin1String("CREATE TABLE assets (store text, warehouse text, asset text, version text, checked bool default false)"));
+            query.exec(QLatin1String("CREATE TABLE assets (store text, warehouse text, asset text, created text, updated bool default false, checked bool default false)"));
+            query.exec(QLatin1String("CREATE TABLE config (key text, val int)"));
+            query.exec(QLatin1String("INSERT INTO config (key, val) VALUES('lastcheck', strftime('%s', 'now'))"));
+            query.exec(QLatin1String("INSERT INTO config (key, val) VALUES('version', 1)"));
         }
     }
 
