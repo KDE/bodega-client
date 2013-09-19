@@ -74,6 +74,7 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
     info.name = asset[QLatin1String("name")].toString();
     info.filename = asset[QLatin1String("filename")].toString();
     info.version = asset[QLatin1String("version")].toString();
+    info.created = asset[QLatin1String("created")].toDateTime();
     info.images = q->session()->urlsForImage(asset[QLatin1String("image")].toString());
     info.description = asset[QLatin1String("description")].toString();
     info.points = asset[QLatin1String("points")].toInt();
