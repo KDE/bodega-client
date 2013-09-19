@@ -59,6 +59,7 @@ namespace Bodega
 
             virtual void launch();
 
+            static QString updateDatabasePath();
             static QSqlDatabase updateDatabase();
 
         Q_SIGNALS:

@@ -231,6 +231,19 @@ bool AssetHandler::isReady() const
     return d->ready;
 }
 
+QString AssetHandler::updateDatabasePath()
+{
+    //FIXME QT5: use QStandardDirs for this
+    QString updateDbPath = QDir::homePath() + QLatin1String("/.local/share/bodega/");
+    if (!QFile::exists(updateDbPath)) {
+        QDir dir;
+        dir.mkpath(updateDbPath);
+    }
+
+    updateDbPath.append(QLatin1String("assets.db"));
+    return updateDbPath;
+}
+
 QSqlDatabase AssetHandler::updateDatabase()
 {
     const QString dbConnectionName = QLatin1String("BODEGA_UPDATES");
@@ -239,14 +252,7 @@ QSqlDatabase AssetHandler::updateDatabase()
     QSqlDatabase updateDb = QSqlDatabase::database(dbConnectionName);
 
     if (!updateDb.isValid()) {
-        //FIXME QT5: use QStandardDirs for this
-        QString updateDbPath = QDir::homePath() + QLatin1String("/.local/share/bodega/");
-        if (!QFile::exists(updateDbPath)) {
-            QDir dir;
-            dir.mkpath(updateDbPath);
-        }
-
-        updateDbPath.append(QLatin1String("assets.db"));
+        const QString updateDbPath = updateDatabasePath();
         initTables = !QFile::exists(updateDbPath);
         updateDb = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"));
         updateDb.setDatabaseName(updateDbPath);
