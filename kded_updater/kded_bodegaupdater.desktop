@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KDEDModule
+X-KDE-Library=bodegaupdater
+X-KDE-DBus-ModuleName=bodegaupdater
+X-KDE-Kded-autoload=true
+X-KDE-Kded-load-on-demand=false
+Name=Bodega Content System Updater
+Comment=Checks for update to content installed using the Bodega content system
