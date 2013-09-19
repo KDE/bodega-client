@@ -264,7 +264,7 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     info.email = scriptValue.property("email").toString();
 }
 
-    BodegaStore::BodegaStore()
+BodegaStore::BodegaStore()
     : KDeclarativeMainWindow(),
       m_historyModel(0),
       m_listCollectionsJobModel(0),
