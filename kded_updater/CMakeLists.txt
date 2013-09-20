@@ -9,6 +9,7 @@ kde4_add_plugin(kded_bodegaupdater ${kded_bodegaupdater_SRCS} )
 target_link_libraries(
    kded_bodegaupdater
    ${KDE4_KDECORE_LIBS}
+   ${KDE4_KDEUI_LIBS}
    ${KDE4_SOLID_LIBS}
    ${QT_QTSQL_LIBRARY}
    bodega

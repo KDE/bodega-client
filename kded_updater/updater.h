@@ -31,6 +31,8 @@
 
 class QTimer;
 
+class KStatusNotifierItem;
+
 namespace Bodega
 {
     class Session;
@@ -53,11 +55,13 @@ private Q_SLOTS:
 
 private:
     void sendUpdateCheck(const QString &store, const QString &warehouse, const QList<QPair<QString, QString> > &assets);
+    void updateNotifier();
 
     QString m_dbPath;
     QSqlDatabase m_db;
     QTimer *m_checkTimer;
     QHash<QString, Bodega::Session *> m_sessions;
+    KStatusNotifierItem *m_notifier;
 };
 
 #endif

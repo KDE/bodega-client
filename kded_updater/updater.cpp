@@ -29,6 +29,8 @@
 #include <KConfigGroup>
 #include <KDebug>
 #include <KDirWatch>
+#include <KLocale>
+#include <KStatusNotifierItem>
 #include <KPluginFactory>
 
 #include <Solid/Networking>
@@ -46,7 +48,8 @@ const int checkInterval = 6 * 60 * 60; // 6 hours
 Updater::Updater(QObject *parent, const QVariantList &)
     : KDEDModule(parent),
       m_dbPath(Bodega::AssetHandler::updateDatabasePath()),
-      m_checkTimer(new QTimer(this))
+      m_checkTimer(new QTimer(this)),
+      m_notifier(0)
 {
     m_checkTimer->setInterval(checkInterval * 1000);
     connect(m_checkTimer, SIGNAL(timeout()), this, SLOT(checkForUpdates()));
@@ -60,6 +63,32 @@ Updater::Updater(QObject *parent, const QVariantList &)
 
     if (QFile::exists(m_dbPath)) {
         QMetaObject::invokeMethod(this, "initDb", Qt::QueuedConnection);
+    }
+}
+
+void Updater::updateNotifier()
+{
+    int updates = 0;
+    if (m_db.isValid()) {
+        QSqlQuery query;
+        if (query.exec("SELECT count(updated) FROM assets WHERE updated")) {
+            query.first();
+            updates = query.value(0).toInt();
+        } else {
+            kDebug() << "QUERY FAILED" << query.lastError();
+        }
+    }
+
+    if (updates > 0) {
+        m_notifier->setStatus(KStatusNotifierItem::Active);
+        m_notifier->setToolTip("system-software-update", i18n("Updates available!"),
+                               i18np("There is one update available for installed add-on content",
+                                     "There are %1 updates available for installed add-on content",
+                                     updates));
+    } else {
+        m_notifier->setStatus(KStatusNotifierItem::Passive);
+        m_notifier->setToolTip("system-software-update", i18n("All content updated"),
+                               i18n("All of your installed add-on content is up to date"));
     }
 }
 
@@ -178,7 +207,7 @@ void Updater::sendUpdateCheck(const QString &store, const QString &warehouse, co
 void Updater::updateCheckFinished(Bodega::NetworkJob *job)
 {
     if (!m_db.isValid()) {
-        kDebug() << "Got an update job, but the database is invalid ..";
+        kDebug() << "Got an update job, but the database is invalid";
         return;
     }
 
@@ -206,14 +235,28 @@ void Updater::updateCheckFinished(Bodega::NetworkJob *job)
     if (!query.exec()) {
         kDebug() << "Failed to mark updated assets in the database:" << query.lastError();
     }
+    updateNotifier();
 }
 
 void Updater::initDb()
 {
     m_db = Bodega::AssetHandler::updateDatabase();
+
     if (m_db.isValid()) {
+        if (!m_notifier) {
+            m_notifier = new KStatusNotifierItem(this);
+            m_notifier->setStatus(KStatusNotifierItem::Passive);
+            m_notifier->setCategory(KStatusNotifierItem::SystemServices);
+            m_notifier->setTitle(i18n("Add-ons Updates"));
+            //TODO: get a bodega / add-ons icon?
+            m_notifier->setIconByName("system-software-update");
+        }
+
+        updateNotifier();
         networkStatusChanged(Solid::Networking::status());
     } else {
+        delete m_notifier;
+        m_notifier = 0;
         m_checkTimer->stop();
     }
 }
