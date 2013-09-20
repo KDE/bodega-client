@@ -54,6 +54,16 @@ ParticipantRatingsJobModel::Private::Private(ParticipantRatingsJobModel *parent)
 
 void ParticipantRatingsJobModel::Private::fetchParticipantRatings()
 {
+    if (!session->isAuthenticated()) {
+        connect(session, SIGNAL(authenticated(bool)),
+            q, SLOT(fetchParticipantRatings()),
+            Qt::UniqueConnection);
+        return;
+    }
+
+    disconnect(session, SIGNAL(authenticated(bool)),
+           q, SLOT(fetchParticipantRatings()));
+
     ParticipantRatingsJob *job = session->participantRatings();
 
     q->beginResetModel();
@@ -216,17 +226,9 @@ void ParticipantRatingsJobModel::setSession(Session *session)
         return;
     }
 
-    if (d->session) {
-        //not connected directly, so disconnect everything
-        d->session->disconnect(this);
-    }
     d->session = session;
 
-    if (!d->session) {
-        return;
-    }
-    connect(d->session, SIGNAL(authenticated(bool)),
-            this, SLOT(fetchParticipantRatings()));
+    d->fetchParticipantRatings();
 }
 
 Session *ParticipantRatingsJobModel::session() const
