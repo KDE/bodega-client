@@ -24,7 +24,6 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 import org.kde.qtextracomponents 0.1
 import "../components"
-import "Ratings.js" as Ratings
 
 BrowserColumn {
     id: root
@@ -249,6 +248,7 @@ BrowserColumn {
                     Baloon {
                         id: ratingsBaloon
                         visualParent: ratingsButton
+                        property variant ratingAttributes: {}
                         Column {
                             spacing: 5
                             Repeater {
@@ -263,11 +263,13 @@ BrowserColumn {
                                     PlasmaComponents.Slider {
                                         valueIndicatorVisible: true
                                         stepSize: 1
-                                        minimumValue: 0
+                                        minimumValue: 1
                                         maximumValue: 5
                                         value: model.RatingValue
                                         onValueChanged: {
-                                            Ratings.addAttribute(model.AttributeId, value)
+                                            var tmp = ratingsBaloon.ratingAttributes;
+                                            tmp[model.AttributeId] = value;
+                                            ratingsBaloon.ratingAttributes = tmp;
                                         }
                                     }
                                 }
@@ -277,7 +279,7 @@ BrowserColumn {
                                     text: i18n("Ok")
                                     onClicked: {
                                         ratingsBaloon.close()
-                                        var job = bodegaClient.session.assetCreateRatings(assetId, Ratings.ratingAttributes)
+                                        var job = bodegaClient.session.assetCreateRatings(assetId, ratingsBaloon.ratingAttributes)
                                         job.jobFinished.connect(root.reloadPage)
                                         job.jobFinished.connect(bodegaClient.participantRatingsJobModel.reload)
                                     }
