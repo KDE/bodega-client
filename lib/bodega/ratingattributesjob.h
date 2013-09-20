@@ -17,51 +17,33 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef BODEGA_ASSETJOB_H
-#define BODEGA_ASSETJOB_H
+#ifndef BODEGA_RATINGATTRIBUTESJOB_H
+#define BODEGA_RATINGATTRIBUTESJOB_H
 
-#include <bodega/globals.h>
 #include <bodega/networkjob.h>
-
-#include <QtCore/QStringList>
+#include <bodega/globals.h>
 
 namespace Bodega {
 
-    class BODEGA_EXPORT AssetJob : public NetworkJob
+    class BODEGA_EXPORT RatingAttributesJob : public NetworkJob
     {
         Q_OBJECT
-        Q_PROPERTY(Bodega::AssetInfo info READ info)
-        Q_PROPERTY(Bodega::Tags tags READ tags)
-
+        Q_PROPERTY(QList<Bodega::RatingAttributes> ratingAttributes READ ratingAttributes)
     public:
-        enum AssetFlag {
-            None          = 0,
-            ShowChangeLog = 1 << 0,
-            ShowPreviews  = 1 << 1,
-            ShowRatings   = 1 << 2
-        };
-        Q_DECLARE_FLAGS(AssetFlags, AssetFlag);
+        RatingAttributesJob(QNetworkReply *reply,
+                       Session *parent);
+        ~RatingAttributesJob();
 
-        AssetJob(const QString &assetId, QNetworkReply *reply,
-                 Session *parent);
-        ~AssetJob();
-
-        QString assetId() const;
-        AssetInfo info() const;
-        ChangeLog changeLog() const;
-        QStringList previews() const;
-        Tags tags() const;
-        QString contentType() const;
+        QList<Bodega::RatingAttributes> ratingAttributes() const;
 
     protected:
-        virtual void netFinished(const QVariantMap &jsonMap);
+        virtual void netFinished(const QVariantMap &result);
 
     private:
         class Private;
         Private * const d;
     };
-}
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(Bodega::AssetJob::AssetFlags);
+}
 
 #endif

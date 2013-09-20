@@ -22,6 +22,7 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtras
+import org.kde.qtextracomponents 0.1
 import "../components"
 
 BrowserColumn {
@@ -46,7 +47,7 @@ BrowserColumn {
         root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
     }
 
-    onAssetIdChanged: {
+    function reloadPage() {
         if (assetId > 0) {
             assetOperations = bodegaClient.session.assetOperations(assetId);
 
@@ -60,6 +61,8 @@ BrowserColumn {
             }
         }
     }
+
+    onAssetIdChanged: reloadPage()
 
     PlasmaExtras.ScrollArea {
         anchors.fill: parent
@@ -195,6 +198,101 @@ BrowserColumn {
                                                                    : i18n("Free")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
+                    Repeater {
+                        id: ratingsRepeater
+                        clip: true
+                        model: assetOperations.ratingsModel
+                        delegate: Row {
+                            visible: model.RatingsCount > 0
+                            property int starCount: model.AverageRating
+                            PlasmaComponents.Label {
+                                id: attributeNameLabel
+                                text: i18n("%1: ", model.Name)
+                                wrapMode: Text.Wrap
+                                width: theme.defaultFont.mSize.width*8
+                                horizontalAlignment: Text.AlignRight
+                            }
+                            Repeater {
+                                model: starCount
+                                delegate: Row {
+                                    PlasmaCore.IconItem {
+                                        source: "rating"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    PlasmaComponents.Label {
+                        id: ratingsLabel
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        visible: ratingsRepeater.model.ratingsCount > 0
+                        text: i18n("See all %1 ratings", ratingsRepeater.model.ratingsCount)
+                        color: theme.linkColor
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                itemBrowser.pop(root)
+                                bodegaClient.assetRatingsJobModel.assetId = assetId;
+                                itemBrowser.push(Qt.createComponent("RatingsColumn.qml"))
+                            }
+                        }
+                    }
+                    PlasmaComponents.Button {
+                        id: ratingsButton
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: i18n("Rate and review")
+                        onClicked: ratingsBaloon.open()
+                    }
+
+                    Baloon {
+                        id: ratingsBaloon
+                        visualParent: ratingsButton
+                        property variant ratingAttributes: {}
+                        Column {
+                            spacing: 5
+                            Repeater {
+                                clip: true
+                                model: assetOperations.ratingsModel
+                                delegate: Column {
+                                    spacing: 5
+                                    PlasmaComponents.Label {
+                                        verticalAlignment: Text.AlignTop
+                                        text: i18n("%1: ", model.Name)
+                                    }
+                                    PlasmaComponents.Slider {
+                                        valueIndicatorVisible: true
+                                        stepSize: 1
+                                        minimumValue: 1
+                                        maximumValue: 5
+                                        value: model.RatingValue
+                                        onValueChanged: {
+                                            var tmp = ratingsBaloon.ratingAttributes;
+                                            tmp[model.AttributeId] = value;
+                                            ratingsBaloon.ratingAttributes = tmp;
+                                        }
+                                    }
+                                }
+                            }
+                            Row {
+                                PlasmaComponents.Button {
+                                    text: i18n("Ok")
+                                    onClicked: {
+                                        ratingsBaloon.close()
+                                        var job = bodegaClient.session.assetCreateRatings(assetId, ratingsBaloon.ratingAttributes)
+                                        job.jobFinished.connect(root.reloadPage)
+                                        job.jobFinished.connect(bodegaClient.participantRatingsJobModel.reload)
+                                    }
+                                }
+                                PlasmaComponents.Button {
+                                    text: i18n("Cancel")
+                                    onClicked: ratingsBaloon.close()
+                                }
+                            }
+                        }
+                    }
+
+
                     Item {
                         anchors {
                             left: parent.left

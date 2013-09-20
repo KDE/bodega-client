@@ -49,6 +49,9 @@ namespace Bodega {
     class ResetPasswordJob;
     class SignOnJob;
     class UninstallJob;
+    class RatingAttributesJob;
+    class AssetRatingsJob;
+    class ParticipantRatingsJob;
 
     class BODEGA_EXPORT Session : public QObject
     {
@@ -140,6 +143,13 @@ namespace Bodega {
                                                       int offset=-1,
                                                       int pageSize=-1);
 
+        Bodega::RatingAttributesJob *listRatingAttributes(const QString &assetId);
+        Bodega::NetworkJob *deleteAssetRatings(const QString &assetId);
+        Bodega::AssetRatingsJob *assetRatings(const QString &assetId);
+        Bodega::ParticipantRatingsJob *participantRatings(int offset = -1, int pageSize = -1);
+        Bodega::ParticipantRatingsJob *participantRatings(const QString &assetId);
+        Bodega::NetworkJob *assetCreateRatings(const QString &assetId, const QVariantMap &ratings);
+        Bodega::NetworkJob *assetDeleteRatings(const QString &assetId);
         /*
          * These two are special because they don't require a session, as
          * such they're fire and forget jobs that don't require

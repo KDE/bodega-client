@@ -21,10 +21,14 @@ set (bodega_HEADERS
      networkjob.h
      participantinfojob.h
      registerjob.h
-     session_p.h
      session.h
      signonjob.h
      uninstalljob.h
+     ratingattributesjob.h
+     assetratingsjob.h
+     participantratingsjob.h
+     assetratingsjobmodel.h
+     participantratingsjobmodel.h
     )
 
 set (bodega_SRCS
@@ -50,10 +54,16 @@ set (bodega_SRCS
      listcollectionsjobmodel.cpp
      networkjob.cpp
      participantinfojob.cpp
+     ratingsmodel_p.cpp
      registerjob.cpp
      session.cpp
      signonjob.cpp
      uninstalljob.cpp
+     ratingattributesjob.cpp
+     assetratingsjob.cpp
+     participantratingsjob.cpp
+     assetratingsjobmodel.cpp
+     participantratingsjobmodel.cpp
      )
 
 include("CMakeQtUsage")

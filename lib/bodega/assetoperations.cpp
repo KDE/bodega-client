@@ -19,12 +19,12 @@
 
 
 #include "assetoperations.h"
-
 #include <QDebug>
 
 #include "assethandler.h"
 #include "installjob.h"
 #include "installjobsmodel.h"
+#include "ratingsmodel_p.h"
 #include "uninstalljob.h"
 
 namespace Bodega
@@ -36,11 +36,14 @@ public:
         : q(operations),
           handler(0),
           wasInstalled(false),
-          progress(0)
+          progress(0),
+          ratingsModel(new RatingsModel(q))
     {}
 
     ~Private()
-    {}
+    {
+        delete ratingsModel;
+    }
 
     void assetDownloadComplete(NetworkJob *job);
     bool ready();
@@ -55,6 +58,7 @@ public:
     QString mimetype;
     bool wasInstalled;
     qreal progress;
+    RatingsModel *ratingsModel;
 };
 
 void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
@@ -66,6 +70,8 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
         assetInfo = assetJob->info();
         assetTags = assetJob->tags();
         changeLog = assetJob->changeLog();
+
+        ratingsModel->setAssetJob(assetJob);
 
         delete handler;
         handler = 0;
@@ -115,7 +121,9 @@ AssetOperations::AssetOperations(const QString &assetId, Session *session)
     : QObject(session),
       d(new AssetOperations::Private(this))
 {
-    AssetJob *aj = session->asset(assetId, AssetJob::ShowChangeLog);
+    d->ratingsModel->setSession(session);
+
+    AssetJob *aj = session->asset(assetId, AssetJob::ShowRatings | AssetJob::ShowChangeLog);
     QObject::connect(aj, SIGNAL(jobFinished(Bodega::NetworkJob*)),
                      this, SLOT(assetDownloadComplete(Bodega::NetworkJob*)));
 }
@@ -206,6 +214,11 @@ void AssetOperations::launch()
     if (d->ready()) {
         d->handler->launch();
     }
+}
+
+QAbstractItemModel *AssetOperations::ratingsModel()
+{
+    return d->ratingsModel;
 }
 
 }

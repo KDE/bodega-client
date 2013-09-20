@@ -37,13 +37,15 @@ public:
     void parseChangeLog(const QVariantMap &result);
     void parsePreviews(const QVariantMap &result);
     void parseTags(const QVariantMap &result);
+    void parseRatings(const QVariantMap &result);
+
     AssetJob *q;
     QString id;
     AssetInfo info;
     ChangeLog changeLog;
     QStringList previews;
     Bodega::Tags tags;
-    AssetFlags flags;
+    QString contentType;
 };
 
 void AssetJob::Private::init(AssetJob *parent,
@@ -52,15 +54,6 @@ void AssetJob::Private::init(AssetJob *parent,
 {
     q = parent;
     id = i;
-    flags = AssetJob::None;
-    QString previewsStr = url.queryItemValue(
-        QLatin1String("previews"));
-    QString changeLogStr = url.queryItemValue(
-        QLatin1String("changelog"));
-    if (previewsStr.toInt())
-        flags |= AssetJob::ShowPreviews;
-    if (changeLogStr.toInt())
-        flags |= AssetJob::ShowChangeLog;
 }
 
 void AssetJob::Private::parseAsset(const QVariantMap &result)
@@ -104,13 +97,33 @@ void AssetJob::Private::parsePreviews(const QVariantMap &result)
     }
 }
 
+void AssetJob::Private::parseRatings(const QVariantMap &result)
+{
+    QVariantList ratingsList = result[QLatin1String("asset")].toMap()[QLatin1String("ratings")].toList();
+    QVariantList::const_iterator itr;
+    for (itr = ratingsList.constBegin(); itr != ratingsList.constEnd(); ++itr) {
+        AssetInfo::AssetInfoRatings assetInfoRating;
+        QVariantMap ratingInfo = itr->toMap();
+        assetInfoRating.averageRating = ratingInfo[QLatin1String("averagerating")].toString();
+        assetInfoRating.ratingsCount = ratingInfo[QLatin1String("ratingscount")].toString();
+        assetInfoRating.attributeId = ratingInfo[QLatin1String("attribute")].toString();
+
+        info.ratings.append(assetInfoRating);
+    }
+}
+
 void AssetJob::Private::parseTags(const QVariantMap &result)
 {
     QVariantList vTags = result[QLatin1String("asset")].toMap()[QLatin1String("tags")].toList();
 
     foreach(const QVariant &t, vTags) {
         QVariantMap vTag = t.toMap();
-        tags.insert(vTag.keys().first(), vTag.values().first().toString());
+        QString key = vTag.keys().first();
+        QString value = vTag.values().first().toString();
+        if (key == QLatin1String("assetType")) {
+            contentType = value;
+        }
+        tags.insert(key, value);
     }
 }
 
@@ -136,6 +149,7 @@ void AssetJob::netFinished(const QVariantMap &result)
         d->parseAsset(result);
         d->parseChangeLog(result);
         d->parsePreviews(result);
+        d->parseRatings(result);
     }
 }
 
@@ -164,9 +178,9 @@ Bodega::Tags AssetJob::tags() const
     return d->tags;
 }
 
-AssetJob::AssetFlags AssetJob::flags() const
+QString AssetJob::contentType() const
 {
-    return d->flags;
+    return d->contentType;;
 }
 
 }

@@ -60,6 +60,14 @@ namespace Bodega {
 
     struct AssetInfo
     {
+        struct AssetInfoRatings
+        {
+            QString averageRating;
+            QString ratingsCount;
+            QString attributeId;
+        };
+
+        QList<AssetInfoRatings> ratings;
         QString id;
         QString license;
         QString licenseText;
@@ -87,6 +95,7 @@ namespace Bodega {
             filename.clear();
             points = 0;
             canDownload = false;
+            ratings.clear();
         }
     };
 
@@ -129,6 +138,40 @@ namespace Bodega {
         QString email;
     };
 
+    struct RatingAttributes
+    {
+        QString id;
+        QString name;
+        QString lowDesc;
+        QString highDesc;
+        QString assetType;
+    };
+
+    struct Ratings
+    {
+        QString attributeId;
+        QString personId;
+        QString rating;
+        QString date;
+    };
+
+    struct ParticipantRatings
+    {
+        struct Ratings
+        {
+            QString attributeId;
+            QString attributeName;
+            QString rating;
+        };
+
+        QString assetId;
+        QString assetDescription;
+        QString assetName;
+        QString assetVersion;
+        QString rated;
+        QList<ParticipantRatings::Ratings> ratings;
+    };
+
     typedef QMultiHash<QString, QString> Tags;
 }
 
@@ -136,8 +179,14 @@ Q_DECLARE_METATYPE(Bodega::AssetInfo)
 Q_DECLARE_METATYPE(Bodega::CollectionInfo)
 Q_DECLARE_METATYPE(Bodega::ChannelInfo)
 Q_DECLARE_METATYPE(Bodega::ChangeLog)
+Q_DECLARE_METATYPE(Bodega::RatingAttributes)
+Q_DECLARE_METATYPE(Bodega::Ratings)
+Q_DECLARE_METATYPE(Bodega::ParticipantRatings)
 Q_DECLARE_METATYPE(QList<Bodega::CollectionInfo>)
 Q_DECLARE_METATYPE(QList<Bodega::AssetInfo>)
+Q_DECLARE_METATYPE(QList<Bodega::RatingAttributes>)
+Q_DECLARE_METATYPE(QList<Bodega::Ratings>)
+Q_DECLARE_METATYPE(QList<Bodega::ParticipantRatings>)
 Q_DECLARE_METATYPE(Bodega::Tags)
 Q_DECLARE_METATYPE(Bodega::ParticipantInfo)
 

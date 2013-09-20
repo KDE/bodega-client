@@ -23,10 +23,11 @@
 
 #include "session.h"
 
+#include "qjson/serializer.h"
+
 namespace Bodega {
 
 class InstallJobsModel;
-
 class Session::Private {
 public:
     Private(Session *parent);
@@ -55,10 +56,29 @@ public:
                 q, SLOT(jobFinished(Bodega::NetworkJob*)));
     }
 
+    QByteArray qvariantToJson(const QVariantMap &data, const QString &rootElement = QString())
+    {
+        QJson::Serializer serializer;
+        bool ok;
+        QVariantMap tmp;
+        if (!rootElement.isEmpty()) {
+            tmp.insert(rootElement, data);
+        } else {
+            tmp = data;
+        }
+        QByteArray json = serializer.serialize(tmp, &ok);
+        if (!ok) {
+            return QByteArray();
+        }
+
+        return json;
+    }
+
     void setPoints(int p);
     void signOnFinished(Bodega::SignOnJob *job);
     void jobFinished(Bodega::NetworkJob *job);
     QNetworkReply *get(const QUrl &url);
+    QNetworkReply *post(const QUrl &url, const QByteArray &data);
     void addPaging(QUrl &url, int offset, int pageSize);
     QAbstractItemModel *historyModel();
 

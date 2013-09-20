@@ -20,7 +20,6 @@
 #include "session.h"
 #include "session_p.h"
 
-
 #include "assetjob.h"
 #include "assetoperations.h"
 #include "collectionaddassetjob.h"
@@ -36,6 +35,9 @@
 #include "participantinfojob.h"
 #include "registerjob.h"
 #include "signonjob.h"
+#include "ratingattributesjob.h"
+#include "assetratingsjob.h"
+#include "participantratingsjob.h"
 
 #include <QNetworkAccessManager>
 #include <QDebug>
@@ -87,10 +89,21 @@ void Session::Private::jobFinished(NetworkJob *job)
 
 QNetworkReply *Session::Private::get(const QUrl &url)
 {
+    //qDebug() << url;
     QNetworkRequest request;
     request.setRawHeader("User-Agent", "Bodega 0.1");
     request.setUrl(url);
     return netManager->get(request);
+}
+
+QNetworkReply *Session::Private::post(const QUrl &url, const QByteArray &data)
+{
+    //qDebug() << url;
+    QNetworkRequest request;
+    request.setRawHeader("User-Agent", "Bodega 0.1");
+    request.setRawHeader("content-type", "application/json");
+    request.setUrl(url);
+    return netManager->post(request, data);
 }
 
 void Session::Private::addPaging(QUrl &url, int offset, int pageSize)
@@ -280,14 +293,20 @@ AssetJob * Session::asset(const QString &assetId,
 
     url.setEncodedPath(d->jsonPath(path));
 
-    if (flags & AssetJob::ShowPreviews)
+    if (flags & AssetJob::ShowPreviews) {
         url.addQueryItem(QLatin1String("previews"),
                          QLatin1String("1"));
+    }
 
-    if (flags & AssetJob::ShowChangeLog)
+    if (flags & AssetJob::ShowChangeLog) {
         url.addQueryItem(QLatin1String("changelog"),
                          QLatin1String("1"));
+    }
 
+    if (flags & AssetJob::ShowRatings) {
+        url.addQueryItem(QLatin1String("ratings"),
+                         QLatin1String("1"));
+    }
     //qDebug()<<"url is " <<url;
 
     AssetJob *job = new AssetJob(assetId, d->get(url), this);
@@ -700,6 +719,85 @@ Bodega::collectionListAssetsJob * Session::collectionListAssets(const QString &c
     //qDebug()<<"url is " <<url;
 
     collectionListAssetsJob *job = new collectionListAssetsJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::RatingAttributesJob * Session::listRatingAttributes(const QString &assetId)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/ratings/attributes/%1").arg(assetId);
+
+    url.setEncodedPath(d->jsonPath(path));
+
+    RatingAttributesJob *job = new RatingAttributesJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::NetworkJob * Session::deleteAssetRatings(const QString &assetId)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/ratings/delete/%1").arg(assetId);
+    url.setEncodedPath(d->jsonPath(path));
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::AssetRatingsJob * Session::assetRatings(const QString &assetId)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/ratings/list/%1").arg(assetId);
+    url.setEncodedPath(d->jsonPath(path));
+
+    AssetRatingsJob *job = new AssetRatingsJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::ParticipantRatingsJob * Session::participantRatings(int offset, int pageSize)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/participant/ratings/");
+    url.setEncodedPath(d->jsonPath(path));
+    d->addPaging(url, offset, pageSize);
+
+    ParticipantRatingsJob *job = new ParticipantRatingsJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::ParticipantRatingsJob * Session::participantRatings(const QString &assetId)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/participant/ratings/%1").arg(assetId);
+    url.setEncodedPath(d->jsonPath(path));
+
+    ParticipantRatingsJob *job = new ParticipantRatingsJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::NetworkJob *Session::assetCreateRatings(const QString &assetId, const QVariantMap &ratings)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/ratings/create/%1").arg(assetId);
+    url.setEncodedPath(d->jsonPath(path));
+
+    NetworkJob *job = new NetworkJob(d->post(url, d->qvariantToJson(ratings, QLatin1String("ratings"))), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::NetworkJob *Session::assetDeleteRatings(const QString &assetId)
+{
+   QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/ratings/delete/%1").arg(assetId);
+    url.setEncodedPath(d->jsonPath(path));
+
+    NetworkJob *job = new NetworkJob(d->get(url), this);
     d->jobConnect(job);
     return job;
 }
