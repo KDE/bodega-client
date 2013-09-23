@@ -50,11 +50,11 @@ private Q_SLOTS:
     void fileDirtied(const QString &file);
     void networkStatusChanged(Solid::Networking::Status status);
     void checkForUpdates();
-    void updateCheckFinished(Bodega::NetworkJob *job);
+    void updatesCheckFinished(Bodega::NetworkJob *job);
     void initDb();
 
 private:
-    void sendUpdateCheck(const QString &store, const QString &warehouse, const QList<QPair<QString, QString> > &assets);
+    void sendUpdatesCheck(const QString &store, const QString &warehouse, const QList<QPair<QString, QString> > &assets);
     void updateNotifier();
 
     QString m_dbPath;

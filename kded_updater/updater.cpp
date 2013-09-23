@@ -37,7 +37,7 @@
 
 #include "bodega/assethandler.h"
 #include "bodega/session.h"
-#include "bodega/updatecheckjob.h"
+#include "bodega/updatescheckjob.h"
 
 const char *defaultPackage = "org.kde.desktop";
 
@@ -163,7 +163,7 @@ void Updater::checkForUpdates()
         const QString created = query.value(createdCol).toString();
         if (currentStore != store || currentWarehouse != warehouse) {
             if (!currentStore.isEmpty()) {
-                sendUpdateCheck(currentStore, currentWarehouse, assets);
+                sendUpdatesCheck(currentStore, currentWarehouse, assets);
                 assets.clear();
             }
 
@@ -185,11 +185,11 @@ void Updater::checkForUpdates()
         if (!query.exec(QString("UPDATE assets SET updated = 0, checked = 1 WHERE rowid IN (%1)").arg(rowIds.join(", ")))) {
             kDebug() << "Failed to update assets with checked status:" << query.lastQuery();
         }
-        sendUpdateCheck(currentStore, currentWarehouse, assets);
+        sendUpdatesCheck(currentStore, currentWarehouse, assets);
     }
 }
 
-void Updater::sendUpdateCheck(const QString &store, const QString &warehouse, const QList<QPair<QString, QString> > &assets)
+void Updater::sendUpdatesCheck(const QString &store, const QString &warehouse, const QList<QPair<QString, QString> > &assets)
 {
     const QString sessionKey(store + '_' + warehouse);
     Bodega::Session *session = m_sessions.value(sessionKey);
@@ -200,18 +200,18 @@ void Updater::sendUpdateCheck(const QString &store, const QString &warehouse, co
         m_sessions.insert(sessionKey, session);
     }
 
-    Bodega::UpdateCheckJob *job = session->updateCheck(assets);
-    connect(job, SIGNAL(jobFinished(Bodega::NetworkJob*)), this, SLOT(updateCheckFinished(Bodega::NetworkJob*)));
+    Bodega::UpdatesCheckJob *job = session->updatesCheck(assets);
+    connect(job, SIGNAL(jobFinished(Bodega::NetworkJob*)), this, SLOT(updatesCheckFinished(Bodega::NetworkJob*)));
 }
 
-void Updater::updateCheckFinished(Bodega::NetworkJob *job)
+void Updater::updatesCheckFinished(Bodega::NetworkJob *job)
 {
     if (!m_db.isValid()) {
         kDebug() << "Got an update job, but the database is invalid";
         return;
     }
 
-    Bodega::UpdateCheckJob *updateJob = qobject_cast<Bodega::UpdateCheckJob *>(job);
+    Bodega::UpdatesCheckJob *updateJob = qobject_cast<Bodega::UpdatesCheckJob *>(job);
     if (!updateJob) {
         kDebug() << "We were sent a non-update job .. that's wrong.";
         return;

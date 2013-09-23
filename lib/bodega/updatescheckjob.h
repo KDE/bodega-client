@@ -17,38 +17,34 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "bodega/updatecheckjob.h"
+#ifndef BODEGA_UPDATESCHECKJOB_H
+#define BODEGA_UPDATESCHECKJOB_H
+
+#include <bodega/networkjob.h>
+
+#include <QStringList>
 
 namespace Bodega {
 
-class UpdateCheckJob::Private
-{
-public:
-    QStringList assets;
-};
+    class Session;
 
-UpdateCheckJob::UpdateCheckJob(QNetworkReply *reply, Session *parent)
-    : NetworkJob(reply, parent, true),
-      d(new Private)
-{
+    class BODEGA_EXPORT UpdatesCheckJob : public NetworkJob
+    {
+        Q_OBJECT
+
+    public:
+        UpdatesCheckJob(QNetworkReply *reply, Session *parent);
+        ~UpdatesCheckJob();
+
+        QStringList updatedAssets() const;
+
+    protected:
+        virtual void netFinished(const QVariantMap &jsonMap);
+
+    private:
+        class Private;
+        Private * const d;
+    };
 }
 
-UpdateCheckJob::~UpdateCheckJob()
-{
-    delete d;
-}
-
-QStringList UpdateCheckJob::updatedAssets() const
-{
-    return d->assets;
-}
-
-void UpdateCheckJob::netFinished(const QVariantMap &jsonMap)
-{
-    d->assets = jsonMap[QLatin1String("assets")].toStringList();
-}
-
-}
-
-#include "updatecheckjob.moc"
-
+#endif

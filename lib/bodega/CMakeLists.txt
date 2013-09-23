@@ -28,7 +28,8 @@ set (bodega_HEADERS
      session_p.h
      session.h
      signonjob.h
-     updatecheckjob.h
+     updatescheckjob.h
+     #updatedassetsmodel.h
      uninstalljob.h
     )
 
@@ -59,7 +60,8 @@ set (bodega_SRCS
      registerjob.cpp
      session.cpp
      signonjob.cpp
-     updatecheckjob.cpp
+     updatescheckjob.cpp
+     #updatedassetsmodel.cpp
      uninstalljob.cpp
      )
 

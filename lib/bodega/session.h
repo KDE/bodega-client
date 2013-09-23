@@ -50,7 +50,7 @@ namespace Bodega {
     class ResetPasswordJob;
     class SignOnJob;
     class UninstallJob;
-    class UpdateCheckJob;
+    class UpdatesCheckJob;
 
     class BODEGA_EXPORT Session : public QObject
     {
@@ -106,7 +106,12 @@ namespace Bodega {
 
         Bodega::AssetJob *asset(const QString &assetId,
                                 AssetJob::AssetFlags flags=AssetJob::None);
-        Bodega::AssetBriefsJob *assetBriefs(const QStringList &assetId);
+        /**
+         * Creates a job that retrives brief information on 1 or more assets
+         * 
+         * @args assetIds a list of asset ids to fetch information for
+         */
+        Bodega::AssetBriefsJob *assetBriefs(const QStringList &assetIds);
         Bodega::ChangeLanguageJob *changeLanguage(const QString &lang);
         Bodega::ChannelsJob *search(const QString &text,
                                     const QString &channelId,
@@ -163,7 +168,7 @@ namespace Bodega {
          *
          * @arg assets a list of pairs of asset names and version timestamps to use in the check
          */
-        Bodega::UpdateCheckJob *updateCheck(const QList<QPair<QString, QString> > &assets);
+        Bodega::UpdatesCheckJob *updatesCheck(const QList<QPair<QString, QString> > &assets);
 
     Q_SIGNALS:
         void disconnected();
