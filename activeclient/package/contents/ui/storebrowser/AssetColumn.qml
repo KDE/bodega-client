@@ -142,8 +142,14 @@ BrowserColumn {
                 Column {
                     id: mainColumn
                     width: mainFlickable.width
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        leftMargin: theme.defaultFont.mSize.width
+                        rightMargin: theme.defaultFont.mSize.width
+                    }
 
-                    spacing: 8
+                    spacing: theme.defaultFont.mSize.height
 
                     Item {
                         visible: bigIconImage.status == Image.Ready
@@ -182,10 +188,10 @@ BrowserColumn {
                             */
                         }
                     }
-                    PlasmaComponents.Label {
+                    PlasmaExtras.Heading {
                         id: titleLabel
+                        level: 1
                         text: assetOperations.assetInfo.name
-                        font.pointSize: 20
                         anchors {
                             left: parent.left
                             right: parent.right
@@ -199,6 +205,7 @@ BrowserColumn {
                                                                    : i18n("Free")
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
+
                     Repeater {
                         id: ratingsRepeater
                         model: assetOperations.ratingsModel
@@ -375,14 +382,9 @@ BrowserColumn {
                             root.installJob = null
                         }
                     }
+
                     //TODO: make a component out of it
                     ExpandingLabel {
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            leftMargin: theme.defaultFont.mSize.width
-                            rightMargin: theme.defaultFont.mSize.width
-                        }
                         id: descriptionLabel
                         visible: text != ''
                         text: assetOperations.assetInfo.description
