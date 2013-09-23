@@ -203,7 +203,7 @@ BrowserColumn {
                         model: assetOperations.ratingsModel
                         delegate: Row {
                             visible: model.RatingsCount > 0
-                            property int starCount: model.AverageRating
+
                             PlasmaComponents.Label {
                                 id: attributeNameLabel
                                 text: i18n("%1: ", model.Name)
@@ -212,10 +212,14 @@ BrowserColumn {
                                 horizontalAlignment: Text.AlignRight
                             }
                             Repeater {
-                                model: starCount
+                                model: 5
                                 delegate: Row {
+                                    //the icon will always be painted sharp, but in this way it searches for a size that goes well with the text
                                     PlasmaCore.IconItem {
                                         source: "rating"
+                                        enabled: modelData < AverageRating
+                                        height: theme.defaultFont.mSize.height * 1.6
+                                        width: height
                                     }
                                 }
                             }
@@ -233,7 +237,7 @@ BrowserColumn {
                             onClicked: {
                                 itemBrowser.pop(root)
                                 bodegaClient.assetRatingsJobModel.assetId = assetId;
-                                itemBrowser.push(Qt.createComponent("RatingsColumn.qml"))
+                                itemBrowser.push(Qt.resolvedUrl("RatingsColumn.qml"))
                             }
                         }
                     }
