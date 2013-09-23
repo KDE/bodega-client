@@ -54,7 +54,6 @@ public:
     QMap<int, Session*> sessionIndexes;
     QSqlDatabase db;
     void briefsJobFinished(Bodega::NetworkJob *);
-    void reloadFromNetwork(bool);
     void fetchBriefs(const QString &store, const QString &warehouse, const QStringList &assets);
     void sessionAuthenticated(bool authed);
 };
@@ -74,6 +73,15 @@ void UpdatedAssetsModel::Private::briefsJobFinished(Bodega::NetworkJob *job)
     sessionIndexes.insert(assets.size(), briefsJob->session());
     assets.append(briefsJob->assets());
     q->endInsertRows();
+
+    /*
+    int count = 0;
+    foreach (const AssetInfo &info, briefsJob->assets()) {
+        QModelIndex index = q->createIndex(count++, 0);
+        qDebug() << "Asset: " << info.id << info.name << info.partnerName << info.size
+                 << q->data(index, UpdatedAssetsModel::SessionRole).value<Bodega::Session*>();
+    }
+    */
 }
 
 void UpdatedAssetsModel::Private::fetchBriefs(const QString &store, const QString &warehouse, const QStringList &assets)
@@ -83,13 +91,15 @@ void UpdatedAssetsModel::Private::fetchBriefs(const QString &store, const QStrin
     if (!session) {
         pendingAssets[sessionId].append(assets);
         session = new Bodega::Session(q);
+        sessions.insert(sessionId, session);
+        connect(session, SIGNAL(authenticated(bool)), q, SLOT(sessionAuthenticated(bool)));
+
         session->setBaseUrl(warehouse);
         session->setStoreId(store);
         //FIXME!
         session->setUserName(QLatin1String("zack@kde.org"));
         session->setPassword(QLatin1String("zack"));
-        sessions.insert(sessionId, session);
-        connect(session, SIGNAL(authenticated(bool)), q, SLOT(sessionAuthenticated(bool)));
+        session->signOn();
     } else if (session->isAuthenticated()) {
         Bodega::AssetBriefsJob *job = session->assetBriefs(assets);
         connect(job, SIGNAL(jobFinished(Bodega::NetworkJob*)),
@@ -131,6 +141,7 @@ UpdatedAssetsModel::UpdatedAssetsModel(QObject *parent)
         roles.insert(e.value(i), e.key(i));
     }
     setRoleNames(roles);
+    QMetaObject::invokeMethod(this, "reload", Qt::QueuedConnection);
 }
 
 UpdatedAssetsModel::~UpdatedAssetsModel()
