@@ -166,7 +166,7 @@ void UpdatedAssetsModel::reload()
     const int storeCol = record.indexOf(QLatin1String("store"));
     const int warehouseCol = record.indexOf(QLatin1String("warehouse"));
     const int assetCol = record.indexOf(QLatin1String("asset"));
-    QStringList assets;
+    QStringList assetIds;
     while (query.next()) {
         const QString store = query.value(storeCol).toString();
         const QString warehouse = query.value(warehouseCol).toString();
@@ -174,19 +174,19 @@ void UpdatedAssetsModel::reload()
 
         if (currentStore != store || currentWarehouse != warehouse) {
             if (!currentStore.isEmpty()) {
-                d->fetchBriefs(currentStore, currentWarehouse, assets);
-                assets.clear();
+                d->fetchBriefs(currentStore, currentWarehouse, assetIds);
+                assetIds.clear();
             }
 
             currentStore = store;
             currentWarehouse = warehouse;
         }
 
-        assets.append(asset);
+        assetIds.append(asset);
     }
 
-    if (!assets.isEmpty()) {
-        d->fetchBriefs(currentStore, currentWarehouse, assets);
+    if (!assetIds.isEmpty()) {
+        d->fetchBriefs(currentStore, currentWarehouse, assetIds);
     }
 }
 
