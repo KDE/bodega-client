@@ -221,6 +221,8 @@ QVariant UpdatedAssetsModel::data(const QModelIndex &index, int role) const
             return info.partnerId;
         case AssetPartnerNameRole:
             return info.partnerName;
+        case AssetSizeRole:
+            return info.size;
         case ImageTinyRole:
             return info.images.value(Bodega::ImageTiny);
         case ImageSmallRole:

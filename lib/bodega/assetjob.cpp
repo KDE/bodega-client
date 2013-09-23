@@ -79,6 +79,7 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
     info.description = asset[QLatin1String("description")].toString();
     info.points = asset[QLatin1String("points")].toInt();
     info.canDownload = asset[QLatin1String("canDownload")].toBool();
+    info.size = asset[QLatin1String("size")].toLongLong();
 }
 
 void AssetJob::Private::parseChangeLog(const QVariantMap &result)

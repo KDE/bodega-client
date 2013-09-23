@@ -58,7 +58,8 @@ namespace Bodega {
             AssetVersionRole,
             AssetFilenameRole,
             AssetDescriptionRole,
-            AssetPointsRole
+            AssetPointsRole,
+            AssetSizeRole
         };
 
         Model(QObject *parent=0);

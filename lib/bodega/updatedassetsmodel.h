@@ -51,6 +51,7 @@ namespace Bodega {
             AssetVersionRole,
             AssetFilenameRole,
             AssetDescriptionRole,
+            AssetSizeRole,
 
             SessionRole = Qt::UserRole + 120
         };

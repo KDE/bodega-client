@@ -380,6 +380,8 @@ QVariant Model::data(const QModelIndex &index, int role) const
             return node->assetInfo().description;
         case AssetPointsRole:
             return node->assetInfo().points;
+        case AssetSizeRole:
+            return node->assetInfo().size;
         default:
             return QVariant();
         }
