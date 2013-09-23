@@ -152,17 +152,17 @@ BrowserColumn {
                     spacing: theme.defaultFont.mSize.height
 
                     Item {
-                        visible: bigIconImage.status == Image.Ready
                         anchors {
                             left: parent.left
                             right: parent.right
                             margins: 32
                         }
-                        height: width
+                        height: bigIconImage.visible ? width : theme.defaultFont.mSize.height
                         Image {
                             id: bigIconImage
                             source: assetOperations.assetInfo.images["huge"]
                             asynchronous: true
+                            visible: bigIconImage.status == Image.Ready
 
                             anchors.centerIn: parent
                             fillMode: Image.PreserveAspectFit
@@ -204,102 +204,6 @@ BrowserColumn {
                                                                      (root.assetOperations.assetInfo.canDownload ? "\n" + i18n("Purchased") : '')
                                                                    : i18n("Free")
                         anchors.horizontalCenter: parent.horizontalCenter
-                    }
-
-                    Repeater {
-                        id: ratingsRepeater
-                        model: assetOperations.ratingsModel
-                        delegate: Row {
-                            visible: model.RatingsCount > 0
-
-                            PlasmaComponents.Label {
-                                id: attributeNameLabel
-                                text: i18n("%1: ", model.Name)
-                                wrapMode: Text.Wrap
-                                width: theme.defaultFont.mSize.width*8
-                                horizontalAlignment: Text.AlignRight
-                            }
-                            Repeater {
-                                model: 5
-                                delegate: Row {
-                                    //the icon will always be painted sharp, but in this way it searches for a size that goes well with the text
-                                    PlasmaCore.IconItem {
-                                        source: "rating"
-                                        enabled: modelData < AverageRating
-                                        height: theme.defaultFont.mSize.height * 1.6
-                                        width: height
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    PlasmaComponents.Label {
-                        id: ratingsLabel
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        visible: ratingsRepeater.model.ratingsCount > 0
-                        text: i18n("See all %1 ratings", ratingsRepeater.model.ratingsCount)
-                        color: theme.linkColor
-                        MouseArea {
-                            anchors.fill: parent
-
-                            onClicked: {
-                                itemBrowser.pop(root)
-                                bodegaClient.assetRatingsJobModel.assetId = assetId;
-                                itemBrowser.push(Qt.resolvedUrl("RatingsColumn.qml"))
-                            }
-                        }
-                    }
-                    PlasmaComponents.Button {
-                        id: ratingsButton
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: i18n("Rate and review")
-                        onClicked: ratingsBaloon.open()
-                    }
-
-                    Baloon {
-                        id: ratingsBaloon
-                        visualParent: ratingsButton
-                        property variant ratingAttributes: {}
-                        Column {
-                            spacing: 5
-                            Repeater {
-                                model: assetOperations.ratingsModel
-                                delegate: Column {
-                                    spacing: 5
-                                    PlasmaComponents.Label {
-                                        verticalAlignment: Text.AlignTop
-                                        text: i18n("%1: ", model.Name)
-                                    }
-                                    PlasmaComponents.Slider {
-                                        valueIndicatorVisible: true
-                                        stepSize: 1
-                                        minimumValue: 1
-                                        maximumValue: 5
-                                        value: model.RatingValue
-                                        onValueChanged: {
-                                            var tmp = ratingsBaloon.ratingAttributes;
-                                            tmp[model.AttributeId] = value;
-                                            ratingsBaloon.ratingAttributes = tmp;
-                                        }
-                                    }
-                                }
-                            }
-                            Row {
-                                PlasmaComponents.Button {
-                                    text: i18n("Ok")
-                                    onClicked: {
-                                        ratingsBaloon.close()
-                                        var job = bodegaClient.session.assetCreateRatings(assetId, ratingsBaloon.ratingAttributes)
-                                        job.jobFinished.connect(root.reloadPage)
-                                        job.jobFinished.connect(bodegaClient.participantRatingsJobModel.reload)
-                                    }
-                                }
-                                PlasmaComponents.Button {
-                                    text: i18n("Cancel")
-                                    onClicked: ratingsBaloon.close()
-                                }
-                            }
-                        }
                     }
 
 
@@ -383,11 +287,57 @@ BrowserColumn {
                         }
                     }
 
-                    //TODO: make a component out of it
+
+                    PlasmaCore.SvgItem {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            leftMargin: -theme.defaultFont.mSize.width
+                            rightMargin: -theme.defaultFont.mSize.width
+                        }
+                        svg: PlasmaCore.Svg {
+                            imagePath: "widgets/line"
+                        }
+                        elementId: "horizontal-line"
+                    }
+
+                    RatingWidget {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                    }
+
+                    PlasmaCore.SvgItem {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            leftMargin: -theme.defaultFont.mSize.width
+                            rightMargin: -theme.defaultFont.mSize.width
+                        }
+                        svg: PlasmaCore.Svg {
+                            imagePath: "widgets/line"
+                        }
+                        elementId: "horizontal-line"
+                    }
+
                     ExpandingLabel {
                         id: descriptionLabel
                         visible: text != ''
                         text: assetOperations.assetInfo.description
+                    }
+
+                    PlasmaCore.SvgItem {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            leftMargin: -theme.defaultFont.mSize.width
+                            rightMargin: -theme.defaultFont.mSize.width
+                        }
+                        svg: PlasmaCore.Svg {
+                            imagePath: "widgets/line"
+                        }
+                        elementId: "horizontal-line"
                     }
 
                     Grid {
