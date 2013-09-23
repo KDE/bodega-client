@@ -146,6 +146,7 @@ BrowserColumn {
                     spacing: 8
 
                     Item {
+                        visible: bigIconImage.status == Image.Ready
                         anchors {
                             left: parent.left
                             right: parent.right
