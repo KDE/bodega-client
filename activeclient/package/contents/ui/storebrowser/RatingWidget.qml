@@ -74,15 +74,35 @@ Column {
                         width: theme.defaultFont.mSize.width*8
                         horizontalAlignment: Text.AlignRight
                     }
-                    Repeater {
-                        model: 5
-                        delegate: Row {
-                            //the icon will always be painted sharp, but in this way it searches for a size that goes well with the text
-                            PlasmaCore.IconItem {
-                                source: "rating"
-                                enabled: modelData < AverageRating
-                                height: theme.defaultFont.mSize.height * 1.6
-                                width: height
+                    Item {
+                        width: childrenRect.width
+                        height: childrenRect.height
+                        Row {
+                            Repeater {
+                                model: 5
+                                delegate: PlasmaCore.IconItem {
+                                    source: "rating"
+                                    enabled: false
+                                    height: theme.defaultFont.mSize.height * 1.6
+                                    width: height
+                                }
+                            }
+                        }
+                        //this can represent an "half" star
+                        Item {
+                            clip: true
+                            height: parent.height
+                            width: parent.width/5 * AverageRating
+                            Row {
+                                Repeater {
+                                    model: 5
+                                    delegate: PlasmaCore.IconItem {
+                                        source: "rating"
+                                        enabled: true
+                                        height: theme.defaultFont.mSize.height * 1.6
+                                        width: height
+                                    }
+                                }
                             }
                         }
                     }
