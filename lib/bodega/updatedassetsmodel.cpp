@@ -51,6 +51,7 @@ public:
     QList<AssetInfo> assets;
     QHash<QString, QStringList> pendingAssets;
     QHash<QString, Session *> sessions;
+    QMap<int, Session*> sessionIndexes;
     QSqlDatabase db;
     void briefsJobFinished(Bodega::NetworkJob *);
     void reloadFromNetwork(bool);
@@ -70,6 +71,7 @@ void UpdatedAssetsModel::Private::briefsJobFinished(Bodega::NetworkJob *job)
     }
 
     q->beginInsertRows(QModelIndex(), assets.size(), assets.size() + briefsJob->assets().size());
+    sessionIndexes.insert(assets.size(), briefsJob->session());
     assets.append(briefsJob->assets());
     q->endInsertRows();
 }
@@ -140,6 +142,7 @@ void UpdatedAssetsModel::reload()
 {
     beginResetModel();
     d->assets.clear();
+    d->sessionIndexes.clear();
     endResetModel();
 
     if (!d->db.isValid()) {
@@ -235,7 +238,18 @@ QVariant UpdatedAssetsModel::data(const QModelIndex &index, int role) const
             return info.images.value(Bodega::ImageHuge);
         case ImagePreviewsRole:
             return info.images.value(Bodega::ImagePreviews);
-        case SessionRole:
+        case SessionRole: {
+            QMapIterator<int, Bodega::Session *> it(d->sessionIndexes);
+            it.toBack();
+            while (it.hasPrevious()) {
+                it.previous();
+                if (it.key() <= index.row()) {
+                    return QVariant::fromValue(it.value());
+                }
+            }
+            return QVariant();
+        }
+            break;
         default:
             return QVariant();
     }
