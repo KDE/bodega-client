@@ -32,8 +32,6 @@ namespace Bodega {
     class CollectionListAssetsJobModel;
 }
 
-Q_DECLARE_METATYPE(Bodega::Session*)
-
 class ErrorCode : public QObject
 {
     Q_OBJECT
