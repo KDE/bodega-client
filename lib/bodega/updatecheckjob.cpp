@@ -27,7 +27,7 @@ public:
     QStringList assets;
 };
 
-UpdateCheckJob::UpdateCheckJob(QNetworkReply *reply, Session *parent, bool parseResponse)
+UpdateCheckJob::UpdateCheckJob(QNetworkReply *reply, Session *parent)
     : NetworkJob(reply, parent, true),
       d(new Private)
 {
@@ -38,7 +38,7 @@ UpdateCheckJob::~UpdateCheckJob()
     delete d;
 }
 
-QStringList UpdateCheckJob::updatedAssets()
+QStringList UpdateCheckJob::updatedAssets() const
 {
     return d->assets;
 }

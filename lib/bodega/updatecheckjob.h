@@ -33,10 +33,10 @@ namespace Bodega {
         Q_OBJECT
 
     public:
-        UpdateCheckJob(QNetworkReply *reply, Session *parent, bool parseResponse = true);
+        UpdateCheckJob(QNetworkReply *reply, Session *parent);
         ~UpdateCheckJob();
 
-        QStringList updatedAssets();
+        QStringList updatedAssets() const;
 
     protected:
         virtual void netFinished(const QVariantMap &jsonMap);
