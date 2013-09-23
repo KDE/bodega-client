@@ -34,7 +34,7 @@ namespace Bodega {
         AssetBriefsJob(QNetworkReply *reply, Session *parent);
         ~AssetBriefsJob();
 
-        QList<AssetInfo> updatedAssets() const;
+        QList<AssetInfo> assets() const;
 
     protected:
         virtual void netFinished(const QVariantMap &jsonMap);

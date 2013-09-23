@@ -41,7 +41,7 @@ AssetBriefsJob::~AssetBriefsJob()
     delete d;
 }
 
-QList<AssetInfo> AssetBriefsJob::updatedAssets() const
+QList<AssetInfo> AssetBriefsJob::assets() const
 {
     return d->assets;
 }
