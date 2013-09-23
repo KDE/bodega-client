@@ -356,6 +356,14 @@ QVariant Model::data(const QModelIndex &index, int role) const
             return node->assetInfo().version;
         case AssetFilenameRole:
             return node->assetInfo().filename;
+        case AssetLicenseRole:
+            return node->assetInfo().license;
+        case AssetLicenseTextRole:
+            return node->assetInfo().licenseText;
+        case AssetPartnerIdRole:
+            return node->assetInfo().partnerId;
+        case AssetPartnerNameRole:
+            return node->assetInfo().partnerName;
         case ImageTinyRole:
             return node->assetInfo().images.value(Bodega::ImageTiny);
         case ImageSmallRole:
