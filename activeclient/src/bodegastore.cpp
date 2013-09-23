@@ -51,8 +51,6 @@
 #include <bodega/collectionlistassetsjobmodel.h>
 #include <bodega/participantratingsjobmodel.h>
 #include <bodega/participantratingsjob.h>
-#include <bodega/ratingattributesjob.h>
-#include <bodega/ratingattributesjobmodel.h>
 #include <bodega/assetratingsjob.h>
 #include <bodega/assetratingsjobmodel.h>
 
