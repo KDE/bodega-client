@@ -213,6 +213,14 @@ QVariant UpdatedAssetsModel::data(const QModelIndex &index, int role) const
             return info.version;
         case AssetFilenameRole:
             return info.filename;
+        case AssetLicenseRole:
+            return info.license;
+        case AssetLicenseTextRole:
+            return info.licenseText;
+        case AssetPartnerIdRole:
+            return info.partnerId;
+        case AssetPartnerNameRole:
+            return info.partnerName;
         case ImageTinyRole:
             return info.images.value(Bodega::ImageTiny);
         case ImageSmallRole:
@@ -225,6 +233,7 @@ QVariant UpdatedAssetsModel::data(const QModelIndex &index, int role) const
             return info.images.value(Bodega::ImageHuge);
         case ImagePreviewsRole:
             return info.images.value(Bodega::ImagePreviews);
+        case SessionRole:
         default:
             return QVariant();
     }

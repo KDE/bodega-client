@@ -36,20 +36,23 @@ namespace Bodega {
     public:
         enum DisplayRoles {
             ImageTinyRole = Qt::UserRole + 50,
-            ImageSmallRole = Qt::UserRole + 51,
-            ImageMediumRole = Qt::UserRole + 52,
-            ImageLargeRole = Qt::UserRole + 53,
-            ImageHugeRole = Qt::UserRole + 54,
-            ImagePreviewsRole = Qt::UserRole + 55,
+            ImageSmallRole,
+            ImageMediumRole,
+            ImageLargeRole,
+            ImageHugeRole,
+            ImagePreviewsRole,
 
             AssetIdRole = Qt::UserRole + 100,
-            AssetLicenseRole = Qt::UserRole + 101,
-            AssetPartnerIdRole = Qt::UserRole + 102,
-            AssetPartnerNameRole = Qt::UserRole + 103,
-            AssetNameRole = Qt::UserRole + 104,
-            AssetVersionRole = Qt::UserRole + 105,
-            AssetFilenameRole = Qt::UserRole + 106,
-            AssetDescriptionRole = Qt::UserRole + 107,
+            AssetLicenseRole,
+            AssetLicenseTextRole,
+            AssetPartnerIdRole,
+            AssetPartnerNameRole,
+            AssetNameRole,
+            AssetVersionRole,
+            AssetFilenameRole,
+            AssetDescriptionRole,
+
+            SessionRole = Qt::UserRole + 120
         };
 
         UpdatedAssetsModel(QObject *parent=0);
