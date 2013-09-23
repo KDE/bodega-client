@@ -74,37 +74,10 @@ Column {
                         width: theme.defaultFont.mSize.width*8
                         horizontalAlignment: Text.AlignRight
                     }
-                    Item {
-                        width: childrenRect.width
-                        height: childrenRect.height
-                        Row {
-                            Repeater {
-                                model: 5
-                                delegate: PlasmaCore.IconItem {
-                                    source: "rating"
-                                    enabled: false
-                                    height: theme.defaultFont.mSize.height * 1.6
-                                    width: height
-                                }
-                            }
-                        }
-                        //this can represent an "half" star
-                        Item {
-                            clip: true
-                            height: parent.height
-                            width: parent.width/5 * AverageRating
-                            Row {
-                                Repeater {
-                                    model: 5
-                                    delegate: PlasmaCore.IconItem {
-                                        source: "rating"
-                                        enabled: true
-                                        height: theme.defaultFont.mSize.height * 1.6
-                                        width: height
-                                    }
-                                }
-                            }
-                        }
+                    RatingStars {
+                        rating: AverageRating
+                        starSize: theme.defaultFont.mSize.height * 1.6
+                        enabled: false
                     }
                 }
             }
@@ -115,6 +88,11 @@ Column {
             }
         }
     }
+    PlasmaComponents.Label {
+        visible: ratingsRepeater.model.ratingsCount == 0
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: i18n("No user ratings yet.")
+    }
 
     Baloon {
         id: ratingsBaloon
@@ -124,21 +102,21 @@ Column {
             spacing: 5
             Repeater {
                 model: assetOperations.ratingsModel
-                delegate: Column {
+                delegate: Row {
+                    anchors.right: parent.right
                     spacing: 5
                     PlasmaComponents.Label {
-                        verticalAlignment: Text.AlignTop
+                        anchors.verticalCenter: stars.verticalCenter
                         text: i18n("%1: ", model.Name)
                     }
-                    PlasmaComponents.Slider {
-                        valueIndicatorVisible: true
-                        stepSize: 1
-                        minimumValue: 1
-                        maximumValue: 5
-                        value: model.RatingValue
-                        onValueChanged: {
+
+                    RatingStars {
+                        id: stars
+                        starSize: theme.defaultFont.mSize.height * 2
+                        rating: model.RatingValue
+                        onRatingChanged: {
                             var tmp = ratingsBaloon.ratingAttributes;
-                            tmp[model.AttributeId] = value;
+                            tmp[model.AttributeId] = rating;
                             ratingsBaloon.ratingAttributes = tmp;
                         }
                     }
