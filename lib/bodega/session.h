@@ -33,6 +33,7 @@ class QAbstractItemModel;
 namespace Bodega {
 
     class AssetJob;
+    class AssetBriefsJob;
     class AssetOperations;
     class collectionAddAssetJob;
     class collectionListAssetsJob;
@@ -105,6 +106,7 @@ namespace Bodega {
 
         Bodega::AssetJob *asset(const QString &assetId,
                                 AssetJob::AssetFlags flags=AssetJob::None);
+        Bodega::AssetBriefsJob *assetBriefs(const QStringList &assetId);
         Bodega::ChangeLanguageJob *changeLanguage(const QString &lang);
         Bodega::ChannelsJob *search(const QString &text,
                                     const QString &channelId,

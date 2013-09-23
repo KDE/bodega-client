@@ -22,6 +22,7 @@
 
 
 #include "assetjob.h"
+#include "assetbriefsjob.h"
 #include "assetoperations.h"
 #include "collectionaddassetjob.h"
 #include "collectionlistassetsjob.h"
@@ -281,17 +282,36 @@ AssetJob * Session::asset(const QString &assetId,
 
     url.setEncodedPath(d->jsonPath(path));
 
-    if (flags & AssetJob::ShowPreviews)
+    if (flags & AssetJob::ShowPreviews) {
         url.addQueryItem(QLatin1String("previews"),
                          QLatin1String("1"));
+    }
 
-    if (flags & AssetJob::ShowChangeLog)
+    if (flags & AssetJob::ShowChangeLog) {
         url.addQueryItem(QLatin1String("changelog"),
                          QLatin1String("1"));
+    }
 
     //qDebug()<<"url is " <<url;
 
     AssetJob *job = new AssetJob(assetId, d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+AssetBriefsJob *Session::assetBriefs(const QStringList &assetIds)
+{
+    QUrl url = d->baseUrl;
+    url.setEncodedPath(d->jsonPath(QString::fromLatin1("/asset/briefs")));
+
+    const QByteArray json = "{ \"assets\": [" + assetIds.join(QLatin1String(", ")).toLatin1() + "] }";
+    //qDebug()<<"url is " <<url;
+    QNetworkRequest request;
+    request.setRawHeader("User-Agent", "Bodega 0.1");
+    request.setRawHeader("content-type", "application/json");
+    request.setUrl(url);
+
+    AssetBriefsJob *job = new AssetBriefsJob(d->netManager->post(request, json), this);
     d->jobConnect(job);
     return job;
 }

@@ -4,6 +4,7 @@ SET(QT_USE_QTSQL TRUE)
 
 set (bodega_HEADERS
      assetjob.h
+     assetbriefsjob.h
      assetoperations.h
      collectionaddassetjob.h
      collectionlistassetsjob.h
@@ -33,6 +34,7 @@ set (bodega_HEADERS
 
 set (bodega_SRCS
      assetjob.cpp
+     assetbriefsjob.cpp
      assethandler.cpp
      assethandlerfactory.cpp
      assetoperations.cpp
