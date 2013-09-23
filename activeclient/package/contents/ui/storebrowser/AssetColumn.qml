@@ -200,7 +200,6 @@ BrowserColumn {
                     }
                     Repeater {
                         id: ratingsRepeater
-                        clip: true
                         model: assetOperations.ratingsModel
                         delegate: Row {
                             visible: model.RatingsCount > 0
@@ -252,7 +251,6 @@ BrowserColumn {
                         Column {
                             spacing: 5
                             Repeater {
-                                clip: true
                                 model: assetOperations.ratingsModel
                                 delegate: Column {
                                     spacing: 5
