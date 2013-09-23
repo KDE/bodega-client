@@ -376,6 +376,12 @@ BrowserColumn {
                     }
                     //TODO: make a component out of it
                     ExpandingLabel {
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            leftMargin: theme.defaultFont.mSize.width
+                            rightMargin: theme.defaultFont.mSize.width
+                        }
                         id: descriptionLabel
                         visible: text != ''
                         text: assetOperations.assetInfo.description
