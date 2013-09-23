@@ -302,7 +302,7 @@ AssetJob * Session::asset(const QString &assetId,
 AssetBriefsJob *Session::assetBriefs(const QStringList &assetIds)
 {
     QUrl url = d->baseUrl;
-    url.setEncodedPath(d->jsonPath(QString::fromLatin1("/asset/briefs")));
+    url.setEncodedPath(d->jsonPath(QString::fromLatin1("/asset/list/briefs")));
 
     const QByteArray json = "{ \"assets\": [" + assetIds.join(QLatin1String(", ")).toLatin1() + "] }";
     //qDebug()<<"url is " <<url;
