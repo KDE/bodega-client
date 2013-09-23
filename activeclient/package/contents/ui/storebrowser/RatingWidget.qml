@@ -122,21 +122,18 @@ Column {
                     }
                 }
             }
-            Row {
-                PlasmaComponents.Button {
-                    text: i18n("Ok")
-                    onClicked: {
-                        ratingsBaloon.close()
-                        var job = bodegaClient.session.assetCreateRatings(assetId, ratingsBaloon.ratingAttributes)
-                        job.jobFinished.connect(root.reloadPage)
-                        job.jobFinished.connect(bodegaClient.participantRatingsJobModel.reload)
-                    }
-                }
-                PlasmaComponents.Button {
-                    text: i18n("Cancel")
-                    onClicked: ratingsBaloon.close()
+
+            PlasmaComponents.Button {
+                text: i18n("Ok")
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: {
+                    ratingsBaloon.close()
+                    var job = bodegaClient.session.assetCreateRatings(assetId, ratingsBaloon.ratingAttributes)
+                    job.jobFinished.connect(root.reloadPage)
+                    job.jobFinished.connect(bodegaClient.participantRatingsJobModel.reload)
                 }
             }
+
         }
     }
 }
