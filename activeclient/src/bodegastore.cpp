@@ -31,6 +31,7 @@
 #include <KConfigGroup>
 #include <KDebug>
 #include <KGlobal>
+#include <KCmdLineArgs>
 #include <kwallet.h>
 
 //Bodega libs
@@ -298,6 +299,9 @@ BodegaStore::BodegaStore()
     qScriptRegisterMetaType<Bodega::Tags>(declarativeView()->scriptEngine(), qScriptValueFromTags, tagsFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ParticipantInfo>(declarativeView()->scriptEngine(), qScriptValueFromParticipantInfo, participantInfoFromQScriptValue, QScriptValue());
 
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    m_startPage = args->getOption("startpage");
+
     m_session = new Session(this);
     KConfigGroup config(KGlobal::config(), "AddOns");
 
@@ -323,6 +327,11 @@ BodegaStore::~BodegaStore()
 Session* BodegaStore::session() const
 {
     return m_session;
+}
+
+QString BodegaStore::startPage() const
+{
+    return m_startPage;
 }
 
 Model* BodegaStore::channelsModel() const

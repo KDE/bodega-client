@@ -90,6 +90,7 @@ class BodegaStore : public KDeclarativeMainWindow
 {
     Q_OBJECT
     Q_PROPERTY(Bodega::Session *session READ session CONSTANT)
+    Q_PROPERTY(QString startPage READ startPage CONSTANT)
     Q_PROPERTY(Bodega::Model *channelsModel READ channelsModel CONSTANT)
     Q_PROPERTY(Bodega::Model *searchModel READ searchModel CONSTANT)
     Q_PROPERTY(Bodega::HistoryModel *historyModel READ historyModel CONSTANT)
@@ -109,6 +110,7 @@ public:
     Bodega::ListCollectionsJobModel *listCollectionsJobModel() const;
     Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel() const;
     Bodega::UpdatedAssetsModel *updatedAssetsModel() const;
+    QString startPage() const;
 
     Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE void forgetCredentials() const;
@@ -124,6 +126,7 @@ private:
     Bodega::CollectionListAssetsJobModel *m_collectionListAssetsJobModel;
     Bodega::UpdatedAssetsModel *m_updatedAssetsModel;
     int m_historyUsers;
+    QString m_startPage;
 };
 
 #endif // BODEGASTORE_H

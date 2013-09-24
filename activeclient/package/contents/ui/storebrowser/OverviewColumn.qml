@@ -28,6 +28,18 @@ BrowserColumn {
     id: root
     clip: true
 
+    //FIXME: why it needs delay to work correctly?
+    Timer {
+        interval: 10
+        running: true
+        onTriggered: {
+            if (bodegaClient.startPage === "updates") {
+                categoriesColumn.currentIndex = updatesItem.index;
+                itemBrowser.push(Qt.createComponent("UpdatesColumn.qml"));
+            }
+        }
+    }
+
     PlasmaExtras.ScrollArea {
         anchors {
             top: parent.top
@@ -95,9 +107,9 @@ BrowserColumn {
                         if (categoriesColumn.currentIndex == index) {
                             return
                         }
-                        categoriesColumn.currentIndex = index
-                        itemBrowser.pop(root)
-                        var page = itemBrowser.push(Qt.createComponent("UpdatesColumn.qml"))
+                        categoriesColumn.currentIndex = index;
+                        itemBrowser.pop(root);
+                        var page = itemBrowser.push(Qt.createComponent("UpdatesColumn.qml"));
                     }
                 }
                 StoreListItem {
