@@ -116,30 +116,79 @@ Column {
 
     PlasmaExtras.ConditionalLoader {
         id: ratingsColumnLoader
+        state: widgetRoot.expanded ? "expanded" : "collapsed"
         anchors {
             left: parent.left
             right: parent.right
             leftMargin: -theme.defaultFont.mSize.width
             rightMargin: -theme.defaultFont.mSize.width
         }
-        height: expanded ? scrollArea.height - ratingsExpander.height - ratingsButton.height -theme.defaultFont.mSize.height*3  : 0
+        visible: false
         when: widgetRoot.expanded
         source: Qt.resolvedUrl("RatingsColumn.qml")
-        Behavior on height {
-            SequentialAnimation {
-                NumberAnimation {
-                    duration: 250
-                    easing.type: Easing.InOutQuad
+
+        states: [
+            State {
+                name: "collapsed"
+                PropertyChanges {
+                    target: ratingsColumnLoader
+                    height: 0
                 }
-                ScriptAction {
-                    script: {
-                        if (widgetRoot.expanded) {
-                            mainFlickable.contentY = widgetRoot.y-theme.defaultFont.mSize.height
-                        }
+            },
+            State {
+                name: "expanded"
+                PropertyChanges {
+                    target: ratingsColumnLoader
+                    height: scrollArea.height - ratingsExpander.height - ratingsButton.height -theme.defaultFont.mSize.height*3
+                }
+            }
+        ]
+        transitions: [
+            Transition {
+                from: "collapsed"
+                to: "expanded"
+                SequentialAnimation {
+                    ScriptAction {
+                        script: ratingsColumnLoader.visible = true
+                    }
+                    NumberAnimation {
+                        targets: ratingsColumnLoader
+                        properties: "height"
+                        duration: 150
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        targets: mainFlickable
+                        properties: "contentY"
+                        to: widgetRoot.y-theme.defaultFont.mSize.height
+                        duration: 150
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+            },
+            Transition {
+                from: "expanded"
+                to: "collapsed"
+                SequentialAnimation {
+                    NumberAnimation {
+                        targets: ratingsColumnLoader
+                        properties: "height"
+                        duration: 150
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        targets: mainFlickable
+                        properties: "contentY"
+                        to: 0
+                        duration: 150
+                        easing.type: Easing.InOutQuad
+                    }
+                    ScriptAction {
+                        script: ratingsColumnLoader.visible = false
                     }
                 }
             }
-        }
+        ]
     }
     Baloon {
         id: ratingsBaloon

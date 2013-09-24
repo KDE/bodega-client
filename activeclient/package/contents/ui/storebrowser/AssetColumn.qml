@@ -303,6 +303,7 @@ BrowserColumn {
                     }
 
                     RatingWidget {
+                        id: ratingWidget
                         anchors {
                             left: parent.left
                             right: parent.right
