@@ -41,11 +41,17 @@ BrowserListView {
             Row {
                 id: delegateRow
                 spacing: theme.defaultFont.mSize.width
+
                 PlasmaComponents.Label {
-                    text: model.AttributeName + ": "
+                    text: i18n("%1: ", model.AttributeName)
+                    wrapMode: Text.Wrap
+                    width: theme.defaultFont.mSize.width*8
+                    horizontalAlignment: Text.AlignRight
                 }
-                PlasmaComponents.Label {
-                    text: model.Rating
+                RatingStars {
+                    rating: model.Rating
+                    starSize: theme.defaultFont.mSize.height * 1.6
+                    enabled: false
                 }
             }
         }
