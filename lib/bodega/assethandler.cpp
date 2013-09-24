@@ -181,7 +181,18 @@ void AssetHandler::registerForUpdates(Bodega::NetworkJob *job)
     d->initUpdateDb();
 
     QSqlQuery query(d->updateDb);
-    query.prepare(QLatin1String("INSERT INTO assets (warehouse, store, asset, created) VALUES (:warehouse, :store, :asset, :created)"));
+
+    query.prepare(QLatin1String("SELECT asset FROM assets WHERE warehouse = :warehouse AND store = :store AND asset = :asset"));
+    query.bindValue(QLatin1String(":warehouse"), job->session()->baseUrl());
+    query.bindValue(QLatin1String(":store"), job->session()->storeId());
+    query.bindValue(QLatin1String(":asset"), id);
+
+    if (query.exec() && query.first()) {
+        query.prepare(QLatin1String("UPDATE assets SET create = :created, updated = 0, checked = 0 WHERE warehouse = :warehouse AND store = :store AND asset = :asset"));
+    } else {
+        query.prepare(QLatin1String("INSERT INTO assets (warehouse, store, asset, created) VALUES (:warehouse, :store, :asset, :created)"));
+    }
+
     query.bindValue(QLatin1String(":warehouse"), job->session()->baseUrl());
     query.bindValue(QLatin1String(":store"), job->session()->storeId());
     query.bindValue(QLatin1String(":asset"), id);
