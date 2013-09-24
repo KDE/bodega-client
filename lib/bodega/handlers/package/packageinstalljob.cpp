@@ -63,6 +63,13 @@ void PackageInstallJob::downloadFinished(const QString &packageFile)
     packageRoot = KStandardDirs::locateLocal("data", installer->defaultPackageRoot());
 
     QFileInfo info(packageFile);
+
+    installer->setPath(packageFile);
+    Plasma::PackageMetadata metadata = installer->metadata();
+
+    //if it was already installed, remove it
+    installer->uninstallPackage(metadata.pluginName(), packageRoot);
+
     if (installer->installPackage(packageFile, packageRoot)) {
         qDebug() << "Successfully installed" << packageFile;
         QDBusInterface dbus(QLatin1String("org.kde.kded"), QLatin1String("/kbuildsycoca"), QLatin1String("org.kde.kbuildsycoca"));
