@@ -70,6 +70,7 @@ BrowserListView {
                     var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
                     assetPage.assetId = model.AssetIdRole
                     assetPage.hasUpdate = true
+                    assetPage.session = model.SessionRole
                 }
             }
         }

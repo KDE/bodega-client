@@ -32,6 +32,7 @@ BrowserColumn {
     property variant assetOperations
     property int assetId: 0
     property bool hasUpdate: false
+    property QtObject session: bodegaClient.session
 
     property variant installJob: null
 
@@ -40,7 +41,7 @@ BrowserColumn {
         downloadProgress.opacity = 1
         downloadProgress.indeterminate = true
         downloadProgress.indeterminate = false
-        root.installJob = bodegaClient.session.install(assetOperations)
+        root.installJob = root.session.install(assetOperations)
         root.installJob.progressChanged.connect(downloadProgress.updateProgress)
         root.installJob.jobFinished.connect(downloadProgress.operationFinished)
         root.installJob.jobError.connect(downloadProgress.installError)
@@ -49,9 +50,9 @@ BrowserColumn {
 
     onAssetIdChanged: {
         if (assetId > 0) {
-            assetOperations = bodegaClient.session.assetOperations(assetId);
+            assetOperations = root.session.assetOperations(assetId);
 
-            root.installJob = bodegaClient.session.installJobsModel.jobForAsset(root.assetId)
+            root.installJob = root.session.installJobsModel.jobForAsset(root.assetId)
             if (root.installJob) {
                 downloadProgress.opacity = 1
                 root.installJob.progressChanged.connect(downloadProgress.updateProgress)
@@ -80,7 +81,7 @@ BrowserColumn {
                 Baloon {Text{text: mainFlickable.height}
                     id: questionBaloon
                     visualParent: installButton
-                    property bool canPurchase:(bodegaClient.session.points >= assetOperations.assetInfo.points)
+                    property bool canPurchase:(root.session.points >= assetOperations.assetInfo.points)
                     Column {
                         spacing: 4
                         width: theme.defaultFont.mSize.width*18
@@ -106,7 +107,7 @@ BrowserColumn {
                                     // purchase
                                     downloadProgress.opacity = 1
                                     downloadProgress.indeterminate = true
-                                    var job = bodegaClient.session.purchaseAsset(assetId)
+                                    var job = root.session.purchaseAsset(assetId)
                                     job.jobFinished.connect(downloadProgress.operationFinished)
                                     job.jobFinished.connect(root.downloadAsset)
                                     job.jobFinished.connect(installButton.assetOpJobCompleted)
@@ -127,7 +128,7 @@ BrowserColumn {
                     onAccepted: {
                         downloadProgress.opacity = 1
                         downloadProgress.indeterminate = true
-                        var job = bodegaClient.session.uninstall(assetOperations)
+                        var job = root.session.uninstall(assetOperations)
                         job.jobFinished.connect(downloadProgress.operationFinished)
                         job.error.connect(downloadProgress.installError)
                         job.jobFinished.connect(installButton.assetOpJobCompleted)
@@ -270,7 +271,7 @@ BrowserColumn {
                         function assetOpJobCompleted()
                         {
                             //TODO: need to show a success message methinks!
-                            root.assetOperations = bodegaClient.session.assetOperations(assetId)
+                            root.assetOperations = root.session.assetOperations(assetId)
                             root.installJob = null
                         }
                     }
