@@ -68,9 +68,10 @@ BrowserColumn {
                     }
                 }
                 StoreListItem {
+                    id: collectionsItem
                     visible: count > 0
                     label: i18n("Collections")
-                    property int index: downloadsItem.index + 1
+                    property int index: visualDataModel.count
                     count: bodegaClient.listCollectionsJobModel.count
                     checked: categoriesColumn.currentIndex == index
                     onClicked: {
@@ -87,7 +88,7 @@ BrowserColumn {
                     visible: count > 0
                     icon: "system-software-update"
                     label: i18n("Updates")
-                    property int index: visualDataModel.count-1
+                    property int index: collectionsItem.index + 1
                     count: bodegaClient.updatedAssetsModel.count
                     checked: categoriesColumn.currentIndex == index
                     onClicked: {
@@ -104,7 +105,7 @@ BrowserColumn {
                     visible: count > 0
                     icon: "folder-downloads"
                     label: i18n("Downloads")
-                    property int index: visualDataModel.count
+                    property int index: updatesItem.index + 1
                     count: bodegaClient.session.installJobsModel.count
                     checked: categoriesColumn.currentIndex == index
                     onClicked: {
