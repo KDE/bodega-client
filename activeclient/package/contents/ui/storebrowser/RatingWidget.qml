@@ -181,15 +181,15 @@ Column {
                 to: "collapsed"
                 SequentialAnimation {
                     NumberAnimation {
-                        targets: ratingsColumnLoader
-                        properties: "height"
-                        duration: 150
-                        easing.type: Easing.InOutQuad
-                    }
-                    NumberAnimation {
                         targets: mainFlickable
                         properties: "contentY"
                         to: 0
+                        duration: 250
+                        easing.type: Easing.InOutQuad
+                    }
+                    NumberAnimation {
+                        targets: ratingsColumnLoader
+                        properties: "height"
                         duration: 150
                         easing.type: Easing.InOutQuad
                     }
