@@ -33,11 +33,11 @@ import "../components"
     preventStealing: true
 
     onPressed: {
-        rating = Math.round(mouse.x / starSize)
+        rating = Math.ceil(mouse.x / starSize)
     }
 
     onPositionChanged: {
-        rating = Math.round(mouse.x / starSize)
+        rating = Math.ceil(mouse.x / starSize)
     }
 
     Row {
