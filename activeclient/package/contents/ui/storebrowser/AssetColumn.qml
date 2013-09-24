@@ -31,6 +31,7 @@ BrowserColumn {
 
     property variant assetOperations
     property int assetId: 0
+    property bool hasUpdate: false
 
     property variant installJob: null
 
@@ -249,17 +250,16 @@ BrowserColumn {
                         id: installButton
                         anchors.horizontalCenter: parent.horizontalCenter
                         enabled: root.installJob == null && root.assetOperations.ready
+                        visible: !root.assetOperations.installed || hasUpdate
                         text: {
-                            if (root.assetOperations.installed) {
-                                i18n("Remove")
+                            if (hasUpdate) {
+                                i18n("Update")
                             } else {
                                 root.assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
                             }
                         }
                         onClicked: {
-                            if (root.assetOperations.installed) {
-                                uninstallConfirmation.open()
-                            } else if (root.assetOperations.assetInfo.canDownload) {
+                            if (root.assetOperations.assetInfo.canDownload) {
                                 root.downloadAsset()
                             } else {
                                 //ask to purchase
@@ -273,6 +273,14 @@ BrowserColumn {
                             root.assetOperations = bodegaClient.session.assetOperations(assetId)
                             root.installJob = null
                         }
+                    }
+                    PlasmaComponents.Button {
+                        id: uninstallButton
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        enabled: root.installJob == null && root.assetOperations.ready
+                        visible: root.assetOperations.installed
+                        text: i18n("Remove")
+                        onClicked: uninstallConfirmation.open()
                     }
                     //TODO: make a component out of it
                     ExpandingLabel {

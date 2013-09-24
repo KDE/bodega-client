@@ -66,13 +66,10 @@ BrowserListView {
                 view.currentIndex = index
                 itemBrowser.pop(root)
 
-                if (model.ChannelIdRole) {
-                    var channelsPage = itemBrowser.push(Qt.createComponent("ChannelsColumn.qml"))
-                    channelsPage.rootIndex = view.model.modelIndex(index)
-                    channelsPage.channelId = model.ChannelIdRole
-                } else if (model.AssetIdRole) {
+                if (model.AssetIdRole) {
                     var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
                     assetPage.assetId = model.AssetIdRole
+                    assetPage.hasUpdate = true
                 }
             }
         }
