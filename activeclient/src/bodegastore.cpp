@@ -280,6 +280,7 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
 
     qmlRegisterType<Bodega::ParticipantInfoJob>();
     qmlRegisterType<Bodega::AssetJob>();
+    qmlRegisterType<Bodega::AssetRatingsJob>();
     qmlRegisterType<Bodega::AssetOperations>();
     qmlRegisterType<Bodega::ChannelsJob>();
     qmlRegisterType<Bodega::HistoryModel>();

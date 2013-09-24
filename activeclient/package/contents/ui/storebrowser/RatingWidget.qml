@@ -40,6 +40,16 @@ Column {
         anchors.horizontalCenter: parent.horizontalCenter
         text: i18n("Rate and review")
         onClicked: ratingsBaloon.open()
+
+        PlasmaCore.IconItem {
+            id: successIcon
+            visible: false
+            anchors {
+                left: parent.right
+                leftMargin: 4
+            }
+            source: "dialog-ok-apply"
+        }
     }
 
     MouseArea {
@@ -194,6 +204,35 @@ Column {
         id: ratingsBaloon
         visualParent: ratingsButton
         property variant ratingAttributes: {}
+
+        //have to use Connections in order for job to be uderstood by QML
+        Connections {
+            id: ratingConnections
+            onJobFinished: {
+                ratingsBaloon.close();
+                successIcon.visible = !job.failed;
+                ratingBusyWidget.visible = false;
+                root.reloadPage();
+                bodegaClient.participantRatingsJobModel.reload();
+                hideTimer.restart();
+            }
+            onJobError: {
+                ratingsBaloon.close();
+                showMessage(error.title, error.description, ratingsButton)
+            }
+        }
+
+
+        Timer {
+            id: hideTimer
+            triggeredOnStart: false
+            interval: 2000
+            running: false
+            repeat: false
+            onTriggered: {
+                successIcon.visible = false;
+            }
+        }
         Column {
             spacing: 5
             Repeater {
@@ -209,27 +248,35 @@ Column {
                     RatingStars {
                         id: stars
                         starSize: theme.defaultFont.mSize.height * 2
-                        rating: model.RatingValue
+                        rating: 0
                         onRatingChanged: {
                             var tmp = ratingsBaloon.ratingAttributes;
                             tmp[model.AttributeId] = rating;
                             ratingsBaloon.ratingAttributes = tmp;
+                            rateConfirmButton.enabled = true;
                         }
                     }
                 }
             }
 
             PlasmaComponents.Button {
-                text: i18n("Ok")
+                id: rateConfirmButton
+                text: i18n("Rate")
                 anchors.horizontalCenter: parent.horizontalCenter
+                enabled: false
                 onClicked: {
-                    ratingsBaloon.close()
-                    var job = bodegaClient.session.assetCreateRatings(assetId, ratingsBaloon.ratingAttributes)
-                    job.jobFinished.connect(root.reloadPage)
-                    job.jobFinished.connect(bodegaClient.participantRatingsJobModel.reload)
+                    ratingBusyWidget.visible = true;
+                    ratingConnections.target = bodegaClient.session.assetCreateRatings(assetId, ratingsBaloon.ratingAttributes);
                 }
             }
 
         }
+        PlasmaComponents.BusyIndicator {
+            id: ratingBusyWidget
+            anchors.centerIn: parent
+            visible: false
+            running: visible
+        }
+
     }
 }
