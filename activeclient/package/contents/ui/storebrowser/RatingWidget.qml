@@ -267,6 +267,7 @@ Column {
                 onClicked: {
                     ratingBusyWidget.visible = true;
                     ratingConnections.target = bodegaClient.session.assetCreateRatings(assetId, ratingsBaloon.ratingAttributes);
+                    enabled = false;
                 }
             }
 
