@@ -46,7 +46,6 @@
 #include <bodega/installjob.h>
 #include <bodega/installjobsmodel.h>
 #include <bodega/uninstalljob.h>
-#include <bodega/listcollectionsjob.h>
 #include <bodega/collectionsmodel.h>
 #include <bodega/collectionassetsmodel.h>
 #include <bodega/participantratingsjobmodel.h>
@@ -292,7 +291,6 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     qmlRegisterType<Bodega::InstallJob>();
     qmlRegisterType<Bodega::InstallJobsModel>();
     qmlRegisterType<Bodega::UninstallJob>();
-    qmlRegisterType<Bodega::ListCollectionsJob>();
     qmlRegisterType<Bodega::CollectionsModel>();
     qmlRegisterType<Bodega::CollectionAssetsModel>();
     qmlRegisterType<Bodega::ParticipantRatingsJobModel>();
