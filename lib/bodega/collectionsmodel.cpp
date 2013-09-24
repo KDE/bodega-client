@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "listcollectionsjobmodel.h"
+#include "collectionsmodel.h"
 
 #include "listcollectionsjob.h"
 #include "collectionlistassetsjob.h"
@@ -33,11 +33,11 @@ namespace Bodega
 
 static const int DEFAULT_PAGE_SIZE = 50;
 
-class ListCollectionsJobModel::Private {
+class CollectionsModel::Private {
 public:
-    Private(ListCollectionsJobModel *parent);
+    Private(CollectionsModel *parent);
 
-    ListCollectionsJobModel *q;
+    CollectionsModel *q;
     Session *session;
     QList<CollectionInfo> collections;
     bool hasMore;
@@ -46,14 +46,14 @@ public:
     void collectionsJobFinished(Bodega::NetworkJob *job);
 };
 
-ListCollectionsJobModel::Private::Private(ListCollectionsJobModel *parent)
+CollectionsModel::Private::Private(CollectionsModel *parent)
     : q(parent),
       session(0),
       hasMore(false)
 {
 }
 
-void ListCollectionsJobModel::Private::fetchInitialCollections()
+void CollectionsModel::Private::fetchInitialCollections()
 {
     if (!session->isAuthenticated()) {
         return;
@@ -65,7 +65,7 @@ void ListCollectionsJobModel::Private::fetchInitialCollections()
             q, SLOT(collectionsJobFinished(Bodega::NetworkJob *)));
 }
 
-void ListCollectionsJobModel::Private::collectionsJobFinished(Bodega::NetworkJob *job)
+void CollectionsModel::Private::collectionsJobFinished(Bodega::NetworkJob *job)
 {
     ListCollectionsJob *collectionJob = qobject_cast<ListCollectionsJob*>(job);
 
@@ -99,7 +99,7 @@ void ListCollectionsJobModel::Private::collectionsJobFinished(Bodega::NetworkJob
     q->endInsertRows();
 }
 
-ListCollectionsJobModel::ListCollectionsJobModel(QObject *parent)
+CollectionsModel::CollectionsModel(QObject *parent)
     : QAbstractItemModel(parent),
       d(new Private(this))
 {
@@ -119,12 +119,12 @@ ListCollectionsJobModel::ListCollectionsJobModel(QObject *parent)
             this, SIGNAL(countChanged()));
 }
 
-ListCollectionsJobModel::~ListCollectionsJobModel()
+CollectionsModel::~CollectionsModel()
 {
     delete d;
 }
 
-bool ListCollectionsJobModel::canFetchMore(const QModelIndex &parent) const
+bool CollectionsModel::canFetchMore(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         return false;
@@ -133,12 +133,12 @@ bool ListCollectionsJobModel::canFetchMore(const QModelIndex &parent) const
     return d->hasMore;
 }
 
-int ListCollectionsJobModel::columnCount(const QModelIndex &parent) const
+int CollectionsModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }
 
-QVariant ListCollectionsJobModel::data(const QModelIndex &index, int role) const
+QVariant CollectionsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= d->collections.count()) {
         return QVariant();
@@ -157,7 +157,7 @@ QVariant ListCollectionsJobModel::data(const QModelIndex &index, int role) const
     }
 }
 
-void ListCollectionsJobModel::fetchMore(const QModelIndex &parent)
+void CollectionsModel::fetchMore(const QModelIndex &parent)
 {
     if (!parent.isValid() || !d->session || !canFetchMore(parent) ||
         !d->session->isAuthenticated()) {
@@ -170,7 +170,7 @@ void ListCollectionsJobModel::fetchMore(const QModelIndex &parent)
             this, SLOT(collectionsJobFinished(Bodega::NetworkJob *)));
 }
 
-Qt::ItemFlags ListCollectionsJobModel::flags(const QModelIndex &index) const
+Qt::ItemFlags CollectionsModel::flags(const QModelIndex &index) const
 {
     if (index.isValid()) {
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -179,19 +179,19 @@ Qt::ItemFlags ListCollectionsJobModel::flags(const QModelIndex &index) const
     }
 }
 
-bool ListCollectionsJobModel::hasChildren(const QModelIndex &parent) const
+bool CollectionsModel::hasChildren(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return false;
 }
 
-QVariant ListCollectionsJobModel::headerData(int section, Qt::Orientation orientation,
+QVariant CollectionsModel::headerData(int section, Qt::Orientation orientation,
                            int role) const
 {
     return QVariant();
 }
 
-QModelIndex ListCollectionsJobModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex CollectionsModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (column > 0) {
         return QModelIndex();
@@ -204,22 +204,22 @@ QModelIndex ListCollectionsJobModel::index(int row, int column, const QModelInde
     return createIndex(row, column);
 }
 
-QMap<int, QVariant> ListCollectionsJobModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> CollectionsModel::itemData(const QModelIndex &index) const
 {
     return QMap<int, QVariant>();
 }
 
-QModelIndex ListCollectionsJobModel::parent(const QModelIndex &index) const
+QModelIndex CollectionsModel::parent(const QModelIndex &index) const
 {
     return QModelIndex();
 }
 
-int ListCollectionsJobModel::rowCount(const QModelIndex &parent) const
+int CollectionsModel::rowCount(const QModelIndex &parent) const
 {
     return d->collections.size();
 }
 
-void ListCollectionsJobModel::setSession(Session *session)
+void CollectionsModel::setSession(Session *session)
 {
     if (session == d->session) {
         return;
@@ -239,11 +239,11 @@ void ListCollectionsJobModel::setSession(Session *session)
             this, SLOT(fetchInitialCollections()));
 }
 
-Session *ListCollectionsJobModel::session() const
+Session *CollectionsModel::session() const
 {
     return d->session;
 }
 
 }
 
-#include "listcollectionsjobmodel.moc"
+#include "collectionsmodel.moc"

@@ -1,7 +1,7 @@
 find_package(KDE4 REQUIRED)
 
 include(KDE4Defaults)
-include_directories( ${KDE4_INCLUDES} ${QT_INCLUDES} ${CMAKE_SOURCE_DIR}/lib)
+include_directories( ${KDE4_INCLUDES} ${QT_INCLUDES}  ${CMAKE_SOURCE_DIR}/kded_updater ${CMAKE_SOURCE_DIR}/lib)
 
 add_subdirectory(src)
 

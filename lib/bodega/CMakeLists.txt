@@ -4,7 +4,8 @@ set (bodega_HEADERS
      assetoperations.h
      collectionaddassetjob.h
      collectionlistassetsjob.h
-     collectionlistassetsjobmodel.h
+     collectionassetsmodel.h
+     collectionsmodel.h
      collectionremoveassetjob.h
      bodegamodel.h
      changelanguagejob.h
@@ -17,7 +18,6 @@ set (bodega_HEADERS
      imagelocator.h
      installjob.h
      listcollectionsjob.h
-     listcollectionsjobmodel.h
      networkjob.h
      participantinfojob.h
      registerjob.h
@@ -38,8 +38,9 @@ set (bodega_SRCS
      assetoperations.cpp
      collectionaddassetjob.cpp
      collectionlistassetsjob.cpp
-     collectionlistassetsjobmodel.cpp
+     collectionassetsmodel.cpp
      collectionremoveassetjob.cpp
+     collectionsmodel.cpp
      bodegamodel.cpp
      changelanguagejob.cpp
      channelsjob.cpp
@@ -51,7 +52,6 @@ set (bodega_SRCS
      installjob.cpp
      installjobsmodel.cpp
      listcollectionsjob.cpp
-     listcollectionsjobmodel.cpp
      networkjob.cpp
      participantinfojob.cpp
      ratingsmodel_p.cpp

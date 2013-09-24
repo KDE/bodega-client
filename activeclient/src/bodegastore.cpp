@@ -47,8 +47,8 @@
 #include <bodega/installjobsmodel.h>
 #include <bodega/uninstalljob.h>
 #include <bodega/listcollectionsjob.h>
-#include <bodega/listcollectionsjobmodel.h>
-#include <bodega/collectionlistassetsjobmodel.h>
+#include <bodega/collectionsmodel.h>
+#include <bodega/collectionassetsmodel.h>
 #include <bodega/participantratingsjobmodel.h>
 #include <bodega/participantratingsjob.h>
 #include <bodega/assetratingsjob.h>
@@ -271,8 +271,8 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     BodegaStore::BodegaStore()
     : KDeclarativeMainWindow(),
       m_historyModel(0),
-      m_listCollectionsJobModel(0),
-      m_collectionListAssetsJobModel(0),
+      m_collectionsModel(0),
+      m_collectionAssetsModel(0),
       m_participantRatingsJobModel(0),
       m_assetRatingsJobModel(0)
 {
@@ -292,8 +292,8 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     qmlRegisterType<Bodega::InstallJobsModel>();
     qmlRegisterType<Bodega::UninstallJob>();
     qmlRegisterType<Bodega::ListCollectionsJob>();
-    qmlRegisterType<Bodega::ListCollectionsJobModel>();
-    qmlRegisterType<Bodega::CollectionListAssetsJobModel>();
+    qmlRegisterType<Bodega::CollectionsModel>();
+    qmlRegisterType<Bodega::CollectionAssetsModel>();
     qmlRegisterType<Bodega::ParticipantRatingsJobModel>();
     qmlRegisterType<Bodega::AssetRatingsJobModel>();
     qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
@@ -309,10 +309,10 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     m_session->setBaseUrl(config.readEntry("URL", "https://addons.makeplaylive.com:3443"));
     m_session->setStoreId(config.readEntry("Store", "VIVALDI-1"));
 
-    m_listCollectionsJobModel = new Bodega::ListCollectionsJobModel(this);
-    m_listCollectionsJobModel->setSession(m_session);
-    m_collectionListAssetsJobModel = new Bodega::CollectionListAssetsJobModel(this);
-    m_collectionListAssetsJobModel->setSession(m_session);
+    m_collectionsModel = new Bodega::CollectionsModel(this);
+    m_collectionsModel->setSession(m_session);
+    m_collectionAssetsModel = new Bodega::CollectionAssetsModel(this);
+    m_collectionAssetsModel->setSession(m_session);
     m_channelsModel = new Bodega::Model(this);
     m_channelsModel->setSession(m_session);
     m_searchModel = new Bodega::Model(this);
@@ -351,14 +351,14 @@ HistoryModel *BodegaStore::historyModel()
     return m_historyModel;
 }
 
-ListCollectionsJobModel *BodegaStore::listCollectionsJobModel() const
+CollectionsModel *BodegaStore::collectionsModel() const
 {
-    return m_listCollectionsJobModel;
+    return m_collectionsModel;
 }
 
-CollectionListAssetsJobModel *BodegaStore::collectionListAssetsJobModel() const
+CollectionAssetsModel *BodegaStore::collectionAssetsModel() const
 {
-    return m_collectionListAssetsJobModel;
+    return m_collectionAssetsModel;
 }
 
 ParticipantRatingsJobModel *BodegaStore::participantRatingsJobModel()

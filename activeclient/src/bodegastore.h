@@ -28,8 +28,8 @@ namespace Bodega {
     class HistoryModel;
     class Model;
     class Session;
-    class ListCollectionsJobModel;
-    class CollectionListAssetsJobModel;
+    class CollectionsModel;
+    class CollectionAssetsModel;
     class ParticipantRatingsJobModel;
     class AssetRatingsJobModel;
 }
@@ -96,11 +96,10 @@ class BodegaStore : public KDeclarativeMainWindow
     Q_PROPERTY(Bodega::Model *channelsModel READ channelsModel CONSTANT)
     Q_PROPERTY(Bodega::Model *searchModel READ searchModel CONSTANT)
     Q_PROPERTY(Bodega::HistoryModel *historyModel READ historyModel CONSTANT)
-    Q_PROPERTY(Bodega::ListCollectionsJobModel *listCollectionsJobModel READ listCollectionsJobModel CONSTANT)
-    Q_PROPERTY(Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel READ collectionListAssetsJobModel CONSTANT)
+    Q_PROPERTY(Bodega::CollectionsModel *collectionsModel READ collectionsModel CONSTANT)
+    Q_PROPERTY(Bodega::CollectionAssetsModel *collectionAssetsModel READ collectionAssetsModel CONSTANT)
     Q_PROPERTY(Bodega::ParticipantRatingsJobModel *participantRatingsJobModel READ participantRatingsJobModel CONSTANT)
     Q_PROPERTY(Bodega::AssetRatingsJobModel *assetRatingsJobModel READ assetRatingsJobModel CONSTANT)
-
 public:
     BodegaStore();
     virtual ~BodegaStore();
@@ -110,8 +109,8 @@ public:
     Bodega::Model* channelsModel() const;
     Bodega::Model* searchModel() const;
     Bodega::HistoryModel *historyModel();
-    Bodega::ListCollectionsJobModel *listCollectionsJobModel() const;
-    Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel() const;
+    Bodega::CollectionsModel *collectionsModel() const;
+    Bodega::CollectionAssetsModel *collectionAssetsModel() const;
     Bodega::ParticipantRatingsJobModel *participantRatingsJobModel();
     Bodega::AssetRatingsJobModel *assetRatingsJobModel();
 
@@ -125,8 +124,8 @@ private:
     Bodega::Model *m_channelsModel;
     Bodega::Model *m_searchModel;
     Bodega::HistoryModel *m_historyModel;
-    Bodega::ListCollectionsJobModel *m_listCollectionsJobModel;
-    Bodega::CollectionListAssetsJobModel *m_collectionListAssetsJobModel;
+    Bodega::CollectionsModel *m_collectionsModel;
+    Bodega::CollectionAssetsModel *m_collectionAssetsModel;
     Bodega::ParticipantRatingsJobModel *m_participantRatingsJobModel;
     Bodega::AssetRatingsJobModel *m_assetRatingsJobModel;
     int m_historyUsers;

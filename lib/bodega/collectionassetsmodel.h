@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef BODEGA_LISTCOLLECTIONSJOB_MODEL_H
-#define BODEGA_LISTCOLLECTIONSJOB_MODEL_H
+#ifndef BODEGA_COLLECTIONLISTASSETSJOB_MODEL_H
+#define BODEGA_COLLECTIONLISTASSETSJOB_MODEL_H
 
 #include <bodega/globals.h>
 
@@ -28,19 +28,31 @@ namespace Bodega {
 
     class Session;
 
-    class BODEGA_EXPORT ListCollectionsJobModel : public QAbstractItemModel
+    class BODEGA_EXPORT CollectionAssetsModel : public QAbstractItemModel
     {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
         Q_PROPERTY(int count READ count NOTIFY countChanged)
+        Q_PROPERTY(QString collectionId READ collectionId WRITE setCollectionId NOTIFY collectionIdChanged)
+
     public:
         enum DisplayRoles {
-            CollectionName = Qt::UserRole + 1,
-            CollectionId = Qt::UserRole + 2,
+            AssetIdRole = Qt::UserRole + 100,
+            AssetLicenseRole = Qt::UserRole + 101,
+            AssetPartnerIdRole = Qt::UserRole + 102,
+            AssetPartnerNameRole = Qt::UserRole + 103,
+            AssetNameRole = Qt::UserRole + 104,
+            AssetVersionRole = Qt::UserRole + 105,
+            AssetFilenameRole = Qt::UserRole + 106,
+            AssetDescriptionRole = Qt::UserRole + 107,
+            AssetPointsRole = Qt::UserRole + 108
         };
 
-        ListCollectionsJobModel(QObject *parent = 0);
-        ~ListCollectionsJobModel();
+        CollectionAssetsModel(QObject *parent = 0);
+        ~CollectionAssetsModel();
+
+        QString collectionId() const;
+        void setCollectionId(const QString& collectionId);
 
         //Invokable to make the view show a spinner when loading more
         Q_INVOKABLE bool canFetchMore(const QModelIndex &parent) const;
@@ -64,14 +76,16 @@ namespace Bodega {
 
     Q_SIGNALS:
         void countChanged();
+        void collectionIdChanged();
 
     private:
         class Private;
         friend class Private;
         Private * const d;
-        Q_PRIVATE_SLOT(d, void collectionsJobFinished(Bodega::NetworkJob *))
-        Q_PRIVATE_SLOT(d, void fetchInitialCollections())
+        Q_PRIVATE_SLOT(d, void assetsJobFinished(Bodega::NetworkJob *))
+        Q_PRIVATE_SLOT(d, void fetchAssets())
     };
+
 }
 
 #endif
