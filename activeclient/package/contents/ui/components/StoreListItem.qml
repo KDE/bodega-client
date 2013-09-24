@@ -47,7 +47,7 @@ PlasmaComponents.ListItem {
             text: root.label
             anchors {
                 left: iconLoader.right
-                leftMargin: 2
+                leftMargin: 4
                 verticalCenter: parent.verticalCenter
                 right: countLabel.left
             }
