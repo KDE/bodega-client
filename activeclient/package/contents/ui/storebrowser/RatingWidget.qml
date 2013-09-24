@@ -27,8 +27,13 @@ import "../components"
 
 
 Column {
+    id: widgetRoot
+    property bool expanded: false
     spacing: theme.defaultFont.mSize.height
 
+    onExpandedChanged: {
+        mainFlickable.interactive = !expanded
+    }
     PlasmaComponents.Button {
         id: ratingsButton
         z: 100
@@ -38,6 +43,7 @@ Column {
     }
 
     MouseArea {
+        id: ratingsExpander
         anchors {
             left: parent.left
             right: parent.right
@@ -47,9 +53,8 @@ Column {
         height: starsColumn.height
 
         onClicked: {
-            itemBrowser.pop(root)
             bodegaClient.assetRatingsJobModel.assetId = assetId;
-            itemBrowser.push(Qt.resolvedUrl("RatingsColumn.qml"))
+            widgetRoot.expanded = !widgetRoot.expanded
         }
 
         Rectangle {
@@ -98,7 +103,7 @@ Column {
             }
             PlasmaComponents.Label {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: i18n("See all ratings...")
+                text: widgetRoot.expanded ? i18n("Hide ratings") : i18n("See all ratings...")
                 color: theme.linkColor
             }
         }
@@ -109,6 +114,33 @@ Column {
         text: i18n("No user ratings yet.")
     }
 
+    PlasmaExtras.ConditionalLoader {
+        id: ratingsColumnLoader
+        anchors {
+            left: parent.left
+            right: parent.right
+            leftMargin: -theme.defaultFont.mSize.width
+            rightMargin: -theme.defaultFont.mSize.width
+        }
+        height: expanded ? scrollArea.height - ratingsExpander.height - ratingsButton.height -theme.defaultFont.mSize.height*3  : 0
+        when: widgetRoot.expanded
+        source: Qt.resolvedUrl("RatingsColumn.qml")
+        Behavior on height {
+            SequentialAnimation {
+                NumberAnimation {
+                    duration: 250
+                    easing.type: Easing.InOutQuad
+                }
+                ScriptAction {
+                    script: {
+                        if (widgetRoot.expanded) {
+                            mainFlickable.contentY = widgetRoot.y-theme.defaultFont.mSize.height
+                        }
+                    }
+                }
+            }
+        }
+    }
     Baloon {
         id: ratingsBaloon
         visualParent: ratingsButton

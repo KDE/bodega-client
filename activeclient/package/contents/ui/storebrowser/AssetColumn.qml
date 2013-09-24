@@ -65,6 +65,7 @@ BrowserColumn {
     onAssetIdChanged: reloadPage()
 
     PlasmaExtras.ScrollArea {
+        id: scrollArea
         anchors.fill: parent
         //color: theme.backgroundColor
 

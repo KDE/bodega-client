@@ -29,9 +29,8 @@ BrowserListView {
     property variant rootIndex
     abstractItemModel: bodegaClient.assetRatingsJobModel
 
-    customHeader: PlasmaExtras.Heading {
-        text: i18n("All the Ratings of the asset")
-        level: 3
+    customHeader: PlasmaComponents.Label {
+        text: i18n("All the Ratings of the asset:")
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
