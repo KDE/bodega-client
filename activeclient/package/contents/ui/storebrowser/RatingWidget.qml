@@ -25,11 +25,13 @@ import org.kde.plasma.extras 0.1 as PlasmaExtras
 import org.kde.qtextracomponents 0.1
 import "../components"
 
+
 Column {
     spacing: theme.defaultFont.mSize.height
 
     PlasmaComponents.Button {
         id: ratingsButton
+        z: 100
         anchors.horizontalCenter: parent.horizontalCenter
         text: i18n("Rate and review")
         onClicked: ratingsBaloon.open()
@@ -42,7 +44,7 @@ Column {
         }
 
         visible: ratingsRepeater.model.ratingsCount > 0
-        height: childrenRect.height
+        height: starsColumn.height
 
         onClicked: {
             itemBrowser.pop(root)
@@ -50,7 +52,20 @@ Column {
             itemBrowser.push(Qt.resolvedUrl("RatingsColumn.qml"))
         }
 
+        Rectangle {
+            anchors {
+                fill: parent
+                leftMargin: -theme.defaultFont.mSize.width
+                rightMargin: -theme.defaultFont.mSize.width
+                topMargin: -theme.defaultFont.mSize.height*2 -ratingsButton.height -1
+                bottomMargin: -theme.defaultFont.mSize.height -1
+            }
+            color: theme.textColor
+            opacity: 0.1
+            visible: parent.pressed
+        }
         Column {
+            id: starsColumn
             anchors {
                 left: parent.left
                 right: parent.right
