@@ -49,6 +49,7 @@
 #include <bodega/listcollectionsjob.h>
 #include <bodega/listcollectionsjobmodel.h>
 #include <bodega/collectionlistassetsjobmodel.h>
+#include <bodega/updatedassetsmodel.h>
 
 using namespace Bodega;
 
@@ -287,6 +288,7 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::UninstallJob>();
     qmlRegisterType<Bodega::ListCollectionsJob>();
     qmlRegisterType<Bodega::ListCollectionsJobModel>();
+    qmlRegisterType<Bodega::UpdatedAssetsModel>();
     qmlRegisterType<Bodega::CollectionListAssetsJobModel>();
     qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
 
@@ -310,6 +312,7 @@ BodegaStore::BodegaStore()
     m_channelsModel->setSession(m_session);
     m_searchModel = new Bodega::Model(this);
     m_searchModel->setSession(m_session);
+    m_updatedAssetsModel = new Bodega::UpdatedAssetsModel(this);
     declarativeView()->rootContext()->setContextProperty("bodegaClient", this);
 }
 
@@ -351,6 +354,11 @@ ListCollectionsJobModel *BodegaStore::listCollectionsJobModel() const
 CollectionListAssetsJobModel *BodegaStore::collectionListAssetsJobModel() const
 {
     return m_collectionListAssetsJobModel;
+}
+
+Bodega::UpdatedAssetsModel *BodegaStore::updatedAssetsModel() const
+{
+    return m_updatedAssetsModel;
 }
 
 void BodegaStore::historyInUse(bool used)

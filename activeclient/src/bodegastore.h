@@ -30,6 +30,7 @@ namespace Bodega {
     class Session;
     class ListCollectionsJobModel;
     class CollectionListAssetsJobModel;
+    class UpdatedAssetsModel;
 }
 
 class ErrorCode : public QObject
@@ -94,6 +95,8 @@ class BodegaStore : public KDeclarativeMainWindow
     Q_PROPERTY(Bodega::HistoryModel *historyModel READ historyModel CONSTANT)
     Q_PROPERTY(Bodega::ListCollectionsJobModel *listCollectionsJobModel READ listCollectionsJobModel CONSTANT)
     Q_PROPERTY(Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel READ collectionListAssetsJobModel CONSTANT)
+    Q_PROPERTY(Bodega::UpdatedAssetsModel *updatedAssetsModel READ updatedAssetsModel CONSTANT)
+
 public:
     BodegaStore();
     virtual ~BodegaStore();
@@ -105,6 +108,7 @@ public:
     Bodega::HistoryModel *historyModel();
     Bodega::ListCollectionsJobModel *listCollectionsJobModel() const;
     Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel() const;
+    Bodega::UpdatedAssetsModel *updatedAssetsModel() const;
 
     Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE void forgetCredentials() const;
@@ -118,6 +122,7 @@ private:
     Bodega::HistoryModel *m_historyModel;
     Bodega::ListCollectionsJobModel *m_listCollectionsJobModel;
     Bodega::CollectionListAssetsJobModel *m_collectionListAssetsJobModel;
+    Bodega::UpdatedAssetsModel *m_updatedAssetsModel;
     int m_historyUsers;
 };
 

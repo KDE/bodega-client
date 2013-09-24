@@ -141,6 +141,14 @@ UpdatedAssetsModel::UpdatedAssetsModel(QObject *parent)
         roles.insert(e.value(i), e.key(i));
     }
     setRoleNames(roles);
+
+    connect(this, SIGNAL(rowsInserted(QModelIndex,int,int)),
+            this, SIGNAL(countChanged()));
+    connect(this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            this, SIGNAL(countChanged()));
+    connect(this, SIGNAL(modelReset()),
+            this, SIGNAL(countChanged()));
+
     QMetaObject::invokeMethod(this, "reload", Qt::QueuedConnection);
 }
 

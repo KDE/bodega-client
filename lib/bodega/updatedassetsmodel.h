@@ -32,6 +32,7 @@ namespace Bodega {
     {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
+        Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 
     public:
         enum DisplayRoles {
@@ -70,6 +71,9 @@ namespace Bodega {
 
         void setSession(Session *session);
         Session *session() const;
+
+    Q_SIGNALS:
+        void countChanged();
 
     private:
         class Private;
