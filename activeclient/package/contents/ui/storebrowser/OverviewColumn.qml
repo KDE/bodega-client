@@ -86,7 +86,7 @@ BrowserColumn {
                 }
                 StoreListItem {
                     visible: count > 0
-                    label: i18n("Collections")
+                    label: i18n("My collections")
                     property int index: downloadsItem.index + 1
                     count: bodegaClient.collectionsModel.count
                     checked: categoriesColumn.currentIndex == index
