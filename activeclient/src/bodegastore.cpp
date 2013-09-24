@@ -273,7 +273,8 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
       m_historyModel(0),
       m_listCollectionsJobModel(0),
       m_collectionListAssetsJobModel(0),
-      m_participantRatingsJobModel(0)
+      m_participantRatingsJobModel(0),
+      m_assetRatingsJobModel(0)
 {
     declarativeView()->setPackageName("com.makeplaylive.addonsapp");
 
