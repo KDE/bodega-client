@@ -63,6 +63,8 @@ namespace Bodega {
         static UpdatedAssetsModel* self();
 
         Q_INVOKABLE void reload();
+        Q_INVOKABLE void updateAll();
+        Q_INVOKABLE bool containsAsset(const QString &assetId);
 
         int columnCount(const QModelIndex &parent = QModelIndex()) const;
         QVariant data(const QModelIndex &index, int role) const;

@@ -51,6 +51,7 @@ BrowserListView {
             PlasmaComponents.Button {
                 anchors.centerIn: parent
                 text: i18n("Update All")
+                onClicked: bodegaClient.updatedAssetsModel.updateAll();
             }
         }
     }
@@ -69,7 +70,6 @@ BrowserListView {
                 if (model.AssetIdRole) {
                     var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
                     assetPage.assetId = model.AssetIdRole
-                    assetPage.hasUpdate = true
                     assetPage.session = model.SessionRole
                 }
             }

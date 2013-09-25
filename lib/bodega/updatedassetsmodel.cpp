@@ -25,6 +25,7 @@
 #include "installjob.h"
 #include "installjobsmodel.h"
 
+#include <QEventLoop>
 #include <QDebug>
 #include <QFile>
 #include <QMetaEnum>
@@ -83,6 +84,7 @@ void UpdatedAssetsModel::Private::briefsJobFinished(Bodega::NetworkJob *job)
     }
 
     q->beginInsertRows(QModelIndex(), assets.size(), assets.size() + briefsJob->assets().size());
+
     sessionIndexes.insert(assets.size(), briefsJob->session());
     assets.append(briefsJob->assets());
     q->endInsertRows();
@@ -277,6 +279,44 @@ void UpdatedAssetsModel::reload()
     if (!assetIds.isEmpty()) {
         d->fetchBriefs(currentStore, currentWarehouse, assetIds);
     }
+}
+
+void UpdatedAssetsModel::updateAll()
+{
+    int i = 0;
+    foreach (const AssetInfo &info, d->assets) {
+        //d->sessionIndexes[i]->install(d->sessionIndexes[i]->assetOperations(info.id));
+        
+        //FIXME: nested loop, evil++
+        QMapIterator<int, Bodega::Session *> it(d->sessionIndexes);
+        it.toBack();
+        while (it.hasPrevious()) {
+            it.previous();
+            if (it.key() <= i) {
+                Session *session = it.value();
+                AssetOperations *operation = session->assetOperations(info.id);
+                //FIXME: make all of this asynchronous
+                QEventLoop eventLoop;
+                connect(operation, SIGNAL(ready()),
+                        &eventLoop, SLOT(quit()));
+                eventLoop.exec();
+                session->install(operation);
+            }
+        }
+        
+        ++i;
+    }
+}
+
+bool UpdatedAssetsModel::containsAsset(const QString &assetId)
+{
+    //FIXME: get rid of this linear scan
+    foreach (const AssetInfo &existingInfo, d->assets) {
+        if (existingInfo.id == assetId) {
+            return true;
+        }
+    }
+    return false;
 }
 
 int UpdatedAssetsModel::columnCount(const QModelIndex &parent) const

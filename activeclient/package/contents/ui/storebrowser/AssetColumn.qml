@@ -31,7 +31,6 @@ BrowserColumn {
 
     property variant assetOperations
     property int assetId: 0
-    property bool hasUpdate: false
     property QtObject session: bodegaClient.session
 
     property variant installJob: null
@@ -251,9 +250,9 @@ BrowserColumn {
                         id: installButton
                         anchors.horizontalCenter: parent.horizontalCenter
                         enabled: root.installJob == null && root.assetOperations.ready
-                        visible: !root.assetOperations.installed || hasUpdate
+                        visible: !root.assetOperations.installed || bodegaClient.updatedAssetsModel.containsAsset(assetId)
                         text: {
-                            if (hasUpdate) {
+                            if (bodegaClient.updatedAssetsModel.containsAsset(assetId)) {
                                 i18n("Update")
                             } else {
                                 root.assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
