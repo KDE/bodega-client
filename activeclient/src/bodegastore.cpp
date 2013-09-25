@@ -316,7 +316,6 @@ BodegaStore::BodegaStore()
     m_channelsModel->setSession(m_session);
     m_searchModel = new Bodega::Model(this);
     m_searchModel->setSession(m_session);
-    m_updatedAssetsModel = new Bodega::UpdatedAssetsModel(this);
     declarativeView()->rootContext()->setContextProperty("bodegaClient", this);
 }
 
@@ -367,7 +366,7 @@ CollectionListAssetsJobModel *BodegaStore::collectionListAssetsJobModel() const
 
 Bodega::UpdatedAssetsModel *BodegaStore::updatedAssetsModel() const
 {
-    return m_updatedAssetsModel;
+    return UpdatedAssetsModel::self();
 }
 
 void BodegaStore::historyInUse(bool used)

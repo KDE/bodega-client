@@ -124,7 +124,6 @@ private:
     Bodega::HistoryModel *m_historyModel;
     Bodega::ListCollectionsJobModel *m_listCollectionsJobModel;
     Bodega::CollectionListAssetsJobModel *m_collectionListAssetsJobModel;
-    Bodega::UpdatedAssetsModel *m_updatedAssetsModel;
     int m_historyUsers;
     QString m_startPage;
 };

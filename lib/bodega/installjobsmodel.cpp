@@ -28,6 +28,7 @@
 namespace Bodega
 {
 
+
 class InstallJobsModel::Private
 {
 public:
@@ -48,9 +49,11 @@ public:
     //the two hashes are intended to be perfectly symmetrical
     QHash<InstallJob *, QString> idsForJobs;
     QHash<QString, InstallJob *> jobsForIds;
+
+    static InstallJobsModel* s_self;
 };
 
-InstallJobsModel* s_self = 0;
+InstallJobsModel* InstallJobsModel::Private::s_self = 0;
 
 InstallJobsModel::Private::Private(InstallJobsModel *parent)
     : q(parent)
@@ -114,11 +117,11 @@ InstallJobsModel::~InstallJobsModel()
 
 InstallJobsModel* InstallJobsModel::self()
 {
-    if (!s_self) {
-        s_self = new InstallJobsModel;
+    if (!InstallJobsModel::Private::s_self) {
+        InstallJobsModel::Private::s_self = new InstallJobsModel;
     }
 
-    return s_self;
+    return InstallJobsModel::Private::s_self;
 }
 
 Bodega::InstallJob *InstallJobsModel::jobForAsset(const QString &assetId) const

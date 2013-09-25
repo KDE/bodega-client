@@ -57,8 +57,9 @@ namespace Bodega {
             SessionRole = Qt::UserRole + 120
         };
 
-        UpdatedAssetsModel(QObject *parent = 0);
         ~UpdatedAssetsModel();
+
+        static UpdatedAssetsModel* self();
 
         Q_INVOKABLE void reload();
 
@@ -74,6 +75,9 @@ namespace Bodega {
 
     Q_SIGNALS:
         void countChanged();
+
+    protected:
+        UpdatedAssetsModel(QObject *parent = 0);
 
     private:
         class Private;

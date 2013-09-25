@@ -35,6 +35,7 @@
 
 namespace Bodega {
 
+
 class UpdatedAssetsModel::Private
 {
 public:
@@ -56,7 +57,11 @@ public:
     void briefsJobFinished(Bodega::NetworkJob *);
     void fetchBriefs(const QString &store, const QString &warehouse, const QStringList &assets);
     void sessionAuthenticated(bool authed);
+
+    static UpdatedAssetsModel *s_self;
 };
+
+UpdatedAssetsModel *UpdatedAssetsModel::Private::s_self = 0;
 
 void UpdatedAssetsModel::Private::briefsJobFinished(Bodega::NetworkJob *job)
 {
@@ -155,6 +160,15 @@ UpdatedAssetsModel::UpdatedAssetsModel(QObject *parent)
 UpdatedAssetsModel::~UpdatedAssetsModel()
 {
     delete d;
+}
+
+UpdatedAssetsModel* UpdatedAssetsModel::self()
+{
+    if (!UpdatedAssetsModel::Private::s_self) {
+        UpdatedAssetsModel::Private::s_self = new UpdatedAssetsModel;
+    }
+
+    return UpdatedAssetsModel::Private::s_self;
 }
 
 void UpdatedAssetsModel::reload()
