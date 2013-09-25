@@ -49,8 +49,7 @@ Session::Private::Private(Session *parent)
         : q(parent),
           points(0),
           authenticated(false),
-          netManager(new QNetworkAccessManager(q)),
-          installJobsModel(new InstallJobsModel(q))
+          netManager(new QNetworkAccessManager(q))
 {
 }
 
@@ -361,7 +360,7 @@ QMap<ImageUrl, QUrl> Session::urlsForImage(const QString &name) const
 
 Bodega::InstallJobsModel *Session::installJobsModel() const
 {
-    return d->installJobsModel;
+    return InstallJobsModel::self();
 }
 
 Bodega::NetworkJob *Session::history(int offset, int pageSize)

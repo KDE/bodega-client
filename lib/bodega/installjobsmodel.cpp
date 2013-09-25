@@ -50,6 +50,8 @@ public:
     QHash<QString, InstallJob *> jobsForIds;
 };
 
+InstallJobsModel* s_self = 0;
+
 InstallJobsModel::Private::Private(InstallJobsModel *parent)
     : q(parent)
 {
@@ -108,6 +110,15 @@ InstallJobsModel::InstallJobsModel(QObject *parent)
 InstallJobsModel::~InstallJobsModel()
 {
     delete d;
+}
+
+InstallJobsModel* InstallJobsModel::self()
+{
+    if (!s_self) {
+        s_self = new InstallJobsModel;
+    }
+
+    return s_self;
 }
 
 Bodega::InstallJob *InstallJobsModel::jobForAsset(const QString &assetId) const
