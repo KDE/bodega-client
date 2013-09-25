@@ -54,7 +54,8 @@ namespace Bodega {
             AssetDescriptionRole,
             AssetSizeRole,
 
-            SessionRole = Qt::UserRole + 120
+            SessionRole = Qt::UserRole + 120,
+            ProgressRole
         };
 
         ~UpdatedAssetsModel();
@@ -85,6 +86,9 @@ namespace Bodega {
         Private * const d;
         Q_PRIVATE_SLOT(d, void briefsJobFinished(Bodega::NetworkJob *))
         Q_PRIVATE_SLOT(d, void sessionAuthenticated(bool))
+        Q_PRIVATE_SLOT(d, void jobAdded(const Bodega::AssetInfo &info, Bodega::InstallJob *job))
+        Q_PRIVATE_SLOT(d, void progressChanged(qreal progress))
+        Q_PRIVATE_SLOT(d, void jobDestroyed(QObject *obj))
     };
 }
 

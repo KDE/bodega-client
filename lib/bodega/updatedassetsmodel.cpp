@@ -22,6 +22,8 @@
 #include "assethandler.h"
 #include "assetbriefsjob.h"
 #include "session.h"
+#include "installjob.h"
+#include "installjobsmodel.h"
 
 #include <QDebug>
 #include <QFile>
@@ -54,9 +56,15 @@ public:
     QHash<QString, Session *> sessions;
     QMap<int, Session*> sessionIndexes;
     QSqlDatabase db;
+    QHash<QPersistentModelIndex, Bodega::InstallJob *> installJobs;
+    QHash<Bodega::InstallJob *, QPersistentModelIndex> installJobsIndexes;
+
     void briefsJobFinished(Bodega::NetworkJob *);
     void fetchBriefs(const QString &store, const QString &warehouse, const QStringList &assets);
     void sessionAuthenticated(bool authed);
+    void jobAdded(const Bodega::AssetInfo &info, Bodega::InstallJob *job);
+    void progressChanged(qreal progress);
+    void jobDestroyed(QObject *obj);
 
     static UpdatedAssetsModel *s_self;
 };
@@ -135,6 +143,48 @@ void UpdatedAssetsModel::Private::sessionAuthenticated(bool authed)
     }
 }
 
+void UpdatedAssetsModel::Private::jobAdded(const Bodega::AssetInfo &info, Bodega::InstallJob *job)
+{
+    connect(job, SIGNAL(progressChanged(qreal)), q, SLOT(progressChanged(qreal)));
+    connect(job, SIGNAL(destroyed(QObject *)), q, SLOT(jobDestroyed(QObject *)));
+
+    //FIXME: get rid of this linear scan
+    int i = 0;
+    foreach (const AssetInfo &existingInfo, assets) {
+        if (existingInfo.id == info.id) {
+            installJobs[QPersistentModelIndex(q->index(i, 0))] = job;
+            installJobsIndexes[job] = QPersistentModelIndex(q->index(i, 0));
+            emit(q->dataChanged(q->index(i, 0), q->index(i, 0)));
+            break;
+        }
+        ++i;
+    }
+}
+
+void UpdatedAssetsModel::Private::progressChanged(qreal progress)
+{
+    InstallJob *job = qobject_cast<InstallJob *>(q->sender());
+
+    if (!job || !installJobsIndexes.contains(job)) {
+        return;
+    }
+
+    emit q->dataChanged(installJobsIndexes[job], installJobsIndexes[job]);
+}
+
+void UpdatedAssetsModel::Private::jobDestroyed(QObject *obj)
+{
+    //WARNING: this static_cast is safe because nobody will access the job* pointer
+    // don't ever access it in this function!
+    InstallJob *job = static_cast<InstallJob *>(obj);
+
+    if (installJobsIndexes.contains(job)) {
+        installJobs.remove(installJobsIndexes.value(job));
+        installJobsIndexes.remove(job);
+    }
+}
+
+
 UpdatedAssetsModel::UpdatedAssetsModel(QObject *parent)
     : d(new Private(this))
 {
@@ -153,6 +203,9 @@ UpdatedAssetsModel::UpdatedAssetsModel(QObject *parent)
             this, SIGNAL(countChanged()));
     connect(this, SIGNAL(modelReset()),
             this, SIGNAL(countChanged()));
+
+    connect(InstallJobsModel::self(), SIGNAL(jobAdded(Bodega::AssetInfo, Bodega::InstallJob *)),
+            this, SLOT(jobAdded(Bodega::AssetInfo, Bodega::InstallJob *)));
 
     QMetaObject::invokeMethod(this, "reload", Qt::QueuedConnection);
 }
@@ -281,6 +334,13 @@ QVariant UpdatedAssetsModel::data(const QModelIndex &index, int role) const
                 }
             }
             return QVariant();
+        }
+        case ProgressRole: {
+            if (d->installJobs.contains(index)) {
+                return d->installJobs[index]->progress();
+            } else {
+                return QVariant();
+            }
         }
             break;
         default:

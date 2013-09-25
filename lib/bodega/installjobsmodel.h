@@ -65,6 +65,7 @@ namespace Bodega {
 
     Q_SIGNALS:
         void countChanged();
+        void jobAdded(const Bodega::AssetInfo &info, Bodega::InstallJob *job);
 
     protected:
         InstallJobsModel(QObject *parent=0);

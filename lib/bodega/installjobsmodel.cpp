@@ -153,6 +153,8 @@ void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
 
     connect(job, SIGNAL(progressChanged(qreal)), this, SLOT(progressChanged(qreal)));
     connect(job, SIGNAL(destroyed(QObject *)), this, SLOT(jobDestroyed(QObject *)));
+
+    emit jobAdded(info, job);
 }
 
 
