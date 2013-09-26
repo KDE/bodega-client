@@ -53,6 +53,7 @@ set (bodega_SRCS
      imagelocator.cpp
      installjob.cpp
      installjobsmodel.cpp
+     installjobscheduler.cpp
      listcollectionsjob.cpp
      listcollectionsjobmodel.cpp
      networkjob.cpp
