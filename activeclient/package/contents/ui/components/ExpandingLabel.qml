@@ -27,10 +27,6 @@ MouseArea {
 
     property alias text: descriptionLabel.text
     property bool expanded: false
-    anchors {
-        left: parent.left
-        right: parent.right
-    }
 
     height: mainColumn.height
     onClicked: root.expanded = !root.expanded

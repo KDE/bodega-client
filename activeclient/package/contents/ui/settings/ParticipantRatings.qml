@@ -50,10 +50,11 @@ PlasmaComponents.Page {
             model: bodegaClient.participantRatingsJobModel
 
             delegate: PlasmaComponents.ListItem {
+                id: listItem
                 property variant ratings: model.Ratings
                 Column {
                     spacing: theme.defaultFont.mSize.height
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: parent.width
 
                     PlasmaExtras.Heading {
                         level: 2
@@ -67,7 +68,7 @@ PlasmaComponents.Page {
                     }
                     Row {
                         spacing: 4
-                       
+                        x: parent.width/2 - theme.defaultFont.mSize.width*11
                         PlasmaComponents.Label {
                             text: i18n("Description:")
                             wrapMode: Text.Wrap
@@ -77,12 +78,16 @@ PlasmaComponents.Page {
                         }
                         PlasmaComponents.Label {
                             text:  model.AssetDesciption
-                            width: theme.defaultFont.mSize.width*11
+                            width: listItem.width/2
                             visible: text.length > 0
+                            wrapMode: Text.Wrap
+                            elide: Text.ElideLeft
+                            maximumLineCount: 3
                         }
                     }
                     Row {
                         spacing: 4
+                        x: parent.width/2 - theme.defaultFont.mSize.width*11
                         PlasmaComponents.Label {
                             text: i18n("Version:")
                             wrapMode: Text.Wrap
@@ -100,23 +105,22 @@ PlasmaComponents.Page {
                     
                     Repeater {
                         model: ratings.length
-                        delegate: Column {
-                            Row {
-                                id: ratingsRow
-                                spacing: 4
-                                PlasmaComponents.Label {
-                                    id: ratingsLabel
-                                    text: i18n("%1 :", ratings[index]["AttributeName"])
-                                    wrapMode: Text.Wrap
-                                    width: theme.defaultFont.mSize.width*11
-                                    horizontalAlignment: Text.AlignRight
-                                }
+                        delegate: Row {
+                            id: ratingsRow
+                            spacing: 4
+                            x: parent.width/2 - theme.defaultFont.mSize.width*11
+                            PlasmaComponents.Label {
+                                id: ratingsLabel
+                                text: i18n("%1 :", ratings[index]["AttributeName"])
+                                wrapMode: Text.Wrap
+                                width: theme.defaultFont.mSize.width*11
+                                horizontalAlignment: Text.AlignRight
+                            }
 
-                                RatingStars {
-                                    rating: ratings[index]["Rating"]
-                                    starSize: theme.defaultFont.mSize.height * 1.6
-                                    enabled: false
-                                }
+                            RatingStars {
+                                rating: ratings[index]["Rating"]
+                                starSize: theme.defaultFont.mSize.height * 1.6
+                                enabled: false
                             }
                         }
                     } // end of Repeater

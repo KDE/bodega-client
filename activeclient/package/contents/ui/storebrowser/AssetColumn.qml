@@ -325,6 +325,10 @@ BrowserColumn {
 
                     ExpandingLabel {
                         id: descriptionLabel
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
                         visible: text != ''
                         text: assetOperations.assetInfo.description
                     }
