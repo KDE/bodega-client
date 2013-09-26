@@ -33,7 +33,7 @@ using namespace Bodega;
 class InstallJobScheduler::Private
 {
 public:
-    Private();
+    Private(InstallJobScheduler *parent);
     void fetchAssetOperations(const QString &assetId, Bodega::Session *session);
     void operationReady();
     void jobFinished(Bodega::NetworkJob *job);
@@ -54,8 +54,9 @@ public:
 
 InstallJobScheduler* InstallJobScheduler::Private::s_self = 0;
 
-InstallJobScheduler::Private::Private()
-    : maximumRunning(3)
+InstallJobScheduler::Private::Private(InstallJobScheduler *parent)
+    : q(parent),
+      maximumRunning(3)
 {
 }
 
@@ -98,7 +99,7 @@ void InstallJobScheduler::Private::jobFinished(Bodega::NetworkJob *job)
     jobToAssetId.remove(qobject_cast<InstallJob *>(job));
 
     
-    while (runningQueue.size() < maximumRunning) {
+    while (!waitingQueue.isEmpty() && runningQueue.size() < maximumRunning) {
         assetId = waitingQueue.first();
         waitingQueue.pop_front();
         //can this ever be false?
@@ -114,7 +115,7 @@ void InstallJobScheduler::Private::jobFinished(Bodega::NetworkJob *job)
 
 InstallJobScheduler::InstallJobScheduler(QObject *parent)
     : QObject(parent),
-      d(0)
+      d(new Private(this))
 {
 }
 

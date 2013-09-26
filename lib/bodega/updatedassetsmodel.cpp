@@ -24,6 +24,7 @@
 #include "session.h"
 #include "installjob.h"
 #include "installjobsmodel.h"
+#include "installjobscheduler.h"
 
 #include <QDebug>
 #include <QFile>
@@ -297,7 +298,6 @@ void UpdatedAssetsModel::updateAll()
 {
     int i = 0;
     foreach (const AssetInfo &info, d->assets) {
-        //d->sessionIndexes[i]->install(d->sessionIndexes[i]->assetOperations(info.id));
         
         //FIXME: nested loop, evil++
         QMapIterator<int, Bodega::Session *> it(d->sessionIndexes);
@@ -305,10 +305,7 @@ void UpdatedAssetsModel::updateAll()
         while (it.hasPrevious()) {
             it.previous();
             if (it.key() <= i) {
-                Session *session = it.value();
-                AssetOperations *operation = session->assetOperations(info.id);
-                d->pendingOperations[operation] = session;
-                connect(operation, SIGNAL(ready()), this, SLOT(operationReady()));
+                InstallJobScheduler::self()->scheduleInstall(info.id, it.value());
             }
         }
         
