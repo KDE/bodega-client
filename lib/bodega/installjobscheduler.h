@@ -33,6 +33,8 @@ namespace Bodega
     {
         Q_OBJECT
 
+        Q_ENUMS(InstallStatus)
+
     public:
         enum InstallStatus
         {
@@ -47,11 +49,11 @@ namespace Bodega
 
         //not an AssetOperation since it has to be taken asynchronously too
         //passing session so it can work with multiple warehouses too
-        void scheduleInstall(const QString &assetId, Bodega::Session *sesison);
+        Q_INVOKABLE void scheduleInstall(const QString &assetId, Bodega::Session *sesison);
 
-        InstallStatus installStatus(const QString &assetId);
+        Q_INVOKABLE InstallJobScheduler::InstallStatus installStatus(const QString &assetId);
 
-        Bodega::InstallJob *installJobForAsset(const QString &assetId);
+        Q_INVOKABLE Bodega::InstallJob *installJobForAsset(const QString &assetId);
 
     Q_SIGNALS:
         void installStatusChanged(const QString &assetId, InstallStatus status);
