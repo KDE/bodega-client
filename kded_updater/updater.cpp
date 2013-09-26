@@ -248,7 +248,7 @@ void Updater::initDb()
             m_notifier = new KStatusNotifierItem(this);
             m_notifier->setStatus(KStatusNotifierItem::Passive);
             m_notifier->setCategory(KStatusNotifierItem::SystemServices);
-            m_notifier->setTitle(i18n("Add-ons Updates"));
+            m_notifier->setTitle(i18n("Add-ons Updater"));
             //TODO: get a bodega / add-ons icon?
             m_notifier->setIconByName("system-software-update");
         }
