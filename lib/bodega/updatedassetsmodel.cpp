@@ -25,7 +25,6 @@
 #include "installjob.h"
 #include "installjobsmodel.h"
 
-#include <QEventLoop>
 #include <QDebug>
 #include <QFile>
 #include <QMetaEnum>
@@ -59,6 +58,7 @@ public:
     QSqlDatabase db;
     QHash<QPersistentModelIndex, Bodega::InstallJob *> installJobs;
     QHash<Bodega::InstallJob *, QPersistentModelIndex> installJobsIndexes;
+    QHash<AssetOperations *, Session *> pendingOperations;
 
     void briefsJobFinished(Bodega::NetworkJob *);
     void fetchBriefs(const QString &store, const QString &warehouse, const QStringList &assets);
@@ -66,6 +66,7 @@ public:
     void jobAdded(const Bodega::AssetInfo &info, Bodega::InstallJob *job);
     void progressChanged(qreal progress);
     void jobDestroyed(QObject *obj);
+    void operationReady();
 
     static UpdatedAssetsModel *s_self;
 };
@@ -186,6 +187,17 @@ void UpdatedAssetsModel::Private::jobDestroyed(QObject *obj)
     }
 }
 
+void UpdatedAssetsModel::Private::operationReady()
+{
+    AssetOperations *operation = qobject_cast<AssetOperations *>(q->sender());
+
+    if (!operation) {
+        return;
+    }
+
+    pendingOperations[operation]->install(operation);
+    pendingOperations.remove(operation);
+}
 
 UpdatedAssetsModel::UpdatedAssetsModel(QObject *parent)
     : d(new Private(this))
@@ -295,12 +307,8 @@ void UpdatedAssetsModel::updateAll()
             if (it.key() <= i) {
                 Session *session = it.value();
                 AssetOperations *operation = session->assetOperations(info.id);
-                //FIXME: make all of this asynchronous
-                QEventLoop eventLoop;
-                connect(operation, SIGNAL(ready()),
-                        &eventLoop, SLOT(quit()));
-                eventLoop.exec();
-                session->install(operation);
+                d->pendingOperations[operation] = session;
+                connect(operation, SIGNAL(ready()), this, SLOT(operationReady()));
             }
         }
         

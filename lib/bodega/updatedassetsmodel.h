@@ -91,6 +91,7 @@ namespace Bodega {
         Q_PRIVATE_SLOT(d, void jobAdded(const Bodega::AssetInfo &info, Bodega::InstallJob *job))
         Q_PRIVATE_SLOT(d, void progressChanged(qreal progress))
         Q_PRIVATE_SLOT(d, void jobDestroyed(QObject *obj))
+        Q_PRIVATE_SLOT(d, void operationReady())
     };
 }
 
