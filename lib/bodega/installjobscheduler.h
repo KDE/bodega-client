@@ -51,12 +51,12 @@ namespace Bodega
         //passing session so it can work with multiple warehouses too
         Q_INVOKABLE void scheduleInstall(const QString &assetId, Bodega::Session *sesison);
 
-        Q_INVOKABLE InstallJobScheduler::InstallStatus installStatus(const QString &assetId);
+        Q_INVOKABLE Bodega::InstallJobScheduler::InstallStatus installStatus(const QString &assetId);
 
         Q_INVOKABLE Bodega::InstallJob *installJobForAsset(const QString &assetId);
 
     Q_SIGNALS:
-        void installStatusChanged(const QString &assetId, InstallStatus status);
+        void installStatusChanged(const QString &assetId, Bodega::InstallJobScheduler::InstallStatus status);
 
     protected:
         InstallJobScheduler(QObject *parent = 0);
@@ -68,6 +68,9 @@ namespace Bodega
         Q_PRIVATE_SLOT(d, void jobFinished(Bodega::NetworkJob *))
         Q_PRIVATE_SLOT(d, void operationReady())
     };
+
 }
+
+Q_DECLARE_METATYPE(Bodega::InstallJobScheduler::InstallStatus)
 
 #endif

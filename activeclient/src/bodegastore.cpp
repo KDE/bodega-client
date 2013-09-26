@@ -56,6 +56,17 @@
 using namespace Bodega;
 
 
+
+QScriptValue qScriptValueFromStatus(QScriptEngine *engine, const Bodega::InstallJobScheduler::InstallStatus &status)
+{
+    return QScriptValue((int)status);
+}
+
+void statusFromQScriptValue(const QScriptValue &scriptValue, Bodega::InstallJobScheduler::InstallStatus &status)
+{
+    status = (Bodega::InstallJobScheduler::InstallStatus)scriptValue.toInteger();
+}
+
 QScriptValue qScriptValueFromError(QScriptEngine *engine, const Bodega::Error &error)
 {
     QScriptValue obj = engine->newObject();
@@ -291,8 +302,12 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::ListCollectionsJob>();
     qmlRegisterType<Bodega::ListCollectionsJobModel>();
     qmlRegisterType<Bodega::UpdatedAssetsModel>();
-    qmlRegisterType<Bodega::InstallJobScheduler>();
     qmlRegisterType<Bodega::CollectionListAssetsJobModel>();
+
+    qRegisterMetaType<Bodega::InstallJobScheduler::InstallStatus>("Bodega::InstallJobScheduler::InstallStatus");
+    qScriptRegisterMetaType<Bodega::InstallJobScheduler::InstallStatus>(declarativeView()->scriptEngine(), qScriptValueFromStatus, statusFromQScriptValue, QScriptValue());
+    qmlRegisterUncreatableType<Bodega::InstallJobScheduler>("com.makeplaylive.addonsapp", 1, 0, "InstallJobScheduler", QLatin1String("Do not create objects of this type."));
+    
     qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
 
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());

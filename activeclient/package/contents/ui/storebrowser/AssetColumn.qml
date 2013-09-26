@@ -22,6 +22,7 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtras
+import com.makeplaylive.addonsapp 1.0
 import "../components"
 
 BrowserColumn {
@@ -34,30 +35,45 @@ BrowserColumn {
     property QtObject session: bodegaClient.session
 
     property variant installJob: null
+    property int installStatus: 0
 
-    function downloadAsset()
-    {
-        downloadProgress.opacity = 1
-        downloadProgress.indeterminate = true
-        downloadProgress.indeterminate = false
-        root.installJob = root.session.install(assetOperations)
-        root.installJob.progressChanged.connect(downloadProgress.updateProgress)
-        root.installJob.jobFinished.connect(downloadProgress.operationFinished)
-        root.installJob.jobError.connect(downloadProgress.installError)
-        root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
+    function downloadAsset() {downloadProgress.opacity = 1
+        bodegaClient.installJobScheduler.scheduleInstall(assetId, session)
     }
 
     onAssetIdChanged: {
         if (assetId > 0) {
             assetOperations = root.session.assetOperations(assetId);
 
-            root.installJob = root.session.installJobsModel.jobForAsset(root.assetId)
+            root.installJob = bodegaClient.installJobScheduler.installJobForAsset(assetId)
             if (root.installJob) {
                 downloadProgress.opacity = 1
                 root.installJob.progressChanged.connect(downloadProgress.updateProgress)
                 root.installJob.jobFinished.connect(downloadProgress.operationFinished)
                 root.installJob.jobError.connect(downloadProgress.installError)
                 root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
+            }
+        }
+    }
+
+    Connections {
+        target: bodegaClient.installJobScheduler
+        onInstallStatusChanged: {
+            if (assetId == root.assetId) {
+                root.installStatus = status;
+                if (status == InstallJobScheduler.Installing) {
+                    downloadProgress.opacity = 1
+                    downloadProgress.indeterminate = true
+                    downloadProgress.indeterminate = false
+                    root.installJob = bodegaClient.installJobScheduler.installJobForAsset(assetId);
+
+                    if (root.installJob) {
+                        root.installJob.progressChanged.connect(downloadProgress.updateProgress)
+                        root.installJob.jobFinished.connect(downloadProgress.operationFinished)
+                        root.installJob.jobError.connect(downloadProgress.installError)
+                        root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
+                    }
+                }
             }
         }
     }

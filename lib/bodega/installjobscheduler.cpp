@@ -65,9 +65,8 @@ void InstallJobScheduler::Private::fetchAssetOperations(const QString &assetId, 
 {
     AssetOperations *operation = session->assetOperations(assetId);
     pendingOperations[operation] = session;
-    runningQueue << assetId;
     waitingQueue.removeAll(assetId);
-    emit q->installStatusChanged(assetId, InstallJobScheduler::Installing);
+
     connect(operation, SIGNAL(ready()), q, SLOT(operationReady()));
 }
 
@@ -82,6 +81,8 @@ void InstallJobScheduler::Private::operationReady()
     assetIdToJob[operation->assetInfo().id] = pendingOperations[operation]->install(operation);
     jobToAssetId[assetIdToJob[operation->assetInfo().id]] = operation->assetInfo().id;
     pendingOperations.remove(operation);
+    runningQueue << operation->assetInfo().id;
+    emit q->installStatusChanged(operation->assetInfo().id, InstallJobScheduler::Installing);
 
     connect(assetIdToJob[operation->assetInfo().id], SIGNAL(jobFinished(Bodega::NetworkJob *)),
             q, SLOT(jobFinished(Bodega::NetworkJob *)));
@@ -136,6 +137,7 @@ InstallJobScheduler* InstallJobScheduler::self()
 void InstallJobScheduler::scheduleInstall(const QString &assetId, Bodega::Session *session)
 {
     d->waitingQueue << assetId;
+
     emit installStatusChanged(assetId, Waiting);
 
     if (d->runningQueue.length() < d->maximumRunning) {
