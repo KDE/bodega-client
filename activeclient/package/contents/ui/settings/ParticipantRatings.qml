@@ -134,7 +134,7 @@ PlasmaComponents.Page {
                     }
                     Item {
                         width: 1
-                        height: theme.defaultFont.mSize.height/2
+                        height: theme.defaultFont.mSize.height/4
                     }
 
                     InlineConfirmationDialog {
