@@ -70,16 +70,20 @@ PlasmaComponents.Page {
                         spacing: 4
                         x: parent.width/2 - theme.defaultFont.mSize.width*11
                         PlasmaComponents.Label {
+                            anchors.top: foobar.top
                             text: i18n("Description:")
                             wrapMode: Text.Wrap
                             width: theme.defaultFont.mSize.width*11
                             horizontalAlignment: Text.AlignRight
+                            verticalAlignment: Text.AlignTop
                             visible: model.AssetDesciption.length > 0
                         }
                         PlasmaComponents.Label {
+                            id: foobar
                             text:  model.AssetDesciption
                             width: listItem.width/2
                             visible: text.length > 0
+                            verticalAlignment: Text.AlignTop
                             wrapMode: Text.Wrap
                             elide: Text.ElideLeft
                             maximumLineCount: 3
