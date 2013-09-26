@@ -16,5 +16,5 @@ target_link_libraries(
 )
 
 install(TARGETS kded_bodegaupdater DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES kded_bodegaupdater.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kded)
+install(FILES bodegaupdater.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kded)
 
