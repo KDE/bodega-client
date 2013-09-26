@@ -31,6 +31,7 @@ namespace Bodega {
     class ListCollectionsJobModel;
     class CollectionListAssetsJobModel;
     class UpdatedAssetsModel;
+    class InstallJobScheduler;
 }
 
 class ErrorCode : public QObject
@@ -97,6 +98,7 @@ class BodegaStore : public KDeclarativeMainWindow
     Q_PROPERTY(Bodega::ListCollectionsJobModel *listCollectionsJobModel READ listCollectionsJobModel CONSTANT)
     Q_PROPERTY(Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel READ collectionListAssetsJobModel CONSTANT)
     Q_PROPERTY(Bodega::UpdatedAssetsModel *updatedAssetsModel READ updatedAssetsModel CONSTANT)
+    Q_PROPERTY(Bodega::InstallJobScheduler *installJobScheduler READ installJobScheduler CONSTANT)
 
 public:
     BodegaStore();
@@ -110,6 +112,7 @@ public:
     Bodega::ListCollectionsJobModel *listCollectionsJobModel() const;
     Bodega::CollectionListAssetsJobModel *collectionListAssetsJobModel() const;
     Bodega::UpdatedAssetsModel *updatedAssetsModel() const;
+    Bodega::InstallJobScheduler *installJobScheduler() const;
     QString startPage() const;
 
     Q_INVOKABLE void saveCredentials() const;

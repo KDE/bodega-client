@@ -46,6 +46,7 @@
 #include <bodega/signonjob.h>
 #include <bodega/installjob.h>
 #include <bodega/installjobsmodel.h>
+#include <bodega/installjobscheduler.h>
 #include <bodega/uninstalljob.h>
 #include <bodega/listcollectionsjob.h>
 #include <bodega/listcollectionsjobmodel.h>
@@ -290,6 +291,7 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::ListCollectionsJob>();
     qmlRegisterType<Bodega::ListCollectionsJobModel>();
     qmlRegisterType<Bodega::UpdatedAssetsModel>();
+    qmlRegisterType<Bodega::InstallJobScheduler>();
     qmlRegisterType<Bodega::CollectionListAssetsJobModel>();
     qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
 
@@ -367,6 +369,11 @@ CollectionListAssetsJobModel *BodegaStore::collectionListAssetsJobModel() const
 Bodega::UpdatedAssetsModel *BodegaStore::updatedAssetsModel() const
 {
     return UpdatedAssetsModel::self();
+}
+
+Bodega::InstallJobScheduler *BodegaStore::installJobScheduler() const
+{
+    return InstallJobScheduler::self();
 }
 
 void BodegaStore::historyInUse(bool used)
