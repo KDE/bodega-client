@@ -48,7 +48,11 @@ public:
 
     QHash<QString, InstallJob *> assetIdToJob;
     QHash<InstallJob *, QString> jobToAssetId;
+
+    static InstallJobScheduler* s_self;
 };
+
+InstallJobScheduler* InstallJobScheduler::Private::s_self = 0;
 
 InstallJobScheduler::Private::Private()
     : maximumRunning(3)
@@ -106,6 +110,8 @@ void InstallJobScheduler::Private::jobFinished(Bodega::NetworkJob *job)
 }
 
 
+
+
 InstallJobScheduler::InstallJobScheduler(QObject *parent)
     : QObject(parent),
       d(0)
@@ -117,6 +123,14 @@ InstallJobScheduler::~InstallJobScheduler()
     delete d;
 }
 
+InstallJobScheduler* InstallJobScheduler::self()
+{
+    if (!InstallJobScheduler::Private::s_self) {
+        InstallJobScheduler::Private::s_self = new InstallJobScheduler;
+    }
+
+    return InstallJobScheduler::Private::s_self;
+}
 
 void InstallJobScheduler::scheduleInstall(const QString &assetId, Bodega::Session *session)
 {

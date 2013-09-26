@@ -41,9 +41,9 @@ namespace Bodega
             Installing,
             Finished
         };
-        //singleton instead?
-        InstallJobScheduler(QObject *parent);
         ~InstallJobScheduler();
+
+        static InstallJobScheduler* self();
 
         //not an AssetOperation since it has to be taken asynchronously too
         //passing session so it can work with multiple warehouses too
@@ -55,6 +55,9 @@ namespace Bodega
 
     Q_SIGNALS:
         void installStatusChanged(const QString &assetId, InstallStatus status);
+
+    protected:
+        InstallJobScheduler(QObject *parent = 0);
 
     private:
         class Private;
