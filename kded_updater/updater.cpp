@@ -42,6 +42,7 @@
 const char *defaultPackage = "org.kde.desktop";
 
 K_PLUGIN_FACTORY(UpdaterFactory, registerPlugin<Updater>();)
+K_EXPORT_PLUGIN(UpdaterFactory("bodegaupdater"))
 
 const int checkInterval = 6 * 60 * 60; // 6 hours
 
