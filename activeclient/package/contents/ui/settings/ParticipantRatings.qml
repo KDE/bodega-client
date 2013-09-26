@@ -53,7 +53,6 @@ PlasmaComponents.Page {
                 id: listItem
                 property variant ratings: model.Ratings
                 Column {
-                    spacing: theme.defaultFont.mSize.height
                     width: parent.width
 
                     PlasmaExtras.Heading {
@@ -67,10 +66,9 @@ PlasmaComponents.Page {
                         horizontalAlignment: Text.AlignHCenter
                     }
                     Row {
+                        x: Math.max(0, parent.width / 2 - theme.defaultFont.mSize.width * 11)
                         spacing: 4
-                        x: parent.width/2 - theme.defaultFont.mSize.width*11
                         PlasmaComponents.Label {
-                            anchors.top: foobar.top
                             text: i18n("Description:")
                             wrapMode: Text.Wrap
                             width: theme.defaultFont.mSize.width*11
@@ -79,7 +77,7 @@ PlasmaComponents.Page {
                             visible: model.AssetDesciption.length > 0
                         }
                         PlasmaComponents.Label {
-                            id: foobar
+                            id: descriptionLabel
                             text:  model.AssetDesciption
                             width: listItem.width/2
                             visible: text.length > 0
@@ -90,29 +88,28 @@ PlasmaComponents.Page {
                         }
                     }
                     Row {
+                        x: Math.max(0, parent.width/2 - theme.defaultFont.mSize.width * 11)
                         spacing: 4
-                        x: parent.width/2 - theme.defaultFont.mSize.width*11
                         PlasmaComponents.Label {
                             text: i18n("Version:")
                             wrapMode: Text.Wrap
-                            width: theme.defaultFont.mSize.width*11
+                            width: theme.defaultFont.mSize.width * 11
                             horizontalAlignment: Text.AlignRight
                             visible: model.AssetVersion.length > 0
                         }
                         PlasmaComponents.Label {
                             text:  model.AssetVersion
-                            width: theme.defaultFont.mSize.width*11
+                            width: theme.defaultFont.mSize.width * 11
                             visible: text.length > 0
                         }
                     }
 
-                    
                     Repeater {
                         model: ratings.length
                         delegate: Row {
                             id: ratingsRow
+                            x: Math.max(0, parent.width / 2 - theme.defaultFont.mSize.width * 11)
                             spacing: 4
-                            x: parent.width/2 - theme.defaultFont.mSize.width*11
                             PlasmaComponents.Label {
                                 id: ratingsLabel
                                 text: i18n("%1 :", ratings[index]["AttributeName"])
@@ -132,8 +129,8 @@ PlasmaComponents.Page {
 
                     PlasmaComponents.Button {
                         id: ratingsDeleteButton
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        text: i18n("Delete ratings")
+                        x: listItem.width / 2
+                        text: i18n("Delete this rating")
                         onClicked: ratingsDeleteConfirmation.open()
                     }
                     Item {
