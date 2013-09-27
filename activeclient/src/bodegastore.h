@@ -32,9 +32,9 @@ namespace Bodega {
     class CollectionAssetsModel;
     class ParticipantRatingsJobModel;
     class AssetRatingsJobModel;
+    class UpdatedAssetsModel;
+    class InstallJobScheduler;
 }
-
-Q_DECLARE_METATYPE(Bodega::Session*)
 
 class ErrorCode : public QObject
 {
@@ -93,6 +93,7 @@ class BodegaStore : public KDeclarativeMainWindow
 {
     Q_OBJECT
     Q_PROPERTY(Bodega::Session *session READ session CONSTANT)
+    Q_PROPERTY(QString startPage READ startPage CONSTANT)
     Q_PROPERTY(Bodega::Model *channelsModel READ channelsModel CONSTANT)
     Q_PROPERTY(Bodega::Model *searchModel READ searchModel CONSTANT)
     Q_PROPERTY(Bodega::HistoryModel *historyModel READ historyModel CONSTANT)
@@ -100,6 +101,9 @@ class BodegaStore : public KDeclarativeMainWindow
     Q_PROPERTY(Bodega::CollectionAssetsModel *collectionAssetsModel READ collectionAssetsModel CONSTANT)
     Q_PROPERTY(Bodega::ParticipantRatingsJobModel *participantRatingsJobModel READ participantRatingsJobModel CONSTANT)
     Q_PROPERTY(Bodega::AssetRatingsJobModel *assetRatingsJobModel READ assetRatingsJobModel CONSTANT)
+    Q_PROPERTY(Bodega::UpdatedAssetsModel *updatedAssetsModel READ updatedAssetsModel CONSTANT)
+    Q_PROPERTY(Bodega::InstallJobScheduler *installJobScheduler READ installJobScheduler CONSTANT)
+
 public:
     BodegaStore();
     virtual ~BodegaStore();
@@ -113,6 +117,9 @@ public:
     Bodega::CollectionAssetsModel *collectionAssetsModel() const;
     Bodega::ParticipantRatingsJobModel *participantRatingsJobModel();
     Bodega::AssetRatingsJobModel *assetRatingsJobModel();
+    Bodega::UpdatedAssetsModel *updatedAssetsModel() const;
+    Bodega::InstallJobScheduler *installJobScheduler() const;
+    QString startPage() const;
 
     Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE void forgetCredentials() const;
@@ -129,6 +136,7 @@ private:
     Bodega::ParticipantRatingsJobModel *m_participantRatingsJobModel;
     Bodega::AssetRatingsJobModel *m_assetRatingsJobModel;
     int m_historyUsers;
+    QString m_startPage;
 };
 
 #endif // BODEGASTORE_H

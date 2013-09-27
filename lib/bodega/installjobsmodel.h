@@ -47,8 +47,9 @@ namespace Bodega {
             ImagePreviewsRole = Qt::UserRole + 55,
         };
 
-        InstallJobsModel(QObject *parent = 0);
         ~InstallJobsModel();
+
+        static InstallJobsModel* self();
 
         Q_INVOKABLE Bodega::InstallJob *jobForAsset(const QString &assetId) const;
 
@@ -64,6 +65,10 @@ namespace Bodega {
 
     Q_SIGNALS:
         void countChanged();
+        void jobAdded(const Bodega::AssetInfo &info, Bodega::InstallJob *job);
+
+    protected:
+        InstallJobsModel(QObject *parent=0);
 
     private:
         class Private;

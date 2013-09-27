@@ -4,7 +4,7 @@ link_directories(${LINK_DIRECTORIES} ${QJSON_LIBRARY_DIRS})
 find_package(KDE4 REQUIRED)
 include_directories(${CMAKE_SOURCE_DIR}/libs/bodega/ ${CMAKE_SOURCE_DIR}/libs/bodega/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/bodega ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES} ${KDE4_INCLUDES} )
 
-include("../../CMakeQtUsage")
+SET(QT_DONT_USE_QTCORE FALSE)
 
 find_package(Soprano)
 macro_log_feature(

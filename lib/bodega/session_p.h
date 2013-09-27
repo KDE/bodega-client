@@ -91,7 +91,6 @@ public:
     bool authenticated;
     int points;
     QMap<ImageUrl, QUrl> imageUrls;
-    InstallJobsModel *installJobsModel;
 };
 
 }

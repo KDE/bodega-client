@@ -31,6 +31,7 @@
 #include <KConfigGroup>
 #include <KDebug>
 #include <KGlobal>
+#include <KCmdLineArgs>
 #include <kwallet.h>
 
 //Bodega libs
@@ -45,6 +46,7 @@
 #include <bodega/signonjob.h>
 #include <bodega/installjob.h>
 #include <bodega/installjobsmodel.h>
+#include <bodega/installjobscheduler.h>
 #include <bodega/uninstalljob.h>
 #include <bodega/collectionsmodel.h>
 #include <bodega/collectionassetsmodel.h>
@@ -52,9 +54,21 @@
 #include <bodega/participantratingsjob.h>
 #include <bodega/assetratingsjob.h>
 #include <bodega/assetratingsjobmodel.h>
+#include <bodega/updatedassetsmodel.h>
 
 using namespace Bodega;
 
+
+
+QScriptValue qScriptValueFromStatus(QScriptEngine *engine, const Bodega::InstallJobScheduler::InstallStatus &status)
+{
+    return QScriptValue((int)status);
+}
+
+void statusFromQScriptValue(const QScriptValue &scriptValue, Bodega::InstallJobScheduler::InstallStatus &status)
+{
+    status = (Bodega::InstallJobScheduler::InstallStatus)scriptValue.toInteger();
+}
 
 QScriptValue qScriptValueFromError(QScriptEngine *engine, const Bodega::Error &error)
 {
@@ -267,7 +281,7 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     info.email = scriptValue.property("email").toString();
 }
 
-    BodegaStore::BodegaStore()
+BodegaStore::BodegaStore()
     : KDeclarativeMainWindow(),
       m_historyModel(0),
       m_collectionsModel(0),
@@ -295,13 +309,20 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
     qmlRegisterType<Bodega::CollectionAssetsModel>();
     qmlRegisterType<Bodega::ParticipantRatingsJobModel>();
     qmlRegisterType<Bodega::AssetRatingsJobModel>();
-    qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
+    qmlRegisterType<Bodega::UpdatedAssetsModel>();
 
+    qRegisterMetaType<Bodega::InstallJobScheduler::InstallStatus>("Bodega::InstallJobScheduler::InstallStatus");
+    qScriptRegisterMetaType<Bodega::InstallJobScheduler::InstallStatus>(declarativeView()->scriptEngine(), qScriptValueFromStatus, statusFromQScriptValue, QScriptValue());
+    qmlRegisterUncreatableType<Bodega::InstallJobScheduler>("com.makeplaylive.addonsapp", 1, 0, "InstallJobScheduler", QLatin1String("Do not create objects of this type."));
+    qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ChannelInfo>(declarativeView()->scriptEngine(), qScriptValueFromChannelInfo, channelInfoFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::AssetInfo>(declarativeView()->scriptEngine(), qScriptValueFromAssetInfo, assetInfoFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::Tags>(declarativeView()->scriptEngine(), qScriptValueFromTags, tagsFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ParticipantInfo>(declarativeView()->scriptEngine(), qScriptValueFromParticipantInfo, participantInfoFromQScriptValue, QScriptValue());
+
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    m_startPage = args->getOption("startpage");
 
     m_session = new Session(this);
     KConfigGroup config(KGlobal::config(), "AddOns");
@@ -327,6 +348,11 @@ BodegaStore::~BodegaStore()
 Session* BodegaStore::session() const
 {
     return m_session;
+}
+
+QString BodegaStore::startPage() const
+{
+    return m_startPage;
 }
 
 Model* BodegaStore::channelsModel() const
@@ -376,6 +402,16 @@ AssetRatingsJobModel *BodegaStore::assetRatingsJobModel()
         m_assetRatingsJobModel->setSession(m_session);
     }
     return m_assetRatingsJobModel;
+}
+
+Bodega::UpdatedAssetsModel *BodegaStore::updatedAssetsModel() const
+{
+    return UpdatedAssetsModel::self();
+}
+
+Bodega::InstallJobScheduler *BodegaStore::installJobScheduler() const
+{
+    return InstallJobScheduler::self();
 }
 
 void BodegaStore::historyInUse(bool used)

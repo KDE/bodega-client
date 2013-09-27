@@ -1,5 +1,5 @@
 /*
- *   Copyright 2012 Coherent Theory LLC
+ *   Copyright 2013 Coherent Theory LLC
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU Library General Public License as
@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef BODEGA_MODEL_H
-#define BODEGA_MODEL_H
+#ifndef UPDATED_ASSETS_MODEL_H
+#define UPDATED_ASSETS_MODEL_H
 
 #include <bodega/globals.h>
 
@@ -28,20 +28,14 @@ namespace Bodega {
 
     class Session;
 
-    class BODEGA_EXPORT Model : public QAbstractItemModel
+    class BODEGA_EXPORT UpdatedAssetsModel : public QAbstractItemModel
     {
         Q_OBJECT
-        Q_PROPERTY(QString topChannel READ topChannel WRITE setTopChannel NOTIFY topChannelChanged)
-        Q_PROPERTY(QString searchQuery READ searchQuery WRITE setSearchQuery NOTIFY searchQueryChanged)
         Q_ENUMS(DisplayRoles)
+        Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
 
     public:
         enum DisplayRoles {
-            ChannelIdRole = Qt::UserRole + 1,
-            ChannelNameRole,
-            ChannelDescriptionRole,
-            ChannelAssetCountRole,
-
             ImageTinyRole = Qt::UserRole + 50,
             ImageSmallRole,
             ImageMediumRole,
@@ -58,50 +52,47 @@ namespace Bodega {
             AssetVersionRole,
             AssetFilenameRole,
             AssetDescriptionRole,
-            AssetPointsRole,
-            AssetSizeRole
+            AssetSizeRole,
+
+            SessionRole = Qt::UserRole + 120,
+            ProgressRole
         };
 
-        Model(QObject *parent = 0);
-        ~Model();
+        ~UpdatedAssetsModel();
 
-        //Invokable to make the view show a spinner when loading more
-        Q_INVOKABLE bool canFetchMore(const QModelIndex &parent) const;
+        static UpdatedAssetsModel* self();
+
+        Q_INVOKABLE void reload();
+        Q_INVOKABLE void updateAll();
+        Q_INVOKABLE bool containsAsset(const QString &assetId);
 
         int columnCount(const QModelIndex &parent = QModelIndex()) const;
         QVariant data(const QModelIndex &index, int role) const;
-        void fetchMore(const QModelIndex &parent);
-        Qt::ItemFlags flags(const QModelIndex &index) const;
         bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
-        QVariant headerData(int section, Qt::Orientation orientation,
-                            int role = Qt::DisplayRole) const;
-        QModelIndex index(int row, int column,
-                          const QModelIndex &parent = QModelIndex()) const;
-        QMap<int, QVariant> itemData(const QModelIndex &index) const;
+        QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
         QModelIndex parent(const QModelIndex &index) const;
         int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
         void setSession(Session *session);
         Session *session() const;
 
-        void setTopChannel(const QString &topChannel);
-        QString topChannel() const;
-
-        void setSearchQuery(const QString &query);
-        QString searchQuery() const;
-
     Q_SIGNALS:
-        void topChannelChanged();
-        void searchQueryChanged();
+        void countChanged();
+
+    protected:
+        UpdatedAssetsModel(QObject *parent = 0);
 
     private:
         class Private;
         friend class Private;
         Private * const d;
-        Q_PRIVATE_SLOT(d, void channelsJobFinished(Bodega::NetworkJob *))
-        Q_PRIVATE_SLOT(d, void reloadFromNetwork())
+        Q_PRIVATE_SLOT(d, void briefsJobFinished(Bodega::NetworkJob *))
+        Q_PRIVATE_SLOT(d, void sessionAuthenticated(bool))
+        Q_PRIVATE_SLOT(d, void jobAdded(const Bodega::AssetInfo &info, Bodega::InstallJob *job))
+        Q_PRIVATE_SLOT(d, void progressChanged(qreal progress))
+        Q_PRIVATE_SLOT(d, void jobDestroyed(QObject *obj))
+        Q_PRIVATE_SLOT(d, void operationReady())
     };
-
 }
 
 #endif

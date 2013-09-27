@@ -23,6 +23,7 @@ import org.kde.plasma.mobilecomponents 0.1 as MobileComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.plasma.extras 0.1 as PlasmaExtras
 import org.kde.qtextracomponents 0.1
+import com.makeplaylive.addonsapp 1.0
 import "../components"
 
 BrowserColumn {
@@ -32,26 +33,20 @@ BrowserColumn {
 
     property variant assetOperations
     property int assetId: 0
+    property QtObject session: bodegaClient.session
 
     property variant installJob: null
+    property int installStatus: 0
 
-    function downloadAsset()
-    {
-        downloadProgress.opacity = 1
-        downloadProgress.indeterminate = true
-        downloadProgress.indeterminate = false
-        root.installJob = bodegaClient.session.install(assetOperations)
-        root.installJob.progressChanged.connect(downloadProgress.updateProgress)
-        root.installJob.jobFinished.connect(downloadProgress.operationFinished)
-        root.installJob.jobError.connect(downloadProgress.installError)
-        root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
+    function downloadAsset() {downloadProgress.opacity = 1
+        bodegaClient.installJobScheduler.scheduleInstall(assetId, session)
     }
 
     function reloadPage() {
         if (assetId > 0) {
-            assetOperations = bodegaClient.session.assetOperations(assetId);
+            assetOperations = root.session.assetOperations(assetId);
 
-            root.installJob = bodegaClient.session.installJobsModel.jobForAsset(root.assetId)
+            root.installJob = bodegaClient.installJobScheduler.installJobForAsset(assetId)
             if (root.installJob) {
                 downloadProgress.opacity = 1
                 root.installJob.progressChanged.connect(downloadProgress.updateProgress)
@@ -63,6 +58,28 @@ BrowserColumn {
     }
 
     onAssetIdChanged: reloadPage()
+
+    Connections {
+        target: bodegaClient.installJobScheduler
+        onInstallStatusChanged: {
+            if (assetId == root.assetId) {
+                root.installStatus = status;
+                if (status == InstallJobScheduler.Installing) {
+                    downloadProgress.opacity = 1
+                    downloadProgress.indeterminate = true
+                    downloadProgress.indeterminate = false
+                    root.installJob = bodegaClient.installJobScheduler.installJobForAsset(assetId);
+
+                    if (root.installJob) {
+                        root.installJob.progressChanged.connect(downloadProgress.updateProgress)
+                        root.installJob.jobFinished.connect(downloadProgress.operationFinished)
+                        root.installJob.jobError.connect(downloadProgress.installError)
+                        root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
+                    }
+                }
+            }
+        }
+    }
 
     PlasmaExtras.ScrollArea {
         id: scrollArea
@@ -83,7 +100,7 @@ BrowserColumn {
                 Baloon {
                     id: questionBaloon
                     visualParent: installButton
-                    property bool canPurchase:(bodegaClient.session.points >= assetOperations.assetInfo.points)
+                    property bool canPurchase:(root.session.points >= assetOperations.assetInfo.points)
                     Column {
                         spacing: 4
                         width: theme.defaultFont.mSize.width*18
@@ -109,7 +126,7 @@ BrowserColumn {
                                     // purchase
                                     downloadProgress.opacity = 1
                                     downloadProgress.indeterminate = true
-                                    var job = bodegaClient.session.purchaseAsset(assetId)
+                                    var job = root.session.purchaseAsset(assetId)
                                     job.jobFinished.connect(downloadProgress.operationFinished)
                                     job.jobFinished.connect(root.downloadAsset)
                                     job.jobFinished.connect(installButton.assetOpJobCompleted)
@@ -130,7 +147,7 @@ BrowserColumn {
                     onAccepted: {
                         downloadProgress.opacity = 1
                         downloadProgress.indeterminate = true
-                        var job = bodegaClient.session.uninstall(assetOperations)
+                        var job = root.session.uninstall(assetOperations)
                         job.jobFinished.connect(downloadProgress.operationFinished)
                         job.error.connect(downloadProgress.installError)
                         job.jobFinished.connect(installButton.assetOpJobCompleted)
@@ -262,17 +279,16 @@ BrowserColumn {
                         id: installButton
                         anchors.horizontalCenter: parent.horizontalCenter
                         enabled: root.installJob == null && root.assetOperations.ready
+                        visible: !root.assetOperations.installed || bodegaClient.updatedAssetsModel.containsAsset(assetId)
                         text: {
-                            if (root.assetOperations.installed) {
-                                i18n("Remove")
+                            if (bodegaClient.updatedAssetsModel.containsAsset(assetId)) {
+                                i18n("Update")
                             } else {
                                 root.assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
                             }
                         }
                         onClicked: {
-                            if (root.assetOperations.installed) {
-                                uninstallConfirmation.open()
-                            } else if (root.assetOperations.assetInfo.canDownload) {
+                            if (root.assetOperations.assetInfo.canDownload) {
                                 root.downloadAsset()
                             } else {
                                 //ask to purchase
@@ -283,11 +299,19 @@ BrowserColumn {
                         function assetOpJobCompleted()
                         {
                             //TODO: need to show a success message methinks!
-                            root.assetOperations = bodegaClient.session.assetOperations(assetId)
+                            root.assetOperations = root.session.assetOperations(assetId)
                             root.installJob = null
                         }
                     }
 
+                    PlasmaComponents.Button {
+                        id: uninstallButton
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        enabled: root.installJob == null && root.assetOperations.ready
+                        visible: root.assetOperations.installed
+                        text: i18n("Remove")
+                        onClicked: uninstallConfirmation.open()
+                    }
 
                     PlasmaCore.SvgItem {
                         anchors {

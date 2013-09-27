@@ -28,6 +28,18 @@ BrowserColumn {
     id: root
     clip: true
 
+    //FIXME: why it needs delay to work correctly?
+    Timer {
+        interval: 10
+        running: true
+        onTriggered: {
+            if (bodegaClient.startPage === "updates") {
+                categoriesColumn.currentIndex = updatesItem.index;
+                itemBrowser.push(Qt.createComponent("UpdatesColumn.qml"));
+            }
+        }
+    }
+
     PlasmaExtras.ScrollArea {
         anchors {
             top: parent.top
@@ -68,11 +80,44 @@ BrowserColumn {
                     }
                 }
                 StoreListItem {
+                    id: collectionsItem
+                    visible: count > 0
+                    label: i18n("My collections")
+                    property int index: visualDataModel.count
+                    count: bodegaClient.collectionsModel.count
+                    checked: categoriesColumn.currentIndex == index
+                    onClicked: {
+                        if (categoriesColumn.currentIndex == index) {
+                            return
+                        }
+                        categoriesColumn.currentIndex = index;
+                        itemBrowser.pop(root);
+                        var collections = itemBrowser.push(Qt.createComponent("CollectionsColumn.qml"))
+                    }
+                }
+                StoreListItem {
+                    id: updatesItem
+                    visible: count > 0
+                    icon: "system-software-update"
+                    label: i18n("Updates")
+                    property int index: collectionsItem.index + 1
+                    count: bodegaClient.updatedAssetsModel.count
+                    checked: categoriesColumn.currentIndex == index
+                    onClicked: {
+                        if (categoriesColumn.currentIndex == index) {
+                            return
+                        }
+                        categoriesColumn.currentIndex = index;
+                        itemBrowser.pop(root);
+                        var page = itemBrowser.push(Qt.createComponent("UpdatesColumn.qml"));
+                    }
+                }
+                StoreListItem {
                     id: downloadsItem
                     visible: count > 0
                     icon: "folder-downloads"
                     label: i18n("Downloads")
-                    property int index: visualDataModel.count
+                    property int index: updatesItem.index + 1
                     count: bodegaClient.session.installJobsModel.count
                     checked: categoriesColumn.currentIndex == index
                     onClicked: {
@@ -82,21 +127,6 @@ BrowserColumn {
                         categoriesColumn.currentIndex = index
                         itemBrowser.pop(root)
                         var channels = itemBrowser.push(Qt.createComponent("InstallJobsColumn.qml"))
-                    }
-                }
-                StoreListItem {
-                    visible: count > 0
-                    label: i18n("My collections")
-                    property int index: downloadsItem.index + 1
-                    count: bodegaClient.collectionsModel.count
-                    checked: categoriesColumn.currentIndex == index
-                    onClicked: {
-                        if (categoriesColumn.currentIndex == index) {
-                            return
-                        }
-                        categoriesColumn.currentIndex = index
-                        itemBrowser.pop(root);
-                        var collections = itemBrowser.push(Qt.createComponent("CollectionsColumn.qml"))
                     }
                 }
             }

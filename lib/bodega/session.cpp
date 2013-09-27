@@ -21,6 +21,7 @@
 #include "session_p.h"
 
 #include "assetjob.h"
+#include "assetbriefsjob.h"
 #include "assetoperations.h"
 #include "collectionaddassetjob.h"
 #include "collectionlistassetsjob.h"
@@ -38,6 +39,7 @@
 #include "ratingattributesjob.h"
 #include "assetratingsjob.h"
 #include "participantratingsjob.h"
+#include "updatescheckjob.h"
 
 #include <QNetworkAccessManager>
 #include <QDebug>
@@ -49,8 +51,7 @@ Session::Private::Private(Session *parent)
         : q(parent),
           points(0),
           authenticated(false),
-          netManager(new QNetworkAccessManager(q)),
-          installJobsModel(new InstallJobsModel(q))
+          netManager(new QNetworkAccessManager(q))
 {
 }
 
@@ -314,6 +315,23 @@ AssetJob * Session::asset(const QString &assetId,
     return job;
 }
 
+AssetBriefsJob *Session::assetBriefs(const QStringList &assetIds)
+{
+    QUrl url = d->baseUrl;
+    url.setEncodedPath(d->jsonPath(QString::fromLatin1("/asset/list/briefs")));
+
+    const QByteArray json = "{ \"assets\": [" + assetIds.join(QLatin1String(", ")).toLatin1() + "] }";
+    //qDebug()<<"url is " <<url;
+    QNetworkRequest request;
+    request.setRawHeader("User-Agent", "Bodega 0.1");
+    request.setRawHeader("content-type", "application/json");
+    request.setUrl(url);
+
+    AssetBriefsJob *job = new AssetBriefsJob(d->netManager->post(request, json), this);
+    d->jobConnect(job);
+    return job;
+}
+
 ChangeLanguageJob * Session::changeLanguage(const QString &lang)
 {
     QUrl url = d->baseUrl;
@@ -359,7 +377,7 @@ QMap<ImageUrl, QUrl> Session::urlsForImage(const QString &name) const
 
 Bodega::InstallJobsModel *Session::installJobsModel() const
 {
-    return d->installJobsModel;
+    return InstallJobsModel::self();
 }
 
 Bodega::NetworkJob *Session::history(int offset, int pageSize)
@@ -609,6 +627,32 @@ Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, cons
     //qDebug()<<"url is " <<url;
 
     NetworkJob *job = new NetworkJob(d->get(url), this);
+    d->jobConnect(job);
+    return job;
+}
+
+Bodega::UpdatesCheckJob *Session::updatesCheck(const QList<QPair<QString, QString> > &assets)
+{
+    QUrl url = d->baseUrl;
+    const QString path = QString::fromLatin1("/asset/list/updates");
+    url.setEncodedPath(d->jsonPath(path));
+
+    QByteArray json = "{ \"assets\": [";
+    const QString arrayTemplate(QLatin1String("[%1, \"%2\"]"));
+    QStringList arrays;
+    typedef QPair<QString, QString> stringPair;
+    foreach (const stringPair &pair, assets) {
+        const QString tmp = arrayTemplate.arg(pair.first, pair.second);
+        arrays.append(tmp);
+    }
+    json.append(arrays.join(QLatin1String(",")).toLatin1()).append("] }");
+
+    QNetworkRequest request;
+    request.setRawHeader("User-Agent", "Bodega 0.1");
+    request.setRawHeader("content-type", "application/json");
+    request.setUrl(url);
+
+    UpdatesCheckJob *job = new UpdatesCheckJob(d->netManager->post(request, json), this);
     d->jobConnect(job);
     return job;
 }

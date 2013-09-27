@@ -23,6 +23,8 @@
 
 #include <bodega/assetoperations.h>
 
+#include <QSqlDatabase>
+
 namespace Bodega
 {
     class InstallJob;
@@ -57,12 +59,34 @@ namespace Bodega
 
             virtual void launch();
 
+            static QString updateDatabasePath();
+            static QSqlDatabase updateDatabase();
+
         Q_SIGNALS:
             void ready();
             void installedChanged();
 
         protected:
             AssetHandler(QObject *parent = 0);
+
+        protected Q_SLOTS:
+            /**
+             * If the asset should be checked for updates, this method
+             * should be called after installation is successful
+             * 
+             * @arg job if a job is passed in, then it is checked for
+             *          success before registration happens
+             */
+            void registerForUpdates(Bodega::NetworkJob *job = 0);
+
+            /**
+             * Removes the asset from update checking 
+             * on successful uninstallation
+             * 
+             * @arg job if a job is passed in, then it is checked for
+             *          success before registration happens
+             */
+            void unregisterForUpdates(Bodega::NetworkJob *job = 0);
 
         private:
             class Private;

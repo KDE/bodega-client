@@ -28,6 +28,7 @@ PlasmaComponents.ListItem {
     property int iconSize: theme.mediumIconSize
     property string icon
     property string label: model.DisplayRole
+    property real progress: model.ProgressRole
     property int count: model.ChannelAssetCountRole ? model.ChannelAssetCountRole : -1
     Row {
         spacing: theme.defaultFont.mSize.width
@@ -42,17 +43,40 @@ PlasmaComponents.ListItem {
             sourceComponent: (root.icon || model.DecorationRole) ? qIconComponent : (model.ImageMediumRole ? iconComponent : emptyComponent)
             anchors.verticalCenter: parent.verticalCenter
         }
-        PlasmaComponents.Label {
-            id: label
-            text: root.label
+        Column {
             anchors {
                 left: iconLoader.right
-                leftMargin: 2
+                leftMargin: 4
                 verticalCenter: parent.verticalCenter
                 right: countLabel.left
             }
-            width: parent.width - iconLoader.width - theme.defaultFont.mSize.width
-            elide: Text.ElideRight
+            PlasmaComponents.Label {
+                id: label
+                text: root.label
+                
+                width: parent.width - iconLoader.width - theme.defaultFont.mSize.width
+                elide: Text.ElideRight
+            }
+            PlasmaComponents.ProgressBar {
+                id: downloadProgress
+                visible: value && value < maximumValue
+                minimumValue: 0
+                maximumValue: 100
+                value: model.ProgressRole*100
+                height: doneLabel.height
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+            }
+            PlasmaComponents.Label {
+                id: doneLabel
+                text: i18n("Download finished")
+                height: paintedHeight
+                visible: progress >= 1
+                font.pointSize: theme.smallestFont.pointSize
+
+            }
         }
         PlasmaComponents.Label {
             id: countLabel

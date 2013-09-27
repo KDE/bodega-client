@@ -67,6 +67,8 @@ Bodega::InstallJob *WallpaperHandler::install(QNetworkReply *reply, Session *ses
 {
     if (!m_installJob) {
         m_installJob = new WallpaperInstallJob(reply, session);
+        connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
+                this, SLOT(registerForUpdates(Bodega::NetworkJob*)));
     }
 
     return m_installJob.data();
@@ -77,6 +79,8 @@ Bodega::UninstallJob *WallpaperHandler::uninstall(Session *session)
     //qDebug()<<m_uninstallJob;
     if (!m_uninstallJob) {
         m_uninstallJob = new WallpaperUninstallJob(session, this);
+        connect(m_uninstallJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
+                this, SLOT(unregisterForUpdates(Bodega::NetworkJob*)));
     }
 
     return m_uninstallJob.data();

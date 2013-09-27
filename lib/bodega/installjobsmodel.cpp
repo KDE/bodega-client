@@ -28,6 +28,7 @@
 namespace Bodega
 {
 
+
 class InstallJobsModel::Private
 {
 public:
@@ -48,7 +49,11 @@ public:
     //the two hashes are intended to be perfectly symmetrical
     QHash<InstallJob *, QString> idsForJobs;
     QHash<QString, InstallJob *> jobsForIds;
+
+    static InstallJobsModel* s_self;
 };
+
+InstallJobsModel* InstallJobsModel::Private::s_self = 0;
 
 InstallJobsModel::Private::Private(InstallJobsModel *parent)
     : q(parent)
@@ -110,6 +115,15 @@ InstallJobsModel::~InstallJobsModel()
     delete d;
 }
 
+InstallJobsModel* InstallJobsModel::self()
+{
+    if (!InstallJobsModel::Private::s_self) {
+        InstallJobsModel::Private::s_self = new InstallJobsModel;
+    }
+
+    return InstallJobsModel::Private::s_self;
+}
+
 Bodega::InstallJob *InstallJobsModel::jobForAsset(const QString &assetId) const
 {
     return d->jobsForIds.value(assetId);
@@ -139,6 +153,8 @@ void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
 
     connect(job, SIGNAL(progressChanged(qreal)), this, SLOT(progressChanged(qreal)));
     connect(job, SIGNAL(destroyed(QObject *)), this, SLOT(jobDestroyed(QObject *)));
+
+    emit jobAdded(info, job);
 }
 
 

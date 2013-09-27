@@ -57,7 +57,7 @@ void PackageIdInstallJob::downloadFinished(const QString &localFile)
 
     while (!idFile.atEnd()) {
         pkgId = QLatin1String(idFile.readLine());
-        if(pkgId.split(QLatin1Char(';'), QString::KeepEmptyParts).count() == 4) {
+        if (pkgId.split(QLatin1Char(';'), QString::KeepEmptyParts).count() == 4) {
             m_packageId = pkgId;
             break;
         }

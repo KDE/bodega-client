@@ -98,8 +98,9 @@ Node *Node::parent()
 
 int Node::row() const
 {
-    if (m_parentNode)
+    if (m_parentNode) {
         return m_parentNode->m_childNodes.indexOf(const_cast<Node*>(this));
+    }
 
     return 0;
 }
@@ -144,9 +145,14 @@ void Node::setLastFetchedOffset(int offset)
 
 class Model::Private {
 public:
-    Private()
-    {}
-    void init(Model *parent);
+    Private(Model *parent) :
+        q(parent),
+        session(0),
+        topNode(0)
+    {
+        init();
+    }
+    void init();
     void channelsJobFinished(Bodega::NetworkJob *job);
     void reloadFromNetwork();
 
@@ -163,12 +169,14 @@ public:
     QHash<QPersistentModelIndex, QList<ChannelsJob *> > jobsForIndex;
 };
 
-void Model::Private::init(Model *parent)
+void Model::Private::init()
 {
-    q = parent;
     ChannelInfo rootChanInfo;
     AssetInfo rootAssetInfo;
+    delete topNode;
     topNode = new Node(rootChanInfo, rootAssetInfo, 0);
+    indexForJobs.clear();
+    jobsForIndex.clear();
     session = 0;
 }
 
@@ -266,9 +274,8 @@ void Model::Private::reloadFromNetwork()
 
 Model::Model(QObject *parent)
     : QAbstractItemModel(parent),
-      d(new Private)
+      d(new Private(this))
 {
-    d->init(this);
     // set the role names based on the values of the DisplayRoles enum for
     //  the sake of QML
     QHash<int, QByteArray> roles;
@@ -349,6 +356,14 @@ QVariant Model::data(const QModelIndex &index, int role) const
             return node->assetInfo().version;
         case AssetFilenameRole:
             return node->assetInfo().filename;
+        case AssetLicenseRole:
+            return node->assetInfo().license;
+        case AssetLicenseTextRole:
+            return node->assetInfo().licenseText;
+        case AssetPartnerIdRole:
+            return node->assetInfo().partnerId;
+        case AssetPartnerNameRole:
+            return node->assetInfo().partnerName;
         case ImageTinyRole:
             return node->assetInfo().images.value(Bodega::ImageTiny);
         case ImageSmallRole:
@@ -365,6 +380,8 @@ QVariant Model::data(const QModelIndex &index, int role) const
             return node->assetInfo().description;
         case AssetPointsRole:
             return node->assetInfo().points;
+        case AssetSizeRole:
+            return node->assetInfo().size;
         default:
             return QVariant();
         }
@@ -490,9 +507,10 @@ void Model::setSession(Session *session)
     }
 
     if (d->session) {
-        //not connected directly, so disconnect everything
-        //delete d->channelsJob;
-        //TODO: delete all the jobs
+        disconnect(d->session, 0, this, 0);
+        d->init();
+        beginResetModel();
+        endResetModel();
     }
 
     d->session = session;

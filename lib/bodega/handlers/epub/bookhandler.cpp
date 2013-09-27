@@ -65,6 +65,8 @@ Bodega::InstallJob *BookHandler::install(QNetworkReply *reply, Session *session)
 {
     if (!m_installJob) {
         m_installJob = new BookInstallJob(reply, session, this);
+        connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
+                this, SLOT(registerForUpdates(Bodega::NetworkJob*)));
     }
 
     return m_installJob.data();
@@ -74,6 +76,8 @@ Bodega::UninstallJob *BookHandler::uninstall(Session *session)
 {
     if (!m_uninstallJob) {
         m_uninstallJob = new BookUninstallJob(session, this);
+        connect(m_uninstallJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
+                this, SLOT(unregisterForUpdates(Bodega::NetworkJob*)));
     }
 
     return m_uninstallJob.data();

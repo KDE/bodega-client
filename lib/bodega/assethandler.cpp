@@ -24,6 +24,9 @@
 #include <QDir>
 #include <QLibraryInfo>
 #include <QPluginLoader>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
 
 #include "installjob.h"
 #include "assethandlerfactory.h"
@@ -40,8 +43,17 @@ public:
     {
     }
 
+    void initUpdateDb() {
+        if (updateDb.isOpen()) {
+            return;
+        }
+
+        updateDb = AssetHandler::updateDatabase();
+    }
+
     AssetOperations *ops;
     bool ready;
+    QSqlDatabase updateDb;
 };
 
 AssetHandler::AssetHandler(QObject *parent)
@@ -52,6 +64,10 @@ AssetHandler::AssetHandler(QObject *parent)
 
 AssetHandler::~AssetHandler()
 {
+    if (d->updateDb.isOpen()) {
+        d->updateDb.close();
+    }
+
     delete d;
 }
 
@@ -147,6 +163,72 @@ void AssetHandler::launch()
 {
 }
 
+void AssetHandler::registerForUpdates(Bodega::NetworkJob *job)
+{
+    if (!job || job->failed()) {
+        return;
+    }
+
+    if (!d->ops) {
+        return;
+    }
+
+    const QString id = d->ops->assetInfo().id;
+    if (id.isEmpty()) {
+        return;
+    }
+
+    d->initUpdateDb();
+
+    QSqlQuery query(d->updateDb);
+
+    query.prepare(QLatin1String("SELECT asset FROM assets WHERE warehouse = :warehouse AND store = :store AND asset = :asset"));
+    query.bindValue(QLatin1String(":warehouse"), job->session()->baseUrl());
+    query.bindValue(QLatin1String(":store"), job->session()->storeId());
+    query.bindValue(QLatin1String(":asset"), id);
+
+    if (query.exec() && query.first()) {
+        query.prepare(QLatin1String("UPDATE assets SET create = :created, updated = 0, checked = 0 WHERE warehouse = :warehouse AND store = :store AND asset = :asset"));
+    } else {
+        query.prepare(QLatin1String("INSERT INTO assets (warehouse, store, asset, created) VALUES (:warehouse, :store, :asset, :created)"));
+    }
+
+    query.bindValue(QLatin1String(":warehouse"), job->session()->baseUrl());
+    query.bindValue(QLatin1String(":store"), job->session()->storeId());
+    query.bindValue(QLatin1String(":asset"), id);
+    query.bindValue(QLatin1String(":created"), d->ops->assetInfo().created.toString(Qt::ISODate));
+    if (!query.exec()) {
+        qDebug() << "Insertion of update failed:" << query.lastError();
+    }
+}
+
+void AssetHandler::unregisterForUpdates(Bodega::NetworkJob *job)
+{
+    if (job && job->failed()) {
+        return;
+    }
+
+    if (!d->ops) {
+        return;
+    }
+
+    const QString id = d->ops->assetInfo().id;
+    if (id.isEmpty()) {
+        return;
+    }
+
+    d->initUpdateDb();
+
+    QSqlQuery query(d->updateDb);
+    query.prepare(QLatin1String("DELETE FROM assets WHERE warehouse = :warehouse AND store = :store AND asset = :asset"));
+    query.bindValue(QLatin1String(":warehouse"), job->session()->baseUrl());
+    query.bindValue(QLatin1String(":store"), job->session()->storeId());
+    query.bindValue(QLatin1String(":asset"), id);
+    if (!query.exec()) {
+        qDebug() << "Insertion of update failed:" << query.lastError();
+    }
+}
+
 void AssetHandler::setReady(bool isReady)
 {
     d->ready = isReady;
@@ -158,6 +240,50 @@ void AssetHandler::setReady(bool isReady)
 bool AssetHandler::isReady() const
 {
     return d->ready;
+}
+
+QString AssetHandler::updateDatabasePath()
+{
+    //FIXME QT5: use QStandardDirs for this
+    QString updateDbPath = QDir::homePath() + QLatin1String("/.local/share/bodega/");
+    if (!QFile::exists(updateDbPath)) {
+        QDir dir;
+        dir.mkpath(updateDbPath);
+    }
+
+    updateDbPath.append(QLatin1String("assets.db"));
+    return updateDbPath;
+}
+
+QSqlDatabase AssetHandler::updateDatabase()
+{
+    const QString dbConnectionName = QLatin1String("BODEGA_UPDATES");
+    bool initTables = false;
+
+    QSqlDatabase updateDb = QSqlDatabase::database(dbConnectionName);
+
+    if (!updateDb.isValid()) {
+        const QString updateDbPath = updateDatabasePath();
+        initTables = !QFile::exists(updateDbPath);
+        updateDb = QSqlDatabase::addDatabase(QLatin1String("QSQLITE"));
+        updateDb.setDatabaseName(updateDbPath);
+    }
+
+    if (!updateDb.isOpen()) {
+        if (!updateDb.open()) {
+            qDebug() << "failed to open update db" << updateDb.lastError();
+        }
+
+        if (initTables) {
+            QSqlQuery query(updateDb);
+            query.exec(QLatin1String("CREATE TABLE assets (store text, warehouse text, asset text, created text, updated bool default false, checked bool default false)"));
+            query.exec(QLatin1String("CREATE TABLE config (key text, val int)"));
+            query.exec(QLatin1String("INSERT INTO config (key, val) VALUES('lastcheck', strftime('%s', 'now'))"));
+            query.exec(QLatin1String("INSERT INTO config (key, val) VALUES('version', 1)"));
+        }
+    }
+
+    return updateDb;
 }
 
 } // namespace Bodega

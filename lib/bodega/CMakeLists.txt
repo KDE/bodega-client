@@ -1,6 +1,10 @@
+SET(QT_DONT_USE_QTGUI TRUE)
+SET(QT_USE_QTNETWORK TRUE)
+SET(QT_USE_QTSQL TRUE)
 
 set (bodega_HEADERS
      assetjob.h
+     assetbriefsjob.h
      assetoperations.h
      collectionaddassetjob.h
      collectionlistassetsjob.h
@@ -23,6 +27,8 @@ set (bodega_HEADERS
      registerjob.h
      session.h
      signonjob.h
+     updatescheckjob.h
+     updatedassetsmodel.h
      uninstalljob.h
      ratingattributesjob.h
      assetratingsjob.h
@@ -33,6 +39,7 @@ set (bodega_HEADERS
 
 set (bodega_SRCS
      assetjob.cpp
+     assetbriefsjob.cpp
      assethandler.cpp
      assethandlerfactory.cpp
      assetoperations.cpp
@@ -51,6 +58,7 @@ set (bodega_SRCS
      imagelocator.cpp
      installjob.cpp
      installjobsmodel.cpp
+     installjobscheduler.cpp
      listcollectionsjob.cpp
      networkjob.cpp
      participantinfojob.cpp
@@ -58,6 +66,8 @@ set (bodega_SRCS
      registerjob.cpp
      session.cpp
      signonjob.cpp
+     updatescheckjob.cpp
+     updatedassetsmodel.cpp
      uninstalljob.cpp
      ratingattributesjob.cpp
      assetratingsjob.cpp
@@ -65,8 +75,6 @@ set (bodega_SRCS
      assetratingsjobmodel.cpp
      participantratingsjobmodel.cpp
      )
-
-include("CMakeQtUsage")
 
 include_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/lib/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES} ${QJSON_INCLUDE_DIRS})
 

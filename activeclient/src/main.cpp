@@ -44,6 +44,7 @@ int main(int argc, char **argv)
     KCmdLineArgs::init(argc, argv, &about);
 
     KCmdLineOptions options;
+    options.add("startpage <page>", ki18n("Starts the application at the desired page"));
     KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
 

@@ -33,6 +33,7 @@ class QAbstractItemModel;
 namespace Bodega {
 
     class AssetJob;
+    class AssetBriefsJob;
     class AssetOperations;
     class collectionAddAssetJob;
     class collectionListAssetsJob;
@@ -52,6 +53,7 @@ namespace Bodega {
     class RatingAttributesJob;
     class AssetRatingsJob;
     class ParticipantRatingsJob;
+    class UpdatesCheckJob;
 
     class BODEGA_EXPORT Session : public QObject
     {
@@ -107,6 +109,12 @@ namespace Bodega {
 
         Bodega::AssetJob *asset(const QString &assetId,
                                 AssetJob::AssetFlags flags=AssetJob::None);
+        /**
+         * Creates a job that retrives brief information on 1 or more assets
+         * 
+         * @args assetIds a list of asset ids to fetch information for
+         */
+        Bodega::AssetBriefsJob *assetBriefs(const QStringList &assetIds);
         Bodega::ChangeLanguageJob *changeLanguage(const QString &lang);
         Bodega::ChannelsJob *search(const QString &text,
                                     const QString &channelId,
@@ -151,7 +159,7 @@ namespace Bodega {
         Bodega::NetworkJob *assetCreateRatings(const QString &assetId, const QVariantMap &ratings);
         Bodega::NetworkJob *assetDeleteRatings(const QString &assetId);
         /*
-         * These two are special because they don't require a session, as
+         * These methods are special because they don't require a session, as
          * such they're fire and forget jobs that don't require
          * authentication and don't set any state
          */
@@ -164,6 +172,13 @@ namespace Bodega {
         Bodega::NetworkJob *resetPassword(const QString &email);
         Bodega::NetworkJob *changePassword(const QString &newPassword);
         Bodega::NetworkJob *changeAccountDetails(const QString &firstName, const QString &lastName, const QString &email);
+
+        /**
+         * Creates an update check. Does not require authentication.
+         *
+         * @arg assets a list of pairs of asset names and version timestamps to use in the check
+         */
+        Bodega::UpdatesCheckJob *updatesCheck(const QList<QPair<QString, QString> > &assets);
 
     Q_SIGNALS:
         void disconnected();
@@ -182,4 +197,5 @@ namespace Bodega {
     };
 }
 
+Q_DECLARE_METATYPE(Bodega::Session *);
 #endif

@@ -63,14 +63,16 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
     info.license = asset[QLatin1String("license")].toString();
     info.licenseText = asset[QLatin1String("licenseText")].toString();
     info.partnerId = asset[QLatin1String("partnerId")].toString();
-    info.partnerName = asset[QLatin1String("partnername")].toString();
+    info.partnerName = asset[QLatin1String("partner")].toString();
     info.name = asset[QLatin1String("name")].toString();
     info.filename = asset[QLatin1String("filename")].toString();
     info.version = asset[QLatin1String("version")].toString();
+    info.created = asset[QLatin1String("created")].toDateTime();
     info.images = q->session()->urlsForImage(asset[QLatin1String("image")].toString());
     info.description = asset[QLatin1String("description")].toString();
     info.points = asset[QLatin1String("points")].toInt();
     info.canDownload = asset[QLatin1String("canDownload")].toBool();
+    info.size = asset[QLatin1String("size")].toLongLong();
 }
 
 void AssetJob::Private::parseChangeLog(const QVariantMap &result)

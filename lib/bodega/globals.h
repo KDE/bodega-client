@@ -76,9 +76,11 @@ namespace Bodega {
         QString name;
         QString filename;
         QString version;
+        QDateTime created;
         QString description;
         QString mimetype;
         QMap<ImageUrl, QUrl> images;
+        qint64 size;
         int  points;
         bool canDownload;
 
