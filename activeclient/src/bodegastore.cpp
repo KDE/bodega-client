@@ -60,7 +60,7 @@ using namespace Bodega;
 
 
 
-QScriptValue qScriptValueFromStatus(QScriptEngine *engine, const Bodega::InstallJobScheduler::InstallStatus &status)
+QScriptValue qScriptValueFromStatus(QScriptEngine *, const Bodega::InstallJobScheduler::InstallStatus &status)
 {
     return QScriptValue((int)status);
 }
@@ -163,6 +163,7 @@ QScriptValue qScriptValueFromAssetInfo(QScriptEngine *engine, const Bodega::Asse
     obj.setProperty("description", info.description);
     obj.setProperty("points", info.points);
     obj.setProperty("canDownload", info.canDownload);
+    obj.setProperty("formatedSize", info.formatedSize);
 
     QScriptValue imageObj = engine->newObject();
     imageObj.setProperty("tiny", info.images[ImageTiny].toString());
