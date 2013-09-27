@@ -90,7 +90,7 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
 {
     QString plugin;
     //FIXME: a better registration system is badly needed
-    if (type == QLatin1String("application/epub+zip") ||
+    if (type.startsWith(QLatin1String("application/epub")) ||
         type == QLatin1String("application/pdf")) {
         plugin = QLatin1String("epub");
     } else if (type == QLatin1String("application/x-plasma")) {
