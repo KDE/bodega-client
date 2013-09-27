@@ -73,6 +73,11 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
     info.points = asset[QLatin1String("points")].toInt();
     info.canDownload = asset[QLatin1String("canDownload")].toBool();
     info.size = asset[QLatin1String("size")].toLongLong();
+    if (info.size > 1024*1014) {
+        info.formatedSize = tr("%1 Mb").arg(((info.size * 100) / (1024 * 1024)) / 100.0);
+    } else {
+        info.formatedSize = tr("%1 Kb").arg(((info.size * 10) / 1024) / 10.0);
+    }
 }
 
 void AssetJob::Private::parseChangeLog(const QVariantMap &result)
