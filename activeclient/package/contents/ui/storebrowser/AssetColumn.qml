@@ -173,20 +173,19 @@ BrowserColumn {
                         anchors {
                             left: parent.left
                             right: parent.right
-                            margins: 32
+                            margins: 4
                         }
-                        height: bigIconImage.visible ? width : theme.defaultFont.mSize.height
+                        height: bigIconImage.visible ? bigIconImage.height : theme.defaultFont.mSize.height
                         Image {
                             id: bigIconImage
-                            source: assetOperations.assetInfo.images["huge"]
+                            source: assetOperations.assetInfo.images["large"]
                             asynchronous: true
                             visible: bigIconImage.status == Image.Ready
 
                             anchors.centerIn: parent
                             fillMode: Image.PreserveAspectFit
-                            //width:  Math.min(256 * ratio, Math.min(parent.width - 32, sourceSize.width))
-                            width:  Math.min(parent.width, sourceSize.width)
-                            height: Math.min(parent.height, sourceSize.height)
+                            width:  sourceSize.width
+                            height: sourceSize.height
 
                             /*
                             TODO: make this show the large image unscaled
