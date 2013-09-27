@@ -269,12 +269,23 @@ BrowserColumn {
                             }
                         }
                     }
+                    ExpandingLabel {
+                        id: descriptionLabel
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        visible: text != ''
+                        text: assetOperations.assetInfo.description
+                    }
+
                     PlasmaComponents.Button {
                         visible: assetOperations.installed && assetOperations.launchText !== ""
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: assetOperations.launchText
                         onClicked: assetOperations.launch()
                     }
+
                     PlasmaComponents.Button {
                         id: installButton
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -332,29 +343,6 @@ BrowserColumn {
                             left: parent.left
                             right: parent.right
                         }
-                    }
-
-                    PlasmaCore.SvgItem {
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            leftMargin: -theme.defaultFont.mSize.width
-                            rightMargin: -theme.defaultFont.mSize.width
-                        }
-                        svg: PlasmaCore.Svg {
-                            imagePath: "widgets/line"
-                        }
-                        elementId: "horizontal-line"
-                    }
-
-                    ExpandingLabel {
-                        id: descriptionLabel
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                        }
-                        visible: text != ''
-                        text: assetOperations.assetInfo.description
                     }
 
                     PlasmaCore.SvgItem {
