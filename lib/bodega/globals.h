@@ -44,6 +44,7 @@ namespace Bodega {
         ImageTiny = 1,
         ImageSmall,
         ImageMedium,
+        ImageBig,
         ImageLarge,
         ImageHuge,
         ImagePreviews
