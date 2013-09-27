@@ -319,15 +319,10 @@ AssetBriefsJob *Session::assetBriefs(const QStringList &assetIds)
 {
     QUrl url = d->baseUrl;
     url.setEncodedPath(d->jsonPath(QString::fromLatin1("/asset/list/briefs")));
-
     const QByteArray json = "{ \"assets\": [" + assetIds.join(QLatin1String(", ")).toLatin1() + "] }";
     //qDebug()<<"url is " <<url;
-    QNetworkRequest request;
-    request.setRawHeader("User-Agent", "Bodega 0.1");
-    request.setRawHeader("content-type", "application/json");
-    request.setUrl(url);
 
-    AssetBriefsJob *job = new AssetBriefsJob(d->netManager->post(request, json), this);
+    AssetBriefsJob *job = new AssetBriefsJob(d->post(url, json), this);
     d->jobConnect(job);
     return job;
 }
@@ -647,12 +642,7 @@ Bodega::UpdatesCheckJob *Session::updatesCheck(const QList<QPair<QString, QStrin
     }
     json.append(arrays.join(QLatin1String(",")).toLatin1()).append("] }");
 
-    QNetworkRequest request;
-    request.setRawHeader("User-Agent", "Bodega 0.1");
-    request.setRawHeader("content-type", "application/json");
-    request.setUrl(url);
-
-    UpdatesCheckJob *job = new UpdatesCheckJob(d->netManager->post(request, json), this);
+    UpdatesCheckJob *job = new UpdatesCheckJob(d->post(url, json), this);
     d->jobConnect(job);
     return job;
 }
