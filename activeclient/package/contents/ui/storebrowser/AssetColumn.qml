@@ -361,7 +361,7 @@ BrowserColumn {
 
                     Grid {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        rows: 4
+                        rows: 5
                         columns: 2
                         PlasmaComponents.Label {
                             id: authorTitle
@@ -381,6 +381,31 @@ BrowserColumn {
                             text: visible ? assetOperations.assetTags.author[0] : ''
                             width: root.width - authorTitle.width - 40
                             wrapMode: Text.WordWrap
+                        }
+                        PlasmaComponents.Label {
+                            verticalAlignment: Text.AlignTop
+                            visible: sizeLabel.visible
+                            anchors {
+                                right: sizeLabel.left
+                                rightMargin: theme.defaultFont.mSize.width
+                            }
+                            text: i18n("Size:")
+                        }
+                        PlasmaComponents.Label {
+                            verticalAlignment: Text.AlignTop
+                            id: sizeLabel
+                            visible: text != ''
+                            text: assetOperations.assetInfo.formatedSize
+                            wrapMode: Text.WordWrap
+                        }
+                        PlasmaComponents.Label {
+                            verticalAlignment: Text.AlignTop
+                            anchors {
+                                right: dateLabel.left
+                                rightMargin: theme.defaultFont.mSize.width
+                            }
+                            text: i18n("Date:")
+                            visible: dateLabel.visible
                         }
                         PlasmaComponents.Label {
                             verticalAlignment: Text.AlignTop
