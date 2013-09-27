@@ -79,6 +79,7 @@ namespace Bodega {
         QDateTime created;
         QString description;
         QString mimetype;
+        QString formatedSize;
         QMap<ImageUrl, QUrl> images;
         qint64 size;
         int  points;
@@ -95,6 +96,7 @@ namespace Bodega {
             id = license = partnerId = partnerName = version = description = QString();
             images.clear();
             filename.clear();
+            size = 0;
             points = 0;
             canDownload = false;
             ratings.clear();
