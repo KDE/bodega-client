@@ -97,6 +97,7 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
     } else {
         emit q->failed();
     }
+
     checkInstalled();
 }
 

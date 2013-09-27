@@ -206,6 +206,7 @@ BrowserColumn {
                             */
                         }
                     }
+
                     PlasmaExtras.Heading {
                         id: titleLabel
                         level: 1
