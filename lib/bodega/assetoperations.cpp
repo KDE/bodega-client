@@ -73,6 +73,8 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
 
         ratingsModel->setAssetJob(assetJob);
 
+        emit q->infoReady();
+
         delete handler;
         handler = 0;
 

@@ -38,9 +38,9 @@ namespace Bodega {
         Q_PROPERTY(QString launchText READ launchText NOTIFY ready)
         Q_PROPERTY(bool installed READ isInstalled NOTIFY installedChanged)
         Q_PROPERTY(bool ready READ isReady NOTIFY ready)
-        Q_PROPERTY(Bodega::ChangeLog changeLog READ changeLog NOTIFY ready)
-        Q_PROPERTY(Bodega::AssetInfo assetInfo READ assetInfo NOTIFY ready)
-        Q_PROPERTY(Bodega::Tags assetTags READ assetTags NOTIFY ready)
+        Q_PROPERTY(Bodega::ChangeLog changeLog READ changeLog NOTIFY infoReady)
+        Q_PROPERTY(Bodega::AssetInfo assetInfo READ assetInfo NOTIFY infoReady)
+        Q_PROPERTY(Bodega::Tags assetTags READ assetTags NOTIFY infoReady)
         Q_PROPERTY(QString mimetype READ mimetype)
         Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
         Q_PROPERTY(QAbstractItemModel *ratingsModel READ ratingsModel CONSTANT)
@@ -72,6 +72,7 @@ namespace Bodega {
     Q_SIGNALS:
         void failed();
         void ready();
+        void infoReady();
         void installedChanged();
         void progressChanged(qreal progress);
 
