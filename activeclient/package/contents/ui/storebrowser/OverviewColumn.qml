@@ -126,7 +126,7 @@ BrowserColumn {
                         }
                         categoriesColumn.currentIndex = index
                         itemBrowser.pop(root)
-                        var channels = itemBrowser.push(Qt.createComponent("InstallJobsColumn.qml"))
+                        var page = itemBrowser.push(Qt.createComponent("InstallJobsColumn.qml"))
                     }
                 }
             }
