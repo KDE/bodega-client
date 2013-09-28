@@ -76,7 +76,7 @@ BrowserListView {
                         return
                     }
                     view.currentIndex = index
-                    itemBrowser.pop(browserColumn)
+                    itemBrowser.pop(root)
 
                     if (model.AssetIdRole) {
                         var assetPage = itemBrowser.push(Qt.createComponent("AssetColumn.qml"))
