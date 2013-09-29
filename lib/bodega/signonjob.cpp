@@ -51,7 +51,6 @@ void SignOnJob::netFinished(const QVariantMap &result)
     if (authSuccess() && !failed()) {
         QVariantMap urls = result[QLatin1String("imageUrls")].toMap();
         if (!urls.isEmpty()) {
-            qDebug() << "*************************" << urls;
             QUrl tiny = urls[QLatin1String("tiny")].toUrl();
             QUrl small = urls[QLatin1String("small")].toUrl();
             QUrl medium = urls[QLatin1String("medium")].toUrl();
