@@ -52,9 +52,11 @@ private Q_SLOTS:
     void checkForUpdates();
     void updatesCheckFinished(Bodega::NetworkJob *job);
     void initDb();
+    void showUpdateUi();
 
 private:
-    void sendUpdatesCheck(const QString &store, const QString &warehouse, const QList<QPair<QString, QString> > &assets);
+    void sendUpdatesCheck(const QString &store, const QString &warehouse,
+                          const QList<QPair<QString, QString> > &assets);
     void updateNotifier();
 
     QString m_dbPath;

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Add-ons Updater
+Comment=Updates downloaded add-on content
+Exec=active-addons --startpage updates
+Icon=preferences-desktop-default-applications
+Terminal=false
+Type=Application
+Hidden=true
+Categories=System;SystemSetup;ActiveCore
+

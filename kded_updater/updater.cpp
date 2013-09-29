@@ -21,6 +21,7 @@
 
 #include <QFile>
 #include <QMetaObject>
+#include <QProcess>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -28,10 +29,14 @@
 
 #include <KConfigGroup>
 #include <KDebug>
+#include <KDesktopFile>
 #include <KDirWatch>
 #include <KLocale>
-#include <KStatusNotifierItem>
 #include <KPluginFactory>
+#include <KRun>
+#include <KStandardDirs>
+#include <KStatusNotifierItem>
+#include <KToolInvocation>
 
 #include <Solid/Networking>
 
@@ -251,6 +256,8 @@ void Updater::initDb()
             m_notifier->setTitle(i18n("Add-ons Updater"));
             //TODO: get a bodega / add-ons icon?
             m_notifier->setIconByName("system-software-update");
+            connect(m_notifier, SIGNAL(activateRequested(bool,QPoint)),
+                    this, SLOT(showUpdateUi()));
         }
 
         updateNotifier();
@@ -259,6 +266,20 @@ void Updater::initDb()
         delete m_notifier;
         m_notifier = 0;
         m_checkTimer->stop();
+    }
+}
+
+void Updater::showUpdateUi()
+{
+    if (m_notifier && m_notifier->status() == KStatusNotifierItem::Active) {
+        QString updaterPath = KStandardDirs::locate("xdgdata-apps", "kde4/active-addons-updater.desktop");
+        KDesktopFile desktopFile(updaterPath);
+        updaterPath = desktopFile.desktopGroup().readEntry("Exec", QString());
+        if (!updaterPath.isEmpty()) {
+            QProcess::startDetached(updaterPath);
+            //QStringList args = KShell::splitArgs(updaterPath);
+            //KRun::run(updaterPath, KUrl::List(), 0);
+        }
     }
 }
 

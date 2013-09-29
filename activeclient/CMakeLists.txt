@@ -8,4 +8,5 @@ add_subdirectory(src)
 # QML-only thing
 install(DIRECTORY package/ DESTINATION ${DATA_INSTALL_DIR}/plasma/packages/com.makeplaylive.addonsapp)
 install(FILES active-addons.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(FILES active-addons-updater.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 
