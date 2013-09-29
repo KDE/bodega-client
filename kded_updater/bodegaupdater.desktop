@@ -1,7 +1,23 @@
 [Desktop Entry]
 Type=Service
 Name=Bodega Content System Updater
+Name[nl]=Programma voor het bijwerken van het inhoudssysteem van Bodega
+Name[pt]=Actualização de Sistema do Conteúdo do Bodega
+Name[pt_BR]=Atualização do sistema de conteúdo do Bodega
+Name[sk]=Aktualizátor systému obsahu Bodega
+Name[sv]=Bodega uppdatering av systeminnehåll
+Name[uk]=Засіб оновлення системи керування даними Bodega
+Name[x-test]=xxBodega Content System Updaterxx
+Name[zh_CN]=Bodega 内容系统升级工具
 Comment=Checks for update to content installed using the Bodega content system
+Comment[nl]=Controleert of het inhoudssysteem van Bodega moet worden bijgewerkt
+Comment[pt]=Procura por actualizações no conteúdo instalado com o sistema Bodega
+Comment[pt_BR]=Procura por atualizações usando o sistema de conteúdo do Bodega
+Comment[sk]=Skontroluje aktualizácie obsahu nainštalovaného pomocou systému obsahu Bodega
+Comment[sv]=Tittar efter uppdatering av innehåll installerat med Bodega innehållssystem
+Comment[uk]=Пошук оновлень даних, встановлених за допомогою системи керування даними Bodega
+Comment[x-test]=xxChecks for update to content installed using the Bodega content systemxx
+Comment[zh_CN]=检查用 Bodega 内容系统安装的内容是否有更新
 X-KDE-ServiceTypes=KDEDModule
 X-KDE-Library=bodegaupdater
 X-KDE-DBus-ModuleName=bodegaupdater
