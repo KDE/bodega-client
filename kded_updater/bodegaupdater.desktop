@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=Bodega Content System Updater
+Name[da]=Systemopdatering af Bodega-indhold
 Name[nl]=Programma voor het bijwerken van het inhoudssysteem van Bodega
 Name[pt]=Actualização de Sistema do Conteúdo do Bodega
 Name[pt_BR]=Atualização do sistema de conteúdo do Bodega
@@ -10,6 +11,7 @@ Name[uk]=Засіб оновлення системи керування дан�
 Name[x-test]=xxBodega Content System Updaterxx
 Name[zh_CN]=Bodega 内容系统升级工具
 Comment=Checks for update to content installed using the Bodega content system
+Comment[da]=Tjekker for opdatering af indhold som er installeret med indholdssystemet Bodega
 Comment[nl]=Controleert of het inhoudssysteem van Bodega moet worden bijgewerkt
 Comment[pt]=Procura por actualizações no conteúdo instalado com o sistema Bodega
 Comment[pt_BR]=Procura por atualizações usando o sistema de conteúdo do Bodega
