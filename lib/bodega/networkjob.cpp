@@ -205,7 +205,7 @@ void NetworkJob::parseErrors(const QVariantMap &jsonMap)
                          tr("Authentication Error"),
                          tr("Invalid username or password"));
     } else {
-        const Error::ServerCode code = Error::serverCodeId(error.value(QLatin1String("type")).toString());
+        const ErrorCodes::ServerCode code = Error::serverCodeId(error.value(QLatin1String("type")).toString());
         d->error = Error(code);
     }
 

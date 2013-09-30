@@ -96,8 +96,8 @@ void errorFromQScriptValue(const QScriptValue &scriptValue, Bodega::Error &error
         it.next();
         //kDebug() << it.name() << "is" << it.value().toString();
         if (it.name() == "serverCode") {
-            const Error::ServerCode code = (Error::ServerCode)it.value().toInteger();
-            if (code != Error::NoCode) {
+            const ErrorCodes::ServerCode code = (ErrorCodes::ServerCode)it.value().toInteger();
+            if (code != ErrorCodes::NoCode) {
                 error = Error(code);
                 return;
             }
@@ -315,7 +315,7 @@ BodegaStore::BodegaStore()
     qRegisterMetaType<Bodega::InstallJobScheduler::InstallStatus>("Bodega::InstallJobScheduler::InstallStatus");
     qScriptRegisterMetaType<Bodega::InstallJobScheduler::InstallStatus>(declarativeView()->scriptEngine(), qScriptValueFromStatus, statusFromQScriptValue, QScriptValue());
     qmlRegisterUncreatableType<Bodega::InstallJobScheduler>("com.makeplaylive.addonsapp", 1, 0, "InstallJobScheduler", QLatin1String("Do not create objects of this type."));
-    qmlRegisterUncreatableType<ErrorCode>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
+    qmlRegisterUncreatableType<Bodega::ErrorCodes>("com.makeplaylive.addonsapp", 1, 0, "ErrorCode", QLatin1String("Do not create objects of this type."));
     qScriptRegisterMetaType<Bodega::Error>(declarativeView()->scriptEngine(), qScriptValueFromError, errorFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::ChannelInfo>(declarativeView()->scriptEngine(), qScriptValueFromChannelInfo, channelInfoFromQScriptValue, QScriptValue());
     qScriptRegisterMetaType<Bodega::AssetInfo>(declarativeView()->scriptEngine(), qScriptValueFromAssetInfo, assetInfoFromQScriptValue, QScriptValue());

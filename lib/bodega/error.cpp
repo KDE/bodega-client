@@ -19,6 +19,7 @@
 
 #include "error.h"
 
+#include <QMetaEnum>
 #include <QObject>
 
 using namespace Bodega;
@@ -30,7 +31,7 @@ public:
             const QString &errorId,
             const QString &title,
             const QString &descr)
-      : code(NoCode),
+      : code(ErrorCodes::NoCode),
         type(t),
         id(errorId),
         title(title),
@@ -39,84 +40,46 @@ public:
     }
 
 
-    Private(ServerCode c)
-        : code(NoCode)
+    Private(ErrorCodes::ServerCode c)
+        : code(ErrorCodes::NoCode)
     {
         setServerCode(c);
     }
 
     Private(Type t)
-        : code(NoCode),
+        : code(ErrorCodes::NoCode),
           type(t)
     {
     }
 
-    void setServerCode(ServerCode c);
+    void setServerCode(ErrorCodes::ServerCode c);
     static void initServerCodeDict();
 
-    ServerCode code;
+    ErrorCodes::ServerCode code;
     Type type;
     QString id;
     QString title;
     QString description;
 
-    static QMap<QString, ServerCode> serverCodes;
+    static QMap<QString, ErrorCodes::ServerCode> serverCodes;
 };
 
-QMap<QString, Error::ServerCode> Error::Private::serverCodes;
+QMap<QString, ErrorCodes::ServerCode> Error::Private::serverCodes;
 
 void Error::Private::initServerCodeDict()
 {
     if (!serverCodes.isEmpty()) {
         return;
     }
-    #define ADD_SERVER_CODE(CODE) serverCodes.insert(QLatin1String("" #CODE), CODE);
-    ADD_SERVER_CODE(NoCode)
-    ADD_SERVER_CODE(Connection)
-    ADD_SERVER_CODE(Unknown)
-    ADD_SERVER_CODE(Database)
-    ADD_SERVER_CODE(Unauthorized)
-    ADD_SERVER_CODE(MissingParameters)
-    ADD_SERVER_CODE(NoMatch)
-    ADD_SERVER_CODE(AccountInactive)
-    ADD_SERVER_CODE(AccountExists)
-    ADD_SERVER_CODE(PurchaseFailed)
-    ADD_SERVER_CODE(MailerFailure)
-    ADD_SERVER_CODE(AccountUpdateFailed)
-    ADD_SERVER_CODE(EncryptionFailure)
-    ADD_SERVER_CODE(PasswordTooShort)
-    ADD_SERVER_CODE(Download)
-    ADD_SERVER_CODE(AccessDenied)
-    ADD_SERVER_CODE(RedeemCodeFailure)
 
-    ADD_SERVER_CODE(PaymentMethodCreation)
-    ADD_SERVER_CODE(PaymentMethodDeletion)
-    ADD_SERVER_CODE(PaymentMethodDetails)
-    ADD_SERVER_CODE(PaymentMethodMissing)
-    ADD_SERVER_CODE(CustomerRetrieval)
-    ADD_SERVER_CODE(CustomerDatabase)
-    ADD_SERVER_CODE(CustomerCharge)
-    ADD_SERVER_CODE(CustomerRefund)
-    ADD_SERVER_CODE(ChargeNotRecorded)
-    ADD_SERVER_CODE(NotEnoughPoints)
-    ADD_SERVER_CODE(TooManyPoints)
-    ADD_SERVER_CODE(CollectionExists)
-    ADD_SERVER_CODE(AssetExists)
-    ADD_SERVER_CODE(CardDeclined)
-    ADD_SERVER_CODE(CardIncorrectNumber)
-    ADD_SERVER_CODE(CardInvalidNumber)
-    ADD_SERVER_CODE(CardInvalidExpiryMonth)
-    ADD_SERVER_CODE(CardInvalidExpiryYear)
-    ADD_SERVER_CODE(CardInvalidCVC)
-    ADD_SERVER_CODE(CardExpired)
-    ADD_SERVER_CODE(CardInvalidAmount)
-    ADD_SERVER_CODE(CardDuplicateTransaction)
-    ADD_SERVER_CODE(CardProcessingError)
-    ADD_SERVER_CODE(PurchaseNotEnoughPoints)
-    ADD_SERVER_CODE(PurchaseTooManyPoints)
+    ErrorCodes codes;
+    QMetaEnum e = codes.metaObject()->enumerator(codes.metaObject()->indexOfEnumerator("ServerCode"));
+    for (int i = 0; i < e.keyCount(); ++i) {
+        serverCodes.insert(QLatin1String(e.key(i)), static_cast<ErrorCodes::ServerCode>(e.value(i)));
+    }
 }
 
-void Error::Private::setServerCode(ServerCode c)
+void Error::Private::setServerCode(ErrorCodes::ServerCode c)
 {
     code = c;
     type = Session;
@@ -124,154 +87,147 @@ void Error::Private::setServerCode(ServerCode c)
     title = QObject::tr("Session Error");
 
     switch (code) {
-        case Connection:
+        case ErrorCodes::Connection:
             description = QObject::tr("Connection failed.");
         break;
-        case Database:
+        case ErrorCodes::Database:
             description = QObject::tr("The add-ons database could not be reached.");
         break;
-        case Unauthorized:
+        case ErrorCodes::Unauthorized:
             description = QObject::tr("This account may not perform the requested action.");
         break;
-        case MissingParameters:
+        case ErrorCodes::MissingParameters:
             description = QObject::tr("Required information was missing from the request.");
         break;
-        case NoMatch:
+        case ErrorCodes::NoMatch:
             description = QObject::tr("Wrong user name or password.");
         break;
-        case AccountInactive:
+        case ErrorCodes::AccountInactive:
             description = QObject::tr("This account is not active.");
         break;
-        case AccountExists:
+        case ErrorCodes::AccountExists:
             description = QObject::tr("An account for that email already exists.");
         break;
-        case PurchaseFailed:
+        case ErrorCodes::PurchaseFailed:
             description = QObject::tr("Could not purchase the requested item.");
         break;
-        case MailerFailure:
+        case ErrorCodes::MailerFailure:
             description = QObject::tr("Failed to send email.");
         break;
-        case AccountUpdateFailed:
+        case ErrorCodes::AccountUpdateFailed:
             description = QObject::tr("Failed to change account information.");
         break;
-        case EncryptionFailure:
+        case ErrorCodes::EncryptionFailure:
             description = QObject::tr("Encryption failed, please try again.");
         break;
-        case PasswordTooShort:
+        case ErrorCodes::PasswordTooShort:
             description = QObject::tr("The password is too short, please try again.");
         break;
-        case Download:
+        case ErrorCodes::Download:
             description = QObject::tr("Could not complete the download of the requested item.");
         break;
-        case AccessDenied:
+        case ErrorCodes::AccessDenied:
             description = QObject::tr("Could not complete the download of the requested item.");
         break;
-        case RedeemCodeFailure:
+        case ErrorCodes::RedeemCodeFailure:
             description = QObject::tr("The supplied points code was not valid.");
         break;
 
-        case PaymentMethodCreation:
+        case ErrorCodes::PurchaseMethodCreation:
             title = QObject::tr("Payment Method Error");
             description = QObject::tr("Failed to update purchase method details.");
         break;
-        case PaymentMethodDeletion:
+        case ErrorCodes::PurchaseMethodDeletion:
             title = QObject::tr("Payment Method Error");
             description = QObject::tr("Failed to update purchase method details.");
         break;
-        case PaymentMethodDetails:
+        case ErrorCodes::PurchaseMethodDetails:
             title = QObject::tr("Payment Method Error");
             description = QObject::tr("Failed to update purchase method details.");
         break;
-        case PaymentMethodMissing:
+        case ErrorCodes::PurchaseMethodMissing:
             title = QObject::tr("Payment Method Error");
             description = QObject::tr("A valid payment method could not be found. Please add a payment method to your account.");
         break;
-        case CustomerRetrieval:
+        case ErrorCodes::CustomerRetrieval:
             title = QObject::tr("Purchase Method Error");
             description = QObject::tr("No purchase method (e.g. credit card) information found.");
         break;
-        case CustomerDatabase:
+        case ErrorCodes::CustomerDatabase:
             description = QObject::tr("Could not locate the requested customer account.");
         break;
-        case CustomerCharge:
-        case CustomerRefund:
+        case ErrorCodes::CustomerCharge:
+        case ErrorCodes::CustomerRefund:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("Unable to complete the purchase process. No charge was made to your card.");
         break;
-        case ChargeNotRecorded:
+        case ErrorCodes::ChargeNotRecorded:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("Transaction was successful, but could not record the result on the account");
         break;
-        case NotEnoughPoints:
+        case ErrorCodes::AccountNotEnoughPoints:
             title = QObject::tr("Purchase Error");
             description = QObject::tr("Your account lacks enough points to make this purchase.");
         break;
-        case TooManyPoints:
-            title = QObject::tr("Purchase Error");
-            description = QObject::tr("The requested amount of points exceeds the maximum purchase limit.");
-        break;
-
-        case CollectionExists:
+        case ErrorCodes::CollectionExists:
             title = QObject::tr("Creation Error");
             description = QObject::tr("The collection already exists.");
         break;
-        case AssetExists:
+        case ErrorCodes::AssetExists:
             title = QObject::tr("Creation Error");
             description = QObject::tr("The asset already exists.");
         break;
 
-        case CardDeclined:
+        case ErrorCodes::CardDeclined:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("Your card has been declined. Please try another payment method");
         break;
 
-        case CardIncorrectNumber:
-        case CardInvalidNumber:
+        case ErrorCodes::CardIncorrectNumber:
+        case ErrorCodes::CardInvalidNumber:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("The card number supplied is incorrect. Please check it and try again.");
         break;
 
-        case CardInvalidExpiryMonth:
+        case ErrorCodes::CardInvalidExpiryMonth:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("The card expiry month supplied is incorrect.");
         break;
 
-        case CardInvalidExpiryYear:
+        case ErrorCodes::CardInvalidExpiryYear:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("The card expiry year supplied is incorrect.");
         break;
 
-        case CardInvalidCVC:
+        case ErrorCodes::CardInvalidCVC:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("The card CVC supplied is incorrect.");
         break;
 
-        case CardExpired:
+        case ErrorCodes::CardExpired:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("Your card has expired. Please try another payment method.");
         break;
 
-        case CardInvalidAmount:
+        case ErrorCodes::CardInvalidAmount:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("The purchase amount was invalid. Please try again.");
         break;
 
-        case CardDuplicateTransaction:
+        case ErrorCodes::CardDuplicateTransaction:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("This transaction was already processed.");
         break;
 
-        case CardProcessingError:
+        case ErrorCodes::CardProcessingError:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("A processing error occured when making the purchase. Please try again.");
         break;
-
-        case PurchaseNotEnoughPoints:
+        case ErrorCodes::PurchaseNotEnoughPoints:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("Too few points were requested. A minimum of 500 points per purchase is required.");
         break;
-
-        case PurchaseTooManyPoints:
+        case ErrorCodes::PurchaseTooManyPoints:
             title = QObject::tr("Transaction Error");
             description = QObject::tr("Too many points were requested. Please purchase fewer points.");
         break;
@@ -294,7 +250,7 @@ Error::Error(const Error &other)
 
 }
 
-Error::Error(ServerCode code)
+Error::Error(ErrorCodes::ServerCode code)
     : d(new Private(code))
 {
 }
@@ -327,7 +283,7 @@ Error &Error::operator=(const Error &rhs)
     return *this;
 }
 
-Error::ServerCode Error::serverCode() const
+ErrorCodes::ServerCode Error::serverCode() const
 {
     return d->code;
 }
@@ -352,13 +308,15 @@ QString Error::description() const
     return d->description;
 }
 
-Error::ServerCode Error::serverCodeId(const QString &string)
+ErrorCodes::ServerCode Error::serverCodeId(const QString &string)
 {
     Private::initServerCodeDict();
     if (Private::serverCodes.contains(string)) {
         return Private::serverCodes.value(string);
     }
 
-    return Unknown;
+    return ErrorCodes::Unknown;
 }
+
+#include "error.moc"
 
