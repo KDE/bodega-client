@@ -46,10 +46,12 @@ class Updater : public KDEDModule
 public:
     Updater(QObject *parent = 0, const QVariantList &args = QVariantList());
 
+public Q_SLOTS:
+    void checkForUpdates();
+
 private Q_SLOTS:
     void fileDirtied(const QString &file);
     void networkStatusChanged(Solid::Networking::Status status);
-    void checkForUpdates();
     void updatesCheckFinished(Bodega::NetworkJob *job);
     void initDb();
     void showUpdateUi();

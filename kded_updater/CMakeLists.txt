@@ -4,6 +4,9 @@ include_directories( ${KDE4_INCLUDES} ${QT_INCLUDES} ${CMAKE_SOURCE_DIR}/lib)
 
 set(kded_bodegaupdater_SRCS updater.cpp)
 
+QT4_ADD_DBUS_ADAPTOR(kded_bodegaupdater_SRCS  org.kde.BodegaUpdater.xml
+                     updater.h Updater)
+
 kde4_add_plugin(kded_bodegaupdater ${kded_bodegaupdater_SRCS} )
 
 target_link_libraries(
