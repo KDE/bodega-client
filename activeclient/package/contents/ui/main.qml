@@ -102,6 +102,14 @@ Image {
         showMessage(error.title, error.description)
     }
 
+    Connections {
+        target: bodegaClient.session.installJobsModel
+        onRunningCountChanged: {
+            if (bodegaClient.session.installJobsModel.runningCount == 0) {
+                bodegaClient.checkForUpdates();
+            }
+        }
+    }
 
     //Tis timer is to avoid to show the connecting page if the authentication is fast enough
     Timer {
