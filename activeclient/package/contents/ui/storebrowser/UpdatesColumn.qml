@@ -40,12 +40,20 @@ BrowserListView {
         delegate: delegateComponent
     }
 
+    PlasmaExtras.Heading {
+        anchors.centerIn: parent
+        width: parent.width * 0.8
+        visible: bodegaClient.updatedAssetsModel.count == 0
+        text: i18n("Everything is up to date")
+        horizontalAlignment: Text.AlignHCenter
+    }
     
 
     PlasmaComponents.ToolBar {
         id: toolBar
         anchors.bottom: parent.bottom
         z: 1
+        visible: bodegaClient.updatedAssetsModel.count > 0
         tools: Item {
             height: childrenRect.height
             PlasmaComponents.Button {
