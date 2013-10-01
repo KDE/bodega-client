@@ -1,6 +1,20 @@
 [Desktop Entry]
 Name=Add-ons Updater
+Name[nl]=Bijwerker van add-on
+Name[pt]=Actualizador de Extensões
+Name[pt_BR]=Atualizador de extensões
+Name[sk]=Aktualizátor doplnkov
+Name[sv]=Uppdatering av tillägg
+Name[uk]=Оновлювач додатків
+Name[x-test]=xxAdd-ons Updaterxx
 Comment=Updates downloaded add-on content
+Comment[nl]=Inhoud voor add-on gedownload bij bijwerken
+Comment[pt]=Actualiza os conteúdos de extensões transferidos
+Comment[pt_BR]=Atualiza o conteúdo das extensões baixadas
+Comment[sk]=Aktualizuje stiahnutý obsah doplnkov
+Comment[sv]=Uppdateringar laddade ner tilläggsinnehåll
+Comment[uk]=Оновлення отриманих даних додатків
+Comment[x-test]=xxUpdates downloaded add-on contentxx
 Exec=active-addons --startpage updates
 Icon=preferences-desktop-default-applications
 Terminal=false
