@@ -23,6 +23,8 @@
 #define BODEGASTORE_H
 
 #include "kdeclarativemainwindow.h"
+#include "bodegaupdater_interface.h"
+
 
 namespace Bodega {
     class HistoryModel;
@@ -72,6 +74,11 @@ public:
     Q_INVOKABLE void forgetCredentials() const;
     Q_INVOKABLE QVariantHash retrieveCredentials() const;
     Q_INVOKABLE void historyInUse(bool used);
+    Q_INVOKABLE void checkForUpdates();
+
+private Q_SLOTS:
+    void registerToDaemon();
+    void serviceChange(const QString &name, const QString &oldOwner, const QString &newOwner);
 
 private:
     Bodega::Session *m_session;
@@ -82,6 +89,7 @@ private:
     Bodega::CollectionAssetsModel *m_collectionAssetsModel;
     Bodega::ParticipantRatingsJobModel *m_participantRatingsJobModel;
     Bodega::AssetRatingsJobModel *m_assetRatingsJobModel;
+    org::kde::BodegaUpdater *m_bodegaUpdater;
     int m_historyUsers;
     QString m_startPage;
 };

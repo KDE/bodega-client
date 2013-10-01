@@ -44,6 +44,8 @@
 #include "bodega/session.h"
 #include "bodega/updatescheckjob.h"
 
+#include "bodegaupdateradaptor.h"
+
 const char *defaultPackage = "org.kde.desktop";
 
 K_PLUGIN_FACTORY(UpdaterFactory, registerPlugin<Updater>();)
@@ -57,6 +59,11 @@ Updater::Updater(QObject *parent, const QVariantList &)
       m_checkTimer(new QTimer(this)),
       m_notifier(0)
 {
+    new BodegaUpdaterAdaptor(this);
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.registerService("org.kde.BodegaUpdater");
+    dbus.registerObject("/BodegaUpdater", this);
+
     m_checkTimer->setInterval(checkInterval * 1000);
     connect(m_checkTimer, SIGNAL(timeout()), this, SLOT(checkForUpdates()));
 

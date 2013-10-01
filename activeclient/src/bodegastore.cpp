@@ -26,6 +26,8 @@
 #include <QDeclarativeEngine>
 #include <QScriptEngine>
 #include <QScriptValueIterator>
+#include <QDBusServiceWatcher>
+#include <QDBusConnection>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -58,7 +60,7 @@
 
 using namespace Bodega;
 
-
+static const QString s_bodegaUpdaterServiceName("org.kde.BodegaUpdater");
 
 QScriptValue qScriptValueFromStatus(QScriptEngine *, const Bodega::InstallJobScheduler::InstallStatus &status)
 {
@@ -288,7 +290,8 @@ BodegaStore::BodegaStore()
       m_collectionsModel(0),
       m_collectionAssetsModel(0),
       m_participantRatingsJobModel(0),
-      m_assetRatingsJobModel(0)
+      m_assetRatingsJobModel(0),
+      m_bodegaUpdater(0)
 {
     declarativeView()->setPackageName("com.makeplaylive.addonsapp");
 
@@ -311,6 +314,15 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::ParticipantRatingsJobModel>();
     qmlRegisterType<Bodega::AssetRatingsJobModel>();
     qmlRegisterType<Bodega::UpdatedAssetsModel>();
+
+
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(s_bodegaUpdaterServiceName,
+                                   QDBusConnection::sessionBus(),
+                                   QDBusServiceWatcher::WatchForOwnerChange,
+                                   this);
+    QObject::connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+                     this, SLOT(serviceChange(QString,QString,QString)));
+
 
     qRegisterMetaType<Bodega::InstallJobScheduler::InstallStatus>("Bodega::InstallJobScheduler::InstallStatus");
     qScriptRegisterMetaType<Bodega::InstallJobScheduler::InstallStatus>(declarativeView()->scriptEngine(), qScriptValueFromStatus, statusFromQScriptValue, QScriptValue());
@@ -478,6 +490,44 @@ QVariantHash BodegaStore::retrieveCredentials() const
     }
 
     return QVariantHash();
+}
+
+void BodegaStore::checkForUpdates()
+{
+    if (m_bodegaUpdater && m_bodegaUpdater->isValid()) {
+        m_bodegaUpdater->call(QDBus::NoBlock, "checkForUpdates");
+    }
+}
+
+void BodegaStore::serviceChange(const QString &name, const QString &oldOwner, const QString &newOwner)
+{
+    Q_UNUSED(name)
+    if (newOwner.isEmpty()) {
+        //unregistered
+        kDebug() << "Connection to the BodegaUpdater lost";
+        delete m_bodegaUpdater;
+        m_bodegaUpdater = 0;
+    } else if (oldOwner.isEmpty()) {
+        //registered
+        registerToDaemon();
+    }
+}
+
+void BodegaStore::registerToDaemon()
+{
+    kDebug() << "Registering a client interface to the BodegaUpdater";
+    if (!m_bodegaUpdater) {
+        m_bodegaUpdater = new org::kde::BodegaUpdater(s_bodegaUpdaterServiceName, "/BodegaUpdater",
+                                                      QDBusConnection::sessionBus());
+    }
+
+    if (m_bodegaUpdater->isValid()) {
+        kDebug() << "Successfully registered to BodegaUpdater";
+    } else {
+        kDebug() << "BodegaUpdater not reachable";
+        delete m_bodegaUpdater;
+        m_bodegaUpdater = 0;
+    }
 }
 
 #include "bodegastore.moc"

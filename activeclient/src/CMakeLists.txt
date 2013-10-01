@@ -10,6 +10,10 @@ set(active-addons_SRCS
     common/kdeclarativemainwindow.cpp
 )
 
+set(bodegaupdater_xml ../../kded_updater/org.kde.BodegaUpdater.xml)
+
+QT4_ADD_DBUS_INTERFACE(active-addons_SRCS ${bodegaupdater_xml} bodegaupdater_interface)
+
 KDE4_ADD_EXECUTABLE(active-addons ${active-addons_SRCS})
 
 target_link_libraries(active-addons
