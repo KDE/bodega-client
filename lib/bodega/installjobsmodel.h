@@ -33,6 +33,7 @@ namespace Bodega {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
         Q_PROPERTY(int count READ count NOTIFY countChanged)
+        Q_PROPERTY(int runningCount READ runningCount NOTIFY runningCountChanged)
 
     public:
         enum DisplayRoles {
@@ -57,6 +58,7 @@ namespace Bodega {
         void addJob(const AssetInfo &info, InstallJob *job);
 
         int count() const {return rowCount();}
+        int runningCount() const;
 
         //Reimplemented from QAbstractItemModel
         QVariant data(const QModelIndex &index, int role) const;
@@ -65,6 +67,7 @@ namespace Bodega {
 
     Q_SIGNALS:
         void countChanged();
+        void runningCountChanged();
         void jobAdded(const Bodega::AssetInfo &info, Bodega::InstallJob *job);
 
     protected:

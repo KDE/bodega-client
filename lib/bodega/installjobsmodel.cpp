@@ -50,13 +50,16 @@ public:
     QHash<InstallJob *, QString> idsForJobs;
     QHash<QString, InstallJob *> jobsForIds;
 
+    int runningJobs;
+
     static InstallJobsModel* s_self;
 };
 
 InstallJobsModel* InstallJobsModel::Private::s_self = 0;
 
 InstallJobsModel::Private::Private(InstallJobsModel *parent)
-    : q(parent)
+    : q(parent),
+      runningJobs(0)
 {
 }
 
@@ -85,6 +88,9 @@ void InstallJobsModel::Private::jobDestroyed(QObject *obj)
 
     idsForJobs.remove(job);
     rowsForJobs.remove(job);
+
+    --runningJobs;
+    emit q->runningCountChanged();
 }
 
 InstallJobsModel::InstallJobsModel(QObject *parent)
@@ -155,8 +161,15 @@ void InstallJobsModel::addJob(const AssetInfo &info, InstallJob *job)
     connect(job, SIGNAL(destroyed(QObject *)), this, SLOT(jobDestroyed(QObject *)));
 
     emit jobAdded(info, job);
+
+    ++d->runningJobs;
+    emit runningCountChanged();
 }
 
+int InstallJobsModel::runningCount() const
+{
+    return d->runningJobs;
+}
 
 QVariant InstallJobsModel::data(const QModelIndex &index, int role) const
 {
