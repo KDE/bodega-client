@@ -50,6 +50,13 @@ namespace Bodega {
         ImagePreviews
     };
 
+    enum PreviewType {
+        ScreenShot1 = 1,
+        ScreenShot2,
+        CoverFront = 100,
+        CoverBack
+    };
+
     struct ChannelInfo
     {
         QString id;
@@ -82,6 +89,7 @@ namespace Bodega {
         QString mimetype;
         QString formatedSize;
         QMap<ImageUrl, QUrl> images;
+        QMap<PreviewType, QUrl> previews;
         qint64 size;
         int  points;
         bool canDownload;

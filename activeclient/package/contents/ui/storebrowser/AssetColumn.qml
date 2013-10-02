@@ -38,13 +38,22 @@ BrowserColumn {
     property variant installJob: null
     property int installStatus: 0
 
-    function downloadAsset() {downloadProgress.opacity = 1
+    function downloadAsset() {
+        downloadProgress.opacity = 1
         bodegaClient.installJobScheduler.scheduleInstall(assetId, session)
+    }
+
+    function loadPreviews() {
+        for(var i in assetOperations.assetInfo.previews) {
+            print(i+": "+assetOperations.assetInfo.previews[i])
+            slideShow.model.append({'fileName': assetOperations.assetInfo.previews[i]})
+        }
     }
 
     function reloadPage() {
         if (assetId > 0) {
             assetOperations = root.session.assetOperations(assetId);
+            assetOperations.infoReady.connect(loadPreviews)
 
             root.installJob = bodegaClient.installJobScheduler.installJobForAsset(assetId)
             if (root.installJob) {
@@ -269,6 +278,12 @@ BrowserColumn {
                             }
                         }
                     }
+
+                    SlideShow {
+                        id: slideShow
+                        model: ListModel {}
+                    }
+
                     ExpandingLabel {
                         id: descriptionLabel
                         anchors {
@@ -458,18 +473,6 @@ BrowserColumn {
                             wrapMode: Text.WordWrap
                         }
                     }
-
-                    /*TODO
-                    SlideShow {
-                        model: ListModel {
-                            ListElement {
-                                fileName: "../../storebrowser/kpat1.jpg"
-                            }
-                            ListElement {
-                                fileName: "../../storebrowser/kpat2.jpg"
-                            }
-                        }
-                    }*/
                 }
             }
         }

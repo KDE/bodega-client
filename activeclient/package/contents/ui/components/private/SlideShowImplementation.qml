@@ -29,13 +29,7 @@ Rectangle {
     signal clicked(int index)
 
     color: "black"
-    anchors {
-        fill: parent
-        leftMargin: photoBackground.margins.left
-        topMargin: photoBackground.margins.top
-        rightMargin: photoBackground.margins.right
-        bottomMargin: photoBackground.margins.bottom
-    }
+
     ListView {
         id: listView
         anchors.fill: parent
@@ -59,6 +53,7 @@ Rectangle {
             bottom: parent.bottom
             bottomMargin: 4
         }
+        visible: listView.count > 1
         spacing: 2
         Repeater {
             model: listView.count

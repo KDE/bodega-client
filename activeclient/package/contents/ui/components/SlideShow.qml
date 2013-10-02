@@ -28,6 +28,7 @@ PlasmaCore.FrameSvgItem {
     imagePath: "widgets/media-delegate"
     prefix: "picture"
     property alias model: slideShowImplementation.model
+    visible: model.count > 0
 
     anchors {
         left: parent.left
@@ -38,6 +39,13 @@ PlasmaCore.FrameSvgItem {
 
     SlideShowImplementation {
         id: slideShowImplementation
+        anchors {
+            fill: parent
+            leftMargin: photoBackground.margins.left
+            topMargin: photoBackground.margins.top
+            rightMargin: photoBackground.margins.right
+            bottomMargin: photoBackground.margins.bottom
+        }
         onClicked: {
             if (dialog == undefined) {
                 dialog = dialogComponent.createObject(root)
@@ -56,8 +64,8 @@ PlasmaCore.FrameSvgItem {
                 id: dialogSlideshow
                 model: slideShowImplementation.model
                 onClicked: fullscreenDialog.close()
-                width: 700
-                height: 420
+                width: appRoot.width * 0.7
+                height: appRoot.height * 0.7
             }
         }
     }

@@ -78,6 +78,20 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
     } else {
         info.formatedSize = tr("%1 Kb").arg(((info.size * 10) / 1024) / 10.0);
     }
+
+    QVariantList previewList = asset.value(QLatin1String("previews")).value<QVariantList>();
+    foreach (const QVariant &item, previewList) {
+        const QVariantMap preview = item.value<QVariantMap>();
+        QUrl url = q->session()->baseUrl();
+        url.setPath(url.path() + QLatin1String("/previews/") + preview[QLatin1String("path")].toString());
+        if (preview[QLatin1String("type")] == QLatin1String("screenshot")) {
+            if (preview[QLatin1String("subtype")] == QLatin1String("screen1")) {
+                info.previews[ScreenShot1] = url;
+            } else if (preview[QLatin1String("subtype")] == QLatin1String("screen2")) {
+                info.previews[ScreenShot2] = url;
+            }
+        }
+    }
 }
 
 void AssetJob::Private::parseChangeLog(const QVariantMap &result)
