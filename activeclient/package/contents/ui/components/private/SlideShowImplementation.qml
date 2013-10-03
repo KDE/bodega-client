@@ -41,6 +41,7 @@ Rectangle {
             width: listView.width
             height: listView.height
             source: fileName
+            fillMode: Image.PreserveAspectFit
             MouseArea {
                 anchors.fill: parent
                 onClicked: root.clicked(index)
