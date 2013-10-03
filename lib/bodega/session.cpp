@@ -501,49 +501,50 @@ Bodega::NetworkJob *Session::setPaymentMethod(const QString &number, const QStri
     const QString path = QString::fromLatin1("/participant/changeAccountDetails");
     url.setEncodedPath(d->jsonPath(path));
 
+    QVariantMap data;
     if (!number.isEmpty()) {
-        url.addQueryItem(QLatin1String("card[number]"), number);
+        data.insert(QLatin1String("card[number]"), number);
     }
 
     if (!expiryMonth.isEmpty()) {
-        url.addQueryItem(QLatin1String("card[exp_month]"), expiryMonth);
+        data.insert(QLatin1String("card[exp_month]"), expiryMonth);
     }
 
     if (!expiryYear.isEmpty()) {
-        url.addQueryItem(QLatin1String("card[exp_year]"), expiryYear);
+        data.insert(QLatin1String("card[exp_year]"), expiryYear);
     }
 
     if (!cvc.isEmpty()) {
-        url.addQueryItem(QLatin1String("card[cvc]"), cvc);
+        data.insert(QLatin1String("card[cvc]"), cvc);
     }
 
     if (!name.isEmpty()) {
-        url.addQueryItem(QLatin1String("card[name]"), name);
+        data.insert(QLatin1String("card[name]"), name);
     }
 
     if (!address1.isEmpty()) {
-        url.addQueryItem(QLatin1String("card[address_line1]"), address1);
+        data.insert(QLatin1String("card[address_line1]"), address1);
     }
 
     if (!address2.isEmpty()) {
-        url.addQueryItem(QLatin1String("card[address_line2]"), address2);
+        data.insert(QLatin1String("card[address_line2]"), address2);
     }
 
     if (!addressZip.isEmpty()) {
-        url.addQueryItem(QLatin1String("card[address_zip]"), addressZip);
+        data.insert(QLatin1String("card[address_zip]"), addressZip);
     }
 
     if (!addressState.isEmpty()) {
-        url.addQueryItem(QLatin1String("card[address_state]"), addressState);
+        data.insert(QLatin1String("card[address_state]"), addressState);
     }
 
     if (!addressCountry.isEmpty()) {
-        url.addQueryItem(QLatin1String("card[address_country]"), addressCountry);
+        data.insert(QLatin1String("card[address_country]"), addressCountry);
     }
 
-    //qDebug()<<"url is " <<url;
+    //qDebug() << "url is " << url << data.encodedQuery();
 
-    NetworkJob *job = new NetworkJob(d->get(url), this);
+    NetworkJob *job = new NetworkJob(d->post(url, d->qvariantToJson(data)), this);
     d->jobConnect(job);
     return job;
 }
@@ -607,21 +608,22 @@ Bodega::NetworkJob *Session::changeAccountDetails(const QString &firstName, cons
     const QString path = QString::fromLatin1("/participant/changeAccountDetails");
     url.setEncodedPath(d->jsonPath(path));
 
+    QVariantMap data;
     if (!firstName.isEmpty()) {
-        url.addQueryItem(QLatin1String("firstName"), firstName);
+        data.insert(QLatin1String("firstName"), firstName);
     }
 
     if (!lastName.isEmpty()) {
-        url.addQueryItem(QLatin1String("lastName"), lastName);
+        data.insert(QLatin1String("lastName"), lastName);
     }
 
     if (!email.isEmpty()) {
-        url.addQueryItem(QLatin1String("email"), email);
+        data.insert(QLatin1String("email"), email);
     }
 
-    //qDebug()<<"url is " <<url;
+    //qDebug() << "url is " << url;
 
-    NetworkJob *job = new NetworkJob(d->get(url), this);
+    NetworkJob *job = new NetworkJob(d->post(url, d->qvariantToJson(data)), this);
     d->jobConnect(job);
     return job;
 }
