@@ -90,6 +90,12 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
             } else if (preview[QLatin1String("subtype")] == QLatin1String("screen2")) {
                 info.previews[ScreenShot2] = url;
             }
+        } else if (preview[QLatin1String("type")] == QLatin1String("cover")) {
+            if (preview[QLatin1String("subtype")] == QLatin1String("front")) {
+                info.previews[CoverFront] = url;
+            } else if (preview[QLatin1String("subtype")] == QLatin1String("back")) {
+                info.previews[CoverBack] = url;
+            }
         }
     }
 }
