@@ -55,14 +55,14 @@ BrowserListView {
             onSearchQueryChanged: {
                 //var job = bodegaClient.session.search(searchQuery, -1, -1)
                 if (searchQuery.length > 3) {
-                    listView.model = searchModel
+                    root.view.model = searchModel
                     bodegaClient.searchModel.topChannel = root.channelId
                     bodegaClient.searchModel.searchQuery = searchQuery
                 } else {
-                    listView.model = visualDataModel
+                    root.view.model = channelsModel
                     bodegaClient.searchModel.searchQuery = ""
                 }
-                listView.currentIndex = -1
+                root.view.currentIndex = -1
             }
         }
     }
