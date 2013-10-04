@@ -77,6 +77,7 @@ PlasmaComponents.Page {
             id: emailField
             width: nameField.width
             Keys.onTabPressed: email2Field.forceActiveFocus()
+            Keys.onPressed: emailErrorMessage.shouldBeVisible = true;
         }
         PlasmaComponents.Label {
             text: i18n("Confirm email:")
@@ -89,15 +90,20 @@ PlasmaComponents.Page {
             id: email2Field
             width: nameField.width
             Keys.onTabPressed: creation ? passwordField.forceActiveFocus() : saveInfoButton.forceActiveFocus()
+            onTextChanged: emailErrorMessage.shouldBeVisible = true;
             Row {
+                id: emailErrorMessage
+
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: parent.right
                     leftMargin: 4
                 }
+                property bool shouldBeVisible: false
                 spacing: 4
                 property bool check: emailField.text == email2Field.text && emailField.text.indexOf("@") !== -1 && emailField.text.indexOf("@") !== emailField.text.length-1
-                    visible: emailField.text != ""
+
+                visible: shouldBeVisible && emailField.text != ""
 
                 PlasmaCore.IconItem {
                     width: theme.smallMediumIconSize
@@ -134,6 +140,7 @@ PlasmaComponents.Page {
             onClicked: {
                 text = i18n("Saving...")
                 enabled = false;
+                emailErrorMessage.shouldBeVisible = true;
 
                 job = bodegaClient.session.changeAccountDetails(nameField.text, lastNameField.text, emailField.text);
                 job.jobFinished.connect(updateDone);
