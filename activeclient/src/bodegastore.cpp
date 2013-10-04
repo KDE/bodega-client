@@ -466,6 +466,11 @@ void BodegaStore::authenticate(Bodega::Session *session)
     }
 }
 
+QString sessionWalletKey(Bodega::Session *session)
+{
+    return session->baseUrl().host() + "::" + session->baseUrl().port() + '_' + session->storeId();
+}
+
 void BodegaStore::saveCredentials() const
 {
     KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(),
@@ -479,7 +484,7 @@ void BodegaStore::saveCredentials() const
         map["username"] = m_session->userName();
         map["password"] = m_session->password();
 
-        if (wallet->writeMap("credentials", map) != 0) {
+        if (wallet->writeMap(sessionWalletKey(m_session), map) != 0) {
             kWarning() << "Unable to write credentials to wallet";
         }
     } else {
@@ -504,9 +509,8 @@ QVariantHash BodegaStore::retrieveCredentials(Bodega::Session *session) const
     if (wallet && wallet->isOpen() && wallet->setFolder("MakePlayLive")) {
 
         QMap<QString, QString> map;
-        const QString key = session->baseUrl().host() + "::" + session->baseUrl().port() + '_' + session->storeId();
 
-        if (!wallet->readMap(key, map)) {
+        if (!wallet->readMap(sessionWalletKey(session), map)) {
             // compatibility mode for old storage ...
             wallet->readMap("credentials", map);
         }
