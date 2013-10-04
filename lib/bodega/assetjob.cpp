@@ -82,8 +82,9 @@ void AssetJob::Private::parseAsset(const QVariantMap &result)
     QVariantList previewList = asset.value(QLatin1String("previews")).value<QVariantList>();
     foreach (const QVariant &item, previewList) {
         const QVariantMap preview = item.value<QVariantMap>();
-        QUrl url = q->session()->baseUrl();
-        url.setPath(url.path() + QLatin1String("/previews/") + preview[QLatin1String("path")].toString());
+        QUrl url = q->session()->imageUrls().value(ImagePreviews);
+
+        url.setPath(url.path() + QLatin1String("/") + preview[QLatin1String("path")].toString());
         if (preview[QLatin1String("type")] == QLatin1String("screenshot")) {
             if (preview[QLatin1String("subtype")] == QLatin1String("screen1")) {
                 info.previews[ScreenShot1] = url;

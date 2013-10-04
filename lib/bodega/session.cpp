@@ -349,6 +349,11 @@ int Session::points() const
     return d->points;
 }
 
+QMap<ImageUrl, QUrl> Session::imageUrls() const
+{
+    return d->imageUrls;
+}
+
 QMap<ImageUrl, QUrl> Session::urlsForImage(const QString &name) const
 {
     QMap<ImageUrl, QUrl>::const_iterator itr;
