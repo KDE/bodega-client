@@ -318,6 +318,7 @@ void participantInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::Pa
 
 BodegaStore::BodegaStore()
     : KDeclarativeMainWindow(),
+      Bodega::CredentialsProvider(),
       m_historyModel(0),
       m_collectionsModel(0),
       m_collectionAssetsModel(0),
@@ -480,6 +481,28 @@ void BodegaStore::forgetCredentials() const
     saveCredentials();
 }
 
+void BodegaStore::authenticate(Bodega::Session *session)
+{
+    if (session->isAuthenticated()) {
+        return;
+    }
+
+    QVariantHash credentials = retrieveCredentials(session);
+
+    if (credentials.isEmpty()) {
+        //FIXME: we need to be able to request the user/pass from the user
+    } else {
+        session->setUserName(credentials.value("username").toString());
+        session->setPassword(credentials.value("password").toString());
+        session->signOn();
+    }
+}
+
+QString sessionWalletKey(Bodega::Session *session)
+{
+    return session->baseUrl().host() + "::" + session->baseUrl().port() + '_' + session->storeId();
+}
+
 void BodegaStore::saveCredentials() const
 {
     KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(),
@@ -493,7 +516,7 @@ void BodegaStore::saveCredentials() const
         map["username"] = m_session->userName();
         map["password"] = m_session->password();
 
-        if (wallet->writeMap("credentials", map) != 0) {
+        if (wallet->writeMap(sessionWalletKey(m_session), map) != 0) {
             kWarning() << "Unable to write credentials to wallet";
         }
     } else {
@@ -503,19 +526,34 @@ void BodegaStore::saveCredentials() const
 
 QVariantHash BodegaStore::retrieveCredentials() const
 {
+    return retrieveCredentials(m_session);
+}
+
+QVariantHash BodegaStore::retrieveCredentials(Bodega::Session *session) const
+{
+    if (!session) {
+        return QVariantHash();
+    }
+
+    //FIXME: synchronous API -> not good
     KWallet::Wallet *wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(),
                                            winId(), KWallet::Wallet::Synchronous);
     if (wallet && wallet->isOpen() && wallet->setFolder("MakePlayLive")) {
 
         QMap<QString, QString> map;
 
-        if (wallet->readMap("credentials", map) == 0) {
+        if (!wallet->readMap(sessionWalletKey(session), map)) {
+            // compatibility mode for old storage ...
+            wallet->readMap("credentials", map);
+        }
+
+        if (map.isEmpty()) {
+            kWarning() << "Unable to read credentials from wallet";
+        } else {
             QVariantHash hash;
             hash["username"] = map["username"];
             hash["password"] = map["password"];
             return hash;
-        } else {
-            kWarning() << "Unable to read credentials from wallet";
         }
     } else {
         kWarning() << "Unable to open wallet";

@@ -22,6 +22,8 @@
 #ifndef BODEGASTORE_H
 #define BODEGASTORE_H
 
+#include "bodega/credentialsprovider.h"
+
 #include "kdeclarativemainwindow.h"
 #include "bodegaupdater_interface.h"
 
@@ -38,7 +40,7 @@ namespace Bodega {
     class InstallJobScheduler;
 }
 
-class BodegaStore : public KDeclarativeMainWindow
+class BodegaStore : public KDeclarativeMainWindow, public Bodega::CredentialsProvider
 {
     Q_OBJECT
     Q_PROPERTY(Bodega::Session *session READ session CONSTANT)
@@ -70,9 +72,12 @@ public:
     Bodega::InstallJobScheduler *installJobScheduler() const;
     QString startPage() const;
 
+    // the authenticate method is from the CredentialsProvider interface
+    void authenticate(Bodega::Session *session);
     Q_INVOKABLE void saveCredentials() const;
     Q_INVOKABLE void forgetCredentials() const;
     Q_INVOKABLE QVariantHash retrieveCredentials() const;
+    Q_INVOKABLE QVariantHash retrieveCredentials(Bodega::Session *session) const;
     Q_INVOKABLE void historyInUse(bool used);
     Q_INVOKABLE void checkForUpdates();
 
