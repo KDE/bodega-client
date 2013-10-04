@@ -21,6 +21,7 @@
 
 #include "assethandler.h"
 #include "assetbriefsjob.h"
+#include "credentialsprovider.h"
 #include "session.h"
 #include "installjob.h"
 #include "installjobsmodel.h"
@@ -113,10 +114,7 @@ void UpdatedAssetsModel::Private::fetchBriefs(const QString &store, const QStrin
 
         session->setBaseUrl(warehouse);
         session->setStoreId(store);
-        //FIXME!
-        session->setUserName(QLatin1String("zack@kde.org"));
-        session->setPassword(QLatin1String("zack"));
-        session->signOn();
+        CredentialsProvider::self()->authenticate(session);
     } else if (session->isAuthenticated()) {
         Bodega::AssetBriefsJob *job = session->assetBriefs(assets);
         connect(job, SIGNAL(jobFinished(Bodega::NetworkJob*)),
@@ -152,7 +150,6 @@ void UpdatedAssetsModel::Private::jobAdded(const Bodega::AssetInfo &info, Bodega
     connect(job, SIGNAL(progressChanged(qreal)), q, SLOT(progressChanged(qreal)));
     connect(job, SIGNAL(destroyed(QObject *)), q, SLOT(jobDestroyed(QObject *)));
 
-    //FIXME: get rid of this linear scan
     int i = 0;
     foreach (const AssetInfo &existingInfo, assets) {
         if (existingInfo.id == info.id) {
@@ -297,25 +294,24 @@ void UpdatedAssetsModel::reload()
 void UpdatedAssetsModel::updateAll()
 {
     int i = 0;
-    foreach (const AssetInfo &info, d->assets) {
-        
-        //FIXME: nested loop, evil++
-        QMapIterator<int, Bodega::Session *> it(d->sessionIndexes);
-        it.toBack();
-        while (it.hasPrevious()) {
-            it.previous();
-            if (it.key() <= i) {
-                InstallJobScheduler::self()->scheduleInstall(info.id, it.value());
+    QListIterator<AssetInfo> asset(d->assets);
+    QMapIterator<int, Bodega::Session *> session(d->sessionIndexes);
+    while (session.hasNext()) {
+        session.next();
+        int nextIndex = session.hasNext() ? session.peekNext().key() : d->assets.size();
+        while (nextIndex > i) {
+            if (!asset.hasNext()) {
+                return;
             }
+
+            InstallJobScheduler::self()->scheduleInstall(asset.next().id, session.value());
+            ++i;
         }
-        
-        ++i;
     }
 }
 
 bool UpdatedAssetsModel::containsAsset(const QString &assetId)
 {
-    //FIXME: get rid of this linear scan
     foreach (const AssetInfo &existingInfo, d->assets) {
         if (existingInfo.id == assetId) {
             return true;

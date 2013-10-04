@@ -11,6 +11,7 @@ set (bodega_HEADERS
      collectionassetsmodel.h
      collectionsmodel.h
      collectionremoveassetjob.h
+     credentialsprovider.h
      bodegamodel.h
      changelanguagejob.h
      channelsjob.h
@@ -48,6 +49,7 @@ set (bodega_SRCS
      collectionassetsmodel.cpp
      collectionremoveassetjob.cpp
      collectionsmodel.cpp
+     credentialsprovider.cpp
      bodegamodel.cpp
      changelanguagejob.cpp
      channelsjob.cpp
