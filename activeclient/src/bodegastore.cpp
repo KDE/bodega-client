@@ -176,6 +176,21 @@ QScriptValue qScriptValueFromAssetInfo(QScriptEngine *engine, const Bodega::Asse
     imageObj.setProperty("previews", info.images[ImagePreviews].toString());
     obj.setProperty("images", imageObj);
 
+    QScriptValue previewsObj = engine->newObject();
+    if (info.previews.contains(ScreenShot1)) {
+        previewsObj.setProperty("screenshot1", info.previews[ScreenShot1].toString());
+    }
+    if (info.previews.contains(ScreenShot2)) {
+        previewsObj.setProperty("screenshot2", info.previews[ScreenShot2].toString());
+    }
+    if (info.previews.contains(CoverFront)) {
+        previewsObj.setProperty("coverfront", info.previews[CoverFront].toString());
+    }
+    if (info.previews.contains(CoverBack)) {
+        previewsObj.setProperty("coverback", info.previews[CoverBack].toString());
+    }
+    obj.setProperty("previews", previewsObj);
+
     return obj;
 }
 
@@ -226,6 +241,23 @@ void assetInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::AssetInf
                 }
             }
             info.images = images;
+        } else if (it.name() == "previews") {
+            QMap<PreviewType, QUrl> previews;
+            QScriptValueIterator previewIt(scriptValue);
+
+            while (previewIt.hasNext()) {
+                previewIt.next();
+                if (previewIt.name() == "screenshot1") {
+                    previews[ScreenShot1] = previewIt.value().toString();
+                } else if (previewIt.name() == "screenshot2") {
+                    previews[ScreenShot2] = previewIt.value().toString();
+                } else if (previewIt.name() == "coverfront") {
+                    previews[CoverFront] = previewIt.value().toString();
+                } else if (previewIt.name() == "coverback") {
+                    previews[CoverBack] = previewIt.value().toString();
+                }
+            }
+            info.previews = previews;
         }
     }
 }

@@ -38,21 +38,30 @@ BrowserColumn {
     property variant installJob: null
     property int installStatus: 0
 
-    function downloadAsset() {downloadProgress.opacity = 1
+    function downloadAsset() {
+        downloadProgress.opacity = 1
         bodegaClient.installJobScheduler.scheduleInstall(assetId, session)
+    }
+
+    function loadPreviews() {
+        for(var i in assetOperations.assetInfo.previews) {
+            //print(i+": "+assetOperations.assetInfo.previews[i])
+            slideShow.model.append({'fileName': assetOperations.assetInfo.previews[i]});
+        }
     }
 
     function reloadPage() {
         if (assetId > 0) {
             assetOperations = root.session.assetOperations(assetId);
+            assetOperations.infoReady.connect(loadPreviews);
 
-            root.installJob = bodegaClient.installJobScheduler.installJobForAsset(assetId)
+            root.installJob = bodegaClient.installJobScheduler.installJobForAsset(assetId);
             if (root.installJob) {
-                downloadProgress.opacity = 1
-                root.installJob.progressChanged.connect(downloadProgress.updateProgress)
-                root.installJob.jobFinished.connect(downloadProgress.operationFinished)
-                root.installJob.jobError.connect(downloadProgress.installError)
-                root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
+                downloadProgress.opacity = 1;
+                root.installJob.progressChanged.connect(downloadProgress.updateProgress);
+                root.installJob.jobFinished.connect(downloadProgress.operationFinished);
+                root.installJob.jobError.connect(downloadProgress.installError);
+                root.installJob.jobFinished.connect(installButton.assetOpJobCompleted);
             }
         }
     }
@@ -65,16 +74,16 @@ BrowserColumn {
             if (assetId == root.assetId) {
                 root.installStatus = status;
                 if (status == InstallJobScheduler.Installing) {
-                    downloadProgress.opacity = 1
-                    downloadProgress.indeterminate = true
-                    downloadProgress.indeterminate = false
+                    downloadProgress.opacity = 1;
+                    downloadProgress.indeterminate = true;
+                    downloadProgress.indeterminate = false;
                     root.installJob = bodegaClient.installJobScheduler.installJobForAsset(assetId);
 
                     if (root.installJob) {
-                        root.installJob.progressChanged.connect(downloadProgress.updateProgress)
-                        root.installJob.jobFinished.connect(downloadProgress.operationFinished)
-                        root.installJob.jobError.connect(downloadProgress.installError)
-                        root.installJob.jobFinished.connect(installButton.assetOpJobCompleted)
+                        root.installJob.progressChanged.connect(downloadProgress.updateProgress);
+                        root.installJob.jobFinished.connect(downloadProgress.operationFinished);
+                        root.installJob.jobError.connect(downloadProgress.installError);
+                        root.installJob.jobFinished.connect(installButton.assetOpJobCompleted);
                     }
                 }
             }
@@ -111,9 +120,9 @@ BrowserColumn {
                             }
                             text: {
                                 if (questionBaloon.canPurchase) {
-                                    i18n("Confirm purchase of \"%1\" for %2 points.", assetOperations.assetInfo.name,  assetOperations.assetInfo.points)
+                                    i18n("Confirm purchase of \"%1\" for %2 points.", assetOperations.assetInfo.name,  assetOperations.assetInfo.points);
                                 } else {
-                                    i18n("You need to buy %1 extra points to be able to buy this asset.",  assetOperations.assetInfo.points)
+                                    i18n("You need to buy %1 extra points to be able to buy this asset.",  assetOperations.assetInfo.points);
                                 }
                             }
                             wrapMode: Text.Wrap
@@ -124,18 +133,18 @@ BrowserColumn {
                             onClicked: {
                                 if (questionBaloon.canPurchase) {
                                     // purchase
-                                    downloadProgress.opacity = 1
-                                    downloadProgress.indeterminate = true
-                                    var job = root.session.purchaseAsset(assetId)
-                                    job.jobFinished.connect(downloadProgress.operationFinished)
-                                    job.jobFinished.connect(root.downloadAsset)
-                                    job.jobFinished.connect(installButton.assetOpJobCompleted)
-                                    job.jobError.connect(downloadProgress.installError)
-                                    root.installJob = job
+                                    downloadProgress.opacity = 1;
+                                    downloadProgress.indeterminate = true;
+                                    var job = root.session.purchaseAsset(assetId);
+                                    job.jobFinished.connect(downloadProgress.operationFinished);
+                                    job.jobFinished.connect(root.downloadAsset);
+                                    job.jobFinished.connect(installButton.assetOpJobCompleted);
+                                    job.jobError.connect(downloadProgress.installError);
+                                    root.installJob = job;
                                 } else {
-                                    mainStack.push(Qt.createComponent("../settings/AddPoints.qml"))
+                                    mainStack.push(Qt.createComponent("../settings/AddPoints.qml"));
                                 }
-                                questionBaloon.close()
+                                questionBaloon.close();
                             }
                         }
                     }
@@ -145,14 +154,14 @@ BrowserColumn {
                     visualParent: installButton
                     message: i18n("Are you sure you want to uninstall %1?", assetOperations.assetInfo.name)
                     onAccepted: {
-                        downloadProgress.opacity = 1
-                        downloadProgress.indeterminate = true
-                        var job = root.session.uninstall(assetOperations)
-                        job.jobFinished.connect(downloadProgress.operationFinished)
-                        job.error.connect(downloadProgress.installError)
-                        job.jobFinished.connect(installButton.assetOpJobCompleted)
+                        downloadProgress.opacity = 1;
+                        downloadProgress.indeterminate = true;
+                        var job = root.session.uninstall(assetOperations);
+                        job.jobFinished.connect(downloadProgress.operationFinished);
+                        job.error.connect(downloadProgress.installError);
+                        job.jobFinished.connect(installButton.assetOpJobCompleted);
                         if (job.finished) {
-                            downloadProgress.opacity = 0
+                            downloadProgress.opacity = 0;
                             enabled = true;
                         }
                     }
@@ -240,27 +249,29 @@ BrowserColumn {
                                 left: parent.left
                                 right: parent.right
                             }
-                            function updateProgress(progress)
-                            {
-                                value = progress*100
-                                indeterminate = (value >= 100)
-                            }
+
                             onValueChanged: {
                                 if (value >= 100) {
-                                    indeterminate = true
+                                    indeterminate = true;
                                 }
                             }
-                            function operationFinished(job)
-                            {
-                                opacity = 0
-                                indeterminate = false
+
+                            function updateProgress(progress) {
+                                value = progress * 100;
+                                indeterminate = (value >= 100);
                             }
-                            function installError(job, error)
-                            {
-                                opacity = 0
-                                indeterminate = false
-                                showMessage(error.title, error.description, installButton)
+
+                            function operationFinished(job) {
+                                opacity = 0;
+                                indeterminate = false;
                             }
+
+                            function installError(job, error) {
+                                opacity = 0;
+                                indeterminate = false;
+                                showMessage(error.title, error.description, installButton);
+                            }
+
                             Behavior on opacity {
                                 NumberAnimation {
                                     duration: 250
@@ -269,6 +280,12 @@ BrowserColumn {
                             }
                         }
                     }
+
+                    SlideShow {
+                        id: slideShow
+                        model: ListModel {}
+                    }
+
                     ExpandingLabel {
                         id: descriptionLabel
                         anchors {
@@ -293,25 +310,24 @@ BrowserColumn {
                         visible: !root.assetOperations.installed || bodegaClient.updatedAssetsModel.containsAsset(assetId)
                         text: {
                             if (bodegaClient.updatedAssetsModel.containsAsset(assetId)) {
-                                i18n("Update")
+                                i18n("Update");
                             } else {
-                                root.assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase")
+                                root.assetOperations.assetInfo.canDownload ? i18n("Download") : i18n("Purchase");
                             }
                         }
                         onClicked: {
                             if (root.assetOperations.assetInfo.canDownload) {
-                                root.downloadAsset()
+                                root.downloadAsset();
                             } else {
                                 //ask to purchase
-                                questionBaloon.open()
+                                questionBaloon.open();
                             }
                         }
 
-                        function assetOpJobCompleted()
-                        {
+                        function assetOpJobCompleted() {
                             //TODO: need to show a success message methinks!
-                            root.assetOperations = root.session.assetOperations(assetId)
-                            root.installJob = null
+                            root.assetOperations = root.session.assetOperations(assetId);
+                            root.installJob = null;
                         }
                     }
 
@@ -458,18 +474,6 @@ BrowserColumn {
                             wrapMode: Text.WordWrap
                         }
                     }
-
-                    /*TODO
-                    SlideShow {
-                        model: ListModel {
-                            ListElement {
-                                fileName: "../../storebrowser/kpat1.jpg"
-                            }
-                            ListElement {
-                                fileName: "../../storebrowser/kpat2.jpg"
-                            }
-                        }
-                    }*/
                 }
             }
         }
