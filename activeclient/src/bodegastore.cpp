@@ -451,10 +451,19 @@ void BodegaStore::forgetCredentials() const
 
 void BodegaStore::authenticate(Bodega::Session *session)
 {
+    if (session->isAuthenticated()) {
+        return;
+    }
+
     QVariantHash credentials = retrieveCredentials(session);
-    session->setUserName(credentials.value("username").toString());
-    session->setPassword(credentials.value("password").toString());
-    session->signOn();
+
+    if (credentials.isEmpty()) {
+        //FIXME: we need to be able to request the user/pass from the user
+    } else {
+        session->setUserName(credentials.value("username").toString());
+        session->setPassword(credentials.value("password").toString());
+        session->signOn();
+    }
 }
 
 void BodegaStore::saveCredentials() const
