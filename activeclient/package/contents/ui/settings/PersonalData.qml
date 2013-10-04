@@ -143,7 +143,7 @@ PlasmaComponents.Page {
             function updateDone()
             {
                 if (job.failed) {
-                    showMessage(job.error.title, job.error.errorId + ': ' + job.error.description);
+                    return;
                 }
 
                 enabled = nameField.text && lastNameField.text && emailField.text
