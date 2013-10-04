@@ -45,7 +45,7 @@ BrowserColumn {
 
     function loadPreviews() {
         for(var i in assetOperations.assetInfo.previews) {
-            print(i+": "+assetOperations.assetInfo.previews[i])
+            //print(i+": "+assetOperations.assetInfo.previews[i])
             slideShow.model.append({'fileName': assetOperations.assetInfo.previews[i]})
         }
     }
