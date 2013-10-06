@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Add-ons Updater
+Name[da]=Opdatering af tilføjet indhold
 Name[es]=Actualizador de añadidos
 Name[nl]=Bijwerker van add-on
 Name[pt]=Actualizador de Extensões
@@ -10,6 +11,7 @@ Name[uk]=Оновлювач додатків
 Name[x-test]=xxAdd-ons Updaterxx
 Name[zh_TW]=擴充功能更新器
 Comment=Updates downloaded add-on content
+Comment[da]=Opdaterer tilføjet indhold du har downloadet
 Comment[es]=Actualiza los contenidos de añadidos descargados
 Comment[nl]=Inhoud voor add-on gedownload bij bijwerken
 Comment[pt]=Actualiza os conteúdos de extensões transferidos
