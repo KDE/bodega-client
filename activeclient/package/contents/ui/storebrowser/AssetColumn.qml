@@ -234,6 +234,21 @@ BrowserColumn {
                     }
 
 
+                    SlideShow {
+                        id: slideShow
+                        model: ListModel {}
+                    }
+
+                    ExpandingLabel {
+                        id: descriptionLabel
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                        }
+                        visible: text != ''
+                        text: assetOperations.assetInfo.description
+                    }
+
                     Item {
                         anchors {
                             left: parent.left
@@ -281,21 +296,6 @@ BrowserColumn {
                         }
                     }
 
-                    SlideShow {
-                        id: slideShow
-                        model: ListModel {}
-                    }
-
-                    ExpandingLabel {
-                        id: descriptionLabel
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                        }
-                        visible: text != ''
-                        text: assetOperations.assetInfo.description
-                    }
-
                     PlasmaComponents.Button {
                         visible: assetOperations.installed && assetOperations.launchText !== ""
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -306,7 +306,7 @@ BrowserColumn {
                     PlasmaComponents.Button {
                         id: installButton
                         anchors.horizontalCenter: parent.horizontalCenter
-                        enabled: root.installJob == null && root.assetOperations.ready
+                        //enabled: root.installJob == null && root.assetOperations.ready
                         visible: !root.assetOperations.installed || bodegaClient.updatedAssetsModel.containsAsset(assetId)
                         text: {
                             if (bodegaClient.updatedAssetsModel.containsAsset(assetId)) {
@@ -316,6 +316,9 @@ BrowserColumn {
                             }
                         }
                         onClicked: {
+                            print(root.installJob )
+                            print(root.assetOperations.ready)
+                            return
                             if (root.assetOperations.assetInfo.canDownload) {
                                 root.downloadAsset();
                             } else {
