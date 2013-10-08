@@ -42,7 +42,7 @@ MouseArea {
         PlasmaComponents.Label {
             id: descriptionLabel
             wrapMode: Text.WordWrap
-            horizontalAlignment: Text.AlignJustify
+            horizontalAlignment: Text.AlignLeft
             height: root.expanded ? paintedHeight : theme.defaultFont.mSize.height * 4
             clip: true
             anchors {
@@ -57,7 +57,7 @@ MouseArea {
                 }
             }
         }
-        
+
         PlasmaCore.SvgItem {
             svg: PlasmaCore.Svg{
                 imagePath: "widgets/arrows"
