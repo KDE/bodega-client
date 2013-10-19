@@ -24,6 +24,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QSettings>
 
 #include "assetoperations.h"
 #include "rpmhandler.h"
@@ -55,14 +56,13 @@ void PackageIdInstallJob::downloadFinished(const QString &localFile)
         return;
     }
 
-    while (!idFile.atEnd()) {
-        pkgId = QLatin1String(idFile.readLine());
-        if (pkgId.split(QLatin1Char(';'), QString::KeepEmptyParts).count() == 4) {
-            m_packageId = pkgId;
-            break;
-        }
-    }
     idFile.close();
+    
+    QSettings *settings = new QSettings(localFile, QSettings::IniFormat, 0);
+
+    m_packageId = settings->value(QLatin1String("packageId")).toString();
+    delete settings;
+
     if (m_packageId.isEmpty()) {
         setError(Error(Error::Session,
                    QString(QLatin1String("packageid/2")),
