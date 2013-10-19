@@ -25,16 +25,21 @@
 
 namespace Bodega {
 
+    class WallpaperHandler;
+
     class WallpaperInstallJob : public InstallJob
     {
         Q_OBJECT
 
     public:
-        WallpaperInstallJob(QNetworkReply *reply, Session *session);
+        WallpaperInstallJob(QNetworkReply *reply, Session *session, WallpaperHandler *handler);
         ~WallpaperInstallJob();
 
     protected:
         void downloadFinished(const QString &localFile);
+
+    private:
+        WallpaperHandler *m_handler;
     };
 }
 

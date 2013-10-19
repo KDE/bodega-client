@@ -46,12 +46,22 @@ WallpaperHandler::~WallpaperHandler()
 QString WallpaperHandler::assetLocation(bool fullPath) const
 {
     QString packageName = operations()->assetInfo().filename;
+
     if (packageName.endsWith(QLatin1String(".wallpaper"))) {
         packageName.chop(10);
-    }
 
-    if (fullPath) {
-        return KStandardDirs::locateLocal("wallpaper", QString()) + packageName + QLatin1String("/metadata.desktop");
+
+        if (fullPath) {
+            return KStandardDirs::locateLocal("wallpaper", QString()) + packageName + QLatin1String("/metadata.desktop");
+        }
+
+    } else if (packageName.toLower().endsWith(QLatin1String(".jpg")) ||
+        packageName.toLower().endsWith(QLatin1String(".jpeg")) ||
+        packageName.toLower().endsWith(QLatin1String(".png"))) {
+
+        if (fullPath) {
+            return KStandardDirs::locateLocal("wallpaper", QString()) + packageName;
+        }
     }
 
     return packageName;
@@ -66,7 +76,7 @@ bool WallpaperHandler::isInstalled() const
 Bodega::InstallJob *WallpaperHandler::install(QNetworkReply *reply, Session *session)
 {
     if (!m_installJob) {
-        m_installJob = new WallpaperInstallJob(reply, session);
+        m_installJob = new WallpaperInstallJob(reply, session, this);
         connect(m_installJob.data(), SIGNAL(jobFinished(Bodega::NetworkJob*)),
                 this, SLOT(registerForUpdates(Bodega::NetworkJob*)));
     }

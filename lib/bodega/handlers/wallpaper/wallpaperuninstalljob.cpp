@@ -44,14 +44,30 @@ WallpaperUninstallJob::~WallpaperUninstallJob()
 void WallpaperUninstallJob::commit()
 {
     QString packageName = m_handler->assetLocation(false);
-    Plasma::PackageStructure installer(0, QLatin1String("Plasma/Wallpaper"));
-    const bool success = installer.uninstallPackage(packageName, KGlobal::dirs()->findDirs("wallpaper", QString()).first());
 
-    if (!success) {
-        setError(Error(Error::Parsing,
-                       QLatin1String("uj/01"),
-                       tr("Uninstall failed"),
-                       tr("Impossible to uninstall the wallpaper package.")));
+    if (packageName.endsWith(QLatin1String(".wallpaper"))) {
+        Plasma::PackageStructure installer(0, QLatin1String("Plasma/Wallpaper"));
+        const bool success = installer.uninstallPackage(packageName, KGlobal::dirs()->findDirs("wallpaper", QString()).first());
+
+        if (!success) {
+            setError(Error(Error::Parsing,
+                        QLatin1String("uj/02"),
+                        tr("Uninstall failed"),
+                        tr("Impossible to uninstall the wallpaper package.")));
+        }
+    } else {
+        QFile f(m_handler->assetLocation(true));
+        if (!f.exists()) {
+            setError(Error(Error::Session,
+                        QLatin1String("uj/01"),
+                        tr("Uninstall failed"),
+                        tr("The wallpaper is not installed.")));
+        } else if (!f.remove()) {
+            setError(Error(Error::Session,
+                        QLatin1String("uj/02"),
+                        tr("Uninstall failed"),
+                        tr("Impossible to delete the file.")));
+        }
     }
     setFinished();
 }

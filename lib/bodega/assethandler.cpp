@@ -111,7 +111,9 @@ AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
         plugin = QLatin1String("epub");
     } else if (type == QLatin1String("application/x-plasma")) {
         plugin = QLatin1String("plasmoid");
-    } else if (type == QLatin1String("application/x-desktop-wallpaper")) {
+    } else if (type == QLatin1String("application/x-desktop-wallpaper") ||
+               type == QLatin1String("image/png") ||
+               type == QLatin1String("image/jpeg")) {
         plugin = QLatin1String("wallpaper");
     } else if (type == QLatin1String("application/x-rpm")) {
         plugin = QLatin1String("rpm");
