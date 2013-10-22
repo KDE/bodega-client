@@ -453,13 +453,11 @@ Bodega::NetworkJob *Session::buyPoints(int points)
     const QString path = QLatin1String("/points/buy");
     url.setEncodedPath(d->jsonPath(path));
 
-    if (points > 0) {
-        url.addQueryItem(QLatin1String("amount"), QString::number(points));
-    }
+    QVariantMap data;
+    data.insert(QLatin1String("amount"), points);
 
-    //qDebug() << "url is" << url;
-
-    NetworkJob *job = new NetworkJob(d->get(url), this);
+    //qDebug() << "url is " << url << data;
+    NetworkJob *job = new NetworkJob(d->post(url, d->qvariantToJson(data)), this);
     d->jobConnect(job);
     return job;
 }
