@@ -78,6 +78,7 @@ PlasmaComponents.Page {
 
             PlasmaComponents.Label {
                 text: i18n("Billing address:")
+                visible: address1Label.visible
                 anchors {
                     right: address1Label.left
                     rightMargin: theme.defaultFont.mSize.width
@@ -85,6 +86,7 @@ PlasmaComponents.Page {
             }
             PlasmaComponents.Label {
                 id: address1Label
+                visible: text.length > 0
                 width: Math.max(paintedWidth, 1)
                 text: paymentMethodStack.address1
             }
@@ -93,12 +95,14 @@ PlasmaComponents.Page {
             Item {width: 1; height: 1}
             PlasmaComponents.Label {
                 id: address2Label
+                visible: text.length > 0
                 width: Math.max(paintedWidth, 1)
                 text: paymentMethodStack.address2
             }
 
             PlasmaComponents.Label {
                 text: i18n("Country:")
+                visible: countryLabel.visible
                 anchors {
                     right: countryLabel.left
                     rightMargin: theme.defaultFont.mSize.width
@@ -106,12 +110,14 @@ PlasmaComponents.Page {
             }
             PlasmaComponents.Label {
                 id: countryLabel
+                visible: text.length > 0
                 width: Math.max(paintedWidth, 1)
                 text: paymentMethodStack.country
             }
 
             PlasmaComponents.Label {
                 text: i18n("State:")
+                visible: stateLabel.visible
                 anchors {
                     right: stateLabel.left
                     rightMargin: theme.defaultFont.mSize.width
@@ -119,12 +125,14 @@ PlasmaComponents.Page {
             }
             PlasmaComponents.Label {
                 id: stateLabel
+                visible: text.length > 0
                 width: Math.max(paintedWidth, 1)
                 text: paymentMethodStack.state
             }
 
             PlasmaComponents.Label {
                 text: i18n("ZIP:")
+                visible: zipLabel.visible
                 anchors {
                     right: zipLabel.left
                     rightMargin: theme.defaultFont.mSize.width
@@ -132,6 +140,7 @@ PlasmaComponents.Page {
             }
             PlasmaComponents.Label {
                 id: zipLabel
+                visible: text.length > 0
                 width: Math.max(paintedWidth, 1)
                 text: paymentMethodStack.zip
             }
