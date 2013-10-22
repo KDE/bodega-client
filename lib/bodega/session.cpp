@@ -506,49 +506,51 @@ Bodega::NetworkJob *Session::setPaymentMethod(const QString &number, const QStri
     const QString path = QString::fromLatin1("/participant/changeAccountDetails");
     url.setEncodedPath(d->jsonPath(path));
 
-    QVariantMap data;
+    QVariantMap card;
     if (!number.isEmpty()) {
-        data.insert(QLatin1String("card[number]"), number);
+        card.insert(QLatin1String("number"), number);
     }
 
     if (!expiryMonth.isEmpty()) {
-        data.insert(QLatin1String("card[exp_month]"), expiryMonth);
+        card.insert(QLatin1String("exp_month"), expiryMonth);
     }
 
     if (!expiryYear.isEmpty()) {
-        data.insert(QLatin1String("card[exp_year]"), expiryYear);
+        card.insert(QLatin1String("exp_year"), expiryYear);
     }
 
     if (!cvc.isEmpty()) {
-        data.insert(QLatin1String("card[cvc]"), cvc);
+        card.insert(QLatin1String("cvc"), cvc);
     }
 
     if (!name.isEmpty()) {
-        data.insert(QLatin1String("card[name]"), name);
+        card.insert(QLatin1String("name"), name);
     }
 
     if (!address1.isEmpty()) {
-        data.insert(QLatin1String("card[address_line1]"), address1);
+        card.insert(QLatin1String("address_line1"), address1);
     }
 
     if (!address2.isEmpty()) {
-        data.insert(QLatin1String("card[address_line2]"), address2);
+        card.insert(QLatin1String("address_line2"), address2);
     }
 
     if (!addressZip.isEmpty()) {
-        data.insert(QLatin1String("card[address_zip]"), addressZip);
+        card.insert(QLatin1String("address_zip"), addressZip);
     }
 
     if (!addressState.isEmpty()) {
-        data.insert(QLatin1String("card[address_state]"), addressState);
+        card.insert(QLatin1String("address_state"), addressState);
     }
 
     if (!addressCountry.isEmpty()) {
-        data.insert(QLatin1String("card[address_country]"), addressCountry);
+        card.insert(QLatin1String("address_country"), addressCountry);
     }
 
-    //qDebug() << "url is " << url << data.encodedQuery();
 
+    QVariantMap data;
+    data.insert(QLatin1String("card"), card);
+    //qDebug() << "url is " << url << data;
     NetworkJob *job = new NetworkJob(d->post(url, d->qvariantToJson(data)), this);
     d->jobConnect(job);
     return job;
