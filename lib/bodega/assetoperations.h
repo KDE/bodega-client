@@ -42,6 +42,7 @@ namespace Bodega {
         Q_PROPERTY(Bodega::AssetInfo assetInfo READ assetInfo NOTIFY infoReady)
         Q_PROPERTY(Bodega::Tags assetTags READ assetTags NOTIFY infoReady)
         Q_PROPERTY(QString mimetype READ mimetype)
+        Q_PROPERTY(QString assetType READ assetType)
         Q_PROPERTY(qreal progress READ progress NOTIFY progressChanged)
         Q_PROPERTY(QAbstractItemModel *ratingsModel READ ratingsModel CONSTANT)
 
@@ -59,6 +60,7 @@ namespace Bodega {
         bool isInstalled() const;
 
         QString mimetype() const;
+        QString assetType() const;
 
         qreal progress() const;
 

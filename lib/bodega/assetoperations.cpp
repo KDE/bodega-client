@@ -56,6 +56,7 @@ public:
     ChangeLog changeLog;
     Tags assetTags;
     QString mimetype;
+    QString assetType;
     bool wasInstalled;
     qreal progress;
     RatingsModel *ratingsModel;
@@ -78,12 +79,11 @@ void AssetOperations::Private::assetDownloadComplete(NetworkJob *job)
         delete handler;
         handler = 0;
 
-        //FIXME: may ever have more than one mimetype?
-        QHash<QString, QString> tags = assetJob->tags();
-        const QString mimeTag(QLatin1String("mimetype"));
-        mimetype = tags.value(mimeTag);
-        if (!mimetype.isEmpty()) {
-            handler = AssetHandler::create(mimetype, q);
+        const QHash<QString, QString> tags = assetJob->tags();
+        mimetype = tags.value(QLatin1String("mimetype"));
+        assetType = tags.value(QLatin1String("assetType"));
+        if (!assetType.isEmpty() || !mimetype.isEmpty()) {
+            handler = AssetHandler::create(assetType, mimetype, q);
         }
     }
 
@@ -176,6 +176,11 @@ bool AssetOperations::isInstalled() const
 QString AssetOperations::mimetype() const
 {
     return d->mimetype;
+}
+
+QString AssetOperations::assetType() const
+{
+    return d->assetType;
 }
 
 qreal AssetOperations::progress() const

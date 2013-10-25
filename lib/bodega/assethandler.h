@@ -37,6 +37,7 @@ namespace Bodega
 
         public:
             static AssetHandler *create(const QString &type,
+                                        const QString &mimetype,
                                         AssetOperations *parent);
 
             ~AssetHandler();

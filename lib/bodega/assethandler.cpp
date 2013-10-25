@@ -102,20 +102,22 @@ Bodega::UninstallJob *AssetHandler::uninstall(Session *session)
     return 0;
 }
 
-AssetHandler *AssetHandler::create(const QString &type, AssetOperations *parent)
+AssetHandler *AssetHandler::create(const QString &assetType, const QString &mimetype, AssetOperations *parent)
 {
     QString plugin;
     //FIXME: a better registration system is badly needed
-    if (type.startsWith(QLatin1String("application/epub")) ||
-        type == QLatin1String("application/pdf")) {
+    if (assetType == QLatin1String("book") ||
+        mimetype.startsWith(QLatin1String("application/epub")) ||
+        mimetype == QLatin1String("application/pdf")) {
         plugin = QLatin1String("epub");
-    } else if (type == QLatin1String("application/x-plasma")) {
+    } else if (assetType == QLatin1String("widget") &&
+               mimetype == QLatin1String("application/x-plasma")) {
         plugin = QLatin1String("plasmoid");
-    } else if (type == QLatin1String("application/x-desktop-wallpaper") ||
-               type == QLatin1String("image/png") ||
-               type == QLatin1String("image/jpeg")) {
+    } else if (assetType == QLatin1String("wallpaper") ||
+               mimetype == QLatin1String("image/png") ||
+               mimetype == QLatin1String("image/jpeg")) {
         plugin = QLatin1String("wallpaper");
-    } else if (type == QLatin1String("application/x-rpm")) {
+    } else if (mimetype == QLatin1String("application/x-rpm")) {
         plugin = QLatin1String("rpm");
     }
 
