@@ -44,9 +44,27 @@ BrowserColumn {
     }
 
     function loadPreviews() {
-        for(var i in assetOperations.assetInfo.previews) {
-            //print(i+": "+assetOperations.assetInfo.previews[i])
-            slideShow.model.append({'fileName': assetOperations.assetInfo.previews[i]});
+        
+        if (((assetOperations.assetTags.assetType != 'book' &&
+             assetOperations.assetTags.assetType != 'wallpaper') ||
+            (assetOperations.assetTags.assetType == 'book' && !assetOperations.assetInfo.previews.coverfront)) &&
+            assetOperations.assetInfo.images["large"]) {
+            slideShow.model.append(
+                {
+                    'type': 'icon',
+                    'tiny': assetOperations.assetInfo.images["tiny"],
+                    'small': assetOperations.assetInfo.images["small"],
+                    'medium': assetOperations.assetInfo.images["medium"],
+                    'big': assetOperations.assetInfo.images["big"],
+                    'large': assetOperations.assetInfo.images["large"],
+                    'huge': assetOperations.assetInfo.images["huge"],
+                    //Has to stay there due to a qml models limitation
+                    'fileName': ''
+                })
+        }
+        for (var i in assetOperations.assetInfo.previews) {
+            print(i+": "+assetOperations.assetInfo.previews[i])
+            slideShow.model.append({'type': 'preview', 'fileName': assetOperations.assetInfo.previews[i]});
         }
     }
 
@@ -178,41 +196,9 @@ BrowserColumn {
 
                     spacing: theme.defaultFont.mSize.height
 
-                    Item {
-                        anchors {
-                            left: parent.left
-                            right: parent.right
-                            margins: 4
-                        }
-                        height: bigIconImage.visible ? bigIconImage.height : theme.defaultFont.mSize.height
-                        Image {
-                            id: bigIconImage
-                            source: assetOperations.assetInfo.images["large"]
-                            asynchronous: true
-                            visible: bigIconImage.status == Image.Ready
-
-                            anchors.centerIn: parent
-                            fillMode: Image.PreserveAspectFit
-                            width:  sourceSize.width
-                            height: sourceSize.height
-
-                            /*
-                            TODO: make this show the large image unscaled
-                            MouseArea {
-                                anchors.fill: parent
-                                property bool big: false
-                                onClicked: {
-                                    if (big) {
-                                        bigIconImage.source = assetOperations.assetInfo.images["large"];
-                                    } else {
-                                        bigIconImage.source = assetOperations.assetInfo.images["huge"];
-                                    }
-
-                                    big = !big;
-                                }
-                            }
-                            */
-                        }
+                    SlideShow {
+                        id: slideShow
+                        model: ListModel {}
                     }
 
                     PlasmaExtras.Heading {
@@ -231,12 +217,6 @@ BrowserColumn {
                                                                      (root.assetOperations.assetInfo.canDownload ? "\n" + i18n("Purchased") : '')
                                                                    : i18n("Free")
                         anchors.horizontalCenter: parent.horizontalCenter
-                    }
-
-
-                    SlideShow {
-                        id: slideShow
-                        model: ListModel {}
                     }
 
                     ExpandingLabel {

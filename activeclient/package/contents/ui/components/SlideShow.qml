@@ -23,29 +23,21 @@ import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.qtextracomponents 0.1
 import "./private"
 
-PlasmaCore.FrameSvgItem {
-    id: photoBackground
-    imagePath: "widgets/media-delegate"
-    prefix: "picture"
+Item {
+    id: root
     property alias model: slideShowImplementation.model
     visible: model.count > 0
 
     anchors {
         left: parent.left
         right: parent.right
-        margins: 4
+        margins: 2
     }
-    height: width/1.6
+    height: width
 
     SlideShowImplementation {
         id: slideShowImplementation
-        anchors {
-            fill: parent
-            leftMargin: photoBackground.margins.left
-            topMargin: photoBackground.margins.top
-            rightMargin: photoBackground.margins.right
-            bottomMargin: photoBackground.margins.bottom
-        }
+        anchors.fill: parent
         onClicked: {
             if (dialog == undefined) {
                 dialog = dialogComponent.createObject(root)
@@ -62,6 +54,7 @@ PlasmaCore.FrameSvgItem {
             property alias currentIndex: dialogSlideshow.currentIndex
             content: SlideShowImplementation {
                 id: dialogSlideshow
+                showBackround: false
                 model: slideShowImplementation.model
                 onClicked: fullscreenDialog.close()
                 width: appRoot.width * 0.7

@@ -171,6 +171,7 @@ QScriptValue qScriptValueFromAssetInfo(QScriptEngine *engine, const Bodega::Asse
     imageObj.setProperty("tiny", info.images[ImageTiny].toString());
     imageObj.setProperty("small", info.images[ImageSmall].toString());
     imageObj.setProperty("medium", info.images[ImageMedium].toString());
+    imageObj.setProperty("big", info.images[ImageBig].toString());
     imageObj.setProperty("large", info.images[ImageLarge].toString());
     imageObj.setProperty("huge", info.images[ImageHuge].toString());
     imageObj.setProperty("previews", info.images[ImagePreviews].toString());
@@ -232,6 +233,8 @@ void assetInfoFromQScriptValue(const QScriptValue &scriptValue, Bodega::AssetInf
                     images[ImageSmall] = imageIt.value().toString();
                 } else if (imageIt.name() == "medium") {
                     images[ImageMedium] = imageIt.value().toString();
+                } else if (imageIt.name() == "big") {
+                    images[ImageBig] = imageIt.value().toString();
                 } else if (imageIt.name() == "large") {
                     images[ImageLarge] = imageIt.value().toString();
                 } else if (imageIt.name() == "huge") {

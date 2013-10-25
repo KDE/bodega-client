@@ -22,29 +22,120 @@ import org.kde.plasma.components 0.1 as PlasmaComponents
 import org.kde.plasma.core 0.1 as PlasmaCore
 import org.kde.qtextracomponents 0.1
 
-Rectangle {
+Item {
     id: root
     property alias model: listView.model
     property alias currentIndex: listView.currentIndex
+    property bool showBackround: true
     signal clicked(int index)
 
-    color: "black"
+    function imageforSize(width) {
+        if (width < 32) {
+            return 'tiny';
+        } else if (width < 64) {
+            return 'small';
+        } else if (width < 128) {
+            return 'medium';
+        } else if (width < 256) {
+            return 'big';
+        } else if (width < 512) {
+            return 'large';
+        } else {
+            return 'huge';
+        }
+    }
+    function roundSize(width) {
+        if (width < 32) {
+            return 22;
+        } else if (width < 64) {
+            return 32;
+        } else if (width < 128) {
+            return 64;
+        } else if (width < 256) {
+            return 128;
+        } else if (width < 512) {
+            return 256;
+        } else {
+            return 512;
+        }
+    }
 
+    Component {
+        id: iconDelegate
+        Item {
+            property QtObject model
+            width: listView.width
+            height: listView.height
+            Image {
+                anchors.centerIn: parent
+                width: roundSize(Math.min(parent.width, parent.height))
+                height: width
+                source: model[imageforSize(width)]
+                fillMode: Image.PreserveAspectFit
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.clicked(model.index)
+                }
+            }
+        }
+    }
+    Component {
+        id: previewDelegate
+        Item {
+            property QtObject model
+            width: listView.width
+            height: listView.height
+            PlasmaCore.FrameSvgItem {
+                id: photoBackground
+                width: screenshot.paintedWidth ? screenshot.paintedWidth + margins.left + margins.right : parent.width
+                height: screenshot.paintedHeight ? screenshot.paintedHeight + margins.top + margins.bottom : parent.width / 1.6
+                x: screenshot.x - margins.left
+                y: screenshot.y - margins.top
+                anchors.verticalCenter: parent.verticalCenter
+                imagePath: showBackround ? "widgets/media-delegate" : ''
+                prefix: "picture"
+            }
+            Rectangle {
+                id: blackFrame
+                anchors {
+                    fill: photoBackground
+                    leftMargin: photoBackground.margins.left
+                    topMargin: photoBackground.margins.top
+                    rightMargin: photoBackground.margins.right
+                    bottomMargin: photoBackground.margins.bottom
+                }
+                color: 'black'
+            }
+            Image {
+                id: screenshot
+                anchors {
+                    fill: parent
+                    leftMargin: photoBackground.margins.left
+                    topMargin: photoBackground.margins.top
+                    rightMargin: photoBackground.margins.right
+                    bottomMargin: photoBackground.margins.bottom
+                }
+                source: model.fileName
+                fillMode: Image.PreserveAspectFit
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.clicked(model.index)
+                }
+            }
+        }
+    }
     ListView {
         id: listView
         anchors.fill: parent
         snapMode: ListView.SnapToItem
+        cacheBuffer: 10
         clip: true
         orientation: ListView.Horizontal
         highlightRangeMode: ListView.StrictlyEnforceRange
-        delegate: Image {
-            width: listView.width
-            height: listView.height
-            source: fileName
-            fillMode: Image.PreserveAspectFit
-            MouseArea {
-                anchors.fill: parent
-                onClicked: root.clicked(index)
+        delegate: Loader {
+            sourceComponent: model.type == 'icon' ? iconDelegate : previewDelegate
+            Component.onCompleted: {
+                item.model = model      
             }
         }
     }
@@ -52,7 +143,7 @@ Rectangle {
         anchors {
             horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
-            bottomMargin: 4
+            bottomMargin: parent.height/10
         }
         visible: listView.count > 1
         spacing: 2
