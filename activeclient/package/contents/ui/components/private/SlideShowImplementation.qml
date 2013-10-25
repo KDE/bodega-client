@@ -89,7 +89,7 @@ Item {
             PlasmaCore.FrameSvgItem {
                 id: photoBackground
                 width: screenshot.paintedWidth ? screenshot.paintedWidth + margins.left + margins.right : parent.width
-                height: screenshot.paintedHeight ? screenshot.paintedHeight + margins.top + margins.bottom : parent.width / 1.6
+                height: screenshot.paintedHeight ? screenshot.paintedHeight + margins.top + margins.bottom : parent.height
                 anchors.centerIn: parent
                 anchors.verticalCenter: parent.verticalCenter
                 imagePath: showBackround ? "widgets/media-delegate" : ''
