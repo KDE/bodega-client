@@ -33,7 +33,7 @@ Item {
         right: parent.right
         margins: 2
     }
-    height: width
+    height: slideShowImplementation.implicitHeight
 
     SlideShowImplementation {
         id: slideShowImplementation

@@ -28,6 +28,7 @@ Item {
     property alias currentIndex: listView.currentIndex
     property bool showBackround: true
     signal clicked(int index)
+    implicitHeight: roundSize(width)
 
     function imageforSize(width) {
         if (width < 32) {
@@ -89,8 +90,7 @@ Item {
                 id: photoBackground
                 width: screenshot.paintedWidth ? screenshot.paintedWidth + margins.left + margins.right : parent.width
                 height: screenshot.paintedHeight ? screenshot.paintedHeight + margins.top + margins.bottom : parent.width / 1.6
-                x: screenshot.x - margins.left
-                y: screenshot.y - margins.top
+                anchors.centerIn: parent
                 anchors.verticalCenter: parent.verticalCenter
                 imagePath: showBackround ? "widgets/media-delegate" : ''
                 prefix: "picture"
