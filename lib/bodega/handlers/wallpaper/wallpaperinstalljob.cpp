@@ -47,7 +47,7 @@ void WallpaperInstallJob::downloadFinished(const QString &localFile)
 {
     const QString root = KStandardDirs::locateLocal("wallpaper", QString());
 
-    QString fileName = m_handler->assetLocation(false);
+    QString fileName = m_handler->operations()->assetInfo().filename;
 
     if (fileName.endsWith(QLatin1String(".wallpaper"))) {
         Plasma::PackageStructure package;
