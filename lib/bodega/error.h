@@ -129,10 +129,12 @@ namespace Bodega {
     {
     public:
         enum Type {
+            NoError = 0,
             Network,
             Authentication,
             Parsing,
-            Session
+            Session,
+            Installation
         };
 
         Error();
