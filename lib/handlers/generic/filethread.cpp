@@ -43,20 +43,37 @@ FileThread::FileThread(const QString &pathToDelete)
 
 void FileThread::run()
 {
-    //TODO .. error handling?
+    Bodega::Error error;
+
     if (m_move) {
         QFileInfo info(m_dest);
-        QDir dir(info.canonicalPath());
+        QDir dir(info.absolutePath());
         if (!dir.exists()) {
             dir.mkpath(dir.path());
         }
 
-        QFile::rename(m_source, m_dest);
+        if (!QFile::rename(m_source, m_dest)) {
+            error = Bodega::Error(Bodega::Error::Installation,
+                                  QLatin1String("ij/01"),
+                                  tr("Install failed"),
+                                  tr("Could not install the file; wrong permissions or no space left on device."));
+        }
     } else {
-        QFile::remove(m_source);
+        QFile f(m_source);
+        if (!f.exists()) {
+            error = Bodega::Error(Bodega::Error::Installation,
+                                  QLatin1String("uj/01"),
+                                  tr("Uninstall failed"),
+                                  tr("The file is not installed."));
+        } else if (!f.remove()) {
+            error = Bodega::Error(Bodega::Error::Installation,
+                                  QLatin1String("uj/02"),
+                                  tr("Uninstall failed"),
+                                  tr("Unable to delete the file."));
+        }
     }
 
-    emit completed();
+    emit completed(error);
 }
 
 #include "filethread.moc"

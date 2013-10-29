@@ -40,8 +40,17 @@ GenericInstallJob::~GenericInstallJob()
 void GenericInstallJob::downloadFinished(const QString &file)
 {
     FileThread *thread = new FileThread(file, m_handler->installPath());
-    connect(thread, SIGNAL(completed()), this, SLOT(setFinished()));
+    connect(thread, SIGNAL(completed(Bodega::Error)), this, SLOT(threadFinished(Bodega::Error)));
     QThreadPool::globalInstance()->start(thread);
+}
+
+void GenericInstallJob::threadFinished(const Bodega::Error &error)
+{
+    if (error.type() != Bodega::Error::NoError) {
+        setError(error);
+    }
+
+    setFinished();
 }
 
 #include "genericinstalljob.moc"

@@ -20,6 +20,7 @@
 #ifndef GENERICUNINSTALLJOB_H
 #define GENERICUNINSTALLJOB_H
 
+#include <bodega/error.h>
 #include <bodega/uninstalljob.h>
 
 namespace Bodega {
@@ -34,9 +35,9 @@ namespace Bodega {
         GenericUninstallJob(Session *parent, GenericHandler *handler);
         ~GenericUninstallJob();
 
-
     private Q_SLOTS:
         void start();
+        void threadFinished(const Bodega::Error &error);
 
     private:
         GenericHandler *m_handler;

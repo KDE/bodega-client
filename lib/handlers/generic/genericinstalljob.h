@@ -20,6 +20,7 @@
 #ifndef BODEGA_GENERICINSTALLJOB_H
 #define BODEGA_GENERICINSTALLJOB_H
 
+#include <bodega/error.h>
 #include <bodega/installjob.h>
 
 namespace Bodega {
@@ -35,6 +36,9 @@ namespace Bodega {
 
     protected:
         void downloadFinished(const QString &localFile);
+
+    private Q_SLOTS:
+        void threadFinished(const Bodega::Error &error);
 
     private:
         GenericHandler *m_handler;

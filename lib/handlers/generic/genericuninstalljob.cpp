@@ -33,15 +33,24 @@ GenericUninstallJob::GenericUninstallJob(Session *parent, GenericHandler *handle
     QMetaObject::invokeMethod(this, "start", Qt::QueuedConnection);
 }
 
+GenericUninstallJob::~GenericUninstallJob()
+{
+}
+
 void GenericUninstallJob::start()
 {
     FileThread *thread = new FileThread(m_handler->installPath());
-    connect(thread, SIGNAL(completed()), this, SLOT(setFinished()));
+    connect(thread, SIGNAL(completed(Bodega::Error)), this, SLOT(threadFinished(Bodega::Error)));
     QThreadPool::globalInstance()->start(thread);
 }
 
-GenericUninstallJob::~GenericUninstallJob()
+void GenericUninstallJob::threadFinished(const Bodega::Error &error)
 {
+    if (error.type() != Bodega::Error::NoError) {
+        setError(error);
+    }
+
+    setFinished();
 }
 
 #include "genericuninstalljob.moc"

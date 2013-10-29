@@ -23,6 +23,8 @@
 #include <QObject>
 #include <QRunnable>
 
+#include <bodega/error.h>
+
 class FileThread : public QObject, public QRunnable
 {
     Q_OBJECT
@@ -37,7 +39,7 @@ public:
     void run();
 
 Q_SIGNALS:
-    void completed();
+    void completed(const Bodega::Error &error);
 
 private:
     QString m_source;
