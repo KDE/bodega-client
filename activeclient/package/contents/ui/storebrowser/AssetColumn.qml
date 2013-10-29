@@ -169,7 +169,7 @@ BrowserColumn {
                 }
                 InlineConfirmationDialog {
                     id: uninstallConfirmation
-                    visualParent: installButton
+                    visualParent: uninstallButton
                     message: i18n("Are you sure you want to uninstall %1?", assetOperations.assetInfo.name)
                     onAccepted: {
                         downloadProgress.opacity = 1;

@@ -104,4 +104,3 @@ install(FILES
 )
 
 
-add_subdirectory(handlers)

@@ -1,3 +1,5 @@
+include_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/lib/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES} ${QJSON_INCLUDE_DIRS})
+
 find_package(PackageKitQt2)
 if (PACKAGEKIT_QT2_FOUND)
    add_subdirectory(rpm)

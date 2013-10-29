@@ -61,6 +61,7 @@ INCLUDE( ${QT_USE_FILE} )
 
 # Subdirs
 add_subdirectory(bodega)
+add_subdirectory(handlers)
 IF (KDE4_BUILD_TESTS OR BODEGA_BUILD_TESTS)
   enable_testing()
   ADD_SUBDIRECTORY(tests)
