@@ -22,40 +22,20 @@
 
 #include <bodega/error.h>
 #include <bodega/globals.h>
+#include <bodega/networkjob.h>
 
-#include <QtCore/QObject>
 
 namespace Bodega {
 
     class Session;
 
-    class BODEGA_EXPORT UninstallJob : public QObject
+    class BODEGA_EXPORT UninstallJob : public NetworkJob
     {
         Q_OBJECT
-        Q_PROPERTY(bool finished READ isFinished NOTIFY finishedChanged())
-        Q_PROPERTY(bool failed READ failed NOTIFY failedChanged())
 
     public:
         UninstallJob(Session *parent);
         ~UninstallJob();
-
-        Session *session() const;
-
-        bool isFinished() const;
-
-        bool failed() const;
-        Error error() const;
-
-    protected:
-        void setError(const Bodega::Error &e);
-        void setFinished();
-
-    Q_SIGNALS:
-        void error(Bodega::UninstallJob *job, const Bodega::Error &error);
-        void jobFinished(Bodega::UninstallJob *job);
-        void failedChanged();
-        void finishedChanged();
-
 
     private:
         class Private;

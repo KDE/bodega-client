@@ -208,7 +208,7 @@ Bodega::UninstallJob *AssetOperations::uninstall(Session *session)
     if (d->ready()) {
         Bodega::UninstallJob *job = d->handler->uninstall(session);
         if (job) {
-            connect(job, SIGNAL(jobFinished(Bodega::UninstallJob *)), this, SLOT(checkInstalled()));
+            connect(job, SIGNAL(jobFinished(Bodega::NetworkJob *)), this, SLOT(checkInstalled()));
             d->checkInstalled();
         }
         return job;

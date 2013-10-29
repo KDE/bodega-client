@@ -26,69 +26,15 @@
 
 using namespace Bodega;
 
-class UninstallJob::Private {
-public:
-    Private(UninstallJob *uj);
-
-    UninstallJob *q;
-    bool finished;
-    bool failed;
-    Error error;
-};
-
-UninstallJob::Private::Private(UninstallJob *uj)
-    : q(uj),
-      finished(false),
-      failed(false)
-{
-}
-
 UninstallJob::UninstallJob(Session *parent)
-    : QObject(parent),
-      d(new UninstallJob::Private(this))
+    : NetworkJob(parent),
+      d(0)
 {
 }
 
 UninstallJob::~UninstallJob()
 {
-    delete d;
-}
-
-bool UninstallJob::failed() const
-{
-    return d->failed;
-}
-
-
-bool UninstallJob::isFinished() const
-{
-    return d->finished;
-}
-
-Session *UninstallJob::session() const
-{
-    return qobject_cast<Session*>(parent());
-}
-
-Bodega::Error UninstallJob::error() const
-{
-    return d->error;
-}
-
-void UninstallJob::setError(const Bodega::Error &e)
-{
-    d->error = e;
-    d->failed = true;
-    emit error(this, e);
-    emit failedChanged();
-}
-
-void UninstallJob::setFinished()
-{
-    d->finished = true;
-    emit finishedChanged();
-    emit jobFinished(this);
-    deleteLater();
+    //delete d;
 }
 
 #include "uninstalljob.moc"
