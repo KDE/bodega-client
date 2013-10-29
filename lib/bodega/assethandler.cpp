@@ -119,6 +119,8 @@ AssetHandler *AssetHandler::create(const QString &assetType, const QString &mime
         plugin = QLatin1String("wallpaper");
     } else if (mimetype == QLatin1String("application/x-rpm")) {
         plugin = QLatin1String("rpm");
+    } else {
+        plugin = QLatin1String("generic");
     }
 
     AssetHandler * handler = 0;
