@@ -30,7 +30,7 @@ using namespace Bodega;
 
 class NetworkJob::Private {
 public:
-    Private(NetworkJob *nj, QNetworkReply *r, bool parseResults);
+    Private(NetworkJob *nj, QNetworkReply *r = 0, bool parseResults = false);
 
     void netError(QNetworkReply::NetworkError code);
     void netFinished();
@@ -63,16 +63,18 @@ NetworkJob::Private::Private(NetworkJob *nj, QNetworkReply *r, bool parseResults
       file(0),
       progress(0)
 {
-    QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
-                     q, SLOT(netError(QNetworkReply::NetworkError)));
-    QObject::connect(reply, SIGNAL(finished()), q, SLOT(netFinished()));
-    QObject::connect(reply, SIGNAL(downloadProgress(qint64, qint64)),
-                     q, SLOT(downloadProgress(qint64, qint64)));
-    if (!expectingJson) {
-        // not json ... so we need to save to a file
-        file = new QTemporaryFile(q);
-        file->open();
-        QObject::connect(reply, SIGNAL(readyRead()), q, SLOT(readFromNetwork()));
+    if (reply) {
+        QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
+                         q, SLOT(netError(QNetworkReply::NetworkError)));
+        QObject::connect(reply, SIGNAL(finished()), q, SLOT(netFinished()));
+        QObject::connect(reply, SIGNAL(downloadProgress(qint64, qint64)),
+                         q, SLOT(downloadProgress(qint64, qint64)));
+        if (!expectingJson) {
+            // not json ... so we need to save to a file
+            file = new QTemporaryFile(q);
+            file->open();
+            QObject::connect(reply, SIGNAL(readyRead()), q, SLOT(readFromNetwork()));
+        }
     }
 }
 
@@ -145,12 +147,18 @@ NetworkJob::NetworkJob(QNetworkReply *reply, Session *parent, bool parseResults)
 {
 }
 
+NetworkJob::NetworkJob(Session *parent)
+    : QObject(parent),
+      d(new NetworkJob::Private(this))
+{
+}
+
 NetworkJob::~NetworkJob()
 {
     delete d;
 }
 
-QNetworkReply * NetworkJob::reply() const
+QNetworkReply *NetworkJob::reply() const
 {
     return d->reply;
 }
@@ -178,7 +186,7 @@ bool NetworkJob::isFinished() const
 
 bool NetworkJob::isJsonResponse() const
 {
-    return d->expectingJson;
+    return d->reply && d->expectingJson;
 }
 
 QVariantMap NetworkJob::parsedJson() const
@@ -188,7 +196,7 @@ QVariantMap NetworkJob::parsedJson() const
 
 QUrl NetworkJob::url() const
 {
-    return d->reply->url();
+    return d->reply ? d->reply->url() : QString();
 }
 
 void NetworkJob::parseErrors(const QVariantMap &jsonMap)

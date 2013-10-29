@@ -45,6 +45,7 @@ namespace Bodega {
 
     public:
         NetworkJob(QNetworkReply *reply, Session *parent, bool parseResponse = true);
+        NetworkJob(Session *parent);
         ~NetworkJob();
 
         Session *session() const;
@@ -93,6 +94,8 @@ namespace Bodega {
         void parseErrors(const QVariantMap &jsonMap);
         //For errors not related to network
         void setError(const Bodega::Error &error);
+
+    protected Q_SLOTS:
         void setFinished();
 
     private:
