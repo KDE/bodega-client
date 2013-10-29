@@ -19,6 +19,7 @@ set (bookhandlerplugin_SRCS
      bookhandler.cpp
      bookinstalljob.cpp
      bookuninstalljob.cpp
+     filethread.cpp
      )
 
 

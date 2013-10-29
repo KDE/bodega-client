@@ -33,6 +33,13 @@ namespace Bodega {
     public:
         BookUninstallJob(Session *parent, BookHandler *handler);
         ~BookUninstallJob();
+
+    private Q_SLOTS:
+        void start();
+        void threadCompleted(const Bodega::Error &error);
+
+    private:
+        BookHandler *m_handler;
     };
 }
 

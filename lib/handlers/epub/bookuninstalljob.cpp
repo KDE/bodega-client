@@ -18,34 +18,41 @@
  */
 
 #include "bookuninstalljob.h"
-#include "bookhandler.h"
-#include "session.h"
 
 #include <QDebug>
-#include <QFile>
+#include <QThreadPool>
+
+#include "bookhandler.h"
+#include "filethread.h"
 
 using namespace Bodega;
 
 BookUninstallJob::BookUninstallJob(Session *parent, BookHandler *handler)
-    : UninstallJob(parent)
+    : UninstallJob(parent),
+      m_handler(handler)
 {
-    QFile f(handler->filePath());
-    if (!f.exists()) {
-        setError(Error(Error::Session,
-                       QLatin1String("uj/01"),
-                       tr("Uninstall failed"),
-                       tr("The book is not installed.")));
-    } else if (!f.remove()) {
-        setError(Error(Error::Session,
-                       QLatin1String("uj/02"),
-                       tr("Uninstall failed"),
-                       tr("Impossible to delete the file.")));
-    }
-    setFinished();
+    QMetaObject::invokeMethod(this, "start", Qt::QueuedConnection);
+}
+
+void BookUninstallJob::start()
+{
+    FileThread *thread = new FileThread(m_handler->filePath());
+    connect(thread, SIGNAL(completed(Bodega::Error)), this, SLOT(threadCompleted(Bodega::Error)));
+    QThreadPool::globalInstance()->start(thread);
 }
 
 BookUninstallJob::~BookUninstallJob()
 {
 }
+
+void BookUninstallJob::threadCompleted(const Bodega::Error &error)
+{
+    if (error.type() != Bodega::Error::NoError) {
+        setError(error);
+    }
+
+    setFinished();
+}
+
 
 #include "bookuninstalljob.moc"

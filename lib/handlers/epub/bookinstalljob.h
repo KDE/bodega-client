@@ -20,8 +20,9 @@
 #ifndef BODEGA_BOOKINSTALLJOB_H
 #define BODEGA_BOOKINSTALLJOB_H
 
-#include <bodega/installjob.h>
+#include <bodega/error.h>
 #include <bodega/globals.h>
+#include <bodega/installjob.h>
 
 namespace Bodega {
     class BookHandler;
@@ -36,6 +37,9 @@ namespace Bodega {
 
     protected:
         void downloadFinished(const QString &localFile);
+
+    private Q_SLOTS:
+        void threadCompleted(const Bodega::Error &error);
 
     private:
         BookHandler *m_handler;

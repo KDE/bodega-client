@@ -22,18 +22,11 @@
 
 #include <QDebug>
 #include <QDir>
-#include <QFile>
-#include <QFileInfo>
+#include <QThreadPool>
 
 #include "assetoperations.h"
 #include "bookhandler.h"
-
-#ifdef USE_NEPOMUK
-#include <nepomuk2/nco.h>
-#include <nepomuk2/nfo.h>
-#include <nepomuk2/resource.h>
-#include <nepomuk2/variant.h>
-#endif
+#include "filethread.h"
 
 namespace Bodega
 {
@@ -51,34 +44,18 @@ BookInstallJob::~BookInstallJob()
 
 void BookInstallJob::downloadFinished(const QString &localFile)
 {
-    QFile f(localFile);
+    const QString author = m_handler->operations()->assetTags().value(QLatin1String("author"));
+    FileThread *thread = new FileThread(localFile, m_handler->filePath(), author);
+    connect(thread, SIGNAL(completed(Bodega::Error)), this, SLOT(threadCompleted(Bodega::Error)));
+    QThreadPool::globalInstance()->start(thread);
+}
 
-    QDir dir(QDir::homePath() + QString::fromLatin1("/Books/"));
-
-    if (!dir.exists()) {
-        dir.mkdir(dir.path());
+void BookInstallJob::threadCompleted(const Bodega::Error &error)
+{
+    if (error.type() != Bodega::Error::NoError) {
+        setError(error);
     }
 
-    if (!f.rename(dir.filePath(m_handler->filePath()))) {
-        setError(Error(Error::Session,
-                       QLatin1String("ij/01"),
-                       tr("Install failed"),
-                       tr("Impossible to install the book, wrong permissions or no space left on device.")));
-    } else {
-#ifdef USE_NEPOMUK
-        Nepomuk2::Resource r(dir.filePath(m_handler->filePath()));
-        r.addType(Nepomuk2::Vocabulary::NFO::Document());
-
-        //add an author if possuble
-        if (m_handler->operations()->assetTags().contains(QLatin1String("author"))) {
-
-            Nepomuk2::Resource authorRes = Nepomuk2::Resource();
-            authorRes.addType(Nepomuk2::Vocabulary::NCO::Contact());
-            authorRes.addProperty(Nepomuk2::Vocabulary::NCO::fullname(), m_handler->operations()->assetTags().value(QLatin1String("author")));
-            r.addProperty(Nepomuk2::Vocabulary::NCO::creator(), authorRes);
-        }
-#endif
-    }
     setFinished();
 }
 
