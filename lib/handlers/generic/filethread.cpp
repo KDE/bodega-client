@@ -52,7 +52,12 @@ void FileThread::run()
             dir.mkpath(dir.path());
         }
 
-        if (!QFile::rename(m_source, m_dest)) {
+        if (info.exists()) {
+            error = Bodega::Error(Bodega::Error::Installation,
+                                  QLatin1String("ij/03"),
+                                  tr("Install failed"),
+                                  tr("A file by this name already exists on the device: %1").arg(info.absoluteFilePath()));
+        } else if (!QFile::rename(m_source, m_dest)) {
             error = Bodega::Error(Bodega::Error::Installation,
                                   QLatin1String("ij/01"),
                                   tr("Install failed"),
