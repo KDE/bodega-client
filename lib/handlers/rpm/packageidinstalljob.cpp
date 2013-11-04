@@ -57,7 +57,7 @@ void PackageIdInstallJob::downloadFinished(const QString &localFile)
     }
 
     idFile.close();
-    
+
     QSettings *settings = new QSettings(localFile, QSettings::IniFormat, 0);
 
     m_packageId = settings->value(QLatin1String("packageId")).toString();
@@ -71,17 +71,33 @@ void PackageIdInstallJob::downloadFinished(const QString &localFile)
         return;
     }
 
-    qDebug() << "Simulate install" << m_packageId;
+    qDebug() << "Updating package cache";
 
     PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
-    transaction->simulateInstallPackage(PackageKit::Package(m_packageId));
-
+    transaction->refreshCache(false);
     connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
             this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(simulateInstallFinished(PackageKit::Transaction::Exit, uint)));
-    connect(transaction, SIGNAL(changed()),
+            this, SLOT(refreshFinished(PackageKit::Transaction::Exit, uint)));
+      connect(transaction, SIGNAL(changed()),
             this, SLOT(transactionChanged()));
+}
+
+void PackageIdInstallJob::refreshFinished(PackageKit::Transaction::Exit status, uint runtime)
+{
+    if (status == PackageKit::Transaction::ExitSuccess) {
+        qDebug() << "Simulate install" << m_packageId;
+
+        PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
+        transaction->simulateInstallPackage(PackageKit::Package(m_packageId));
+
+        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
+                this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
+        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+                this, SLOT(simulateInstallFinished(PackageKit::Transaction::Exit, uint)));
+        connect(transaction, SIGNAL(changed()),
+                this, SLOT(transactionChanged()));
+    }
 }
 
 
