@@ -24,7 +24,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QtGui/QDesktopServices>
+#include <QProcess>
 
 #include <Daemon>
 
@@ -131,7 +131,7 @@ QString RpmHandler::launchText() const
 
 void RpmHandler::launch()
 {
-    QDesktopServices::openUrl(QUrl(m_desktopFile));
+    QProcess::startDetached(QString::fromLatin1("kioclient"), QStringList() << QString::fromLatin1("exec") << m_desktopFile);
 }
 
 void RpmHandler::gotPackage(const PackageKit::Package &package)
