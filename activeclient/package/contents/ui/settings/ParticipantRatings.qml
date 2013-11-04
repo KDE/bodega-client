@@ -141,7 +141,7 @@ PlasmaComponents.Page {
                     InlineConfirmationDialog {
                         id: ratingsDeleteConfirmation
                         visualParent: ratingsDeleteButton
-                        message: i18n("Are you sure you want to remove all your ratings from the asset")
+                        message: i18n("Are you sure you want to remove all your ratings from the asset?")
                         onAccepted: {
                             var job = bodegaClient.session.assetDeleteRatings(model.AssetId)
                             job.jobFinished.connect(bodegaClient.participantRatingsJobModel.reload)
