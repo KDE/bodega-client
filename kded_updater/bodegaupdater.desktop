@@ -17,6 +17,7 @@ Name[zh_CN]=Bodega 内容系统升级工具
 Name[zh_TW]=Bodega 內容系統更新器
 Comment=Checks for update to content installed using the Bodega content system
 Comment[da]=Tjekker for opdatering af indhold som er installeret med indholdssystemet Bodega
+Comment[de]=Sucht nach Aktualisierungen für Inhalte, die mit dem Bodega-System heruntergeladen wurden
 Comment[es]=Comprueba si hay actualizaciones del contenido instalado usando el sistema de contenidos de Bodega
 Comment[fr]=Vérifie s'il existe des mises à jour pour le contenu installé dans le système de contenu de Bodega
 Comment[gl]=Comproba as actualizacións dos contidos usando o sistema de contidos Bodega

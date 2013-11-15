@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Add-ons Updater
 Name[da]=Opdatering af tilføjet indhold
+Name[de]=Erweiterungen aktualisieren
 Name[es]=Actualizador de añadidos
 Name[gl]=Actualizador de complementos
 Name[hu]=Kiegészítő frissítő
@@ -15,6 +16,7 @@ Name[zh_CN]=插件更新
 Name[zh_TW]=擴充功能更新器
 Comment=Updates downloaded add-on content
 Comment[da]=Opdaterer tilføjet indhold du har downloadet
+Comment[de]=Aktualisiert heruntergeladene Erweiterungen
 Comment[es]=Actualiza los contenidos de añadidos descargados
 Comment[gl]=Actualiza os complementos descargados
 Comment[hu]=Frissíti a letöltött kiegészítő tartalmat
