@@ -63,7 +63,7 @@ Column {
         height: starsColumn.height
 
         onClicked: {
-            bodegaClient.assetRatingsJobModel.assetId = assetId;
+            bodegaClient.assetRatingsModel.assetId = assetId;
             widgetRoot.expanded = !widgetRoot.expanded
         }
 

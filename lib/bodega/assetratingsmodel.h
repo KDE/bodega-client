@@ -28,7 +28,7 @@ namespace Bodega {
 
     class Session;
 
-    class BODEGA_EXPORT AssetRatingsJobModel : public QAbstractItemModel
+    class BODEGA_EXPORT AssetRatingsModel : public QAbstractItemModel
     {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
@@ -43,8 +43,8 @@ namespace Bodega {
             Rating = Qt::UserRole + 103
         };
 
-        AssetRatingsJobModel(QObject *parent = 0);
-        ~AssetRatingsJobModel();
+        AssetRatingsModel(QObject *parent = 0);
+        ~AssetRatingsModel();
 
         QString assetId() const;
         void setAssetId(const QString& collectionId);

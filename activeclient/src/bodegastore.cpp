@@ -55,7 +55,7 @@
 #include <bodega/participantratingsmodel.h>
 #include <bodega/participantratingsjob.h>
 #include <bodega/assetratingsjob.h>
-#include <bodega/assetratingsjobmodel.h>
+#include <bodega/assetratingsmodel.h>
 #include <bodega/updatedassetsmodel.h>
 
 using namespace Bodega;
@@ -326,7 +326,7 @@ BodegaStore::BodegaStore()
       m_collectionsModel(0),
       m_collectionAssetsModel(0),
       m_participantRatingsModel(0),
-      m_assetRatingsJobModel(0),
+      m_assetRatingsModel(0),
       m_bodegaUpdater(0)
 {
     declarativeView()->setPackageName("com.makeplaylive.addonsapp");
@@ -348,7 +348,7 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::CollectionsModel>();
     qmlRegisterType<Bodega::CollectionAssetsModel>();
     qmlRegisterType<Bodega::ParticipantRatingsModel>();
-    qmlRegisterType<Bodega::AssetRatingsJobModel>();
+    qmlRegisterType<Bodega::AssetRatingsModel>();
     qmlRegisterType<Bodega::UpdatedAssetsModel>();
 
 
@@ -444,13 +444,13 @@ ParticipantRatingsModel *BodegaStore::participantRatingsModel()
     return m_participantRatingsModel;
 }
 
-AssetRatingsJobModel *BodegaStore::assetRatingsJobModel()
+AssetRatingsModel *BodegaStore::assetRatingsModel()
 {
-    if (!m_assetRatingsJobModel) {
-        m_assetRatingsJobModel = new AssetRatingsJobModel(this);
-        m_assetRatingsJobModel->setSession(m_session);
+    if (!m_assetRatingsModel) {
+        m_assetRatingsModel = new AssetRatingsModel(this);
+        m_assetRatingsModel->setSession(m_session);
     }
-    return m_assetRatingsJobModel;
+    return m_assetRatingsModel;
 }
 
 Bodega::UpdatedAssetsModel *BodegaStore::updatedAssetsModel() const

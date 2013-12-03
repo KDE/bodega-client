@@ -35,7 +35,7 @@ namespace Bodega {
     class CollectionsModel;
     class CollectionAssetsModel;
     class ParticipantRatingsModel;
-    class AssetRatingsJobModel;
+    class AssetRatingsModel;
     class UpdatedAssetsModel;
     class InstallJobScheduler;
 }
@@ -51,7 +51,7 @@ class BodegaStore : public KDeclarativeMainWindow, public Bodega::CredentialsPro
     Q_PROPERTY(Bodega::CollectionsModel *collectionsModel READ collectionsModel CONSTANT)
     Q_PROPERTY(Bodega::CollectionAssetsModel *collectionAssetsModel READ collectionAssetsModel CONSTANT)
     Q_PROPERTY(Bodega::ParticipantRatingsModel *participantRatingsModel READ participantRatingsModel CONSTANT)
-    Q_PROPERTY(Bodega::AssetRatingsJobModel *assetRatingsJobModel READ assetRatingsJobModel CONSTANT)
+    Q_PROPERTY(Bodega::AssetRatingsModel *assetRatingsModel READ assetRatingsModel CONSTANT)
     Q_PROPERTY(Bodega::UpdatedAssetsModel *updatedAssetsModel READ updatedAssetsModel CONSTANT)
     Q_PROPERTY(Bodega::InstallJobScheduler *installJobScheduler READ installJobScheduler CONSTANT)
 
@@ -67,7 +67,7 @@ public:
     Bodega::CollectionsModel *collectionsModel() const;
     Bodega::CollectionAssetsModel *collectionAssetsModel() const;
     Bodega::ParticipantRatingsModel *participantRatingsModel();
-    Bodega::AssetRatingsJobModel *assetRatingsJobModel();
+    Bodega::AssetRatingsModel *assetRatingsModel();
     Bodega::UpdatedAssetsModel *updatedAssetsModel() const;
     Bodega::InstallJobScheduler *installJobScheduler() const;
     QString startPage() const;
@@ -93,7 +93,7 @@ private:
     Bodega::CollectionsModel *m_collectionsModel;
     Bodega::CollectionAssetsModel *m_collectionAssetsModel;
     Bodega::ParticipantRatingsModel *m_participantRatingsModel;
-    Bodega::AssetRatingsJobModel *m_assetRatingsJobModel;
+    Bodega::AssetRatingsModel *m_assetRatingsModel;
     org::kde::BodegaUpdater *m_bodegaUpdater;
     int m_historyUsers;
     QString m_startPage;

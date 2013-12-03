@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "assetratingsjobmodel.h"
+#include "assetratingsmodel.h"
 
 #include "assetratingsjob.h"
 #include "ratingattributesjob.h"
@@ -31,11 +31,11 @@
 namespace Bodega
 {
 
-class AssetRatingsJobModel::Private {
+class AssetRatingsModel::Private {
 public:
-    Private(AssetRatingsJobModel *parent);
+    Private(AssetRatingsModel *parent);
 
-    AssetRatingsJobModel *q;
+    AssetRatingsModel *q;
     Session *session;
     void fetchRatings();
     void ratingsJobFinished(Bodega::NetworkJob *job);
@@ -46,13 +46,13 @@ public:
     QString findAttributeName(const QString &attributeId) const;
 };
 
-AssetRatingsJobModel::Private::Private(AssetRatingsJobModel *parent)
+AssetRatingsModel::Private::Private(AssetRatingsModel *parent)
     : q(parent),
       session(0)
 {
 }
 
-void AssetRatingsJobModel::Private::fetchRatings()
+void AssetRatingsModel::Private::fetchRatings()
 {
     AssetRatingsJob *job = session->assetRatings(assetId);
 
@@ -64,7 +64,7 @@ void AssetRatingsJobModel::Private::fetchRatings()
             q, SLOT(ratingsJobFinished(Bodega::NetworkJob *)));
 }
 
-void AssetRatingsJobModel::Private::ratingsJobFinished(Bodega::NetworkJob *job)
+void AssetRatingsModel::Private::ratingsJobFinished(Bodega::NetworkJob *job)
 {
     AssetRatingsJob *assetRatingsJob = qobject_cast<AssetRatingsJob*>(job);
 
@@ -88,7 +88,7 @@ void AssetRatingsJobModel::Private::ratingsJobFinished(Bodega::NetworkJob *job)
         q, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
 }
 
-void AssetRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::NetworkJob *job)
+void AssetRatingsModel::Private::ratingAttributesJobFinished(Bodega::NetworkJob *job)
 {
     RatingAttributesJob *ratingAttributesJob = qobject_cast<RatingAttributesJob*>(job);
 
@@ -105,7 +105,7 @@ void AssetRatingsJobModel::Private::ratingAttributesJobFinished(Bodega::NetworkJ
     q->endInsertRows();
 }
 
-QString AssetRatingsJobModel::Private::findAttributeName(const QString &attributeId) const
+QString AssetRatingsModel::Private::findAttributeName(const QString &attributeId) const
 {
     foreach(const RatingAttributes &attribute, ratingAttributes) {
         if (attribute.id == attributeId) {
@@ -115,7 +115,7 @@ QString AssetRatingsJobModel::Private::findAttributeName(const QString &attribut
     return QString();
 }
 
-AssetRatingsJobModel::AssetRatingsJobModel(QObject *parent)
+AssetRatingsModel::AssetRatingsModel(QObject *parent)
     : QAbstractItemModel(parent),
       d(new Private(this))
 {
@@ -139,28 +139,28 @@ AssetRatingsJobModel::AssetRatingsJobModel(QObject *parent)
             this, SLOT(fetchRatings()));
 }
 
-AssetRatingsJobModel::~AssetRatingsJobModel()
+AssetRatingsModel::~AssetRatingsModel()
 {
     delete d;
 }
 
-QString AssetRatingsJobModel::assetId() const
+QString AssetRatingsModel::assetId() const
 {
     return d->assetId;
 }
 
-void AssetRatingsJobModel::setAssetId(const QString& assetId)
+void AssetRatingsModel::setAssetId(const QString& assetId)
 {
     d->assetId = assetId;
     emit assetIdChanged();
 }
 
-int AssetRatingsJobModel::columnCount(const QModelIndex &parent) const
+int AssetRatingsModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }
 
-QVariant AssetRatingsJobModel::data(const QModelIndex &index, int role) const
+QVariant AssetRatingsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= d->ratings.count()) {
         return QVariant();
@@ -185,7 +185,7 @@ QVariant AssetRatingsJobModel::data(const QModelIndex &index, int role) const
     }
 }
 
-Qt::ItemFlags AssetRatingsJobModel::flags(const QModelIndex &index) const
+Qt::ItemFlags AssetRatingsModel::flags(const QModelIndex &index) const
 {
     if (index.isValid()) {
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -194,19 +194,19 @@ Qt::ItemFlags AssetRatingsJobModel::flags(const QModelIndex &index) const
     }
 }
 
-bool AssetRatingsJobModel::hasChildren(const QModelIndex &parent) const
+bool AssetRatingsModel::hasChildren(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return false;
 }
 
-QVariant AssetRatingsJobModel::headerData(int section, Qt::Orientation orientation,
+QVariant AssetRatingsModel::headerData(int section, Qt::Orientation orientation,
                            int role) const
 {
     return QVariant();
 }
 
-QModelIndex AssetRatingsJobModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex AssetRatingsModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (column > 0) {
         return QModelIndex();
@@ -219,22 +219,22 @@ QModelIndex AssetRatingsJobModel::index(int row, int column, const QModelIndex &
     return createIndex(row, column);
 }
 
-QMap<int, QVariant> AssetRatingsJobModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> AssetRatingsModel::itemData(const QModelIndex &index) const
 {
     return QMap<int, QVariant>();
 }
 
-QModelIndex AssetRatingsJobModel::parent(const QModelIndex &index) const
+QModelIndex AssetRatingsModel::parent(const QModelIndex &index) const
 {
     return QModelIndex();
 }
 
-int AssetRatingsJobModel::rowCount(const QModelIndex &parent) const
+int AssetRatingsModel::rowCount(const QModelIndex &parent) const
 {
     return d->ratings.size();
 }
 
-void AssetRatingsJobModel::setSession(Session *session)
+void AssetRatingsModel::setSession(Session *session)
 {
     if (session == d->session) {
         return;
@@ -251,11 +251,11 @@ void AssetRatingsJobModel::setSession(Session *session)
     }
 }
 
-Session *AssetRatingsJobModel::session() const
+Session *AssetRatingsModel::session() const
 {
     return d->session;
 }
 
 }
 
-#include "assetratingsjobmodel.moc"
+#include "assetratingsmodel.moc"

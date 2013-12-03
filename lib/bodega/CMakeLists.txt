@@ -34,7 +34,7 @@ set (bodega_HEADERS
      ratingattributesjob.h
      assetratingsjob.h
      participantratingsjob.h
-     assetratingsjobmodel.h
+     assetratingsmodel.h
      participantratingsmodel.h
     )
 
@@ -74,7 +74,7 @@ set (bodega_SRCS
      ratingattributesjob.cpp
      assetratingsjob.cpp
      participantratingsjob.cpp
-     assetratingsjobmodel.cpp
+     assetratingsmodel.cpp
      participantratingsmodel.cpp
      )
 

@@ -27,7 +27,7 @@ import "../components"
 BrowserListView {
     id: root
     property variant rootIndex
-    abstractItemModel: bodegaClient.assetRatingsJobModel
+    abstractItemModel: bodegaClient.assetRatingsModel
 
     customHeader: PlasmaComponents.Label {
         text: i18n("All the Ratings of the asset:")
@@ -35,7 +35,7 @@ BrowserListView {
     }
 
     customDelegate: Component {
-        id: assetRatingsJobModelDelegate
+        id: assetRatingsModelDelegate
         PlasmaComponents.ListItem {
             id: listItem
             Row {
