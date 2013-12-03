@@ -30,7 +30,7 @@ BrowserListView {
     abstractItemModel: bodegaClient.assetRatingsModel
 
     customHeader: PlasmaComponents.Label {
-        text: i18n("All the Ratings of the asset:")
+        text: i18n("All ratings")
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
@@ -38,21 +38,59 @@ BrowserListView {
         id: assetRatingsModelDelegate
         PlasmaComponents.ListItem {
             id: listItem
-            Row {
-                id: delegateRow
-                spacing: theme.defaultFont.mSize.width
+            property variant ratings: model.Ratings
+            Column {
+                width: parent.width
 
-                PlasmaComponents.Label {
-                    text: i18n("%1: ", model.AttributeName)
-                    wrapMode: Text.Wrap
-                    width: theme.defaultFont.mSize.width*8
-                    horizontalAlignment: Text.AlignRight
+                Row {
+                    x: Math.max(0, parent.width / 2 - theme.defaultFont.mSize.width * 11)
+                    spacing: 4
+                    PlasmaComponents.Label {
+                        text: i18n("Rated by:", model.PersonName)
+                        wrapMode: Text.WordWrap
+                        width: theme.defaultFont.mSize.width*11
+                        horizontalAlignment: Text.AlignRight
+                    }
+
+                    PlasmaComponents.Label {
+                        text: model.PersonName
+                    }
                 }
-                RatingStars {
-                    rating: model.Rating
-                    starSize: theme.defaultFont.mSize.height * 1.6
-                    enabled: false
+
+                Row {
+                    x: Math.max(0, parent.width / 2 - theme.defaultFont.mSize.width * 11)
+                    spacing: 4
+                    PlasmaComponents.Label {
+                        text: i18n("On:", model.PersonName)
+                        wrapMode: Text.WordWrap
+                        width: theme.defaultFont.mSize.width*11
+                        horizontalAlignment: Text.AlignRight
+                    }
+
+                    PlasmaComponents.Label {
+                        text: Qt.formatDateTime(model.Rated)
+                    }
                 }
+
+                Repeater {
+                    model: ratings.length
+                    delegate: Row {
+                        x: Math.max(0, parent.width / 2 - theme.defaultFont.mSize.width * 11)
+                        spacing: 4
+                        PlasmaComponents.Label {
+                            text: i18n("%1:", ratings[index]["AttributeName"])
+                            wrapMode: Text.Wrap
+                            width: theme.defaultFont.mSize.width*11
+                            horizontalAlignment: Text.AlignRight
+                        }
+
+                        RatingStars {
+                            rating: ratings[index]["Rating"]
+                            starSize: theme.defaultFont.mSize.height * 1.6
+                            enabled: false
+                        }
+                    }
+                } // end of Repeater
             }
         }
     }
