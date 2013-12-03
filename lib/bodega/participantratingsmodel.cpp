@@ -17,7 +17,7 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#include "participantratingsjobmodel.h"
+#include "participantratingsmodel.h"
 
 #include "participantratingsjob.h"
 #include "assetjob.h"
@@ -33,11 +33,11 @@
 namespace Bodega
 {
 
-class ParticipantRatingsJobModel::Private {
+class ParticipantRatingsModel::Private {
 public:
-    Private(ParticipantRatingsJobModel *parent);
+    Private(ParticipantRatingsModel *parent);
 
-    ParticipantRatingsJobModel *q;
+    ParticipantRatingsModel *q;
     Session *session;
     void fetchParticipantRatings();
     void participantRatingsJobFinished(Bodega::NetworkJob *job);
@@ -46,13 +46,13 @@ public:
     QList<ParticipantRatings> participantRatings;
 };
 
-ParticipantRatingsJobModel::Private::Private(ParticipantRatingsJobModel *parent)
+ParticipantRatingsModel::Private::Private(ParticipantRatingsModel *parent)
     : q(parent),
       session(0)
 {
 }
 
-void ParticipantRatingsJobModel::Private::fetchParticipantRatings()
+void ParticipantRatingsModel::Private::fetchParticipantRatings()
 {
     if (!session->isAuthenticated()) {
         connect(session, SIGNAL(authenticated(bool)),
@@ -74,7 +74,7 @@ void ParticipantRatingsJobModel::Private::fetchParticipantRatings()
             q, SLOT(participantRatingsJobFinished(Bodega::NetworkJob *)));
 }
 
-void ParticipantRatingsJobModel::Private::participantRatingsJobFinished(Bodega::NetworkJob *job)
+void ParticipantRatingsModel::Private::participantRatingsJobFinished(Bodega::NetworkJob *job)
 {
     ParticipantRatingsJob *participantRatingsJob = qobject_cast<ParticipantRatingsJob*>(job);
 
@@ -97,7 +97,7 @@ void ParticipantRatingsJobModel::Private::participantRatingsJobFinished(Bodega::
     q->endInsertRows();
 }
 
-QVariantList ParticipantRatingsJobModel::Private::dataToList(int index) const
+QVariantList ParticipantRatingsModel::Private::dataToList(int index) const
 {
     QVariantList l;
     foreach(const ParticipantRatings::Ratings &itr, participantRatings.at(index).ratings) {
@@ -109,7 +109,7 @@ QVariantList ParticipantRatingsJobModel::Private::dataToList(int index) const
     return l;
 }
 
-ParticipantRatingsJobModel::ParticipantRatingsJobModel(QObject *parent)
+ParticipantRatingsModel::ParticipantRatingsModel(QObject *parent)
     : QAbstractItemModel(parent),
       d(new Private(this))
 {
@@ -133,17 +133,17 @@ ParticipantRatingsJobModel::ParticipantRatingsJobModel(QObject *parent)
             this, SLOT(fetchParticipantRatings()));
 }
 
-ParticipantRatingsJobModel::~ParticipantRatingsJobModel()
+ParticipantRatingsModel::~ParticipantRatingsModel()
 {
     delete d;
 }
 
-int ParticipantRatingsJobModel::columnCount(const QModelIndex &parent) const
+int ParticipantRatingsModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }
 
-QVariant ParticipantRatingsJobModel::data(const QModelIndex &index, int role) const
+QVariant ParticipantRatingsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() >= d->participantRatings.count()) {
         return QVariant();
@@ -171,7 +171,7 @@ QVariant ParticipantRatingsJobModel::data(const QModelIndex &index, int role) co
     }
 }
 
-Qt::ItemFlags ParticipantRatingsJobModel::flags(const QModelIndex &index) const
+Qt::ItemFlags ParticipantRatingsModel::flags(const QModelIndex &index) const
 {
     if (index.isValid()) {
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -180,19 +180,19 @@ Qt::ItemFlags ParticipantRatingsJobModel::flags(const QModelIndex &index) const
     }
 }
 
-bool ParticipantRatingsJobModel::hasChildren(const QModelIndex &parent) const
+bool ParticipantRatingsModel::hasChildren(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return false;
 }
 
-QVariant ParticipantRatingsJobModel::headerData(int section, Qt::Orientation orientation,
+QVariant ParticipantRatingsModel::headerData(int section, Qt::Orientation orientation,
                            int role) const
 {
     return QVariant();
 }
 
-QModelIndex ParticipantRatingsJobModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex ParticipantRatingsModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (column > 0) {
         return QModelIndex();
@@ -205,22 +205,22 @@ QModelIndex ParticipantRatingsJobModel::index(int row, int column, const QModelI
     return createIndex(row, column);
 }
 
-QMap<int, QVariant> ParticipantRatingsJobModel::itemData(const QModelIndex &index) const
+QMap<int, QVariant> ParticipantRatingsModel::itemData(const QModelIndex &index) const
 {
     return QMap<int, QVariant>();
 }
 
-QModelIndex ParticipantRatingsJobModel::parent(const QModelIndex &index) const
+QModelIndex ParticipantRatingsModel::parent(const QModelIndex &index) const
 {
     return QModelIndex();
 }
 
-int ParticipantRatingsJobModel::rowCount(const QModelIndex &parent) const
+int ParticipantRatingsModel::rowCount(const QModelIndex &parent) const
 {
     return d->participantRatings.count();
 }
 
-void ParticipantRatingsJobModel::setSession(Session *session)
+void ParticipantRatingsModel::setSession(Session *session)
 {
     if (session == d->session) {
         return;
@@ -231,11 +231,11 @@ void ParticipantRatingsJobModel::setSession(Session *session)
     d->fetchParticipantRatings();
 }
 
-Session *ParticipantRatingsJobModel::session() const
+Session *ParticipantRatingsModel::session() const
 {
     return d->session;
 }
 
 }
 
-#include "participantratingsjobmodel.moc"
+#include "participantratingsmodel.moc"

@@ -52,7 +52,7 @@
 #include <bodega/uninstalljob.h>
 #include <bodega/collectionsmodel.h>
 #include <bodega/collectionassetsmodel.h>
-#include <bodega/participantratingsjobmodel.h>
+#include <bodega/participantratingsmodel.h>
 #include <bodega/participantratingsjob.h>
 #include <bodega/assetratingsjob.h>
 #include <bodega/assetratingsjobmodel.h>
@@ -325,7 +325,7 @@ BodegaStore::BodegaStore()
       m_historyModel(0),
       m_collectionsModel(0),
       m_collectionAssetsModel(0),
-      m_participantRatingsJobModel(0),
+      m_participantRatingsModel(0),
       m_assetRatingsJobModel(0),
       m_bodegaUpdater(0)
 {
@@ -347,7 +347,7 @@ BodegaStore::BodegaStore()
     qmlRegisterType<Bodega::UninstallJob>();
     qmlRegisterType<Bodega::CollectionsModel>();
     qmlRegisterType<Bodega::CollectionAssetsModel>();
-    qmlRegisterType<Bodega::ParticipantRatingsJobModel>();
+    qmlRegisterType<Bodega::ParticipantRatingsModel>();
     qmlRegisterType<Bodega::AssetRatingsJobModel>();
     qmlRegisterType<Bodega::UpdatedAssetsModel>();
 
@@ -435,13 +435,13 @@ CollectionAssetsModel *BodegaStore::collectionAssetsModel() const
     return m_collectionAssetsModel;
 }
 
-ParticipantRatingsJobModel *BodegaStore::participantRatingsJobModel()
+ParticipantRatingsModel *BodegaStore::participantRatingsModel()
 {
-    if (!m_participantRatingsJobModel) {
-        m_participantRatingsJobModel = new ParticipantRatingsJobModel(this);
-        m_participantRatingsJobModel->setSession(m_session);
+    if (!m_participantRatingsModel) {
+        m_participantRatingsModel = new ParticipantRatingsModel(this);
+        m_participantRatingsModel->setSession(m_session);
     }
-    return m_participantRatingsJobModel;
+    return m_participantRatingsModel;
 }
 
 AssetRatingsJobModel *BodegaStore::assetRatingsJobModel()

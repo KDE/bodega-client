@@ -213,7 +213,7 @@ Column {
                 successIcon.visible = !job.failed;
                 ratingBusyWidget.visible = false;
                 root.reloadPage();
-                bodegaClient.participantRatingsJobModel.reload();
+                bodegaClient.participantRatingsModel.reload();
                 hideTimer.restart();
             }
             onJobError: {

@@ -35,7 +35,7 @@ set (bodega_HEADERS
      assetratingsjob.h
      participantratingsjob.h
      assetratingsjobmodel.h
-     participantratingsjobmodel.h
+     participantratingsmodel.h
     )
 
 set (bodega_SRCS
@@ -75,7 +75,7 @@ set (bodega_SRCS
      assetratingsjob.cpp
      participantratingsjob.cpp
      assetratingsjobmodel.cpp
-     participantratingsjobmodel.cpp
+     participantratingsmodel.cpp
      )
 
 include_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/lib/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES} ${QJSON_INCLUDE_DIRS})

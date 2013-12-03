@@ -34,7 +34,7 @@ namespace Bodega {
     class Session;
     class CollectionsModel;
     class CollectionAssetsModel;
-    class ParticipantRatingsJobModel;
+    class ParticipantRatingsModel;
     class AssetRatingsJobModel;
     class UpdatedAssetsModel;
     class InstallJobScheduler;
@@ -50,7 +50,7 @@ class BodegaStore : public KDeclarativeMainWindow, public Bodega::CredentialsPro
     Q_PROPERTY(Bodega::HistoryModel *historyModel READ historyModel CONSTANT)
     Q_PROPERTY(Bodega::CollectionsModel *collectionsModel READ collectionsModel CONSTANT)
     Q_PROPERTY(Bodega::CollectionAssetsModel *collectionAssetsModel READ collectionAssetsModel CONSTANT)
-    Q_PROPERTY(Bodega::ParticipantRatingsJobModel *participantRatingsJobModel READ participantRatingsJobModel CONSTANT)
+    Q_PROPERTY(Bodega::ParticipantRatingsModel *participantRatingsModel READ participantRatingsModel CONSTANT)
     Q_PROPERTY(Bodega::AssetRatingsJobModel *assetRatingsJobModel READ assetRatingsJobModel CONSTANT)
     Q_PROPERTY(Bodega::UpdatedAssetsModel *updatedAssetsModel READ updatedAssetsModel CONSTANT)
     Q_PROPERTY(Bodega::InstallJobScheduler *installJobScheduler READ installJobScheduler CONSTANT)
@@ -66,7 +66,7 @@ public:
     Bodega::HistoryModel *historyModel();
     Bodega::CollectionsModel *collectionsModel() const;
     Bodega::CollectionAssetsModel *collectionAssetsModel() const;
-    Bodega::ParticipantRatingsJobModel *participantRatingsJobModel();
+    Bodega::ParticipantRatingsModel *participantRatingsModel();
     Bodega::AssetRatingsJobModel *assetRatingsJobModel();
     Bodega::UpdatedAssetsModel *updatedAssetsModel() const;
     Bodega::InstallJobScheduler *installJobScheduler() const;
@@ -92,7 +92,7 @@ private:
     Bodega::HistoryModel *m_historyModel;
     Bodega::CollectionsModel *m_collectionsModel;
     Bodega::CollectionAssetsModel *m_collectionAssetsModel;
-    Bodega::ParticipantRatingsJobModel *m_participantRatingsJobModel;
+    Bodega::ParticipantRatingsModel *m_participantRatingsModel;
     Bodega::AssetRatingsJobModel *m_assetRatingsJobModel;
     org::kde::BodegaUpdater *m_bodegaUpdater;
     int m_historyUsers;

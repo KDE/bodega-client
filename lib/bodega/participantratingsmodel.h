@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef BODEGA_PARTICIPANTRATINGSJOB_MODEL_H
-#define BODEGA_PARTICIPANTRATINGSJOB_MODEL_H
+#ifndef BODEGA_PARTICIPANTRATINGS_MODEL_H
+#define BODEGA_PARTICIPANTRATINGS_MODEL_H
 
 #include <bodega/globals.h>
 
@@ -28,7 +28,7 @@ namespace Bodega {
 
     class Session;
 
-    class BODEGA_EXPORT ParticipantRatingsJobModel : public QAbstractItemModel
+    class BODEGA_EXPORT ParticipantRatingsModel : public QAbstractItemModel
     {
         Q_OBJECT
         Q_ENUMS(DisplayRoles)
@@ -43,8 +43,8 @@ namespace Bodega {
             Ratings = Qt::UserRole + 104
         };
 
-        ParticipantRatingsJobModel(QObject *parent = 0);
-        ~ParticipantRatingsJobModel();
+        ParticipantRatingsModel(QObject *parent = 0);
+        ~ParticipantRatingsModel();
 
         int columnCount(const QModelIndex &parent = QModelIndex()) const;
         QVariant data(const QModelIndex &index, int role) const;
