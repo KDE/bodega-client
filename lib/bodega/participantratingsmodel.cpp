@@ -41,7 +41,6 @@ public:
     Session *session;
     void fetchParticipantRatings();
     void participantRatingsJobFinished(Bodega::NetworkJob *job);
-    QVariantList dataToList(int index) const;
 
     QList<ParticipantRatings> participantRatings;
 };
@@ -95,18 +94,6 @@ void ParticipantRatingsModel::Private::participantRatingsJobFinished(Bodega::Net
 
     q->beginInsertRows(QModelIndex(), begin, end);
     q->endInsertRows();
-}
-
-QVariantList ParticipantRatingsModel::Private::dataToList(int index) const
-{
-    QVariantList l;
-    foreach(const ParticipantRatings::Ratings &itr, participantRatings.at(index).ratings) {
-        QVariantMap data;
-        data.insert(QLatin1String("AttributeName"), itr.attributeName);
-        data.insert(QLatin1String("Rating"), itr.rating);
-        l.append(data);
-    }
-    return l;
 }
 
 ParticipantRatingsModel::ParticipantRatingsModel(QObject *parent)
@@ -163,7 +150,14 @@ QVariant ParticipantRatingsModel::data(const QModelIndex &index, int role) const
             return d->participantRatings.at(index.row()).assetId;
         }
         case Ratings: {
-            return d->dataToList(index.row());
+            QVariantList l;
+            foreach(const Rating &itr, d->participantRatings.at(index.row()).ratings) {
+                QVariantMap data;
+                data.insert(QLatin1String("AttributeName"), itr.attributeName);
+                data.insert(QLatin1String("Rating"), itr.rating);
+                l.append(data);
+            }
+            return l;
         }
         default: {
             return QVariant();

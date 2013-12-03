@@ -28,13 +28,13 @@ namespace Bodega {
     class BODEGA_EXPORT AssetRatingsJob : public NetworkJob
     {
         Q_OBJECT
-        Q_PROPERTY(QList<Bodega::Ratings> ratings READ ratings)
+        Q_PROPERTY(QList<Bodega::AssetRatings> ratings READ ratings)
     public:
         AssetRatingsJob(QNetworkReply *reply,
                        Session *parent);
         ~AssetRatingsJob();
 
-        QList<Bodega::Ratings> ratings() const;
+        QList<Bodega::AssetRatings> ratings() const;
 
     protected:
         virtual void netFinished(const QVariantMap &result);

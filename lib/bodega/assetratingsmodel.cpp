@@ -39,10 +39,8 @@ public:
     Session *session;
     void fetchRatings();
     void ratingsJobFinished(Bodega::NetworkJob *job);
-    void ratingAttributesJobFinished(Bodega::NetworkJob *job);
     QString assetId;
-    QList<Ratings> ratings;
-    QList<RatingAttributes> ratingAttributes;
+    QList<AssetRatings> ratings;
     QString findAttributeName(const QString &attributeId) const;
 };
 
@@ -78,41 +76,9 @@ void AssetRatingsModel::Private::ratingsJobFinished(Bodega::NetworkJob *job)
         return;
     }
 
-    const int begin = 0;
-    const int end =  qMax(begin, assetRatingsJob->ratings().size() - 1);
-
-    q->beginInsertRows(QModelIndex(), begin, end);
-    ratings= assetRatingsJob->ratings();
-    RatingAttributesJob *ratingAttributesJob = session->listRatingAttributes(assetId);
-    connect(ratingAttributesJob, SIGNAL(jobFinished(Bodega::NetworkJob *)),
-        q, SLOT(ratingAttributesJobFinished(Bodega::NetworkJob *)));
-}
-
-void AssetRatingsModel::Private::ratingAttributesJobFinished(Bodega::NetworkJob *job)
-{
-    RatingAttributesJob *ratingAttributesJob = qobject_cast<RatingAttributesJob*>(job);
-
-    if (!ratingAttributesJob) {
-        return;
-    }
-
-    ratingAttributesJob->deleteLater();
-
-    if (ratingAttributesJob->failed()) {
-        return;
-    }
-    ratingAttributes.append(ratingAttributesJob->ratingAttributes());
+    q->beginInsertRows(QModelIndex(), 0, qMax(0, assetRatingsJob->ratings().size() - 1));
+    ratings = assetRatingsJob->ratings();
     q->endInsertRows();
-}
-
-QString AssetRatingsModel::Private::findAttributeName(const QString &attributeId) const
-{
-    foreach(const RatingAttributes &attribute, ratingAttributes) {
-        if (attribute.id == attributeId) {
-            return attribute.name;
-        }
-    }
-    return QString();
 }
 
 AssetRatingsModel::AssetRatingsModel(QObject *parent)
@@ -171,13 +137,26 @@ QVariant AssetRatingsModel::data(const QModelIndex &index, int role) const
             return d->ratings.at(index.row()).attributeId;
         }
         case AttributeName: {
-            return d->findAttributeName(d->ratings.at(index.row()).attributeId);
+            return d->ratings.at(index.row()).attributeName;
         }
         case PersonId: {
             return d->ratings.at(index.row()).personId;
         }
-        case Rating: {
-            return d->ratings.at(index.row()).rating;
+        case PersonName: {
+            return d->ratings.at(index.row()).personName;
+        }
+        case Rated: {
+            return d->ratings.at(index.row()).rated;
+        }
+        case Ratings: {
+            QVariantList l;
+            foreach (const Bodega::Rating &itr, d->ratings.at(index.row()).ratings) {
+                QVariantMap data;
+                data.insert(QLatin1String("AttributeName"), itr.attributeName);
+                data.insert(QLatin1String("Rating"), itr.rating);
+                l.append(data);
+            }
+            return l;
         }
         default: {
             return QVariant();

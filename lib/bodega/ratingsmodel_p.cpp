@@ -229,7 +229,7 @@ QString RatingsModel::findRatingValue(const QString &ratingAttributeId) const
 {
     foreach(const ParticipantRatings &info, m_participantRatings) {
         if (info.assetId == m_assetInfo.id) {
-            foreach(const ParticipantRatings::Ratings &r, info.ratings) {
+            foreach(const Rating &r, info.ratings) {
                 if (ratingAttributeId == r.attributeId) {
                     return r.rating;
                 }

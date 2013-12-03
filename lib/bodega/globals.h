@@ -160,29 +160,31 @@ namespace Bodega {
         QString assetType;
     };
 
-    struct Ratings
+    struct Rating
     {
         QString attributeId;
-        QString personId;
+        QString attributeName;
         QString rating;
-        QString date;
+    };
+
+    struct AssetRatings
+    {
+        QString attributeId;
+        QString attributeName;
+        QString personId;
+        QString personName;
+        QDateTime rated;
+        QList<Rating> ratings;
     };
 
     struct ParticipantRatings
     {
-        struct Ratings
-        {
-            QString attributeId;
-            QString attributeName;
-            QString rating;
-        };
-
         QString assetId;
         QString assetDescription;
         QString assetName;
         QString assetVersion;
-        QString rated;
-        QList<ParticipantRatings::Ratings> ratings;
+        QDateTime rated;
+        QList<Rating> ratings;
     };
 
     typedef QMultiHash<QString, QString> Tags;
@@ -193,13 +195,12 @@ Q_DECLARE_METATYPE(Bodega::CollectionInfo)
 Q_DECLARE_METATYPE(Bodega::ChannelInfo)
 Q_DECLARE_METATYPE(Bodega::ChangeLog)
 Q_DECLARE_METATYPE(Bodega::RatingAttributes)
-Q_DECLARE_METATYPE(Bodega::Ratings)
-Q_DECLARE_METATYPE(Bodega::ParticipantRatings)
+Q_DECLARE_METATYPE(Bodega::AssetRatings)
+Q_DECLARE_METATYPE(Bodega::Rating)
 Q_DECLARE_METATYPE(QList<Bodega::CollectionInfo>)
 Q_DECLARE_METATYPE(QList<Bodega::AssetInfo>)
 Q_DECLARE_METATYPE(QList<Bodega::RatingAttributes>)
-Q_DECLARE_METATYPE(QList<Bodega::Ratings>)
-Q_DECLARE_METATYPE(QList<Bodega::ParticipantRatings>)
+Q_DECLARE_METATYPE(QList<Bodega::Rating>)
 Q_DECLARE_METATYPE(Bodega::Tags)
 Q_DECLARE_METATYPE(Bodega::ParticipantInfo)
 
