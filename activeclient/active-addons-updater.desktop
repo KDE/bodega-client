@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Add-ons Updater
+Name[bs]=Ažuriranje dodataka
 Name[da]=Opdatering af tilføjet indhold
 Name[de]=Erweiterungen aktualisieren
 Name[es]=Actualizador de añadidos
@@ -18,6 +19,7 @@ Name[x-test]=xxAdd-ons Updaterxx
 Name[zh_CN]=插件更新
 Name[zh_TW]=擴充功能更新器
 Comment=Updates downloaded add-on content
+Comment[bs]=Sadržaj preuzetih dodataka
 Comment[da]=Opdaterer tilføjet indhold du har downloadet
 Comment[de]=Aktualisiert heruntergeladene Erweiterungen
 Comment[es]=Actualiza los contenidos de añadidos descargados
