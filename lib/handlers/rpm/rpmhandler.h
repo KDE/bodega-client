@@ -25,7 +25,7 @@
 
 #include <qplugin.h>
 
-#include <Package>
+#include <Transaction>
 
 #include "rpminstalljob.h"
 #include "rpmuninstalljob.h"
@@ -49,7 +49,7 @@ namespace Bodega {
         QString remoteName() const;
         bool remoteNameIsDescriptor() const;
         QString packageName() const;
-        const PackageKit::Package &package() const;
+        QString packageId() const;
 
     public Q_SLOTS:
         Bodega::InstallJob *install(QNetworkReply *reply, Session *session);
@@ -57,15 +57,17 @@ namespace Bodega {
         void launch();
 
     private Q_SLOTS:
-        void gotPackage(const PackageKit::Package &package);
+        void gotPackage(PackageKit::Transaction::Info info, const QString &packageId, const QString &summary);
         void resolveFinished(PackageKit::Transaction::Exit status, uint runtime);
-        void gotFiles(const PackageKit::Package &package, const QStringList &filenames);
+        void gotFiles(const QString &package, const QStringList &filenames);
         void installJobFinished();
 
     private:
         QWeakPointer<InstallJob> m_installJob;
         QWeakPointer<RpmUninstallJob> m_uninstallJob;
-        PackageKit::Package m_package;
+        QString m_packageId;
+        PackageKit::Transaction::Info m_info;
+        PackageKit::Transaction *m_transaction;
         QString m_desktopFile;
     };
 }

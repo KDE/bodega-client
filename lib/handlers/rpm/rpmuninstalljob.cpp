@@ -31,13 +31,13 @@ RpmUninstallJob::RpmUninstallJob(Session *parent, RpmHandler *handler)
       m_handler(handler)
 {
     PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
-    
-    if (!handler->package().id().isEmpty()) {
-        transaction->simulateRemovePackage(handler->package(), true);
+
+    if (!handler->packageId().isEmpty()) {
+        transaction->removePackage(m_handler->packageId(), true, true);
         connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
                 this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
         connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                this, SLOT(simulateUninstallFinished(PackageKit::Transaction::Exit, uint)));
+                this, SLOT(uninstallFinished(PackageKit::Transaction::Exit, uint)));
     } else {
         setError(Error(Error::Session,
                        QLatin1String("rpm/01"),
@@ -49,18 +49,6 @@ RpmUninstallJob::RpmUninstallJob(Session *parent, RpmHandler *handler)
 
 RpmUninstallJob::~RpmUninstallJob()
 {
-}
-
-void RpmUninstallJob::simulateUninstallFinished(PackageKit::Transaction::Exit status, uint runtime)
-{
-    PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
-
-    transaction->removePackage(m_handler->package(), true, true);
-    connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
-            this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
-    connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(uninstallFinished(PackageKit::Transaction::Exit, uint)));
-
 }
 
 void RpmUninstallJob::errorOccurred(PackageKit::Transaction::Error error, const QString &message)

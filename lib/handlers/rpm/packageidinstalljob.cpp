@@ -86,28 +86,10 @@ void PackageIdInstallJob::downloadFinished(const QString &localFile)
 void PackageIdInstallJob::refreshFinished(PackageKit::Transaction::Exit status, uint runtime)
 {
     if (status == PackageKit::Transaction::ExitSuccess) {
-        qDebug() << "Simulate install" << m_packageId;
-
-        PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
-        transaction->simulateInstallPackage(PackageKit::Package(m_packageId));
-
-        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
-                this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
-        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                this, SLOT(simulateInstallFinished(PackageKit::Transaction::Exit, uint)));
-        connect(transaction, SIGNAL(changed()),
-                this, SLOT(transactionChanged()));
-    }
-}
-
-
-void PackageIdInstallJob::simulateInstallFinished(PackageKit::Transaction::Exit status, uint runtime)
-{
-    if (status == PackageKit::Transaction::ExitSuccess) {
         qDebug() << "Trying to install" << m_packageId;
 
         PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
-        transaction->installPackage(PackageKit::Package(m_packageId), false);
+        transaction->installPackage(m_packageId, false);
 
         connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
                 this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));

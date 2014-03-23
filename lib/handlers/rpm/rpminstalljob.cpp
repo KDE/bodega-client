@@ -31,8 +31,7 @@
 namespace Bodega
 {
 
-RpmInstallJob::RpmInstallJob(QNetworkReply *reply, Session *session,
-                               RpmHandler *handler)
+RpmInstallJob::RpmInstallJob(QNetworkReply *reply, Session *session, RpmHandler *handler)
     : InstallJob(reply, session)
 {
     m_handler = handler;
@@ -68,34 +67,17 @@ void RpmInstallJob::downloadFinished(const QString &localFile)
 
 void RpmInstallJob::removeRepoFinished()
 {
-    qDebug() << "Simulate install" << m_packagePath;
+    qDebug() << "Trying to install" << m_packagePath;
 
     disconnect(sender(), 0, this, 0);
 
     PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
-    transaction->simulateInstallFile(m_packagePath);
+    transaction->installFile(m_packagePath, false);
 
     connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
             this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
     connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-            this, SLOT(simulateInstallFinished(PackageKit::Transaction::Exit, uint)));
-}
-
-void RpmInstallJob::simulateInstallFinished(PackageKit::Transaction::Exit status, uint runtime)
-{
-    if (status == PackageKit::Transaction::ExitSuccess) {
-        qDebug() << "Trying to install" << m_packagePath;
-
-        disconnect(sender(), 0, this, 0);
-
-        PackageKit::Transaction *transaction = new PackageKit::Transaction(this);
-        transaction->installFile(m_packagePath, false);
-
-        connect(transaction, SIGNAL(errorCode(PackageKit::Transaction::Error, QString)),
-                this, SLOT(errorOccurred(PackageKit::Transaction::Error, QString)));
-        connect(transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
-                this, SLOT(installFinished(PackageKit::Transaction::Exit, uint)));
-    }
+            this, SLOT(installFinished(PackageKit::Transaction::Exit, uint)));
 }
 
 void RpmInstallJob::errorOccurred(PackageKit::Transaction::Error error, const QString &message)

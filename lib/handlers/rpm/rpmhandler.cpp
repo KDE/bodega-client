@@ -35,7 +35,9 @@
 using namespace Bodega;
 
 RpmHandler::RpmHandler(QObject *parent)
-    : AssetHandler(parent)
+    : AssetHandler(parent),
+      m_transaction(new PackageKit::Transaction(this)),
+      m_info(PackageKit::Transaction::InfoUnknown)
 {
 }
 
@@ -45,13 +47,12 @@ RpmHandler::~RpmHandler()
 
 void RpmHandler::init()
 {
-    QFileInfo info(operations()->assetInfo().filename);
-    PackageKit::Transaction *t = new PackageKit::Transaction;
-    t->resolve(packageName());
+    m_transaction->reset();
+    m_transaction->resolve(packageName());
 
-    connect(t, SIGNAL(package(const PackageKit::Package &)),
-            this, SLOT(gotPackage(const PackageKit::Package &)));
-    connect(t, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
+    connect(m_transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            this, SLOT(gotPackage(PackageKit::Transaction::Info,QString,QString)));
+    connect(m_transaction, SIGNAL(finished(PackageKit::Transaction::Exit, uint)),
             this, SLOT(resolveFinished(PackageKit::Transaction::Exit, uint)));
 }
 
@@ -80,16 +81,17 @@ QString RpmHandler::packageName() const
     }
 }
 
-const PackageKit::Package &RpmHandler::package() const
+QString RpmHandler::packageId() const
 {
-    return m_package;
+    return m_packageId;
 }
 
 bool RpmHandler::isInstalled() const
 {
     //TODO: manage updates
-    return !m_package.id().isEmpty() && (m_package.info() == PackageKit::Package::InfoInstalled ||
-                m_package.info() == PackageKit::Package::InfoCollectionInstalled);
+    return !m_packageId.isEmpty() &&
+           (m_info == PackageKit::Transaction::InfoInstalled ||
+            m_info == PackageKit::Transaction::InfoCollectionInstalled);
 }
 
 Bodega::InstallJob *RpmHandler::install(QNetworkReply *reply, Session *session)
@@ -134,16 +136,19 @@ void RpmHandler::launch()
     QProcess::startDetached(QString::fromLatin1("kioclient"), QStringList() << QString::fromLatin1("exec") << m_desktopFile);
 }
 
-void RpmHandler::gotPackage(const PackageKit::Package &package)
+void RpmHandler::gotPackage(PackageKit::Transaction::Info info, const QString &packageId, const QString &summary)
 {
-    m_package = package;
+    Q_UNUSED(summary)
+
+    m_packageId = packageId;
+    m_info = info;
 
     emit installedChanged();
 
-    PackageKit::Transaction *listT = new PackageKit::Transaction;
-    listT->getFiles(package);
-    connect(listT, SIGNAL(files(const PackageKit::Package &, const QStringList &)),
-            this, SLOT(gotFiles(const PackageKit::Package &, const QStringList &)));
+    m_transaction->reset();
+    m_transaction->getFiles(m_packageId);
+    connect(m_transaction, SIGNAL(files(QString,QStringList)),
+            this, SLOT(gotFiles(QString,QStringList)));
 }
 
 void RpmHandler::resolveFinished(PackageKit::Transaction::Exit status, uint runtime)
@@ -156,15 +161,16 @@ void RpmHandler::resolveFinished(PackageKit::Transaction::Exit status, uint runt
 
 void RpmHandler::installJobFinished()
 {
-    PackageKit::Transaction *t = new PackageKit::Transaction;
-    m_package = PackageKit::Package();
+    m_packageId.clear();
+    m_info = PackageKit::Transaction::InfoUnknown;
 
-    t->resolve(packageName());
-    connect(t, SIGNAL(package(const PackageKit::Package &)),
-            this, SLOT(gotPackage(const PackageKit::Package &)));
+    m_transaction->reset();
+    m_transaction->resolve(packageName());
+    connect(m_transaction, SIGNAL(package(PackageKit::Transaction::Info,QString,QString)),
+            this, SLOT(gotPackage(PackageKit::Transaction::Info,QString,QString)));
 }
 
-void RpmHandler::gotFiles(const PackageKit::Package &package, const QStringList &fileNames)
+void RpmHandler::gotFiles(const QString &package, const QStringList &fileNames)
 {
     Q_UNUSED(package)
     foreach (const QString &file, fileNames) {
