@@ -1,3 +1,3 @@
 #! /bin/sh
-$XGETTEXT_QT `find -name "*cpp"` -o $podir/bodega_qt.pot
+$XGETTEXT_QT `find -name "*cpp" | grep -v '/tests/'` -o $podir/bodega_qt.pot
 
