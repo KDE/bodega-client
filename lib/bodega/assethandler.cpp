@@ -145,7 +145,7 @@ AssetHandler *AssetHandler::create(const QString &assetType, const QString &mime
                         handler = factory->createHandler();
                         Q_ASSERT(handler);
                     } else {
-                        qWarning() << "Could not instanciate the handler using" << candidatePath;
+                        qWarning() << "Could not instantiate the handler using" << candidatePath;
                     }
                     break;
                 } else {

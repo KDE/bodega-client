@@ -66,7 +66,7 @@ QString RpmHandler::remoteName() const
 
 bool RpmHandler::remoteNameIsDescriptor() const
 {
-    //Package ids are composed of 4 parts separed by mandattory ;
+    //Package ids are composed of 4 parts separated by mandattory ;
     //http://www.packagekit.org/gtk-doc/concepts.html#introduction-ideas-packageid
     return operations()->assetInfo().filename.split(QLatin1Char('.'), QString::KeepEmptyParts).last() == QLatin1String("desc");
 }

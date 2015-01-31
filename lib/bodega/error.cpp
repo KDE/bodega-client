@@ -221,7 +221,7 @@ void Error::Private::setServerCode(ErrorCodes::ServerCode c)
 
         case ErrorCodes::CardProcessingError:
             title = QObject::tr("Transaction Error");
-            description = QObject::tr("A processing error occured when making the purchase. Please try again.");
+            description = QObject::tr("A processing error occurred when making the purchase. Please try again.");
         break;
         case ErrorCodes::PurchaseNotEnoughPoints:
             title = QObject::tr("Transaction Error");

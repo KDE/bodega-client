@@ -29,7 +29,7 @@ namespace Bodega {
     class BODEGA_EXPORT ChangeLanguageJob : public NetworkJob
     {
         Q_OBJECT
-        Q_PROPERTY(QString langauge READ language)
+        Q_PROPERTY(QString language READ language)
     public:
         ChangeLanguageJob(const QString &lang,
                           QNetworkReply *reply,
