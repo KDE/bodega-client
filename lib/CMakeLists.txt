@@ -34,7 +34,7 @@ IF(BODEGA_VERBOSE_DEBUG_OUTPUT)
 endif(BODEGA_VERBOSE_DEBUG_OUTPUT)
 
 # Find the dependencies
-FIND_PACKAGE( Qt4 COMPONENTS QtCore QtNetwork QtSql REQUIRED )
+FIND_PACKAGE( Qt5 COMPONENTS Core Network Sql REQUIRED )
 FIND_PACKAGE( QJSON REQUIRED )
 
 #add extra search paths for libraries and includes
@@ -57,7 +57,7 @@ IF (NOT WIN32)
 ENDIF (NOT WIN32)
 
 # Include the cmake file needed to use qt4
-INCLUDE( ${QT_USE_FILE} )
+# INCLUDE( ${QT_USE_FILE} )
 
 # Subdirs
 add_subdirectory(bodega)

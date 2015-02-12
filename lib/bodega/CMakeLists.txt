@@ -78,9 +78,9 @@ set (bodega_SRCS
      participantratingsmodel.cpp
      )
 
-include_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/lib/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${QT4_INCLUDES} ${QJSON_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/lib ${CMAKE_SOURCE_DIR}/lib/bodega ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${QT_INCLUDES} ${QJSON_INCLUDE_DIRS})
 
-qt4_automoc(${bodega_SRCS})
+# qt_automoc(${bodega_SRCS})
 
 add_library (bodega SHARED ${bodega_SRCS})
 target_link_libraries(bodega  ${QT_LIBRARIES} ${QJSON_LIBRARIES})
